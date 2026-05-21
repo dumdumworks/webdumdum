@@ -1,0 +1,191 @@
+{
+  "sections": [
+    {
+      "id": "entrantes",
+      "title": "Para empezar",
+      "note": "Único entrante. De momento.",
+      "items": [
+        {
+          "id": "beicondilla",
+          "n": 0,
+          "name": "Latindilla",
+          "tagline": "¡PUFF!!",
+          "ingredients": "Ensaladilla de bacon, salsa secreta, toppings umami.",
+          "price": "7,50",
+          "tags": [],
+          "logo": null,
+          "image": "img/dumplings/latindilla.jpg"
+        }
+      ]
+    },
+    {
+      "id": "dumplings",
+      "title": "Dumplings",
+      "note": "100% caseros. 0% convencionales.",
+      "items": [
+        {
+          "id": "muaythai",
+          "n": 1,
+          "name": "Muay Thai",
+          "tagline": "PATADA VOLADORA!",
+          "ingredients": "Dumpling de pollo, salsa de cacahuete, cebolla roja, cilantro, maní crujiente.",
+          "price": "9,00",
+          "tags": [
+            "PICANTE"
+          ],
+          "logo": null,
+          "image": "img/dumplings/muay.jpg"
+        },
+        {
+          "id": "pumpkin",
+          "n": 2,
+          "name": "Honey Pumpkin",
+          "tagline": "SE TE VA A OLVIDAR QUE ES VEGETARIANO",
+          "ingredients": "Dumpling de calabaza asada, gorgonzola, cheddar curado, miel, cúrcuma, pipas de calabaza.",
+          "price": "8,50",
+          "tags": [
+            "VEG"
+          ],
+          "logo": null,
+          "image": "img/dumplings/honey.jpg"
+        },
+        {
+          "id": "cheeseburger",
+          "n": 3,
+          "name": "Cheese Burger",
+          "tagline": "JUSTO ESE BOCADO DEL CENTRO DE LA BURGER",
+          "ingredients": "Dumpling de ternera, cebolla pochada, cheddar, pepinillo, kétchup, mostaza.",
+          "price": "9,00",
+          "tags": [],
+          "logo": null,
+          "image": "img/dumplings/burger.jpg"
+        },
+        {
+          "id": "carbonara",
+          "n": 4,
+          "name": "Carbonara",
+          "tagline": "PURA CREMA!",
+          "ingredients": "Dumpling de bacon, salsa de yema, parmesano.",
+          "price": "9,00",
+          "tags": [],
+          "logo": null,
+          "image": "img/dumplings/carbonara.jpg"
+        },
+        {
+          "id": "pepito",
+          "n": 5,
+          "name": "Pepito de Ternera",
+          "tagline": "EL SABOR DEL BAR DE SIEMPRE",
+          "ingredients": "Dumpling de ternera, cebolla caramelizada, pimiento verde, mantequilla noisette, panko frito.",
+          "price": "9,50",
+          "tags": [],
+          "logo": null,
+          "image": "img/dumplings/pepito.jpg"
+        },
+        {
+          "id": "castiza",
+          "n": 6,
+          "name": "Castizo",
+          "tagline": "MADRID ME MATA",
+          "ingredients": "Dumpling de lomo adobado, salsa brava, torrezno.",
+          "price": "9,50",
+          "tags": [
+            "POR TIEMPO LIMITADO"
+          ],
+          "featured": true,
+          "logo": null,
+          "image": "img/dumplings/castizo.jpg"
+        },
+        {
+          "id": "moussaka",
+          "n": 7,
+          "name": "Moussaka",
+          "tagline": "AKRÓPOLIS!",
+          "ingredients": "Dumpling de champiñón, shiitake, berenjena, gruyère, almendra frita.",
+          "price": "8,50",
+          "tags": [
+            "VEG"
+          ],
+          "logo": null,
+          "image": "img/dumplings/moussaka.jpg"
+        },
+        {
+          "id": "sweetchili",
+          "n": 8,
+          "name": "Sweet Chilli Pork",
+          "tagline": "UN POCO DULCE · OTRO POCO HOT",
+          "ingredients": "Dumpling de cerdo, pimiento, salsa sweet chilli, sésamo, guindilla encurtida.",
+          "price": "9,00",
+          "tags": [
+            "NEW",
+            "PICANTE"
+          ],
+          "logo": null,
+          "image": "img/dumplings/sweet.jpg"
+        },
+        {
+          "id": "teriyaki",
+          "n": 9,
+          "name": "Chicken Teriyaki",
+          "tagline": "LA ROSALÍA!",
+          "ingredients": "Dumpling de pollo, puerro, salsa teriyaki, sésamo, cebolleta.",
+          "price": "9,00",
+          "tags": [],
+          "logo": null,
+          "image": "img/dumplings/teriyaki.jpg"
+        },
+        {
+          "id": "kpop",
+          "n": 10,
+          "name": "Gamba K-Pop",
+          "tagline": "NAMBER GUAN",
+          "ingredients": "Dumpling de gamba, col, mayo kimchi.",
+          "price": "9,50",
+          "tags": [],
+          "logo": null,
+          "image": "img/dumplings/gamba.jpg"
+        }
+      ]
+    },
+    {
+      "id": "postres",
+      "title": "Postres",
+      "note": "Mochis que también desobedecen.",
+      "items": [
+        {
+          "id": "mochi-cheese",
+          "n": 11,
+          "name": "Mochi Tarta de Queso",
+          "tagline": "CREMOSO AL CUBO",
+          "ingredients": "Helado de tarta de queso envuelto en mochi.",
+          "price": "3,50",
+          "tags": [],
+          "logo": null
+        },
+        {
+          "id": "mochi-petit",
+          "n": 12,
+          "name": "Mochi Petit Suisse",
+          "tagline": "INFANCIA EN BOLA",
+          "ingredients": "Helado de petit suisse envuelto en mochi.",
+          "price": "3,50",
+          "tags": [],
+          "logo": null
+        },
+        {
+          "id": "mochi-turron",
+          "n": 13,
+          "name": "Mochi Turrón",
+          "tagline": "FUERA DE TEMPORADA",
+          "ingredients": "Helado de turrón envuelto en mochi.",
+          "price": "3,50",
+          "tags": [
+            "NEW"
+          ],
+          "logo": null
+        }
+      ]
+    }
+  ],
+  "updated": "Mayo dosmil26 · IVA incluido"
+}
