@@ -32,8 +32,10 @@
           "ingredients": "Dumpling de pollo, salsa de cacahuete, cebolla roja, cilantro, maní crujiente.",
           "price": "9,00",
           "tags": [
-            "PICANTE"
+            "PICANTE",
+            "VEG"
           ],
+          "available": true,
           "image": "img/dumplings/muay.jpg",
           "logo": ""
         },
