@@ -394,7 +394,7 @@ function Menu() {
             </div>
 
             <div className="dish-grid">
-              {sec.items.map((it) =>
+              {sec.items.filter((it) => it.available !== false).map((it) =>
             <article key={it.id} className={`dish ${it.logo ? "with-logo" : ""} ${it.featured ? "is-featured" : ""}`}>
                   {/* ─── Layout MOBILE (visible <880px) ──────────────── */}
                   <div className="num m-only">[nº{String(it.n).padStart(2, "0")}]</div>
