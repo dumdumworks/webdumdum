@@ -32,8 +32,8 @@
           "ingredients": "Dumpling de pollo, salsa de cacahuete, cebolla roja, cilantro, maní crujiente.",
           "price": "9,00",
           "tags": [
-            "PICANTE",
-            "VEG"
+            "VEG",
+            "PICANTE"
           ],
           "available": false,
           "image": "img/dumplings/muay.jpg",
@@ -153,50 +153,77 @@
     {
       "id": "postres",
       "title": "Postres",
-      "note": "Mochis que también desobedecen.",
+      "note": "Un último bocado",
       "items": [
         {
           "id": "mochi-cheese",
           "n": 11,
-          "name": "Mochi Tarta de Queso",
-          "tagline": "CREMOSO AL CUBO",
-          "ingredients": "Helado de tarta de queso envuelto en mochi.",
-          "price": "3,50",
+          "name": "Cheesecake",
+          "tagline": "",
+          "ingredients": "Hasta luego",
+          "price": "2,85",
           "tags": [],
+          "image": "/img/dumplings/cheese.jpg",
           "logo": ""
         },
         {
           "id": "mochi-petit",
           "n": 12,
-          "name": "Mochi Petit Suisse",
+          "name": "Petit Suisse",
           "tagline": "INFANCIA EN BOLA",
-          "ingredients": "Helado de petit suisse envuelto en mochi.",
-          "price": "3,50",
+          "ingredients": "Un viaje directo a cuando tenías 9 años",
+          "price": "2,85",
           "tags": [],
+          "image": "/img/dumplings/petit.jpg",
           "logo": ""
         },
         {
           "id": "mochi-turron",
           "n": 13,
-          "name": "Mochi Turrón",
-          "tagline": "FUERA DE TEMPORADA",
-          "ingredients": "Helado de turrón envuelto en mochi.",
-          "price": "3,50",
-          "tags": [
-            "NEW"
-          ],
+          "name": "Turrón",
+          "tagline": "",
+          "ingredients": "Navidad todo el año",
+          "price": "2,85",
+          "tags": [],
+          "image": "/img/dumplings/turron.jpg",
           "logo": ""
         },
         {
-          "id": "MANGO",
-          "n": 0,
-          "name": "MANGO",
+          "id": "mango",
+          "n": 14,
+          "name": "Mango",
           "tagline": "",
-          "ingredients": "",
-          "price": "2,80",
+          "ingredients": "Fressshhh!",
+          "price": "2,85",
           "tags": [],
-          "featured": true,
+          "featured": false,
           "image": "/img/dumplings/mango.jpg",
+          "logo": ""
+        },
+        {
+          "id": "chocolate",
+          "n": 15,
+          "name": "Chocolate",
+          "tagline": "",
+          "ingredients": "Bien goloso",
+          "price": "2,85",
+          "tags": [],
+          "available": true,
+          "featured": false,
+          "image": "/img/dumplings/chocolate.jpg",
+          "logo": ""
+        },
+        {
+          "id": "frutapasion",
+          "n": 16,
+          "name": "Fruta de la Pasión",
+          "tagline": "",
+          "ingredients": "Nombre de fruta y de telenovela",
+          "price": "2,85",
+          "tags": [],
+          "available": true,
+          "featured": false,
+          "image": "/img/dumplings/pasion.jpg",
           "logo": ""
         }
       ]
