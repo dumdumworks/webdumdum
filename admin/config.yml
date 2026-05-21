@@ -41,7 +41,18 @@ collections:
                   - { name: "tagline", label: "Tagline (mayusculas)", widget: "string", required: false }
                   - { name: "ingredients", label: "Ingredientes", widget: "text", required: false }
                   - { name: "price", label: "Precio (sin EUR, ej: 9,50)", widget: "string" }
-                  - { name: "tags", label: "Etiquetas", widget: "list", required: false, hint: "Ej: NEW, VEG, PICANTE" }
+                  - name: "tags"
+                    label: "Etiquetas"
+                    widget: "select"
+                    multiple: true
+                    required: false
+                    hint: "Marca las que apliquen. PICANTE sale como HOT, VEG sale con la hojita."
+                    options:
+                      - { label: "Picante (HOT)", value: "PICANTE" }
+                      - { label: "Vegetariano (VEG)", value: "VEG" }
+                      - { label: "Nuevo (NEW)", value: "NEW" }
+                      - { label: "Por tiempo limitado", value: "POR TIEMPO LIMITADO" }
+                  - { name: "available", label: "Plato disponible (desmarca para ocultarlo de la web)", widget: "boolean", required: false, default: true }
                   - { name: "featured", label: "Plato destacado", widget: "boolean", required: false, default: false }
                   - { name: "image", label: "Foto del plato", widget: "image", required: false }
                   - { name: "logo", label: "Logo (avanzado, dejar vacio)", widget: "string", required: false }
