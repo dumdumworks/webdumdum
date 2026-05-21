@@ -17,6 +17,7 @@
             "PICANTE",
             "NEW"
           ],
+          "available": true,
           "image": "/img/dumplings/latindilla.jpg",
           "logo": ""
         }
@@ -222,7 +223,7 @@
           "ingredients": "Nombre de fruta y de telenovela",
           "price": "2,85",
           "tags": [],
-          "available": false,
+          "available": true,
           "featured": false,
           "image": "/img/dumplings/pasion.jpg",
           "logo": ""
