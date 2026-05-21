@@ -157,7 +157,7 @@
       "items": [
         {
           "id": "mochi-cheese",
-          "n": 11,
+          "n": 1,
           "name": "Cheesecake",
           "tagline": "",
           "ingredients": "Hasta luego",
@@ -168,7 +168,7 @@
         },
         {
           "id": "mochi-petit",
-          "n": 12,
+          "n": 2,
           "name": "Petit Suisse",
           "tagline": "INFANCIA EN BOLA",
           "ingredients": "Un viaje directo a cuando tenías 9 años",
@@ -179,7 +179,7 @@
         },
         {
           "id": "mochi-turron",
-          "n": 13,
+          "n": 3,
           "name": "Turrón",
           "tagline": "",
           "ingredients": "Navidad todo el año",
@@ -190,7 +190,7 @@
         },
         {
           "id": "mango",
-          "n": 14,
+          "n": 4,
           "name": "Mango",
           "tagline": "",
           "ingredients": "Fressshhh!",
@@ -202,7 +202,7 @@
         },
         {
           "id": "chocolate",
-          "n": 15,
+          "n": 5,
           "name": "Chocolate",
           "tagline": "",
           "ingredients": "Bien goloso",
@@ -215,7 +215,7 @@
         },
         {
           "id": "frutapasion",
-          "n": 16,
+          "n": 6,
           "name": "Fruta de la Pasión",
           "tagline": "",
           "ingredients": "Nombre de fruta y de telenovela",
