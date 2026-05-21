@@ -161,7 +161,7 @@
           "ingredients": "Helado de tarta de queso envuelto en mochi.",
           "price": "3,50",
           "tags": [],
-          "logo": null
+          "logo": ""
         },
         {
           "id": "mochi-petit",
@@ -171,7 +171,7 @@
           "ingredients": "Helado de petit suisse envuelto en mochi.",
           "price": "3,50",
           "tags": [],
-          "logo": null
+          "logo": ""
         },
         {
           "id": "mochi-turron",
@@ -183,7 +183,19 @@
           "tags": [
             "NEW"
           ],
-          "logo": null
+          "logo": ""
+        },
+        {
+          "id": "MANGO",
+          "n": 0,
+          "name": "MANGO",
+          "tagline": "",
+          "ingredients": "",
+          "price": "2,80",
+          "tags": [],
+          "featured": true,
+          "image": "/img/dumplings/mango.jpg",
+          "logo": ""
         }
       ]
     }
