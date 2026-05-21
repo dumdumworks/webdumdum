@@ -1,0 +1,186 @@
+@import url("styles-2.css");
+
+:root {
+  --bg: #fffaf3;
+  --ink: #ff001e;
+  --sage: #aaafa3;
+  --sage-soft: #c8ccc2;
+  --sage-faint: #e8eae3;
+  --red: #ff001e;
+  --paper: #fbfaf6;
+  --line: #ff001e;
+  --line-soft: rgba(255,0,30,0.18);
+
+  /* Helvetica · stack del sistema */
+  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* La antigua "mono" hereda el display y se diferencia solo por
+     mayúsculas + tracking (los .tiny/.label/.eyebrow ya lo aplican). */
+  --font-mono: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --max: 1440px;
+  --gutter: 32px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); }
+body {
+  font-family: var(--font-display);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" on, "liga" on;
+  line-height: 1.25;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+img { display: block; max-width: 100%; }
+
+/* ---------- Type tokens ---------- */
+.mono { font-family: var(--font-mono); text-transform: uppercase; font-feature-settings: "ss01" on; letter-spacing: 0; font-weight: 600; }
+.tiny { font-family: var(--font-mono); text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; font-weight: 600; }
+.label { font-family: var(--font-mono); text-transform: uppercase; font-size: 12px; letter-spacing: 0.04em; font-weight: 600; }
+.eyebrow { font-family: var(--font-mono); text-transform: uppercase; font-size: 12px; letter-spacing: 0.08em; color: var(--ink); font-weight: 600; }
+
+.h-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(56px, 11vw, 168px);
+  line-height: 0.86;
+  letter-spacing: -0.045em;
+}
+.h-1 {
+  font-weight: 500;
+  font-size: clamp(36px, 5.6vw, 80px);
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+}
+.h-2 {
+  font-weight: 500;
+  font-size: clamp(28px, 3.4vw, 48px);
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+.body {
+  font-size: 16px;
+  line-height: 1.45;
+  max-width: 56ch;
+}
+
+/* ---------- Layout helpers ---------- */
+.shell { padding: 0 var(--gutter); }
+.hr { height: 1px; background: var(--line); width: 100%; }
+.hr-soft { height: 1px; background: var(--line-soft); width: 100%; }
+
+.row { display: flex; align-items: center; }
+.between { justify-content: space-between; }
+.gap-s { gap: 12px; }
+.gap-m { gap: 24px; }
+.gap-l { gap: 48px; }
+
+/* ---------- Top bar ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  padding: 14px var(--gutter);
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--font-mono); text-transform: uppercase; font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+.topbar a { padding: 4px 0; position: relative; }
+.topbar a.active::after,
+.topbar a:hover::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: var(--red);
+}
+.topbar .nav { display: flex; gap: 24px; }
+.topbar .brand { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: -0.01em; text-transform: none; }
+.topbar .right { display: flex; gap: 16px; align-items: center; }
+
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); display: inline-block; }
+.dot.green { background: #1f8a5b; }
+
+/* ---------- Hover / interactions ---------- */
+.link-hover { transition: color .2s ease; }
+.link-hover:hover { color: var(--red); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--font-mono); text-transform: uppercase; font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  background: var(--bg);
+  transition: background .18s ease, color .18s ease, border-color .18s ease;
+}
+.btn:hover { background: var(--ink); color: var(--bg); }
+.btn.red { background: var(--red); color: #fff; border-color: var(--red); }
+.btn.red:hover { background: var(--ink); border-color: var(--ink); }
+
+.btn-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.32em 0.7em 0.36em;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--font-mono); text-transform: uppercase;
+  font-size: 0.28em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  vertical-align: middle;
+  line-height: 1;
+  margin: 0 0.18em 0.22em 0.12em;
+  white-space: nowrap;
+  transition: background .18s ease, color .18s ease;
+}
+.btn-inline:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+/* ---------- Util ---------- */
+.sage { color: var(--sage); }
+.red { color: var(--red); }
+.muted { color: rgba(255,0,30,0.55); }
+.cap { letter-spacing: 0.04em; }
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* ---------- Loading ---------- */
+.loader {
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--bg);
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 24px;
+  transition: opacity .6s ease, transform .6s cubic-bezier(.7,0,.2,1);
+}
+.loader.out { opacity: 0; transform: translateY(-12px); pointer-events: none; }
+.loader-top, .loader-bot { display: flex; justify-content: space-between; font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 11px; letter-spacing: 0.06em; }
+.loader-mid {
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+}
+.loader-word {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(64px, 18vw, 280px);
+  line-height: 0.82;
+  letter-spacing: -0.06em;
+  white-space: nowrap;
+}
+.loader-word .amp { color: var(--red); font-weight: 400; font-style: italic; }
+.loader-count { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 13px; letter-spacing: 0.08em; }
+.loader-bar { height: 1px; background: var(--line-soft); position: relative; margin: 18px 0; }
+.loader-bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); }
+
+/* ---------- Reveal anim ---------- */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
+.reveal.in { opacity: 1; transform: none; }
+
+/* ---------- Mobile menu (carta) styles in separate block ---------- */
