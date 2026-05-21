@@ -1,0 +1,47 @@
+# ───────────────────────────────────────────────────────────
+# Configuracion de Sveltia CMS para la carta de DUM DUM
+# Edita el archivo menu.json del repositorio.
+# ───────────────────────────────────────────────────────────
+backend:
+  name: github
+  repo: dumdumworks/webdumdum   # <-- usuario/repositorio de GitHub
+  branch: main
+
+# Donde se guardan las fotos que subas desde el editor
+media_folder: "img/dumplings"     # carpeta real en el repo
+public_folder: "img/dumplings"    # ruta que se escribe en los datos
+
+collections:
+  - name: "carta"
+    label: "Carta"
+    files:
+      - name: "menu"
+        label: "Menu completo"
+        file: "menu.json"
+        fields:
+          - { name: "updated", label: "Texto 'ultima actualizacion'", widget: "string", required: false }
+          - name: "sections"
+            label: "Secciones"
+            widget: "list"
+            label_singular: "Seccion"
+            summary: "{{fields.title}}"
+            fields:
+              - { name: "id", label: "ID interno", widget: "string", hint: "No usar espacios ni acentos. Ej: dumplings" }
+              - { name: "title", label: "Titulo de la seccion", widget: "string" }
+              - { name: "note", label: "Nota bajo el titulo", widget: "string", required: false }
+              - name: "items"
+                label: "Platos"
+                widget: "list"
+                label_singular: "Plato"
+                summary: "{{fields.name}} - {{fields.price}} EUR"
+                fields:
+                  - { name: "id", label: "ID interno", widget: "string", hint: "Sin espacios ni acentos. Ej: muaythai" }
+                  - { name: "n", label: "Numero", widget: "number", value_type: "int", default: 0 }
+                  - { name: "name", label: "Nombre del plato", widget: "string" }
+                  - { name: "tagline", label: "Tagline (mayusculas)", widget: "string", required: false }
+                  - { name: "ingredients", label: "Ingredientes", widget: "text", required: false }
+                  - { name: "price", label: "Precio (sin EUR, ej: 9,50)", widget: "string" }
+                  - { name: "tags", label: "Etiquetas", widget: "list", required: false, hint: "Ej: NEW, VEG, PICANTE" }
+                  - { name: "featured", label: "Plato destacado", widget: "boolean", required: false, default: false }
+                  - { name: "image", label: "Foto del plato", widget: "image", required: false }
+                  - { name: "logo", label: "Logo (avanzado, dejar vacio)", widget: "string", required: false }
