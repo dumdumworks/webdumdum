@@ -14,7 +14,7 @@
           "ingredients": "Ensaladilla de bacon, salsa secreta, toppings umami.",
           "price": "7,50",
           "tags": [],
-          "image": "/img/dumplings/Captura de pantalla 2026-05-21 a las 6.49.25 p. m..png",
+          "image": "/img/dumplings/latindilla.jpg",
           "logo": ""
         }
       ]
@@ -95,7 +95,7 @@
           ],
           "featured": true,
           "image": "img/dumplings/castizo.jpg",
-          "logo": null
+          "logo": ""
         },
         {
           "id": "moussaka",
@@ -108,7 +108,7 @@
             "VEG"
           ],
           "image": "img/dumplings/moussaka.jpg",
-          "logo": null
+          "logo": ""
         },
         {
           "id": "sweetchili",
@@ -122,7 +122,7 @@
             "PICANTE"
           ],
           "image": "img/dumplings/sweet.jpg",
-          "logo": null
+          "logo": ""
         },
         {
           "id": "teriyaki",
@@ -133,7 +133,7 @@
           "price": "9,00",
           "tags": [],
           "image": "img/dumplings/teriyaki.jpg",
-          "logo": null
+          "logo": ""
         },
         {
           "id": "kpop",
@@ -144,7 +144,7 @@
           "price": "9,50",
           "tags": [],
           "image": "img/dumplings/gamba.jpg",
-          "logo": null
+          "logo": ""
         }
       ]
     },
