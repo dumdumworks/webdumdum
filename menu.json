@@ -222,7 +222,7 @@
           "ingredients": "Nombre de fruta y de telenovela",
           "price": "2,85",
           "tags": [],
-          "available": true,
+          "available": false,
           "featured": false,
           "image": "/img/dumplings/pasion.jpg",
           "logo": ""
