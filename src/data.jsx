@@ -249,10 +249,21 @@ const INITIAL_MENU = {
 
 // ─── Persistencia ─────────────────────────────────────────────
 function loadMenu() {
+  // 1) Si el editor (Sveltia) ha publicado un menu.json y se ha
+  //    precargado en index.html, esa es la fuente de la verdad.
+  try {
+    if (window.PUBLISHED_MENU && window.PUBLISHED_MENU.sections) {
+      // Combina lo publicado (sections/updated) con el resto del
+      // menú base (galerías, footer, header, disclaimer…).
+      return Object.assign({}, INITIAL_MENU, window.PUBLISHED_MENU);
+    }
+  } catch (e) {}
+  // 2) Si estás editando en /admin viejo y guardaste en localStorage.
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch (e) {}
+  // 3) Respaldo: el menú escrito en el código.
   return INITIAL_MENU;
 }
 function saveMenu(data) {
