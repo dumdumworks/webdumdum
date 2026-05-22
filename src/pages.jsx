@@ -984,7 +984,7 @@ function EventosForm() {
     e.preventDefault();
     if (!form.nombre || !form.email || !form.telefono || !form.fecha) {
       setState("error");
-      setErrMsg("Rellena los campos obligatorios: nombre, email, teléfono y fecha.");
+      setErrMsg("Rellena los campos obligatorios: nombre, email, teléfono y fecha del evento.");
       return;
     }
     setState("sending");
@@ -1015,7 +1015,7 @@ function EventosForm() {
           "Empresa": form.empresa,
           "Email de contacto": form.email,
           "Teléfono": form.telefono,
-          "Fecha": form.fecha,
+          "Fecha del evento": form.fecha,
           "Número de asistentes": form.asistentes,
           "Mensaje": form.mensaje,
           replyto: form.email
@@ -1092,7 +1092,7 @@ function EventosForm() {
             placeholder="+34 600 000 000" />
         </label>
         <label className="ev-field">
-          <span>Fecha *</span>
+          <span>Fecha del evento *</span>
           <input
             type="date"
             value={form.fecha}
