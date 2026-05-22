@@ -306,7 +306,7 @@ function Home() {
           <div className="t">Contacto →</div>
           <div className="d">SALÚDAME SIEMPRE</div>
         </a>
-        <a className="map-cell span-3" href="#" onClick={(e) => e.preventDefault()}>
+        <a className="map-cell span-3" href="https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY" target="_blank" rel="noreferrer">
           <div className="n">[04]</div>
           <div className="t">Uber Eats →</div>
           <div className="d">NI TE MUEVAS</div>
@@ -505,9 +505,25 @@ function GoogleReviews({ href }) {
 // ── LOCALES ───────────────────────────────────────────────────
 // Calcula si el local está abierto AHORA según sus tramos horarios.
 // tramos = [[inicioMin, finMin], ...] en minutos desde medianoche.
+// Usa SIEMPRE la hora de Madrid, sin importar dónde esté el visitante.
 function estadoApertura(tramos) {
-  const now = new Date();
-  const min = now.getHours() * 60 + now.getMinutes();
+  // Hora actual en Madrid (Europe/Madrid), independiente del dispositivo
+  let min;
+  try {
+    const partes = new Intl.DateTimeFormat("es-ES", {
+      timeZone: "Europe/Madrid",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    }).formatToParts(new Date());
+    const h = parseInt(partes.find((p) => p.type === "hour").value, 10);
+    const m = parseInt(partes.find((p) => p.type === "minute").value, 10);
+    min = (h % 24) * 60 + m;
+  } catch (e) {
+    // Si algo fallara, usar hora local como respaldo
+    const now = new Date();
+    min = now.getHours() * 60 + now.getMinutes();
+  }
   const fmt = (m) => `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
   for (let i = 0; i < tramos.length; i++) {
     if (min >= tramos[i][0] && min < tramos[i][1]) {
@@ -523,16 +539,23 @@ function estadoApertura(tramos) {
 }
 
 function EstadoLocal({ tramos }) {
+  // Recalcula el estado cada minuto para mantenerlo al día sin recargar.
+  const [, setTick] = React.useState(0);
+  React.useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 60000);
+    return () => clearInterval(id);
+  }, []);
+
   const est = estadoApertura(tramos);
   if (est.abierto) {
     return (
       <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
-        <span className="dot green" /> Abierto · cierra {est.hora}
+        <span className="dot dot-live" /> Abierto · cierra {est.hora}
       </div>);
   }
   return (
     <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
-      <span className="dot" style={{ background: '#aaafa3' }} /> Cerrado · abre {est.hora}
+      <span className="dot dot-closed" /> Cerrado · abre {est.hora}
     </div>);
 }
 
