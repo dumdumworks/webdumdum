@@ -247,10 +247,10 @@ img { display: block; max-width: 100%; }
 
 /* ---------- Instagram embed (galería Redes) ---------- */
 /* El embed de Instagram necesita altura suficiente para mostrar
-   el vídeo y las interacciones (likes, etc.) sin recortes. */
+   la cabecera, el vídeo y las interacciones (likes, etc.) completas. */
 .ig-slot {
   aspect-ratio: auto;
-  height: 640px;
+  height: 720px;
   overflow: hidden;
   background: var(--bg);
 }
@@ -261,5 +261,5 @@ img { display: block; max-width: 100%; }
   display: block;
 }
 @media (max-width: 640px) {
-  .ig-slot { height: 560px; }
+  .ig-slot { height: 680px; }
 }

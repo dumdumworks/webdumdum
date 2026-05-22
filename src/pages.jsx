@@ -818,7 +818,7 @@ function PrensaSlider() {
   const fallback = Array.from({ length: 6 }, () => ({ src: null, pos: "50% 50%", url: "" }));
   const photos = data.gallery && data.gallery.prensa || fallback;
   return (
-    <GallerySlider photos={photos} visible={2} label="Prensa" placeholderLabel="Noticia" cta="Ver noticia →" />);
+    <GallerySlider photos={photos} visible={2} label="Prensa" placeholderLabel="Noticia" cta="Ver noticia →" ratio="3 / 4" />);
 
 }
 
