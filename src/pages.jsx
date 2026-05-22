@@ -809,6 +809,7 @@ function PrensaSlider() {
 function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLabel = "Espacio", cta = null, ratio = "4 / 3" }) {
   const total = photos.length;
   const [idx, setIdx] = React.useState(0);
+  const [lightbox, setLightbox] = React.useState(null); // índice de foto ampliada, o null
 
   if (total === 0) {
     return (
@@ -850,7 +851,8 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
         {slice.map(({ item, n }, i) =>
         <div className="ev-slider-slot" key={`${idx}-${i}`} style={{ aspectRatio: ratio }}>
             {item.src ?
-          <img src={item.src} alt="" style={{ objectPosition: item.pos || "50% 50%" }} /> :
+          <img src={item.src} alt="" style={{ objectPosition: item.pos || "50% 50%", cursor: "zoom-in" }}
+            onClick={() => setLightbox((idx + i) % total)} /> :
 
           <div className="ev-slider-ph">
                 <span>[ {placeholderLabel} · {String(n).padStart(2, "0")} ]</span>
@@ -868,11 +870,63 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
           </div>
         )}
       </div>
+      <Lightbox
+        photos={photos}
+        index={lightbox}
+        label={label}
+        onClose={() => setLightbox(null)}
+        onNav={(d) => setLightbox((p) => (p + d + total) % total)}
+      />
     </div>);
 
 }
 
-// ── EventosForm ───────────────────────────────────────────────
+// ── Lightbox · visor de galería ampliada ──────────────────────
+// Se abre al hacer clic en una foto. Navega con flechas, se cierra
+// con la X, con clic en el fondo y con la tecla Escape. Respeta el
+// diseño del sitio (rojo, mono, transiciones suaves).
+function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
+  const open = index !== null && index !== undefined;
+
+  React.useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowLeft") onNav(-1);
+      else if (e.key === "ArrowRight") onNav(1);
+    };
+    document.addEventListener("keydown", onKey);
+    // Bloquear el scroll del fondo mientras está abierto
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open, onClose, onNav]);
+
+  if (!open) return null;
+  const total = photos.length;
+  const item = photos[index] || {};
+
+  return (
+    <div className="lb-overlay" onClick={onClose}>
+      <div className="lb-head" onClick={(e) => e.stopPropagation()}>
+        <span className="tiny">{label} · {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
+        <button className="lb-close" onClick={onClose} aria-label="Cerrar">✕</button>
+      </div>
+
+      <button className="lb-nav lb-prev" onClick={(e) => { e.stopPropagation(); onNav(-1); }} aria-label="Anterior">←</button>
+
+      <div className="lb-stage" onClick={(e) => e.stopPropagation()}>
+        {item.src &&
+          <img src={item.src} alt="" style={{ objectPosition: item.pos || "50% 50%" }} />}
+      </div>
+
+      <button className="lb-nav lb-next" onClick={(e) => { e.stopPropagation(); onNav(1); }} aria-label="Siguiente">→</button>
+    </div>);
+
+}
 // Formulario de contacto para Eventos. Envía un POST a un endpoint
 // de Formspree (https://formspree.io/) — gratis hasta 50 emails/mes.
 // Si el endpoint no está configurado, abre la app de mail del usuario

@@ -184,3 +184,65 @@ img { display: block; max-width: 100%; }
 .reveal.in { opacity: 1; transform: none; }
 
 /* ---------- Mobile menu (carta) styles in separate block ---------- */
+
+/* ---------- Lightbox · visor de galería ampliada ---------- */
+.lb-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(20, 0, 3, 0.92);
+  display: flex; align-items: center; justify-content: center;
+  padding: 64px 24px;
+  animation: lb-fade .28s ease;
+}
+@keyframes lb-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.lb-head {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px var(--gutter);
+  color: var(--bg);
+}
+.lb-head .tiny { color: var(--bg); opacity: 0.85; }
+.lb-close {
+  width: 40px; height: 40px; border-radius: 999px;
+  border: 1px solid rgba(255,250,243,0.5);
+  color: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1;
+  transition: background .18s ease, color .18s ease, border-color .18s ease;
+}
+.lb-close:hover { background: var(--bg); color: var(--ink); border-color: var(--bg); }
+
+.lb-stage {
+  max-width: min(1100px, 92vw);
+  max-height: 82vh;
+  display: flex; align-items: center; justify-content: center;
+  animation: lb-pop .3s cubic-bezier(.2,.7,.2,1);
+}
+@keyframes lb-pop { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+.lb-stage img {
+  max-width: 100%; max-height: 82vh;
+  width: auto; height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid rgba(255,0,30,0.6);
+}
+
+.lb-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 52px; height: 52px; border-radius: 999px;
+  border: 1px solid rgba(255,250,243,0.5);
+  color: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; line-height: 1;
+  transition: background .18s ease, color .18s ease, border-color .18s ease;
+}
+.lb-nav:hover { background: var(--bg); color: var(--ink); border-color: var(--bg); }
+.lb-prev { left: 18px; }
+.lb-next { right: 18px; }
+
+@media (max-width: 640px) {
+  .lb-overlay { padding: 56px 8px; }
+  .lb-nav { width: 42px; height: 42px; font-size: 16px; }
+  .lb-prev { left: 8px; }
+  .lb-next { right: 8px; }
+}
