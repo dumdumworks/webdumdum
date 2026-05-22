@@ -732,13 +732,13 @@ function RedesSlider() {
   const prev = () => setIdx((i) => (i - 1 + total) % total);
   const next = () => setIdx((i) => (i + 1) % total);
 
-  const slice = Array.from({ length: 3 }, (_, i) => ({
+  const slice = Array.from({ length: 2 }, (_, i) => ({
     item: items[(idx + i) % total],
     n: (idx + i) % total + 1
   }));
 
   return (
-    <div className="ev-slider ev-slider-cols-3">
+    <div className="ev-slider ev-slider-cols-2">
       <div className="ev-slider-head">
         <div className="tiny muted">Reels · {String(idx + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</div>
         <div className="ev-slider-ctrls">
@@ -748,7 +748,7 @@ function RedesSlider() {
       </div>
       <div className="ev-slider-track">
         {slice.map(({ item, n }, i) =>
-        <div className="ev-slider-slot" key={`${idx}-${i}`} style={{ aspectRatio: "9 / 16" }}>
+        <div className="ev-slider-slot ig-slot" key={`${idx}-${i}`}>
             <ReelEmbed url={item.url} placeholderN={n} />
           </div>
         )}
@@ -771,24 +771,14 @@ function ReelEmbed({ url, placeholderN }) {
     embed = embed.replace(/\?.*$/, "").replace(/\/?$/, "/embed/");
   }
   return (
-    <React.Fragment>
-      <iframe
-        src={embed}
-        title={`Reel ${placeholderN}`}
-        style={{ width: "100%", height: "100%", border: 0, display: "block" }}
-        allow="encrypted-media; picture-in-picture; clipboard-write"
-        allowFullScreen
-        scrolling="no"
-        loading="lazy" />
-      
-      <a className="ev-slider-cta"
-      href={url}
-      target="_blank"
-      rel="noreferrer"
-      style={{ left: "auto", right: 10 }}>
-        Ver en Instagram →
-      </a>
-    </React.Fragment>);
+    <iframe
+      src={embed}
+      title={`Reel ${placeholderN}`}
+      className="ig-embed"
+      allow="encrypted-media; picture-in-picture; clipboard-write"
+      allowFullScreen
+      scrolling="no"
+      loading="lazy" />);
 
 }
 
@@ -828,7 +818,7 @@ function PrensaSlider() {
   const fallback = Array.from({ length: 6 }, () => ({ src: null, pos: "50% 50%", url: "" }));
   const photos = data.gallery && data.gallery.prensa || fallback;
   return (
-    <GallerySlider photos={photos} visible={3} label="Prensa" placeholderLabel="Noticia" cta="Ver noticia →" ratio="2 / 3" />);
+    <GallerySlider photos={photos} visible={2} label="Prensa" placeholderLabel="Noticia" cta="Ver noticia →" />);
 
 }
 

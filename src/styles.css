@@ -244,3 +244,22 @@ img { display: block; max-width: 100%; }
   .lb-prev { left: 8px; }
   .lb-next { right: 8px; }
 }
+
+/* ---------- Instagram embed (galería Redes) ---------- */
+/* El embed de Instagram necesita altura suficiente para mostrar
+   el vídeo y las interacciones (likes, etc.) sin recortes. */
+.ig-slot {
+  aspect-ratio: auto;
+  height: 640px;
+  overflow: hidden;
+  background: var(--bg);
+}
+.ig-embed {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+@media (max-width: 640px) {
+  .ig-slot { height: 560px; }
+}
