@@ -484,21 +484,8 @@ function tagClass(t) {
 }
 
 // ── GoogleReviews ─────────────────────────────────────────────
-// Reflejo visual de las reseñas de Google: logo "G", estrellas
-// proporcionales, puntuación numérica y nº de reseñas. Los datos
-// son props — en producción se actualizarían desde Google Places API.
-function GoogleReviews({ rating, count, href }) {
-  // 5 estrellas con relleno proporcional a `rating/5`
-  const stars = [];
-  for (let i = 0; i < 5; i++) {
-    const fillPct = Math.max(0, Math.min(1, rating - i)) * 100;
-    stars.push(
-      <span key={i} className="grv-star">
-        <span className="grv-star-fill" style={{ width: fillPct + "%" }}>★</span>
-        <span className="grv-star-empty">★</span>
-      </span>
-    );
-  }
+// Enlace a las reseñas de Google del local (sin puntuación ni estrellas).
+function GoogleReviews({ href }) {
   return (
     <a className="grv" href={href || "#"} target={href ? "_blank" : undefined} rel="noreferrer" onClick={(e) => {if (!href) e.preventDefault();}}>
       <span className="grv-g" aria-label="Google">
@@ -509,15 +496,46 @@ function GoogleReviews({ rating, count, href }) {
           <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.84-2.2c-.76.53-1.78.9-3.12.9-2.38 0-4.4-1.57-5.12-3.74L.97 13.04C2.45 15.98 5.48 18 9 18z" />
         </svg>
       </span>
-      <span className="grv-rating">{rating.toFixed(1)}</span>
-      <span className="grv-stars">{stars}</span>
-      <span className="grv-count">{count.toLocaleString("es-ES")} reseñas</span>
+      <span className="grv-count">Ver reseñas</span>
       <span className="grv-arrow">↗</span>
     </a>);
 
 }
 
 // ── LOCALES ───────────────────────────────────────────────────
+// Calcula si el local está abierto AHORA según sus tramos horarios.
+// tramos = [[inicioMin, finMin], ...] en minutos desde medianoche.
+function estadoApertura(tramos) {
+  const now = new Date();
+  const min = now.getHours() * 60 + now.getMinutes();
+  const fmt = (m) => `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
+  for (let i = 0; i < tramos.length; i++) {
+    if (min >= tramos[i][0] && min < tramos[i][1]) {
+      return { abierto: true, hora: fmt(tramos[i][1]) };
+    }
+  }
+  for (let i = 0; i < tramos.length; i++) {
+    if (min < tramos[i][0]) {
+      return { abierto: false, hora: fmt(tramos[i][0]) };
+    }
+  }
+  return { abierto: false, hora: fmt(tramos[0][0]) };
+}
+
+function EstadoLocal({ tramos }) {
+  const est = estadoApertura(tramos);
+  if (est.abierto) {
+    return (
+      <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
+        <span className="dot green" /> Abierto · cierra {est.hora}
+      </div>);
+  }
+  return (
+    <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
+      <span className="dot" style={{ background: '#aaafa3' }} /> Cerrado · abre {est.hora}
+    </div>);
+}
+
 function Locales() {
   return (
     <div data-screen-label="locales">
@@ -529,13 +547,11 @@ function Locales() {
       <div className="locales">
         <div className="locale-card">
           <div>
-            <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
-              <span className="dot green" /> Abierto · turno comida
-            </div>
+            <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
             <h2>Chamberí.</h2>
             <div className="tiny muted" style={{ marginTop: 8 }}>Local original · desde DOSMIL24</div>
 
-            <GoogleReviews rating={4.9} count={1283} href="https://share.google/tkyjRkXEkUi6xBLre" />
+            <GoogleReviews href="https://share.google/tkyjRkXEkUi6xBLre" />
 
             <div className="info">
               <b>Dirección</b><div>Blasco de Garay, 10 · 28015 Madrid</div>
@@ -546,18 +562,23 @@ function Locales() {
             </div>
           </div>
 
-          <div className="map-placeholder">Plano · Chamberí</div>
+          <div className="locale-map">
+            <iframe
+              title="Mapa Chamberí"
+              src="https://www.google.com/maps?q=DUM+DUM+Blasco+de+Garay+10+Madrid&output=embed"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              style={{ width: "100%", height: "100%", border: 0 }} />
+          </div>
         </div>
 
         <div className="locale-card">
           <div>
-            <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
-              <span className="dot" style={{ background: '#aaafa3' }} /> Cerrado · abre 20.00
-            </div>
+            <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
             <h2>Tetuán.</h2>
             <div className="tiny muted" style={{ marginTop: 8 }}>SEGUNDO LOCAL · DESDE DOSMIL26</div>
 
-            <GoogleReviews rating={4.9} count={214} href="https://share.google/DuIH6Qa9EkwE0Or30" />
+            <GoogleReviews href="https://share.google/DuIH6Qa9EkwE0Or30" />
 
             <div className="info">
               <b>Dirección</b><div>Infanta Mercedes, 17 · 28020 Madrid</div>
@@ -572,7 +593,14 @@ function Locales() {
             </a>
           </div>
 
-          <div className="map-placeholder">Plano · Tetuán</div>
+          <div className="locale-map">
+            <iframe
+              title="Mapa Tetuán"
+              src="https://www.google.com/maps?q=DUM+DUM+Infanta+Mercedes+17+Madrid&output=embed"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              style={{ width: "100%", height: "100%", border: 0 }} />
+          </div>
         </div>
       </div>
 
