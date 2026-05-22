@@ -636,8 +636,9 @@ function UniversoSlider() {
     };
   }, []);
 
-  const fallback = [{ src: null }, { src: null }, { src: null }, { src: null }];
-  const items = data.gallery && data.gallery.universo || fallback;
+  const fallback = [{ youtube: "" }, { youtube: "" }, { youtube: "" }];
+  const uni = data.gallery && data.gallery.universo;
+  const items = uni && uni.length > 0 ? uni : fallback;
   const total = items.length;
   const visible = 1;
   const [idx, setIdx] = React.useState(0);
@@ -662,26 +663,52 @@ function UniversoSlider() {
       <div className="ev-slider-track">
         {slice.map(({ item, n }, i) =>
         <div className="ev-slider-slot" key={`${idx}-${i}`} style={{ aspectRatio: "16 / 9" }}>
-            {item.src ?
-          <video
-            src={item.src}
-            muted
-            playsInline
-            loop
-            autoPlay
-            controls
-            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} /> :
-
-
-          <div className="ev-slider-ph">
-                <span>[ Vídeo · {String(n).padStart(2, "0")} ]</span>
-              </div>
-          }
+            <YouTubeEmbed url={item.youtube || item.url} placeholderN={n} />
           </div>
         )}
       </div>
     </div>);
 
+}
+
+// ── YouTubeEmbed · convierte una URL de YouTube en iframe ─────
+// Acepta enlaces tipo youtube.com/watch?v=ID, youtu.be/ID,
+// youtube.com/shorts/ID o youtube.com/embed/ID.
+function YouTubeEmbed({ url, placeholderN }) {
+  const id = getYouTubeId(url);
+  if (!id) {
+    return (
+      <div className="ev-slider-ph">
+        <span>[ Vídeo · {String(placeholderN).padStart(2, "0")} ]</span>
+      </div>);
+
+  }
+  return (
+    <iframe
+      src={`https://www.youtube.com/embed/${id}`}
+      title={`Universo ${placeholderN}`}
+      style={{ width: "100%", height: "100%", border: 0, display: "block" }}
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowFullScreen
+      loading="lazy" />);
+
+}
+
+function getYouTubeId(url) {
+  if (!url) return null;
+  var s = String(url).trim();
+  // youtu.be/ID
+  var m = s.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/);
+  if (m) return m[1];
+  // youtube.com/watch?v=ID
+  m = s.match(/[?&]v=([A-Za-z0-9_-]{6,})/);
+  if (m) return m[1];
+  // youtube.com/shorts/ID  o  /embed/ID
+  m = s.match(/\/(?:shorts|embed)\/([A-Za-z0-9_-]{6,})/);
+  if (m) return m[1];
+  // Si pegan solo el ID
+  if (/^[A-Za-z0-9_-]{6,}$/.test(s)) return s;
+  return null;
 }
 
 // ── RedesSlider · 6 reels de Instagram, 3 visibles, embed 9:16 ─
