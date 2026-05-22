@@ -70,8 +70,8 @@ img { display: block; max-width: 100%; }
 
 /* ---------- Layout helpers ---------- */
 .shell { padding: 0 var(--gutter); }
-.hr { height: 2px; background: var(--line); width: 100%; }
-.hr-soft { height: 2px; background: var(--line-soft); width: 100%; }
+.hr { height: 1px; background: var(--line); width: 100%; }
+.hr-soft { height: 1px; background: var(--line-soft); width: 100%; }
 
 .row { display: flex; align-items: center; }
 .between { justify-content: space-between; }
@@ -83,7 +83,7 @@ img { display: block; max-width: 100%; }
 .topbar {
   position: sticky; top: 0; z-index: 50;
   background: var(--bg);
-  border-bottom: 2px solid var(--line);
+  border-bottom: 1px solid var(--line);
   padding: 14px var(--gutter);
   display: flex; align-items: center; justify-content: space-between;
   font-family: var(--font-mono); text-transform: uppercase; font-weight: 600;
@@ -109,7 +109,7 @@ img { display: block; max-width: 100%; }
 .btn {
   display: inline-flex; align-items: center; gap: 10px;
   padding: 14px 18px;
-  border: 2px solid var(--line);
+  border: 1px solid var(--line);
   border-radius: 999px;
   font-family: var(--font-mono); text-transform: uppercase; font-weight: 600;
   font-size: 12px;
@@ -128,7 +128,7 @@ img { display: block; max-width: 100%; }
   padding: 0.32em 0.7em 0.36em;
   background: var(--bg);
   color: var(--ink);
-  border: 2px solid var(--line);
+  border: 1px solid var(--line);
   border-radius: 999px;
   font-family: var(--font-mono); text-transform: uppercase;
   font-size: 0.28em;
@@ -176,7 +176,7 @@ img { display: block; max-width: 100%; }
 }
 .loader-word .amp { color: var(--red); font-weight: 400; font-style: italic; }
 .loader-count { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 13px; letter-spacing: 0.08em; }
-.loader-bar { height: 2px; background: var(--line-soft); position: relative; margin: 18px 0; }
+.loader-bar { height: 1px; background: var(--line-soft); position: relative; margin: 18px 0; }
 .loader-bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); }
 
 /* ---------- Reveal anim ---------- */
