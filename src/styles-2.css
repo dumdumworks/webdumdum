@@ -763,9 +763,9 @@
 }
 .locale-card:last-child { border-right: none; }
 .locale-card h2 { font-family: var(--font-display); font-weight: 500; font-size: clamp(40px, 5vw, 72px); letter-spacing: -0.035em; line-height: 0.92; }
-.locale-card .info { display: grid; grid-template-columns: 110px 1fr; gap: 8px 14px; margin-top: 24px; font-family: var(--font-display); font-weight: 500; font-size: 13px; letter-spacing: 0.02em; }
+.locale-card .info { display: grid; grid-template-columns: 110px 1fr; gap: 8px 14px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); font-family: var(--font-display); font-weight: 500; font-size: 13px; letter-spacing: 0.02em; }
 .locale-card > div > .tiny.muted { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; letter-spacing: 0; }
-.locale-card .info b { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; letter-spacing: 0; color: rgba(255,0,30,0.55); }
+.locale-card .info b { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0; color: rgba(255,0,30,0.55); }
 
 /* ---------- Google Reviews badge ---------- */
 .grv {
@@ -848,7 +848,6 @@
   display: block;
   width: 100%;
   height: 100%;
-  filter: grayscale(0.4) sepia(0.5) hue-rotate(-18deg) saturate(2.4) contrast(1.05);
 }
 
 /* ---------- EVENTOS ---------- */
