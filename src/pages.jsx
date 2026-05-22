@@ -524,19 +524,22 @@ function estadoApertura(tramos) {
     const now = new Date();
     min = now.getHours() * 60 + now.getMinutes();
   }
-  const fmt = (m) => `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
+  const fmt = (m) => `${String(Math.floor(m / 60)).padStart(2, "0")}.${String(m % 60).padStart(2, "0")}`;
   for (let i = 0; i < tramos.length; i++) {
     if (min >= tramos[i][0] && min < tramos[i][1]) {
       return { abierto: true, hora: fmt(tramos[i][1]) };
     }
   }
+  // Cerrado: ¿queda algún tramo hoy? → abre "hoy"; si no → "mañana"
   for (let i = 0; i < tramos.length; i++) {
     if (min < tramos[i][0]) {
-      return { abierto: false, hora: fmt(tramos[i][0]) };
+      return { abierto: false, hora: fmt(tramos[i][0]), cuando: "hoy" };
     }
   }
-  return { abierto: false, hora: fmt(tramos[0][0]) };
+  return { abierto: false, hora: fmt(tramos[0][0]), cuando: "mañana" };
 }
+// Disponible globalmente para que la TopBar (ui.jsx) la use también
+window.estadoApertura = estadoApertura;
 
 function EstadoLocal({ tramos }) {
   // Recalcula el estado cada minuto para mantenerlo al día sin recargar.
@@ -550,12 +553,16 @@ function EstadoLocal({ tramos }) {
   if (est.abierto) {
     return (
       <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
-        <span className="dot dot-live" /> Abierto · cierra {est.hora}
+        <span className="dot dot-live" /> Abierto · cierra {est.hora}h
       </div>);
   }
+  // Frase natural según cuándo vuelve a abrir
+  const frase = est.cuando === "mañana"
+    ? `Abrimos mañana a las ${est.hora}h`
+    : `Abrimos esta noche a las ${est.hora}h`;
   return (
     <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
-      <span className="dot dot-closed" /> Cerrado · abre {est.hora}
+      <span className="dot dot-closed" /> {frase}
     </div>);
 }
 

@@ -20,12 +20,50 @@ function nav(path) {
 }
 
 // ─── Top bar ──────────────────────────────────────────────────
+// Cálculo de apertura propio (autosuficiente, no depende de pages.jsx),
+// usando SIEMPRE la hora de Madrid.
+function calcAperturaTopbar(tramos) {
+  let min;
+  try {
+    const partes = new Intl.DateTimeFormat("es-ES", {
+      timeZone: "Europe/Madrid", hour: "2-digit", minute: "2-digit", hour12: false
+    }).formatToParts(new Date());
+    const h = parseInt(partes.find((p) => p.type === "hour").value, 10);
+    const m = parseInt(partes.find((p) => p.type === "minute").value, 10);
+    min = (h % 24) * 60 + m;
+  } catch (e) {
+    const now = new Date();
+    min = now.getHours() * 60 + now.getMinutes();
+  }
+  const fmt = (m) => `${String(Math.floor(m / 60)).padStart(2, "0")}.${String(m % 60).padStart(2, "0")}`;
+  for (let i = 0; i < tramos.length; i++) {
+    if (min >= tramos[i][0] && min < tramos[i][1]) {
+      return { abierto: true, hora: fmt(tramos[i][1]) };
+    }
+  }
+  for (let i = 0; i < tramos.length; i++) {
+    if (min < tramos[i][0]) {
+      return { abierto: false, hora: fmt(tramos[i][0]) };
+    }
+  }
+  return { abierto: false, hora: fmt(tramos[0][0]) };
+}
+
 function TopBar({ route }) {
   const links = [
   { p: "/menu", label: "Carta" },
   { p: "/locales", label: "Locales" },
   { p: "/eventos", label: "Eventos" },
   { p: "/contacto", label: "Contacto" }];
+
+  // Estado de apertura, recalculado cada minuto
+  const TRAMOS = [[780, 939], [1200, 1359]];
+  const [, setTick] = React.useState(0);
+  React.useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 60000);
+    return () => clearInterval(id);
+  }, []);
+  const est = calcAperturaTopbar(TRAMOS);
 
   return (
     <header className="topbar" data-screen-label="top-bar">
@@ -39,7 +77,9 @@ function TopBar({ route }) {
       </nav>
       <div className="right">
         <span className="row gap-s">
-          <span className="dot green" /> Abierto · 13.00–15.39
+          {est.abierto ?
+          <React.Fragment><span className="dot dot-live" /> Abierto hasta las {est.hora}h</React.Fragment> :
+          <React.Fragment><span className="dot dot-closed" /> Cerrado hasta las {est.hora}h</React.Fragment>}
         </span>
       </div>
     </header>);
