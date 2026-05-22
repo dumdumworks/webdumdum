@@ -33,6 +33,10 @@
       "pos": "50% 50%"
     },
     {
+      "src": "/img/espacio/Captura de pantalla 2026-05-22 a las 12.10.32 p. m..png",
+      "pos": "50% 50%"
+    },
+    {
       "src": "img/espacio/10-detalle-mesa.jpg",
       "pos": "50% 50%"
     },
@@ -71,6 +75,10 @@
       "pos": "50% 50%"
     },
     {
+      "src": "/img/dumplings/Captura de pantalla 2026-05-22 a las 12.10.44 p. m..png",
+      "pos": "50% 50%"
+    },
+    {
       "src": "img/dumplings/sweet.jpg",
       "pos": "50% 50%"
     },
@@ -103,7 +111,14 @@
     },
     {
       "url": "https://www.instagram.com/p/DYC2JJqtDoN/"
+    },
+    {
+      "url": "https://www.instagram.com/reel/DUnjAlYDCsR/"
     }
   ],
-  "universo": []
+  "universo": [
+    {
+      "youtube": "https://www.youtube.com/watch?v=8q1FgwlttY8"
+    }
+  ]
 }
