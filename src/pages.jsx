@@ -811,17 +811,6 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
   const [idx, setIdx] = React.useState(0);
   const [lightbox, setLightbox] = React.useState(null); // índice de foto ampliada, o null
 
-  // Precargar todas las fotos de la galería en segundo plano, para que
-  // al abrir el lightbox la imagen grande aparezca al instante (sin tirón).
-  React.useEffect(() => {
-    photos.forEach((p) => {
-      if (p && p.src) {
-        const im = new Image();
-        im.src = p.src;
-      }
-    });
-  }, [photos]);
-
   if (total === 0) {
     return (
       <div className="ev-slider">
@@ -862,7 +851,7 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
         {slice.map(({ item, n }, i) =>
         <div className="ev-slider-slot" key={`${idx}-${i}`} style={{ aspectRatio: ratio }}>
             {item.src ?
-          <img src={item.src} alt="" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
+          <img src={item.src} alt="" loading="lazy" decoding="async" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
             onClick={() => setLightbox((idx + i) % total)} /> :
 
           <div className="ev-slider-ph">
@@ -922,14 +911,13 @@ function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
     };
   }, [open, onClose, onNav]);
 
-  if (!open) return null;
   const total = photos.length;
-  const item = photos[index] || {};
+  const item = (open && photos[index]) || {};
 
   return (
-    <div className="lb-overlay" onClick={onClose}>
+    <div className={`lb-overlay${open ? " is-open" : ""}`} onClick={onClose} aria-hidden={!open}>
       <div className="lb-head" onClick={(e) => e.stopPropagation()}>
-        <span className="tiny">{label} · {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
+        <span className="tiny">{label} · {String((index || 0) + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
         <button className="lb-close" onClick={onClose} aria-label="Cerrar">✕</button>
       </div>
 
@@ -937,7 +925,7 @@ function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
 
       <div className="lb-stage" onClick={(e) => e.stopPropagation()}>
         {item.src &&
-          <img key={index} src={item.src} alt="" className="lb-img" style={{ objectPosition: item.pos || "50% 50%" }} />}
+          <img src={item.src} alt="" className="lb-img" style={{ objectPosition: item.pos || "50% 50%" }} />}
       </div>
 
       <button className="lb-nav lb-next" onClick={(e) => { e.stopPropagation(); onNav(1); }} aria-label="Siguiente">→</button>
