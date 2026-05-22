@@ -259,10 +259,10 @@ function loadMenu() {
       // Forzar que sections venga EXACTAMENTE del menu publicado,
       // sin restos del menu viejo del codigo.
       merged.sections = window.PUBLISHED_MENU.sections;
-      // Si el menu publicado trae galerias, esas mandan (editables
-      // desde Sveltia). Si no, se mantienen las del codigo (data.jsx).
-      if (window.PUBLISHED_MENU.gallery) {
-        merged.gallery = Object.assign({}, INITIAL_MENU.gallery, window.PUBLISHED_MENU.gallery);
+      // Galerias: vienen de galerias.json (editable en Sveltia). Cada
+      // galeria presente ahi manda; las que falten usan las del codigo.
+      if (window.PUBLISHED_GALLERY) {
+        merged.gallery = Object.assign({}, INITIAL_MENU.gallery, window.PUBLISHED_GALLERY);
       }
       return merged;
     }
