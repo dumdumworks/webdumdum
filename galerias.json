@@ -87,5 +87,23 @@
       "pos": "50% 50%"
     }
   ],
-  "prensa": []
+  "prensa": [],
+  "redes": [
+    {
+      "url": "https://www.instagram.com/reel/DEvEUOst0Wa/"
+    },
+    {
+      "url": "https://www.instagram.com/reel/DD4QwTxNkiT/"
+    },
+    {
+      "url": "https://www.instagram.com/p/DIG4_ssMih8/"
+    },
+    {
+      "url": "https://www.instagram.com/reel/DJR2Oe5i8Oz/"
+    },
+    {
+      "url": "https://www.instagram.com/p/DYC2JJqtDoN/"
+    }
+  ],
+  "universo": []
 }
