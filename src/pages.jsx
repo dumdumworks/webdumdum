@@ -811,6 +811,17 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
   const [idx, setIdx] = React.useState(0);
   const [lightbox, setLightbox] = React.useState(null); // índice de foto ampliada, o null
 
+  // Precargar todas las fotos de la galería en segundo plano, para que
+  // al abrir el lightbox la imagen grande aparezca al instante (sin tirón).
+  React.useEffect(() => {
+    photos.forEach((p) => {
+      if (p && p.src) {
+        const im = new Image();
+        im.src = p.src;
+      }
+    });
+  }, [photos]);
+
   if (total === 0) {
     return (
       <div className="ev-slider">
@@ -851,7 +862,7 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
         {slice.map(({ item, n }, i) =>
         <div className="ev-slider-slot" key={`${idx}-${i}`} style={{ aspectRatio: ratio }}>
             {item.src ?
-          <img src={item.src} alt="" style={{ objectPosition: item.pos || "50% 50%", cursor: "zoom-in" }}
+          <img src={item.src} alt="" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
             onClick={() => setLightbox((idx + i) % total)} /> :
 
           <div className="ev-slider-ph">
