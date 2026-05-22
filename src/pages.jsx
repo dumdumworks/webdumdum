@@ -990,14 +990,27 @@ function EventosForm() {
     setState("sending");
     setErrMsg("");
 
+    // Identificador de la solicitud: AA/MM/CODIGO (ej: 26/05/A7F3)
+    const now = new Date();
+    const yy = String(now.getFullYear()).slice(-2);
+    const mm = String(now.getMonth() + 1).padStart(2, "0");
+    const code = (function () {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sin caracteres confusos
+      let s = "";
+      for (let i = 0; i < 4; i++) s += chars[Math.floor(Math.random() * chars.length)];
+      return s;
+    })();
+    const ref = `${yy}/${mm}/${code}`;
+
     try {
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Accept": "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({
           access_key: WEB3FORMS_KEY,
-          subject: `Solicitud Eventos — ${form.nombre}`,
+          subject: `Nueva solicitud de evento · ${ref}`,
           from_name: "Web DUM DUM · Eventos",
+          "Referencia": ref,
           "Nombre y apellido": form.nombre,
           "Empresa": form.empresa,
           "Email de contacto": form.email,
