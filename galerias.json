@@ -43,6 +43,14 @@
     {
       "src": "img/espacio/12-suelo-barra-alta.jpg",
       "pos": "50% 50%"
+    },
+    {
+      "src": "/img/espacio/Captura de pantalla 2026-05-22 a las 12.24.27 p. m..png",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "",
+      "pos": "50% 50%"
     }
   ],
   "producto": [
@@ -84,6 +92,10 @@
     },
     {
       "src": "img/dumplings/honey.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "/img/dumplings/Captura de pantalla 2026-05-22 a las 12.24.45 p. m..png",
       "pos": "50% 50%"
     }
   ],
