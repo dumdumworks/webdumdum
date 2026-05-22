@@ -1,59 +1,24 @@
 # ───────────────────────────────────────────────────────────
-# Configuracion de Sveltia CMS para la carta de DUM DUM
-# Edita el archivo menu.json del repositorio.
+# Configuracion de Sveltia CMS para DUM DUM
+# Edita menu.json (la carta) y galerias.json (imagenes de eventos).
 # ───────────────────────────────────────────────────────────
 backend:
   name: github
-  repo: dumdumworks/webdumdum   # <-- usuario/repositorio de GitHub
+  repo: dumdumworks/webdumdum
   branch: main
 
-# Donde se guardan las fotos que subas desde el editor
-media_folder: "img/dumplings"     # carpeta real en el repo
-public_folder: "img/dumplings"    # ruta que se escribe en los datos
+media_folder: "img/dumplings"
+public_folder: "img/dumplings"
 
 collections:
-  - name: "carta"
-    label: "Carta"
+  - name: "galeria-imagenes"
+    label: "Galería de Imágenes"
     files:
-      - name: "menu"
-        label: "Menu completo"
+      - name: "carta"
+        label: "Carta"
         file: "menu.json"
         fields:
           - { name: "updated", label: "Texto 'ultima actualizacion'", widget: "string", required: false }
-          # ── GALERIAS (Eventos): Espacio, Producto y Prensa ──
-          - name: "gallery"
-            label: "Galerías de Eventos (Espacio · Producto · Prensa)"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "espacio"
-                label: "Galería · Espacio"
-                widget: "list"
-                label_singular: "Foto"
-                summary: "{{fields.src}}"
-                required: false
-                fields:
-                  - { name: "src", label: "Foto", widget: "image", required: false, media_folder: "/img/espacio", public_folder: "img/espacio" }
-                  - { name: "pos", label: "Encuadre (avanzado, dejar 50% 50%)", widget: "string", required: false, default: "50% 50%" }
-              - name: "producto"
-                label: "Galería · Producto"
-                widget: "list"
-                label_singular: "Foto"
-                summary: "{{fields.src}}"
-                required: false
-                fields:
-                  - { name: "src", label: "Foto", widget: "image", required: false, media_folder: "/img/dumplings", public_folder: "img/dumplings" }
-                  - { name: "pos", label: "Encuadre (avanzado, dejar 50% 50%)", widget: "string", required: false, default: "50% 50%" }
-              - name: "prensa"
-                label: "Galería · Prensa"
-                widget: "list"
-                label_singular: "Noticia"
-                summary: "{{fields.src}}"
-                required: false
-                fields:
-                  - { name: "src", label: "Foto", widget: "image", required: false, media_folder: "/img/prensa", public_folder: "img/prensa" }
-                  - { name: "url", label: "Enlace a la noticia (https://...)", widget: "string", required: false }
-                  - { name: "pos", label: "Encuadre (avanzado, dejar 50% 50%)", widget: "string", required: false, default: "50% 50%" }
           - name: "sections"
             label: "Secciones"
             widget: "list"
@@ -90,3 +55,52 @@ collections:
                   - { name: "featured", label: "Plato destacado", widget: "boolean", required: false, default: false }
                   - { name: "image", label: "Foto del plato", widget: "image", required: false }
                   - { name: "logo", label: "Logo (avanzado, dejar vacio)", widget: "string", required: false }
+
+      - name: "imagenes-eventos"
+        label: "Imágenes de Eventos"
+        file: "galerias.json"
+        fields:
+          - name: "espacio"
+            label: "Galería · Espacio"
+            widget: "list"
+            label_singular: "Foto"
+            summary: "{{fields.src}}"
+            required: false
+            fields:
+              - { name: "src", label: "Foto", widget: "image", required: false, media_folder: "/img/espacio", public_folder: "img/espacio" }
+              - { name: "pos", label: "Encuadre (avanzado, dejar 50% 50%)", widget: "string", required: false, default: "50% 50%" }
+          - name: "producto"
+            label: "Galería · Producto"
+            widget: "list"
+            label_singular: "Foto"
+            summary: "{{fields.src}}"
+            required: false
+            fields:
+              - { name: "src", label: "Foto", widget: "image", required: false, media_folder: "/img/dumplings", public_folder: "img/dumplings" }
+              - { name: "pos", label: "Encuadre (avanzado, dejar 50% 50%)", widget: "string", required: false, default: "50% 50%" }
+          - name: "prensa"
+            label: "Galería · Prensa / Noticias"
+            widget: "list"
+            label_singular: "Noticia"
+            summary: "{{fields.src}}"
+            required: false
+            fields:
+              - { name: "src", label: "Foto de la noticia", widget: "image", required: false, media_folder: "/img/prensa", public_folder: "img/prensa" }
+              - { name: "url", label: "Enlace a la noticia (https://...)", widget: "string", required: false, hint: "Al pulsar 'Ver noticia' se abre este enlace en otra pestana." }
+              - { name: "pos", label: "Encuadre (avanzado, dejar 50% 50%)", widget: "string", required: false, default: "50% 50%" }
+          - name: "redes"
+            label: "Galería · Instagram (Reels)"
+            widget: "list"
+            label_singular: "Reel"
+            summary: "{{fields.url}}"
+            required: false
+            fields:
+              - { name: "url", label: "Enlace del Reel/Post de Instagram", widget: "string", required: false, hint: "Pega la URL completa, ej: https://www.instagram.com/reel/XXXX/" }
+          - name: "universo"
+            label: "Galería · Universo (YouTube)"
+            widget: "list"
+            label_singular: "Video"
+            summary: "{{fields.youtube}}"
+            required: false
+            fields:
+              - { name: "youtube", label: "Enlace de YouTube", widget: "string", required: false, hint: "Pega la URL del video, ej: https://www.youtube.com/watch?v=XXXX o https://youtu.be/XXXX" }
