@@ -456,14 +456,17 @@ function Menu() {
         )}
 
         <div className="menu-foot">
-          <div>Consulta nuestro menú de alérgenos. Si tienes alguna alergia o intolerancia, pregúntanos sin problema: estaremos encantados de ayudarte.</div>
           {/* href="#" PROVISIONAL · cambiar cuando exista el editor/PDF de alérgenos */}
-          <a className="btn" href="#" style={{ marginTop: 16 }}>Menú de alérgenos →</a>
+          <a className="btn menu-foot-btn" href="#">Alérgenos →</a>
+          <div className="menu-foot-text">Si tienes alguna alergia, alguna intolerancia o, simplemente, dudas, pregúntanos, que somos muy majos.</div>
         </div>
 
         {/* Disclaimer palillos · SOLO MOBILE (.menu-chopsticks-note) */}
         <aside className="menu-chopsticks-note">
-          <p><b>¡Por cierto!</b> Tenemos palillos para los que todavía no sepan comer con las manos. Aunque hoy podría ser un buen día para aprender 😉</p>
+          <span className="menu-chopsticks-arrow" aria-hidden="true">→</span>
+          <div className="menu-chopsticks-bubble">
+            <p><b>¡Por cierto!</b> Hay palillos para los que todavía no sepan comer con las manos. Aunque hoy podría ser un buen día para aprender 😉</p>
+          </div>
         </aside>
       </div>
     </div>);

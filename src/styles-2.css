@@ -742,13 +742,22 @@
   margin-top: 40px;
   padding: 24px 0;
   border-top: 1px solid var(--line);
-  font-family: var(--font-mono); text-transform: uppercase; font-weight: 600;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+}
+.menu-foot-btn { flex-shrink: 0; color: var(--red); border-color: var(--red); }
+.menu-foot-text {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  font-weight: 600;
   font-size: 11px;
   letter-spacing: 0.05em;
-  color: rgba(255,0,30,0.55);
-  display: flex; flex-direction: column; gap: 6px;
+  color: var(--red);
+  line-height: 1.5;
 }
-.menu-foot .btn { align-self: flex-start; }
 
 /* Sección visible SOLO en mobile (p. ej. Bebidas) · oculta en desktop */
 .section-mobile-only { display: block; }
@@ -764,13 +773,23 @@
   background: transparent;
   border: none;
 }
-.menu-chopsticks-note p {
+.menu-chopsticks-arrow {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1;
+  text-align: center;
+}
+.menu-chopsticks-bubble {
   position: relative;
   background: var(--bg);
   border: 1.5px solid var(--ink);
   border-radius: 6px;
   padding: 8px 14px;
   max-width: 70%;
+}
+.menu-chopsticks-bubble p {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 400;
@@ -779,9 +798,24 @@
   color: var(--red);
   letter-spacing: -0.005em;
 }
-.menu-chopsticks-note b { font-weight: 700; }
+.menu-chopsticks-bubble b { font-weight: 700; }
 @media (min-width: 880px) {
   .menu-chopsticks-note { display: none; }
+}
+
+/* Vaivén grácil de las flechas · apuntan a la derecha → se mecen en horizontal */
+@keyframes arrowNudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+.menu-disclaimer-arrow,
+.menu-chopsticks-arrow {
+  animation: arrowNudge 1.8s ease-in-out infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-disclaimer-arrow,
+  .menu-chopsticks-arrow { animation: none; }
 }
 
 /* ---------- LOCALES ---------- */
