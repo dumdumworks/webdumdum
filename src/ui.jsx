@@ -65,8 +65,13 @@ function TopBar({ route }) {
   }, []);
   const est = calcAperturaTopbar(TRAMOS);
 
+  // Menú hamburguesa (solo móvil): abierto/cerrado
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  // Al cambiar de página, cerramos el menú
+  React.useEffect(() => { setMenuOpen(false); }, [route]);
+
   return (
-    <header className="topbar" data-screen-label="top-bar">
+    <header className={`topbar ${menuOpen ? "menu-open" : ""}`} data-screen-label="top-bar">
       <a href="#/" className="brand">DUM DUM<sup style={{ fontSize: '0.55em', marginLeft: '2px' }}>™</sup></a>
       <nav className="nav">
         {links.map((l) =>
@@ -82,6 +87,13 @@ function TopBar({ route }) {
           <React.Fragment><span className="dot dot-closed" /> Cerrado. Nos vemos a las {est.hora}h</React.Fragment>}
         </span>
       </div>
+      <button
+        className="topbar-burger"
+        aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+        aria-expanded={menuOpen}
+        onClick={() => setMenuOpen((o) => !o)}>
+        <span /><span /><span />
+      </button>
     </header>);
 
 }

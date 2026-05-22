@@ -98,6 +98,29 @@ img { display: block; max-width: 100%; }
 .topbar .nav { display: flex; gap: 24px; }
 .topbar .brand { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: -0.01em; text-transform: none; }
 .topbar .right { display: flex; gap: 16px; align-items: center; }
+/* Botón hamburguesa · oculto en desktop, visible en móvil (ver responsive) */
+.topbar-burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+.topbar-burger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--red);
+  transition: transform 0.28s ease, opacity 0.28s ease;
+}
+.topbar.menu-open .topbar-burger span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.topbar.menu-open .topbar-burger span:nth-child(2) { opacity: 0; }
+.topbar.menu-open .topbar-burger span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
 .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); display: inline-block; }
 .dot.green { background: #1f8a5b; }
