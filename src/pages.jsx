@@ -729,8 +729,9 @@ function RedesSlider() {
   const total = items.length;
   const [idx, setIdx] = React.useState(0);
 
-  const prev = () => setIdx((i) => (i - 1 + total) % total);
-  const next = () => setIdx((i) => (i + 1) % total);
+  const step = Math.min(2, total);
+  const prev = () => setIdx((i) => (i - step + total) % total);
+  const next = () => setIdx((i) => (i + step) % total);
 
   const slice = Array.from({ length: 2 }, (_, i) => ({
     item: items[(idx + i) % total],
@@ -847,8 +848,9 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
 
   }
 
-  const prev = () => setIdx((i) => (i - 1 + total) % total);
-  const next = () => setIdx((i) => (i + 1) % total);
+  const step = Math.min(visible, total);
+  const prev = () => setIdx((i) => (i - step + total) % total);
+  const next = () => setIdx((i) => (i + step) % total);
 
   const slice = Array.from({ length: Math.min(visible, total) }, (_, i) => ({
     item: photos[(idx + i) % total],
@@ -955,11 +957,11 @@ function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
 // de Formspree (https://formspree.io/) — gratis hasta 50 emails/mes.
 // Si el endpoint no está configurado, abre la app de mail del usuario
 // con todos los datos prerrellenados (mailto fallback).
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/REEMPLAZAR_ID";
+const WEB3FORMS_KEY = "7b16c2a8-ccbd-4c0a-8d29-0562bd8646a0";
 const EVENTOS_EMAIL = "dumdum@dum-dum.es";
 
 function EventosForm() {
-  const [form, setForm] = React.useState({ nombre: "", email: "", telefono: "", fecha: "", mensaje: "" });
+  const [form, setForm] = React.useState({ nombre: "", empresa: "", email: "", telefono: "", fecha: "", asistentes: "", mensaje: "" });
   const [state, setState] = React.useState("idle"); // idle · sending · ok · error
   const [errMsg, setErrMsg] = React.useState("");
 
@@ -969,51 +971,50 @@ function EventosForm() {
     const subject = `Solicitud de información — ${form.nombre || "(sin nombre)"}`;
     const body =
     `Nombre y apellido: ${form.nombre}\n` +
+    `Empresa: ${form.empresa}\n` +
     `Email: ${form.email}\n` +
     `Teléfono: ${form.telefono}\n` +
-    `Fecha aprox.: ${form.fecha}\n\n` +
+    `Fecha: ${form.fecha}\n` +
+    `Número de asistentes: ${form.asistentes}\n\n` +
     `Mensaje:\n${form.mensaje}`;
     window.location.href = `mailto:${EVENTOS_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!form.nombre || !form.email || !form.mensaje) {
+    if (!form.nombre || !form.email || !form.telefono || !form.fecha) {
       setState("error");
-      setErrMsg("Rellena al menos nombre, email y mensaje.");
+      setErrMsg("Rellena los campos obligatorios: nombre, email, teléfono y fecha.");
       return;
     }
     setState("sending");
     setErrMsg("");
 
-    // Si Formspree no está configurado → fallback mailto inmediato
-    if (FORMSPREE_ENDPOINT.endsWith("REEMPLAZAR_ID")) {
-      mailtoFallback();
-      setState("ok");
-      return;
-    }
-
     try {
-      const res = await fetch(FORMSPREE_ENDPOINT, {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Accept": "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({
-          nombre: form.nombre,
-          email: form.email,
-          telefono: form.telefono,
-          fecha: form.fecha,
-          mensaje: form.mensaje,
-          _subject: `Solicitud Eventos — ${form.nombre}`,
-          _replyto: form.email
+          access_key: WEB3FORMS_KEY,
+          subject: `Solicitud Eventos — ${form.nombre}`,
+          from_name: "Web DUM DUM · Eventos",
+          "Nombre y apellido": form.nombre,
+          "Empresa": form.empresa,
+          "Email de contacto": form.email,
+          "Teléfono": form.telefono,
+          "Fecha": form.fecha,
+          "Número de asistentes": form.asistentes,
+          "Mensaje": form.mensaje,
+          replyto: form.email
         })
       });
-      if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
         setState("ok");
-        setForm({ nombre: "", email: "", telefono: "", fecha: "", mensaje: "" });
+        setForm({ nombre: "", empresa: "", email: "", telefono: "", fecha: "", asistentes: "", mensaje: "" });
       } else {
-        const data = await res.json().catch(() => ({}));
         setState("error");
-        setErrMsg(data.error || "No se pudo enviar. Inténtalo de nuevo o escríbenos directamente.");
+        setErrMsg(data.message || "No se pudo enviar. Inténtalo de nuevo o escríbenos directamente.");
       }
     } catch (err) {
       setState("error");
@@ -1038,9 +1039,9 @@ function EventosForm() {
 
   return (
     <form className="ev-form" onSubmit={submit}>
-      <div className="ev-form-row">
+      <div className="ev-form-row ev-form-row-3">
         <label className="ev-field">
-          <span>Nombre y apellido</span>
+          <span>Nombre y apellido *</span>
           <input
             type="text"
             value={form.nombre}
@@ -1049,7 +1050,15 @@ function EventosForm() {
             placeholder="Tu nombre" />
         </label>
         <label className="ev-field">
-          <span>Email</span>
+          <span>Empresa</span>
+          <input
+            type="text"
+            value={form.empresa}
+            onChange={(e) => set("empresa", e.target.value)}
+            placeholder="Tu empresa (opcional)" />
+        </label>
+        <label className="ev-field">
+          <span>Email *</span>
           <input
             type="email"
             value={form.email}
@@ -1059,21 +1068,40 @@ function EventosForm() {
         </label>
       </div>
 
-      <div className="ev-form-row">
+      <div className="ev-form-row ev-form-row-3">
         <label className="ev-field">
-          <span>Teléfono</span>
+          <span>Teléfono *</span>
           <input
             type="tel"
             value={form.telefono}
             onChange={(e) => set("telefono", e.target.value)}
+            required
             placeholder="+34 600 000 000" />
         </label>
         <label className="ev-field">
-          <span>Fecha aproximada</span>
+          <span>Fecha *</span>
           <input
             type="date"
             value={form.fecha}
-            onChange={(e) => set("fecha", e.target.value)} />
+            onChange={(e) => set("fecha", e.target.value)}
+            required />
+        </label>
+        <label className="ev-field">
+          <span>Número de asistentes</span>
+          <select
+            value={form.asistentes}
+            onChange={(e) => set("asistentes", e.target.value)}
+            className="ev-select">
+            <option value="">Selecciona…</option>
+            <option value="Menos de 10">Menos de 10</option>
+            <option value="Entre 10 y 15">Entre 10 y 15</option>
+            <option value="Entre 15 y 20">Entre 15 y 20</option>
+            <option value="Entre 20 y 25">Entre 20 y 25</option>
+            <option value="Entre 25 y 30">Entre 25 y 30</option>
+            <option value="Entre 30 y 35">Entre 30 y 35</option>
+            <option value="Entre 35 y 40">Entre 35 y 40</option>
+            <option value="Más de 40">Más de 40</option>
+          </select>
         </label>
       </div>
 
@@ -1082,9 +1110,8 @@ function EventosForm() {
         <textarea
           value={form.mensaje}
           onChange={(e) => set("mensaje", e.target.value)}
-          required
           rows={5}
-          placeholder="Tipo de evento, fecha aproximada, número de personas, comentarios…" />
+          placeholder="Tipo de evento, comentarios…" />
       </label>
 
       {state === "error" &&
