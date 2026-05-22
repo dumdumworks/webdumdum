@@ -907,12 +907,18 @@ function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
       else if (e.key === "ArrowRight") onNav(1);
     };
     document.addEventListener("keydown", onKey);
-    // Bloquear el scroll del fondo mientras está abierto
+    // Bloquear el scroll del fondo SIN que la página salte:
+    // al ocultar la barra de scroll, compensamos su ancho con
+    // un padding-right equivalente, así nada se mueve.
+    const scrollbarW = window.innerWidth - document.documentElement.clientWidth;
     const prevOverflow = document.body.style.overflow;
+    const prevPadding = document.body.style.paddingRight;
     document.body.style.overflow = "hidden";
+    if (scrollbarW > 0) document.body.style.paddingRight = scrollbarW + "px";
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
+      document.body.style.paddingRight = prevPadding;
     };
   }, [open, onClose, onNav]);
 
