@@ -58,18 +58,9 @@ const INITIAL_MENU = {
       { url: "https://www.instagram.com/reel/DJR2Oe5i8Oz/" },
       { url: "https://www.instagram.com/p/DYC2JJqtDoN/" }
     ],
-    universo: [
-      { src: "img/universo/02.mp4" },
-      { src: "img/universo/01.mp4" },
-      { src: "img/universo/03.mp4" },
-      { src: null }
-    ]
+    universo: []
   },
-  footer: [
-    "Si tienes alguna alergia o intolerancia, pregunta al equipo.",
-    "Chamberí: sin reserva · Tetuán: con reserva.",
-    "Carta del mes."
-  ],
+  footer: [],
   sections: [
     {
       id: "entrantes",

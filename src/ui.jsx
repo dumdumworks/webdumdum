@@ -79,7 +79,7 @@ function TopBar({ route }) {
         <span className="row gap-s">
           {est.abierto ?
           <React.Fragment><span className="dot dot-live" /> Abierto hasta las {est.hora}h</React.Fragment> :
-          <React.Fragment><span className="dot dot-closed" /> Cerrado hasta las {est.hora}h</React.Fragment>}
+          <React.Fragment><span className="dot dot-closed" /> Cerrado. Nos vemos a las {est.hora}h</React.Fragment>}
         </span>
       </div>
     </header>);
