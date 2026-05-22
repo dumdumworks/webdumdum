@@ -140,17 +140,6 @@
           "logo": ""
         },
         {
-          "id": "kpop",
-          "n": 10,
-          "name": "Gamba K-Pop",
-          "tagline": "NAMBER GUAN",
-          "ingredients": "Dumpling de gamba, col, mayo kimchi.",
-          "price": "11,25",
-          "tags": [],
-          "image": "img/dumplings/gamba.jpg",
-          "logo": ""
-        },
-        {
           "id": "caca",
           "n": 85,
           "name": "caca",
@@ -164,6 +153,17 @@
           "available": true,
           "featured": false,
           "image": "/img/dumplings/Captura de pantalla 2026-05-22 a las 12.09.07 p. m..png",
+          "logo": ""
+        },
+        {
+          "id": "kpop",
+          "n": 10,
+          "name": "Gamba K-Pop",
+          "tagline": "NAMBER GUAN",
+          "ingredients": "Dumpling de gamba, col, mayo kimchi.",
+          "price": "11,25",
+          "tags": [],
+          "image": "img/dumplings/gamba.jpg",
           "logo": ""
         }
       ]
