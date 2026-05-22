@@ -911,13 +911,15 @@ function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
     };
   }, [open, onClose, onNav]);
 
+  if (!open) return null;
   const total = photos.length;
-  const item = (open && photos[index]) || {};
+  const item = photos[index] || {};
+  if (!item.src) return null;
 
   return (
-    <div className={`lb-overlay${open ? " is-open" : ""}`} onClick={onClose} aria-hidden={!open}>
+    <div className="lb-overlay" onClick={onClose}>
       <div className="lb-head" onClick={(e) => e.stopPropagation()}>
-        <span className="tiny">{label} · {String((index || 0) + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
+        <span className="tiny">{label} · {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
         <button className="lb-close" onClick={onClose} aria-label="Cerrar">✕</button>
       </div>
 

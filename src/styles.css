@@ -191,7 +191,7 @@ img { display: block; max-width: 100%; }
   background: rgba(20, 0, 3, 0.92);
   display: flex; align-items: center; justify-content: center;
   padding: 64px 24px;
-  animation: lb-fade .28s ease;
+  animation: lb-fade .2s ease;
 }
 @keyframes lb-fade { from { opacity: 0; } to { opacity: 1; } }
 
@@ -216,9 +216,7 @@ img { display: block; max-width: 100%; }
   max-width: min(1100px, 92vw);
   max-height: 82vh;
   display: flex; align-items: center; justify-content: center;
-  animation: lb-pop .3s cubic-bezier(.2,.7,.2,1);
 }
-@keyframes lb-pop { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
 .lb-stage img {
   max-width: 100%; max-height: 82vh;
   width: auto; height: auto;
