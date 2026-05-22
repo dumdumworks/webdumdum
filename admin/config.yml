@@ -56,3 +56,51 @@ collections:
                   - { name: "featured", label: "Plato destacado", widget: "boolean", required: false, default: false }
                   - { name: "image", label: "Foto del plato", widget: "image", required: false }
                   - { name: "logo", label: "Logo (avanzado, dejar vacio)", widget: "string", required: false }
+
+  # ───────────────────────────────────────────────────────────
+  # GALERIAS (Eventos): Espacio, Producto y Prensa
+  # Seccion aparte del menu. Cada galeria guarda sus fotos en su
+  # propia carpeta. Puedes anadir, quitar y reordenar fotos.
+  # ───────────────────────────────────────────────────────────
+  - name: "galerias"
+    label: "Galerías (Eventos)"
+    files:
+      - name: "galerias"
+        label: "Galerías de fotos"
+        file: "menu.json"
+        fields:
+          - name: "gallery"
+            label: "Galerías"
+            widget: "object"
+            fields:
+              # ── Galeria ESPACIO ──
+              - name: "espacio"
+                label: "Galería · Espacio"
+                widget: "list"
+                label_singular: "Foto"
+                summary: "{{fields.src}}"
+                required: false
+                fields:
+                  - { name: "src", label: "Foto", widget: "image", required: false, media_folder: "/img/espacio", public_folder: "img/espacio" }
+                  - { name: "pos", label: "Encuadre (avanzado, dejar 50% 50%)", widget: "string", required: false, default: "50% 50%" }
+              # ── Galeria PRODUCTO ──
+              - name: "producto"
+                label: "Galería · Producto"
+                widget: "list"
+                label_singular: "Foto"
+                summary: "{{fields.src}}"
+                required: false
+                fields:
+                  - { name: "src", label: "Foto", widget: "image", required: false, media_folder: "/img/dumplings", public_folder: "img/dumplings" }
+                  - { name: "pos", label: "Encuadre (avanzado, dejar 50% 50%)", widget: "string", required: false, default: "50% 50%" }
+              # ── Galeria PRENSA (con enlace a noticia) ──
+              - name: "prensa"
+                label: "Galería · Prensa"
+                widget: "list"
+                label_singular: "Noticia"
+                summary: "{{fields.src}}"
+                required: false
+                fields:
+                  - { name: "src", label: "Foto", widget: "image", required: false, media_folder: "/img/prensa", public_folder: "img/prensa" }
+                  - { name: "url", label: "Enlace a la noticia (https://...)", widget: "string", required: false }
+                  - { name: "pos", label: "Encuadre (avanzado, dejar 50% 50%)", widget: "string", required: false, default: "50% 50%" }
