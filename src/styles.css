@@ -101,6 +101,22 @@ img { display: block; max-width: 100%; }
 
 .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); display: inline-block; }
 .dot.green { background: #1f8a5b; }
+.dot-live {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #1f8a5b; display: inline-block;
+  animation: dotPulse 2s ease-in-out infinite;
+}
+.dot-closed {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--red); display: inline-block;
+}
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(31,138,91,0.5); }
+  50% { opacity: 0.55; box-shadow: 0 0 0 4px rgba(31,138,91,0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dot-live { animation: none; }
+}
 
 /* ---------- Hover / interactions ---------- */
 .link-hover { transition: color .2s ease; }
