@@ -768,10 +768,12 @@
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
-  margin: 16px 0 8px;
-  padding: 0;
+  /* Línea superior propia + 24px hasta la caja (igual que la caja de arriba).
+     24px abajo hasta la línea del pie, para que quede simétrico. */
+  border-top: 1px solid var(--line);
+  margin: 40px 0 0;
+  padding: 24px 0;
   background: transparent;
-  border: none;
 }
 .menu-chopsticks-arrow {
   font-family: var(--font-display);
@@ -799,6 +801,9 @@
   letter-spacing: -0.005em;
 }
 .menu-chopsticks-bubble b { font-weight: 700; }
+/* Cuando el pie va justo tras los palillos (mobile), su línea superior
+   hace de línea inferior de la caja: sin margen extra → 24px simétricos. */
+.menu-chopsticks-note + .menu-foot { margin-top: 0; }
 @media (min-width: 880px) {
   .menu-chopsticks-note { display: none; }
 }
