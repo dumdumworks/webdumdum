@@ -168,7 +168,7 @@
 .map-nav {
   border-top: 1px solid var(--line);
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 }
 .map-cell {
   border-right: 1px solid var(--line);
@@ -186,10 +186,10 @@
 .map-cell .d { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 11px; letter-spacing: 0.04em; color: rgba(255,0,30,0.55); }
 .map-cell:hover { background: var(--ink); color: var(--bg); }
 .map-cell:hover .d { color: rgba(255,255,255,0.6); }
-.map-cell.span-6 { grid-column: span 6; }
-.map-cell.span-4 { grid-column: span 4; }
-.map-cell.span-3 { grid-column: span 3; }
-.map-cell.span-12 { grid-column: span 12; }
+.map-cell.span-6 { grid-column: span 1; }
+.map-cell.span-4 { grid-column: span 1; }
+.map-cell.span-3 { grid-column: span 1; }
+.map-cell.span-12 { grid-column: span 2; }
 
 /* Featured / "del mes" strip */
 .feature-strip {
@@ -1041,7 +1041,7 @@
   .ev-split > div:last-child { padding-top: 64px; }
   .ev-list { grid-template-columns: 1fr; }
   .ev-stats { grid-template-columns: 1fr; }
-  .ev-services-grid { grid-template-columns: 1fr; }
+  .ev-services-grid { grid-template-columns: repeat(2, 1fr); }
 
   .ev-hero {
     padding: 56px var(--gutter) 36px;
@@ -1618,8 +1618,8 @@
   .topbar .nav { gap: 14px; font-size: 11px; }
   .hero { padding: 12vh 0 8vh; }
   .hero-meta { position: static; text-align: left; margin-top: 24px; }
-  .map-cell.span-6, .map-cell.span-4, .map-cell.span-3 { grid-column: span 6; }
-  .map-cell.span-12 { grid-column: span 12; }
+  .map-cell.span-6, .map-cell.span-4, .map-cell.span-3 { grid-column: span 1; }
+  .map-cell.span-12 { grid-column: span 2; }
   .feature-strip, .about-body, .locales, .contact { grid-template-columns: 1fr; }
   .feature-strip > div:first-child, .about-body > div:first-child, .locale-card { border-right: none; border-bottom: 1px solid var(--line); }
   .spec-foot { grid-template-columns: 1fr 1fr; }
@@ -1630,7 +1630,7 @@
 }
 
 @media (max-width: 520px) {
-  .map-cell.span-6, .map-cell.span-4, .map-cell.span-3 { grid-column: span 12; }
+  .map-cell.span-6, .map-cell.span-4, .map-cell.span-3 { grid-column: span 1; }
   .row2, .row3 { grid-template-columns: 1fr; }
   .spec-foot { grid-template-columns: 1fr; }
   .spec-foot > div { border-right: none; border-bottom: 1px solid var(--line); }

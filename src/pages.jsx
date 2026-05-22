@@ -619,7 +619,7 @@ function EspacioSlider() {
 
   const photos = data.gallery && data.gallery.espacio || ESPACIO_PHOTOS_FALLBACK;
   return (
-    <GallerySlider photos={photos} visible={2} label="Galería" />);
+    <GallerySlider photos={photos} visible={2} label="Espacio" />);
 
 }
 
@@ -781,7 +781,7 @@ function ProductoSlider() {
   const fallback = Array.from({ length: 9 }, () => ({ src: null, pos: "50% 50%" }));
   const photos = data.gallery && data.gallery.producto || fallback;
   return (
-    <GallerySlider photos={photos} visible={3} label="Producto" placeholderLabel="Producto" />);
+    <GallerySlider photos={photos} visible={2} label="Producto" placeholderLabel="Producto" />);
 
 }
 
@@ -931,7 +931,7 @@ function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
 
       <div className="lb-stage" onClick={(e) => e.stopPropagation()}>
         {item.src &&
-          <img src={item.src} alt="" style={{ objectPosition: item.pos || "50% 50%" }} />}
+          <img key={index} src={item.src} alt="" className="lb-img" style={{ objectPosition: item.pos || "50% 50%" }} />}
       </div>
 
       <button className="lb-nav lb-next" onClick={(e) => { e.stopPropagation(); onNav(1); }} aria-label="Siguiente">→</button>
