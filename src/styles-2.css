@@ -748,6 +748,41 @@
   color: rgba(255,0,30,0.55);
   display: flex; flex-direction: column; gap: 6px;
 }
+.menu-foot .btn { align-self: flex-start; }
+
+/* Sección visible SOLO en mobile (p. ej. Bebidas) · oculta en desktop */
+.section-mobile-only { display: block; }
+
+/* Disclaimer de palillos · SOLO MOBILE */
+.menu-chopsticks-note {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: 16px 0 8px;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+.menu-chopsticks-note p {
+  position: relative;
+  background: var(--bg);
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  padding: 8px 14px;
+  max-width: 70%;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--red);
+  letter-spacing: -0.005em;
+}
+.menu-chopsticks-note b { font-weight: 700; }
+@media (min-width: 880px) {
+  .menu-chopsticks-note { display: none; }
+}
 
 /* ---------- LOCALES ---------- */
 .locales {
@@ -1333,6 +1368,54 @@
 .dish-card { display: none; }
 .dish-grid { display: block; }
 .dish-tags-overlay { display: none; }
+
+/* ─── 2 COLUMNAS EN MOBILE · Mochis (postres) y Bebidas ───────
+   Solo aplica <880px. En desktop se anula más abajo. */
+.dish-grid-2col-m {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+  row-gap: 0;
+}
+/* Bebidas: 2 columnas SIEMPRE (sección solo-mobile, no depende del ancho) */
+.dish-grid.drinks-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+  row-gap: 0;
+}
+/* Cada plato dentro de las 2 columnas: layout vertical compacto
+   (nº arriba, cuerpo, precio), para que quepa en media anchura. */
+.dish-grid-2col-m .dish,
+.dish-grid-2col-m .dish.with-logo {
+  grid-template-columns: 1fr;
+  gap: 4px 0;
+}
+.dish-grid-2col-m .dish .num { padding-top: 0; }
+.dish-grid-2col-m .dish .name { font-size: 18px; }
+.dish-grid-2col-m .dish .price { padding-top: 4px; }
+.dish-grid-2col-m .dish .ingr { font-size: 13px; margin-top: 6px; }
+
+/* Bebidas: texto compacto, SIN foto ni logo */
+.drinks-grid .dish .dish-img,
+.drinks-grid .dish .dish-card,
+.drinks-grid .dish .logo-slot,
+.drinks-grid .dish .m-only.logo-slot { display: none !important; }
+/* Sin número en bebidas (gana espacio) */
+.drinks-grid .dish .num { display: none !important; }
+/* Cada bebida en vertical: nombre arriba, precio debajo */
+.drinks-grid .dish,
+.drinks-grid .dish.with-logo {
+  display: block;
+  padding: 14px 0;
+}
+.drinks-grid .dish .body { display: block; }
+.drinks-grid .dish .price {
+  display: block;
+  padding-top: 4px;
+  white-space: nowrap;
+}
+.drinks-grid .dish .tagline { margin-top: 4px; }
 .tag-inline { display: inline-flex; }
 /* Mobile-only nodes (num/body/price/logo) visibles por defecto */
 .m-only { display: initial; }
@@ -1340,6 +1423,10 @@
 @media (min-width: 880px) {
   /* En desktop ocultamos los nodos del layout mobile */
   .m-only { display: none !important; }
+  /* En desktop ocultamos las secciones marcadas como solo-mobile (Bebidas).
+     Doble candado: por clase y por id, para que nunca falle. */
+  .section-mobile-only,
+  .section--bebidas { display: none !important; }
   /* ─── Contenedor ────────────────────────────────────────── */
   .menu-shell { max-width: 1320px; padding: 24px 32px 100px; }
   .menu-h { font-size: 96px !important; }
@@ -1354,6 +1441,13 @@
     column-gap: 32px;
     row-gap: 56px;
     padding: 32px 0 0;
+  }
+  /* En desktop, mochis vuelve al grid normal (anula 2-col mobile).
+     Bebidas NO se incluye: es solo-mobile y va a 2 columnas siempre. */
+  .dish-grid-2col-m:not(.drinks-grid) {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    column-gap: 32px;
+    row-gap: 56px;
   }
 
   /* ─── Tarjeta ─────────────────────────────────────────────

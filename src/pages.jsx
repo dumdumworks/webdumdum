@@ -370,10 +370,6 @@ function Menu() {
               <h1 className="menu-h">{data.header && data.header.title || "Carta"}</h1>
               <div className="menu-sub">{data.header && data.header.subtitle || "DUM DUM™ · Actualizada"} {data.updated}</div>
             </div>
-            <div className="tiny muted" style={{ textAlign: 'right' }}>
-              {data.header && data.header.sideLine1 || "6 uds / ración"}<br />
-              {data.header && data.header.sideLine2 || "IVA incluido"}
-            </div>
           </div>
         </div>
 
@@ -387,13 +383,13 @@ function Menu() {
         }
 
         {data.sections.map((sec) =>
-        <section key={sec.id} className="menu-section">
+        <section key={sec.id} className={`menu-section section--${sec.id} ${sec.id === "bebidas" ? "section-mobile-only" : ""}`}>
             <div className="menu-sectionhead">
               <h3>{sec.title}</h3>
               <div className="meta">{sec.note}</div>
             </div>
 
-            <div className="dish-grid">
+            <div className={`dish-grid ${sec.id === "postres" ? "dish-grid-2col-m" : ""} ${sec.id === "bebidas" ? "dish-grid-2col-m drinks-grid" : ""}`}>
               {sec.items.filter((it) => it.available !== false).map((it) =>
             <article key={it.id} className={`dish ${it.logo ? "with-logo" : ""} ${it.featured ? "is-featured" : ""}`}>
                   {/* ─── Layout MOBILE (visible <880px) ──────────────── */}
@@ -460,14 +456,15 @@ function Menu() {
         )}
 
         <div className="menu-foot">
-          {(data.footer && data.footer.length > 0 ? data.footer : [
-          "Si tienes alguna alergia o intolerancia, pregunta al equipo.",
-          "Chamberí: sin reserva · Tetuán: con reserva.",
-          "Carta del mes."]).
-          map((line, i) =>
-          <div key={i}>{line}{i === (data.footer || []).length - 1 ? ` · ${data.updated}` : ""}</div>
-          )}
+          <div>Consulta nuestro menú de alérgenos. Si tienes alguna alergia o intolerancia, pregúntanos sin problema: estaremos encantados de ayudarte.</div>
+          {/* href="#" PROVISIONAL · cambiar cuando exista el editor/PDF de alérgenos */}
+          <a className="btn" href="#" style={{ marginTop: 16 }}>Menú de alérgenos →</a>
         </div>
+
+        {/* Disclaimer palillos · SOLO MOBILE (.menu-chopsticks-note) */}
+        <aside className="menu-chopsticks-note">
+          <p><b>¡Por cierto!</b> Tenemos palillos para los que todavía no sepan comer con las manos. Aunque hoy podría ser un buen día para aprender 😉</p>
+        </aside>
       </div>
     </div>);
 
