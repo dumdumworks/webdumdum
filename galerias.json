@@ -1,0 +1,91 @@
+{
+  "espacio": [
+    {
+      "src": "img/espacio/01-fachada.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/espacio/02-barra-horizontal.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/espacio/04-general-vertical.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/espacio/05-barra-vertical.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/espacio/06-horizontal-barra.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/espacio/07-mesa-alta-fachada.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/espacio/08-mesa-alta-juliette.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/espacio/09-detalle-barra-alta.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/espacio/10-detalle-mesa.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/espacio/11-merchandising.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/espacio/12-suelo-barra-alta.jpg",
+      "pos": "50% 50%"
+    }
+  ],
+  "producto": [
+    {
+      "src": "img/dumplings/muay.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/dumplings/burger.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/dumplings/carbonara.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/dumplings/pepito.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/dumplings/castizo.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/dumplings/moussaka.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/dumplings/sweet.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/dumplings/teriyaki.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/dumplings/gamba.jpg",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "img/dumplings/honey.jpg",
+      "pos": "50% 50%"
+    }
+  ],
+  "prensa": []
+}

@@ -39,6 +39,13 @@
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) { if (data && data.sections) { window.PUBLISHED_MENU = data; } })
       .catch(function () {})
+      .then(function () {
+        // Cargar tambien las galerias (archivo aparte, editable en Sveltia).
+        return fetch("galerias.json?ts=" + Date.now())
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (g) { if (g) { window.PUBLISHED_GALLERY = g; } })
+          .catch(function () {});
+      })
       .then(function () { window.__bootDumDum(); });
   </script>
 </body>
