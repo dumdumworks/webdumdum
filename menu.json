@@ -29,22 +29,6 @@
       "note": "100% caseros. 0% convencionales.",
       "items": [
         {
-          "id": "caca",
-          "n": 85,
-          "name": "caca",
-          "tagline": "caca",
-          "ingredients": "caca",
-          "price": "85",
-          "tags": [
-            "PICANTE",
-            "VEG"
-          ],
-          "available": true,
-          "featured": false,
-          "image": "/img/dumplings/Captura de pantalla 2026-05-22 a las 12.09.07 p. m..png",
-          "logo": ""
-        },
-        {
           "id": "muaythai",
           "n": 1,
           "name": "Muay Thai",
