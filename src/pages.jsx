@@ -551,8 +551,6 @@ function Locales() {
             <h2>Chamberí.</h2>
             <div className="tiny muted" style={{ marginTop: 8 }}>Local original · desde DOSMIL24</div>
 
-            <GoogleReviews href="https://share.google/tkyjRkXEkUi6xBLre" />
-
             <div className="info">
               <b>Dirección</b><div>Blasco de Garay, 10 · 28015 Madrid</div>
               <b>Metro</b><div>Argüelles · San Bernardo</div>
@@ -577,8 +575,6 @@ function Locales() {
             <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
             <h2>Tetuán.</h2>
             <div className="tiny muted" style={{ marginTop: 8 }}>SEGUNDO LOCAL · DESDE DOSMIL26</div>
-
-            <GoogleReviews href="https://share.google/DuIH6Qa9EkwE0Or30" />
 
             <div className="info">
               <b>Dirección</b><div>Infanta Mercedes, 17 · 28020 Madrid</div>
@@ -608,7 +604,7 @@ function Locales() {
         <div><b>Interiorismo</b>Nota Estudio</div>
         <div><b>Identidad</b>Yerai Gómez</div>
         <div><b>Cocina</b>Kéril Gómez · BCC</div>
-        <div><b>Año apertura 02</b>CHAMBERÍ · DOSMIL24 | TETUÁN · DOSMIL26</div>
+        <div><b>Año apertura</b>CHAMBERÍ · DOSMIL24 | TETUÁN · DOSMIL26</div>
       </section>
     </div>);
 
