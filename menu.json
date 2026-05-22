@@ -115,6 +115,22 @@
           "logo": ""
         },
         {
+          "id": "caca",
+          "n": 85,
+          "name": "caca",
+          "tagline": "caca",
+          "ingredients": "caca",
+          "price": "85",
+          "tags": [
+            "PICANTE",
+            "VEG"
+          ],
+          "available": true,
+          "featured": false,
+          "image": "/img/dumplings/Captura de pantalla 2026-05-22 a las 12.09.07 p. m..png",
+          "logo": ""
+        },
+        {
           "id": "sweetchili",
           "n": 8,
           "name": "Sweet Chilli Pork",
@@ -137,22 +153,6 @@
           "price": "8,75",
           "tags": [],
           "image": "img/dumplings/teriyaki.jpg",
-          "logo": ""
-        },
-        {
-          "id": "caca",
-          "n": 85,
-          "name": "caca",
-          "tagline": "caca",
-          "ingredients": "caca",
-          "price": "85",
-          "tags": [
-            "PICANTE",
-            "VEG"
-          ],
-          "available": true,
-          "featured": false,
-          "image": "/img/dumplings/Captura de pantalla 2026-05-22 a las 12.09.07 p. m..png",
           "logo": ""
         },
         {
