@@ -1785,40 +1785,10 @@
 /* ---------- Responsive ---------- */
 @media (max-width: 880px) {
   :root { --gutter: 20px; }
-  /* En móvil ocultamos el estado abierto/cerrado (descuadraba la barra) */
-  .topbar .right { display: none; }
-  /* Mostramos el botón hamburguesa */
-  .topbar-burger { display: flex; }
-  /* La barra deja el logo a la izquierda y el burger a la derecha */
-  .topbar { position: sticky; }
-  /* El menú pasa a panel desplegable bajo la barra */
-  .topbar .nav {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-    background: var(--bg);
-    border-bottom: 0 solid var(--line);
-    padding: 0 var(--gutter);
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.32s ease, padding 0.32s ease;
-  }
-  .topbar.menu-open .nav {
-    max-height: 320px;
-    padding: 8px var(--gutter) 16px;
-    border-bottom-width: 1px;
-  }
-  .topbar .nav a {
-    width: 100%;
-    padding: 14px 0;
-    font-size: 14px;
-    border-bottom: 1px solid var(--line-soft);
-  }
-  .topbar .nav a:last-child { border-bottom: none; }
+  /* NOTA: las reglas de la topbar móvil (burger, ocultar estado, panel
+     desplegable) están en styles.css, que se carga DESPUÉS de este archivo
+     (styles.css hace @import de styles-2.css al inicio). Ponerlas allí
+     garantiza que ganen en especificidad/orden. */
   .hero { padding: 12vh 0 8vh; }
   .hero-meta { position: static; text-align: left; margin-top: 24px; }
   .map-cell.span-6, .map-cell.span-4, .map-cell.span-3 { grid-column: span 1; }
