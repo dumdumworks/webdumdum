@@ -1094,6 +1094,7 @@
   padding: 22px;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
+  box-sizing: border-box;
   transition: background .2s ease, color .2s ease;
 }
 .ev-service:hover { background: transparent; color: inherit; }
@@ -1148,11 +1149,19 @@
 
 @media (max-width: 879px) {
   .ev-split { grid-template-columns: 1fr; }
+  /* El formulario de contacto también a 1 columna: título arriba, campos debajo */
+  .ev-split.ev-split--contact { grid-template-columns: 1fr; }
+  .ev-split.ev-split--contact > div:first-child { border-right: none; border-bottom: 1px solid var(--line); }
+  .ev-split.ev-split--contact > div:last-child { padding-top: 48px; }
   .ev-split > div:first-child { border-right: none; border-bottom: 1px solid var(--line); }
   .ev-split > div:last-child { padding-top: 64px; }
   .ev-list { grid-template-columns: 1fr; }
   .ev-stats { grid-template-columns: 1fr; }
-  .ev-services-grid { grid-template-columns: repeat(2, 1fr); }
+  .ev-services-grid {
+    grid-template-columns: 1fr 1fr;
+    border-right: 1px solid var(--line);
+  }
+  .ev-service { min-height: 150px; }
 
   .ev-hero {
     padding: 56px var(--gutter) 36px;
@@ -1807,5 +1816,6 @@
   .row2, .row3 { grid-template-columns: 1fr; }
   .spec-foot { grid-template-columns: 1fr; }
   .spec-foot > div { border-right: none; border-bottom: 1px solid var(--line); }
-  .foot-grid { grid-template-columns: 1fr; }
+  /* Footer en 2 columnas también en móviles pequeños (no tan largo) */
+  .foot-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
 }

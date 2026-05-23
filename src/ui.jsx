@@ -72,7 +72,7 @@ function TopBar({ route }) {
 
   return (
     <header className={`topbar ${menuOpen ? "menu-open" : ""}`} data-screen-label="top-bar">
-      <a href="#/" className="brand">DUM DUM<sup style={{ fontSize: '0.55em', marginLeft: '2px' }}>™</sup></a>
+      <a href="#/" className="brand">DUM DUM<span className="brand-tm">™</span></a>
       <nav className="nav">
         {links.map((l) =>
         <a key={l.p} href={`#${l.p}`} className={route === l.p ? "active" : ""}>

@@ -97,6 +97,15 @@ img { display: block; max-width: 100%; }
 }
 .topbar .nav { display: flex; gap: 24px; }
 .topbar .brand { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: -0.01em; text-transform: none; }
+/* ™ alineado arriba (como en el footer), no como superíndice bajo */
+.topbar .brand-tm {
+  display: inline-block;
+  font-size: 0.5em;
+  line-height: 1;
+  vertical-align: top;
+  margin-left: 2px;
+  letter-spacing: 0;
+}
 .topbar .right { display: flex; gap: 16px; align-items: center; }
 /* Botón hamburguesa · oculto en desktop, visible en móvil (ver responsive) */
 .topbar-burger {
