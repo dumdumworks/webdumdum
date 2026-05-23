@@ -1080,7 +1080,7 @@
 .ev-services-grid {
   margin-top: 32px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 0;
   border-top: 1px solid var(--line);
   border-left: 1px solid var(--line);
@@ -1090,13 +1090,14 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 32px;
-  min-height: 180px;
+  min-height: 150px;
   padding: 22px;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   box-sizing: border-box;
   transition: background .2s ease, color .2s ease;
 }
+.ev-service:last-child { border-right: 1px solid var(--line); }
 .ev-service:hover { background: transparent; color: inherit; }
 .ev-service:hover .n { color: rgba(255,0,30,0.55); }
 .ev-service .n {
@@ -1157,9 +1158,6 @@
   .ev-split > div:last-child { padding-top: 64px; }
   .ev-list { grid-template-columns: 1fr; }
   .ev-stats { grid-template-columns: 1fr; }
-  .ev-services-grid {
-    grid-template-columns: 1fr 1fr;
-  }
   .ev-service { min-height: 150px; }
 
   .ev-hero {
@@ -1470,6 +1468,9 @@
 @media (min-width: 880px) {
   /* En desktop ocultamos los nodos del layout mobile */
   .m-only { display: none !important; }
+  /* Servicios: 3 columnas en desktop (en móvil la base es 2, como map-nav) */
+  .ev-services-grid { grid-template-columns: repeat(3, 1fr); }
+  .ev-service { min-height: 180px; }
   /* En desktop ocultamos las secciones marcadas como solo-mobile (Bebidas).
      Doble candado: por clase y por id, para que nunca falle. */
   .section-mobile-only,
