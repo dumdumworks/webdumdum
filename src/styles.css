@@ -96,14 +96,16 @@ img { display: block; max-width: 100%; }
   content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: var(--red);
 }
 .topbar .nav { display: flex; gap: 24px; }
-.topbar .brand { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: -0.01em; text-transform: none; }
-/* ™ alineado arriba (como en el footer), no como superíndice bajo */
+.topbar .brand { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: -0.01em; text-transform: none; line-height: 0.82; }
+/* ™ alineado al cap-top de "DUM DUM". El valor clave para ajustar la altura
+   es --tm-top: súbelo (más negativo) si el ™ está bajo, bájalo si está alto. */
 .topbar .brand-tm {
   display: inline-block;
   font-size: 0.5em;
   line-height: 1;
   vertical-align: top;
-  margin-left: 2px;
+  margin-top: var(--tm-top, -0.02em);
+  margin-left: 0.06em;
   letter-spacing: 0;
 }
 .topbar .right { display: flex; gap: 16px; align-items: center; }

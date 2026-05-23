@@ -1159,7 +1159,6 @@
   .ev-stats { grid-template-columns: 1fr; }
   .ev-services-grid {
     grid-template-columns: 1fr 1fr;
-    border-right: 1px solid var(--line);
   }
   .ev-service { min-height: 150px; }
 
