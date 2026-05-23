@@ -1150,12 +1150,18 @@
 
 @media (max-width: 879px) {
   .ev-split { grid-template-columns: 1fr; }
+  /* En móvil: cada bloque (título + texto) es una unidad compacta.
+     - Sin línea interna entre título y texto (la línea solo separa SECCIONES,
+       y esa es el border-bottom de .ev-split).
+     - Padding vertical reducido para que no sea tan largo.
+     - Poco espacio entre el título y el texto. */
+  .ev-split > div { padding: 32px var(--gutter); }
+  .ev-split > div:first-child { border-right: none; border-bottom: none; padding-bottom: 0; }
+  .ev-split > div:last-child { padding-top: 16px; }
   /* El formulario de contacto también a 1 columna: título arriba, campos debajo */
   .ev-split.ev-split--contact { grid-template-columns: 1fr; }
-  .ev-split.ev-split--contact > div:first-child { border-right: none; border-bottom: 1px solid var(--line); }
-  .ev-split.ev-split--contact > div:last-child { padding-top: 48px; }
-  .ev-split > div:first-child { border-right: none; border-bottom: 1px solid var(--line); }
-  .ev-split > div:last-child { padding-top: 64px; }
+  .ev-split.ev-split--contact > div:first-child { border-right: none; border-bottom: none; padding-bottom: 0; }
+  .ev-split.ev-split--contact > div:last-child { padding-top: 24px; }
   .ev-list { grid-template-columns: 1fr; }
   .ev-stats { grid-template-columns: 1fr; }
   .ev-service { min-height: 150px; }
