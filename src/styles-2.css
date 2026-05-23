@@ -1091,6 +1091,7 @@
   justify-content: space-between;
   gap: 32px;
   min-height: 150px;
+  min-width: 0;
   padding: 22px;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -1114,6 +1115,9 @@
   font-size: clamp(20px, 2.2vw, 32px);
   letter-spacing: -0.02em;
   line-height: 1;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .ev-contact {

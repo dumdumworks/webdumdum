@@ -96,17 +96,15 @@ img { display: block; max-width: 100%; }
   content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: var(--red);
 }
 .topbar .nav { display: flex; gap: 24px; }
-.topbar .brand { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: -0.01em; text-transform: none; line-height: 1; position: relative; display: inline-block; padding-right: 0.85em; }
-/* ™ anclado de forma ABSOLUTA arriba a la derecha (en el hueco reservado por
-   padding-right). No depende de vertical-align ni de métricas de línea (que
-   varían entre Safari/Chrome/iOS/Android), por eso se ve idéntico en todos
-   los móviles. top en em = cap-top real de "DUM DUM". */
+.topbar .brand { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: -0.01em; text-transform: none; }
+/* ™ alineado al top del texto · vertical-align:text-top ancla el elemento al
+   borde superior del TEXTO (no de la línea), consistente en todos los
+   navegadores/móviles. Sin position:absolute (que lo descuadraba). */
 .topbar .brand-tm {
-  position: absolute;
-  top: 0.02em;
-  right: 0;
-  font-size: 0.5em;
+  font-size: 0.62em;
+  vertical-align: text-top;
   line-height: 1;
+  margin-left: 0.1em;
   letter-spacing: 0;
 }
 .topbar .right { display: flex; gap: 16px; align-items: center; }
