@@ -143,7 +143,7 @@
 
 /* Tablet ≤780px: stack en columna */
 @media (max-width: 780px) {
-  .home-index { min-height: auto; padding: 44px var(--gutter) 44px; }
+  .home-index { min-height: auto; padding: 20px var(--gutter) 44px; }
   .hero-index { gap: 44px; padding: 0; }
   .hero-stage {
     grid-template-columns: 1fr;
@@ -175,6 +175,8 @@
   }
   .hero-actions-4 .btn { width: 100%; }
   .hero-scroll { display: block; }
+  /* Celda-sello visible en móvil (rellena el hueco de la rejilla 2 col) */
+  .map-cell-seal { display: flex; }
 }
 .hero-wordmark {
   font-family: var(--font-display);
@@ -224,6 +226,9 @@
   grid-template-columns: repeat(2, 1fr);
 }
 .map-nav-3 { grid-template-columns: repeat(3, 1fr); }
+/* Celda-sello · oculta en desktop (la rejilla 3×3 no tiene hueco) */
+.map-cell-seal { display: none; align-items: center; justify-content: center; }
+.map-cell-seal img { width: 96px; height: auto; }
 .map-cell {
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);

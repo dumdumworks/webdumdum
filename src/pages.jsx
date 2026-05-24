@@ -339,6 +339,10 @@ function Home() {
           <div className="t">DD*Mer®ch →</div>
           <div className="d">PRÓXIMAMENTE</div>
         </a>
+        {/* Celda-sello · rellena el hueco de la rejilla en móvil (2 col) */}
+        <div className="map-cell map-cell-seal" aria-hidden="true">
+          <img src="img/dumdum-sello.svg" alt="" />
+        </div>
       </nav>
 
       {/* Spec footer */}
