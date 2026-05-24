@@ -692,8 +692,11 @@
   border-color: var(--bg);
 }
 @media (max-width: 879px) {
-  .ev-form-row { grid-template-columns: 1fr; }
-  .ev-form-row-3 { grid-template-columns: 1fr; }
+  .ev-form-row { grid-template-columns: 1fr; gap: 0; }
+  .ev-form-row-3 { grid-template-columns: 1fr; gap: 0; }
+  /* Apilados en móvil: la separación la da SOLO el margin-bottom de cada
+     campo, así todos los huecos (caja → siguiente título) son iguales. */
+  .ev-field { margin-bottom: 24px; }
 }
 
 /* ─── Disclaimer mobile-only ───────────────────────────────── */
