@@ -50,11 +50,19 @@ function calcAperturaTopbar(tramos) {
 }
 
 function TopBar({ route }) {
+  const UBER_URL = "https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY";
+  // Menú: mismos destinos que la rejilla de la home.
+  // ext: true → enlace externo (abre en nueva pestaña). Si no, ruta interna (#/...).
   const links = [
-  { p: "/menu", label: "Carta" },
+  { p: "/menu", label: "La carta" },
+  { href: UBER_URL, label: "Uber Eats", ext: true },
+  { href: UBER_URL, label: "Take Away", ext: true },
   { p: "/locales", label: "Locales" },
   { p: "/eventos", label: "Eventos" },
-  { p: "/contacto", label: "Contacto" }];
+  { p: "/contacto", label: "Contacto" },
+  { href: "#", label: "Instagram", ext: true },
+  { href: "#", label: "DD*Radio", ext: true },
+  { href: "#", label: "DD*Mer®ch", ext: true }];
 
   // Estado de apertura, recalculado cada minuto
   const TRAMOS = [[780, 939], [1200, 1359]];
@@ -74,8 +82,12 @@ function TopBar({ route }) {
     <header className={`topbar ${menuOpen ? "menu-open" : ""}`} data-screen-label="top-bar">
       <a href="#/" className="brand">DUM DUM<span className="brand-tm">™</span></a>
       <nav className="nav">
-        {links.map((l) =>
-        <a key={l.p} href={`#${l.p}`} className={route === l.p ? "active" : ""}>
+        {links.map((l, i) =>
+        l.ext ?
+        <a key={i} href={l.href} target="_blank" rel="noreferrer">
+            {l.label}
+          </a> :
+        <a key={i} href={`#${l.p}`} className={route === l.p ? "active" : ""}>
             {l.label}
           </a>
         )}

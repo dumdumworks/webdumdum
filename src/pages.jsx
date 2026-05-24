@@ -248,6 +248,7 @@ function Home() {
             </button>
             <a className="btn red" href={UBER_URL} target="_blank" rel="noreferrer">Uber Eats →</a>
           </div>
+          <div className="hero-scroll" aria-hidden="true">↓</div>
         </div>
       </section>
 
