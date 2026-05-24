@@ -238,8 +238,8 @@ function Home() {
           </div>
 
           <div className="hero-actions hero-actions-4">
-            <a className="btn" href="#" onClick={(e) => e.preventDefault()}>Reservar en Tetuán →</a>
-            <a className="btn" href="#/locales">Cómo llegar →</a>
+            <a className="btn" href="#" onClick={(e) => e.preventDefault()}>Reservar →</a>
+            <a className="btn" href="#/locales">Llegar →</a>
             <button
               type="button"
               className="btn"

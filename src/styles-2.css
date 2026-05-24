@@ -83,19 +83,20 @@
   line-height: 1.3;
 }
 
-/* Indicador de scroll (flecha ↓) · solo móvil, animado */
+/* Indicador de scroll (flecha ↓) · solo móvil, animado, con presencia */
 .hero-scroll {
   display: none;
   text-align: center;
-  font-size: 22px;
+  font-size: 34px;
+  font-weight: 600;
   color: var(--red);
   line-height: 1;
-  margin-top: 20px;
-  animation: scrollNudge 1.8s ease-in-out infinite;
+  margin-top: 28px;
+  animation: scrollNudge 1.6s ease-in-out infinite;
 }
 @keyframes scrollNudge {
-  0%, 100% { transform: translateY(0); opacity: 0.9; }
-  50% { transform: translateY(5px); opacity: 0.4; }
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(8px); opacity: 0.45; }
 }
 
 /* Toast "Próximamente" (Take Away / Merch) · notificación flotante fija
@@ -142,18 +143,22 @@
 
 /* Tablet ≤780px: stack en columna */
 @media (max-width: 780px) {
-  .home-index { min-height: auto; padding: 32px var(--gutter) 28px; }
-  .hero-index { gap: 40px; padding: 0; }
+  .home-index { min-height: auto; padding: 44px var(--gutter) 44px; }
+  .hero-index { gap: 44px; padding: 0; }
   .hero-stage {
     grid-template-columns: 1fr;
     grid-template-areas:
       "logo"
       "info-l"
       "info-r";
-    row-gap: 40px;
+    row-gap: 44px;
     justify-items: center;
     text-align: center;
   }
+  /* Los dos bloques de texto (horario y direcciones) van más juntos entre
+     sí (forman un grupo), separados del logo y de los botones por el aire
+     mayor y uniforme (44px). */
+  .hero-info-r { margin-top: -20px; }
   .hero-info,
   .hero-info-l,
   .hero-info-r { text-align: center; white-space: normal; }
