@@ -172,7 +172,7 @@
           "id": "mochi-petit",
           "n": 2,
           "name": "Petit Suisse",
-          "tagline": "INFANCIA EN BOLA",
+          "tagline": "",
           "ingredients": "Un viaje directo a cuando tenías 9 años",
           "price": "2,85",
           "tags": [],
@@ -202,7 +202,7 @@
             "NEW"
           ],
           "available": true,
-          "featured": false,
+          "featured": true,
           "image": "/img/dumplings/coco.jpg",
           "logo": ""
         },
