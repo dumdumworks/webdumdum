@@ -323,18 +323,18 @@ function Home() {
         </a>
         <a className="map-cell" href="#" onClick={(e) => e.preventDefault()}>
           <div className="n">[07]</div>
-          <div className="t">@dumdum.plings →</div>
-          <div className="d">INSTAGRAM</div>
+          <div className="t">Instagram →</div>
+          <div className="d">@DUMDUM.PLINGS</div>
         </a>
         <a className="map-cell" href="#" onClick={(e) => e.preventDefault()}>
           <div className="n">[08]</div>
-          <div className="t">DUM DUM Radio →</div>
+          <div className="t">DD* Radio →</div>
           <div className="d">SPOTIFY</div>
         </a>
         <a className="map-cell" href="#" onClick={(e) => e.preventDefault()}>
           <div className="n">[09]</div>
-          <div className="t">Merch →</div>
-          <div className="d">TIENDA</div>
+          <div className="t">DD* Mer®ch →</div>
+          <div className="d">PRÓXIMAMENTE</div>
         </a>
       </nav>
 
