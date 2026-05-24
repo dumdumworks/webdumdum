@@ -825,11 +825,15 @@
   letter-spacing: -0.005em;
 }
 .menu-chopsticks-bubble b { font-weight: 700; }
-/* Cuando el pie va justo tras los palillos (mobile), su línea superior
-   hace de línea inferior de la caja: sin margen extra → 24px simétricos. */
-.menu-chopsticks-note + .menu-foot { margin-top: 0; }
 @media (min-width: 880px) {
   .menu-chopsticks-note { display: none; }
+}
+/* SOLO móvil: cuando el pie va justo tras los palillos (visibles), su línea
+   superior hace de línea inferior de la caja → sin margen extra. En desktop
+   el chopsticks está oculto pero sigue siendo hermano en el DOM, así que esta
+   regla DEBE limitarse a móvil o el pie perdería su margin-top (se pegaría). */
+@media (max-width: 879px) {
+  .menu-chopsticks-note + .menu-foot { margin-top: 0; }
 }
 
 /* Vaivén grácil de las flechas · apuntan a la derecha → se mecen en horizontal */
