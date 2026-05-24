@@ -782,9 +782,6 @@
   0%, 100% { transform: translateY(0); opacity: 1; }
   50% { transform: translateY(-4px); opacity: 0.6; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .menu-top-arrow { animation: none; }
-}
 
 /* Sección visible SOLO en mobile (p. ej. Bebidas) · oculta en desktop */
 .section-mobile-only { display: block; }
@@ -844,10 +841,6 @@
 .menu-chopsticks-arrow {
   animation: arrowNudge 1.8s ease-in-out infinite;
   will-change: transform;
-}
-@media (prefers-reduced-motion: reduce) {
-  .menu-disclaimer-arrow,
-  .menu-chopsticks-arrow { animation: none; }
 }
 
 /* ---------- LOCALES ---------- */
