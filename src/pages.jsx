@@ -289,37 +289,96 @@ function Home() {
         </div>
       </section>
 
-      {/* Flat map nav */}
-      <nav className="map-nav">
-        <a className="map-cell span-6" href="#/menu">
+      {/* Flat map nav · 3 columnas */}
+      <nav className="map-nav map-nav-3">
+        {/* [01] La carta */}
+        <a className="map-cell" href="#/menu">
           <div className="n">[01]</div>
-          <div className="t">La carta →</div>
-          <div className="d">ECHA UN VITAZO</div>
+          <div className="cell-main">
+            <div className="t">La carta →</div>
+            <div className="d">ECHA UN VITAZO</div>
+          </div>
         </a>
-        <a className="map-cell span-6" href="#/locales">
+
+        {/* [02] Pide ya · con subtarjetas DOMICILIO / RECOGER */}
+        <div className="map-cell map-cell-group">
           <div className="n">[02]</div>
-          <div className="t">Locales →</div>
-          <div className="d">CHAMBERÍ #015 + TETUÁN #020</div>
-        </a>
-        <a className="map-cell span-3" href="#/contacto">
+          <div className="cell-main">
+            <div className="t">Pide ya →</div>
+            <div className="d">CHAMBERÍ #015 + TETUÁN #020</div>
+          </div>
+          <div className="cell-cards">
+            <a
+              className="cell-card"
+              href="https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY"
+              target="_blank"
+              rel="noreferrer">
+              <div className="cell-card-t">Domicilio <span className="arr">↗</span></div>
+              <div className="cell-card-s">UBER EATS</div>
+            </a>
+            <div className="cell-card cell-card-soon" aria-disabled="true">
+              <div className="cell-card-t">Recoger</div>
+              <div className="cell-card-s">PRÓXIMAMENTE</div>
+            </div>
+          </div>
+        </div>
+
+        {/* [03] Locales */}
+        <a className="map-cell" href="#/locales">
           <div className="n">[03]</div>
-          <div className="t">Contacto →</div>
-          <div className="d">SALÚDAME SIEMPRE</div>
+          <div className="cell-main">
+            <div className="t">Locales →</div>
+            <div className="d">CHAMBERÍ #015 + TETUÁN #020</div>
+          </div>
         </a>
-        <a className="map-cell span-3" href="https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY" target="_blank" rel="noreferrer">
+
+        {/* [04] Eventos */}
+        <a className="map-cell" href="#/eventos">
           <div className="n">[04]</div>
-          <div className="t">Uber Eats →</div>
-          <div className="d">NI TE MUEVAS</div>
+          <div className="cell-main">
+            <div className="t">Eventos →</div>
+            <div className="d">AFTER WORKS · CUMPLES · DIVORCIOS?</div>
+          </div>
         </a>
-        <a className="map-cell span-3" href="#/eventos">
+
+        {/* [05] DD World · con subtarjetas Instagram / Spotify / Merch */}
+        <div className="map-cell map-cell-group">
           <div className="n">[05]</div>
-          <div className="t">Eventos →</div>
-          <div className="d">AFTER WORKS · CUMPLES · DIVORCIOS?</div>
-        </a>
-        <a className="map-cell span-3" href="#" onClick={(e) => e.preventDefault()}>
+          <div className="cell-main">
+            <div className="t">
+              DD [W<span className="globe" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="9.2" stroke="currentColor" strokeWidth="1.6" />
+                  <ellipse cx="12" cy="12" rx="4" ry="9.2" stroke="currentColor" strokeWidth="1.6" />
+                  <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" strokeWidth="1.6" />
+                </svg>
+              </span>RLD]→
+            </div>
+            <div className="d">CHAMBERÍ #015 + TETUÁN #020</div>
+          </div>
+          <div className="cell-cards cell-cards-3">
+            <a className="cell-card" href="#" onClick={(e) => e.preventDefault()}>
+              <div className="cell-card-t">Dumdum.plings <span className="arr">↗</span></div>
+              <div className="cell-card-s">INSTAGRAM</div>
+            </a>
+            <a className="cell-card" href="#" onClick={(e) => e.preventDefault()}>
+              <div className="cell-card-t">DD* Radio <span className="arr">↗</span></div>
+              <div className="cell-card-s">SPOTIFY</div>
+            </a>
+            <a className="cell-card" href="#" onClick={(e) => e.preventDefault()}>
+              <div className="cell-card-t">DD* Me®ch <span className="arr">↗</span></div>
+              <div className="cell-card-s">TIENDA</div>
+            </a>
+          </div>
+        </div>
+
+        {/* [06] Contacto */}
+        <a className="map-cell" href="#/contacto">
           <div className="n">[06]</div>
-          <div className="t">Instagram →</div>
-          <div className="d">@dumdum_es</div>
+          <div className="cell-main">
+            <div className="t">Contacto →</div>
+            <div className="d">SALÚDAME SIEMPRE</div>
+          </div>
         </a>
       </nav>
 
