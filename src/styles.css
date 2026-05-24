@@ -107,19 +107,17 @@ img { display: block; max-width: 100%; }
 .topbar .brand {
   font-family: var(--font-display); font-weight: 600; font-size: 14px;
   letter-spacing: -0.01em; text-transform: none;
-  display: inline-flex;
-  align-items: flex-start;
-  line-height: 1;
 }
-/* ™ alineado al cap-top de "DUM DUM" con flexbox (align-items:flex-start del
-   .brand). El top del ™ y el de las letras quedan en la misma línea de forma
-   determinista, igual en todos los navegadores. line-height:1 hace que el
-   top de la caja coincida con el cap-top en esta fuente. */
+/* ™ alineado al TOP de las letras (como el logo de marca).
+   vertical-align calculado con la métrica de Helvetica: para que el top del
+   ™ (a 0.52em) coincida con el cap-top de la "M", la subida es ~0.23em.
+   AJUSTE FINO: si el ™ queda un pelín bajo, sube --tm-rise (p.ej 0.27em);
+   si queda alto, bájalo (p.ej 0.19em). */
 .topbar .brand-tm {
-  font-size: 0.6em;
-  line-height: 1;
-  margin-left: 0.12em;
-  margin-top: -0.02em;
+  font-size: 0.52em;
+  vertical-align: var(--tm-rise, 0.23em);
+  line-height: 0;
+  margin-left: 0.06em;
   letter-spacing: 0;
 }
 .topbar .right { display: flex; gap: 16px; align-items: center; }
