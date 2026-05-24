@@ -115,7 +115,7 @@ img { display: block; max-width: 100%; }
    si queda alto, bájalo (p.ej 0.19em). */
 .topbar .brand-tm {
   font-size: 0.52em;
-  vertical-align: var(--tm-rise, 0.66em);
+  vertical-align: var(--tm-rise, 0.65em);
   line-height: 0;
   margin-left: 0.06em;
   letter-spacing: 0;
