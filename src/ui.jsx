@@ -178,15 +178,13 @@ function Loader({ onDone }) {
       </div>
 
       <div className="loader-mid">
-        <div className="loader-word">DUMPLINGS</div>
-        <div className="loader-word"><span className="amp">&amp;</span></div>
-        <div className="loader-word">DESOBEDIENCIA</div>
+        <div className="loader-count-big">{String(pct).padStart(3, "0")}<span className="loader-pct">%</span></div>
       </div>
 
       <div>
         <div className="loader-bar"><i style={{ width: pct + "%" }} /></div>
         <div className="loader-bot">
-          <span>Cargando carta · {String(pct).padStart(3, "0")}</span>
+          <span>Cargando</span>
           <span>Sin reserva · 13.00 / 20.00</span>
         </div>
       </div>

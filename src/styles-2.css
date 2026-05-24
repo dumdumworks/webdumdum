@@ -60,7 +60,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(260px, 30vw, 460px);
+  width: clamp(130px, 15vw, 230px);
 }
 .hero-logo img {
   width: 100%;
@@ -78,6 +78,30 @@
   padding: 16px 28px;
   font-size: 12px;
   letter-spacing: 0.08em;
+}
+
+/* Toast "Próximamente" (Take Away / Merch) · aviso discreto que aparece
+   y se desvanece. Centrado bajo los botones del hero. */
+.home-toast {
+  margin: 18px auto 0;
+  max-width: 520px;
+  text-align: center;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--red);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 12px 20px;
+  background: var(--bg);
+  animation: toastIn 0.32s ease;
+}
+.home-toast a { text-decoration: underline; }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
 }
 
 /* Responsive: ≤1100px, las dos coords laterales se pliegan
@@ -119,9 +143,16 @@
   .hero-info-r { text-align: center; white-space: normal; }
   .hero-coord-l,
   .hero-coord-r { justify-self: center; text-align: center; }
-  .hero-logo { width: min(78vw, 360px); }
+  .hero-logo { width: min(39vw, 180px); }
   .hero-actions { width: 100%; flex-direction: column; align-items: stretch; }
   .hero-actions .btn { justify-content: center; padding: 14px 20px; }
+  /* Los 4 botones de la home en 2 columnas iguales (2×2) en móvil */
+  .hero-actions-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .hero-actions-4 .btn { width: 100%; }
 }
 .hero-wordmark {
   font-family: var(--font-display);

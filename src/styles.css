@@ -115,7 +115,7 @@ img { display: block; max-width: 100%; }
    si queda alto, bájalo (p.ej 0.19em). */
 .topbar .brand-tm {
   font-size: 0.52em;
-  vertical-align: var(--tm-rise, 0.65em);
+  vertical-align: var(--tm-rise, 0.23em);
   line-height: 0;
   margin-left: 0.06em;
   letter-spacing: 0;
@@ -273,15 +273,22 @@ img { display: block; max-width: 100%; }
   flex: 1;
   display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
 }
-.loader-word {
+.loader-count-big {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(64px, 18vw, 280px);
+  font-size: clamp(96px, 26vw, 360px);
   line-height: 0.82;
   letter-spacing: -0.06em;
-  white-space: nowrap;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
 }
-.loader-word .amp { color: var(--red); font-weight: 400; font-style: italic; }
+.loader-pct {
+  font-size: 0.28em;
+  font-weight: 600;
+  margin-left: 0.1em;
+  letter-spacing: 0;
+}
 .loader-count { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 13px; letter-spacing: 0.08em; }
 .loader-bar { height: 1px; background: var(--line-soft); position: relative; margin: 18px 0; }
 .loader-bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); }

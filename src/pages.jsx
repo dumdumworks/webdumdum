@@ -202,19 +202,23 @@ function DraggableClaim() {
 
 // ── HOME ──────────────────────────────────────────────────────
 function Home() {
+  // Toast "Próximamente" (Take Away, Merch). Mensaje + visibilidad.
+  const [toast, setToast] = React.useState(null);
+  const toastTimer = React.useRef(null);
+  const showToast = (msg) => {
+    setToast(msg);
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(null), 5000);
+  };
+  React.useEffect(() => () => { if (toastTimer.current) clearTimeout(toastTimer.current); }, []);
+
+  const UBER_URL = "https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY";
+
   return (
     <div data-screen-label="home">
       <section className="home home-index">
         <div className="hero-index">
           <div className="hero-stage">
-            {/* Coordenadas Blasco de Garay · izquierda */}
-            <div className="hero-coord hero-coord-l">
-              <div className="muted">MAD · ES</div>
-              <div><b>40.4326° N</b></div>
-              <div><b>3.7102° W</b></div>
-              <div style={{ marginTop: 8 }} className="muted">EST. DOSMIL24</div>
-            </div>
-
             {/* Bloque horario, pegado a la izda del logo */}
             <div className="hero-info hero-info-l">
               <div>TODOS LOS DÍAS</div>
@@ -231,21 +235,26 @@ function Home() {
               <div>BLASCO DE GARAY, 10 — MADRID</div>
               <div>INFANTA MERCEDES, 17 — MADRID</div>
             </div>
-
-            {/* Coordenadas Infanta Mercedes · derecha */}
-            <div className="hero-coord hero-coord-r">
-              <div className="muted">MAD · ES</div>
-              <div><b>40.4595° N</b></div>
-              <div><b>3.6989° W</b></div>
-              <div style={{ marginTop: 8 }} className="muted">EST. DOSMIL24</div>
-            </div>
           </div>
 
-          <div className="hero-actions">
-            <a className="btn red" href="#/menu">Ver la carta →</a>
+          <div className="hero-actions hero-actions-4">
             <a className="btn" href="#" onClick={(e) => e.preventDefault()}>Reservar en Tetuán →</a>
-            <a className="btn" href="#/locales">Cómo llegar</a>
+            <a className="btn" href="#/locales">Cómo llegar →</a>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => showToast("uber")}>
+              Take Away →
+            </button>
+            <a className="btn red" href={UBER_URL} target="_blank" rel="noreferrer">Uber Eats →</a>
           </div>
+          {toast &&
+            <div className="home-toast" role="status">
+              {toast === "uber" ?
+                <span>Próximamente. De momento puedes pedir para recoger en <a href={UBER_URL} target="_blank" rel="noreferrer">Uber Eats →</a></span> :
+                <span>Próximamente.</span>}
+            </div>
+          }
         </div>
       </section>
 
@@ -301,7 +310,7 @@ function Home() {
           <div className="t">Uber Eats →</div>
           <div className="d">NI TE MUEVAS</div>
         </a>
-        <a className="map-cell" href="#" onClick={(e) => e.preventDefault()}>
+        <a className="map-cell" href="#" onClick={(e) => { e.preventDefault(); showToast("uber"); }}>
           <div className="n">[03]</div>
           <div className="t">Take Away →</div>
           <div className="d">PRÓXIMAMENTE</div>
@@ -331,7 +340,7 @@ function Home() {
           <div className="t">DD*Radio →</div>
           <div className="d">SPOTIFY</div>
         </a>
-        <a className="map-cell" href="#" onClick={(e) => e.preventDefault()}>
+        <a className="map-cell" href="#" onClick={(e) => { e.preventDefault(); showToast("soon"); }}>
           <div className="n">[09]</div>
           <div className="t">DD*Mer®ch →</div>
           <div className="d">PRÓXIMAMENTE</div>
