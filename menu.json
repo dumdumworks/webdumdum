@@ -187,6 +187,7 @@
           "ingredients": "Navidad todo el año",
           "price": "2,85",
           "tags": [],
+          "available": true,
           "image": "/img/dumplings/turron.jpg",
           "logo": ""
         },
