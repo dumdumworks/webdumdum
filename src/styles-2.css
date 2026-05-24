@@ -91,7 +91,7 @@
   font-weight: 600;
   color: var(--red);
   line-height: 1;
-  margin-top: 16px;
+  margin-top: 8px;
   animation: scrollNudge 1.6s ease-in-out infinite;
 }
 @keyframes scrollNudge {
@@ -145,7 +145,7 @@
 @media (max-width: 780px) {
   .home-index {
     min-height: calc(100vh - 56px);
-    padding: 24px var(--gutter) 36px;
+    padding: 24px var(--gutter) 52px;
     justify-content: center;
   }
   .hero-index { gap: 44px; padding: 0; }
@@ -233,15 +233,16 @@
 /* Celda-sello · oculta en desktop (la rejilla 3×3 no tiene hueco) */
 .map-cell-seal {
   display: none;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  transition: background .2s ease;
+  padding: 20px;
+  background: var(--bg);
 }
-.map-cell-seal .seal-mark { width: 72%; max-width: 180px; height: auto; }
+.map-cell-seal .seal-mark { width: 78%; max-width: 200px; height: auto; }
 /* Estado activo: fondo rojo + claim blanco centrado */
 .map-cell-seal.is-active { background: var(--ink); }
-.map-cell-seal .seal-claim { width: 80%; max-width: 200px; height: auto; }
+.map-cell-seal .seal-claim { width: 86%; max-width: 230px; height: auto; }
 .map-cell {
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
