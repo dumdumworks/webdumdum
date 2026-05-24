@@ -375,7 +375,7 @@ function Menu() {
 
   return (
     <div data-screen-label="menu">
-      <div className="menu-shell" id="carta-top">
+      <div className="menu-shell">
         <div className="menu-head">
           <div className="row between">
             <div>
@@ -485,11 +485,7 @@ function Menu() {
           <button
             className="btn menu-foot-btn menu-top-btn"
             type="button"
-            onClick={() => {
-              const el = document.getElementById("carta-top");
-              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-              else window.scrollTo({ top: 0, behavior: "smooth" });
-            }}>
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
             Volver arriba <span className="menu-top-arrow" aria-hidden="true">↑</span>
           </button>
           }
