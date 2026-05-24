@@ -214,6 +214,9 @@ function Home() {
 
   const UBER_URL = "https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY";
 
+  // Sello: al tocarlo alterna a estado "activo" (fondo rojo + claim).
+  const [sealActive, setSealActive] = React.useState(false);
+
   return (
     <div data-screen-label="home">
       <section className="home home-index">
@@ -339,10 +342,17 @@ function Home() {
           <div className="t">DD*Mer®ch →</div>
           <div className="d">PRÓXIMAMENTE</div>
         </a>
-        {/* Celda-sello · rellena el hueco de la rejilla en móvil (2 col) */}
-        <div className="map-cell map-cell-seal" aria-hidden="true">
-          <img src="img/dumdum-sello.svg" alt="" />
-        </div>
+        {/* Celda-sello · rellena el hueco de la rejilla en móvil (2 col).
+            Al tocarla, alterna a estado rojo con el claim "DESOBEDECER...". */}
+        <button
+          type="button"
+          className={`map-cell map-cell-seal ${sealActive ? "is-active" : ""}`}
+          onClick={() => setSealActive((v) => !v)}
+          aria-label="DUM DUM">
+          {sealActive ?
+            <img className="seal-claim" src="img/dumdum-desobedecer.svg" alt="Desobedecer es un derecho y una obligación" /> :
+            <img className="seal-mark" src="img/dumdum-sello.svg" alt="" />}
+        </button>
       </nav>
 
       {/* Spec footer */}
