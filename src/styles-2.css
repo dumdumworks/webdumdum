@@ -238,11 +238,27 @@
   justify-content: center;
   padding: 20px;
   background: var(--bg);
+  transition: background .25s ease;
 }
-.map-cell-seal .seal-mark { width: 78%; max-width: 200px; height: auto; }
-/* Estado activo: fondo rojo + claim blanco centrado */
-.map-cell-seal.is-active { background: var(--ink); }
-.map-cell-seal .seal-claim { width: 86%; max-width: 230px; height: auto; }
+/* El sello se pinta con máscara: el color lo da background-color, así
+   puede invertirse (rojo→crema) igual que el texto de las demás celdas. */
+.map-cell-seal .seal-mark {
+  display: block;
+  width: 78%;
+  max-width: 200px;
+  aspect-ratio: 129.6 / 130.32;
+  background-color: var(--ink);
+  -webkit-mask: url("../img/dumdum-sello.svg") no-repeat center / contain;
+  mask: url("../img/dumdum-sello.svg") no-repeat center / contain;
+  transition: background-color .25s ease;
+}
+/* Al pinchar/hover: fondo rojo y sello en crema (colores invertidos) */
+.map-cell-seal:hover,
+.map-cell-seal:active,
+.map-cell-seal:focus { background: var(--ink); }
+.map-cell-seal:hover .seal-mark,
+.map-cell-seal:active .seal-mark,
+.map-cell-seal:focus .seal-mark { background-color: var(--bg); }
 .map-cell {
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
