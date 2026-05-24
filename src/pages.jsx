@@ -350,6 +350,18 @@ function Home() {
 function Menu() {
   const [data, setData] = React.useState(window.DumDumData.loadMenu());
 
+  // Detectar móvil (≤879px) para renderizar el botón "Volver arriba"
+  // SOLO en móvil. Se actualiza al redimensionar / girar el dispositivo.
+  const [isMobile, setIsMobile] = React.useState(
+    typeof window !== "undefined" && window.matchMedia("(max-width: 879px)").matches
+  );
+  React.useEffect(() => {
+    const mq = window.matchMedia("(max-width: 879px)");
+    const onChange = (e) => setIsMobile(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   // Re-cargar si vuelves desde admin
   React.useEffect(() => {
     const onFocus = () => setData(window.DumDumData.loadMenu());
@@ -363,7 +375,7 @@ function Menu() {
 
   return (
     <div data-screen-label="menu">
-      <div className="menu-shell">
+      <div className="menu-shell" id="carta-top">
         <div className="menu-head">
           <div className="row between">
             <div>
@@ -464,9 +476,23 @@ function Menu() {
         </aside>
 
         <div className="menu-foot">
-          {/* href="#" PROVISIONAL · cambiar cuando exista el editor/PDF de alérgenos */}
-          <a className="btn menu-foot-btn" href="#">Alérgenos →</a>
-          <div className="menu-foot-text">Si tienes alguna alergia, alguna intolerancia o, simplemente, dudas, pregúntanos, que somos muy majos.</div>
+          <div className="menu-foot-left">
+            {/* href="#" PROVISIONAL · cambiar cuando exista el editor/PDF de alérgenos */}
+            <a className="btn menu-foot-btn" href="#">Alérgenos →</a>
+            <div className="menu-foot-text">Si tienes alguna alergia, alguna intolerancia o, simplemente, dudas, pregúntanos, que somos muy majos.</div>
+          </div>
+          {isMobile &&
+          <button
+            className="btn menu-foot-btn menu-top-btn"
+            type="button"
+            onClick={() => {
+              const el = document.getElementById("carta-top");
+              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+              else window.scrollTo({ top: 0, behavior: "smooth" });
+            }}>
+            Volver arriba <span className="menu-top-arrow" aria-hidden="true">↑</span>
+          </button>
+          }
         </div>
       </div>
     </div>);

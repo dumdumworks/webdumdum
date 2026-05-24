@@ -749,17 +749,41 @@
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: 24px;
+}
+.menu-foot-left {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+  min-width: 0;
 }
 .menu-foot-btn { flex-shrink: 0; color: var(--red); border-color: var(--red); }
 .menu-foot-text {
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  font-weight: 600;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 500;
   font-size: 11px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0;
+  text-transform: uppercase;
   color: var(--red);
   line-height: 1.5;
+}
+/* Botón "Volver arriba" · se renderiza SOLO en móvil (ver Menu en pages.jsx) */
+.menu-top-btn { flex-shrink: 0; color: var(--red); border-color: var(--red); }
+.menu-top-arrow {
+  display: inline-block;
+  animation: topNudge 1.8s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes topNudge {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(-4px); opacity: 0.6; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-top-arrow { animation: none; }
 }
 
 /* Sección visible SOLO en mobile (p. ej. Bebidas) · oculta en desktop */
@@ -1342,6 +1366,13 @@
 @media (max-width: 879px) {
   .ev-photo-grid { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
   .ev-photo-ph span { font-size: 9px; }
+}
+
+/* Pie de la carta en móvil: alérgenos+texto a ancho completo arriba,
+   y el botón "Volver arriba" alineado a la derecha debajo. */
+@media (max-width: 879px) {
+  .menu-foot-left { flex: 1 1 100%; }
+  .menu-top-btn { margin-left: auto; }
 }
 
 /* ---------- QUIENES SOMOS ---------- */
