@@ -556,10 +556,8 @@ function EstadoLocal({ tramos }) {
         <span className="dot dot-live" /> Abierto · cierra {est.hora}h
       </div>);
   }
-  // Frase natural según cuándo vuelve a abrir
-  const frase = est.cuando === "mañana"
-    ? `Abrimos mañana a las ${est.hora}h`
-    : `Abrimos esta noche a las ${est.hora}h`;
+  // Texto coherente: siempre la hora del próximo tramo de apertura.
+  const frase = `Cerrado. Nos vemos a partir de las ${est.hora}h`;
   return (
     <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
       <span className="dot dot-closed" /> {frase}
