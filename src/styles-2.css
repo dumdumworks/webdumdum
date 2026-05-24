@@ -1164,7 +1164,9 @@
      - Poco espacio entre el título y el texto. */
   .ev-split > div { padding: 32px var(--gutter); }
   .ev-split > div:first-child { border-right: none; border-bottom: none; padding-bottom: 0; }
-  .ev-split > div:last-child { padding-top: 16px; }
+  /* 32px entre el primer bloque (título / título+botón) y el texto.
+     Coincide con el marginTop:32 de los botones → todos los huecos iguales. */
+  .ev-split > div:last-child { padding-top: 32px; }
   /* El formulario de contacto también a 1 columna: título arriba, campos debajo */
   .ev-split.ev-split--contact { grid-template-columns: 1fr; }
   .ev-split.ev-split--contact > div:first-child { border-right: none; border-bottom: none; padding-bottom: 0; }
