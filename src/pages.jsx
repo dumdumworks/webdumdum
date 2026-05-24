@@ -569,7 +569,7 @@ function Locales() {
     <div data-screen-label="locales">
       <section style={{ padding: '14vh var(--gutter) 6vh', borderBottom: '1px solid var(--line)' }}>
         <div className="tiny muted">[02] Locales</div>
-        <h1 className="h-display" style={{ marginTop: 16 }}>Dos puertas<br />en Madrid.</h1>
+        <h1 className="h-display" style={{ marginTop: 16 }}>Dos casas<br />en Madrid.</h1>
       </section>
 
       <div className="locales">
@@ -608,7 +608,7 @@ function Locales() {
               <b>Dirección</b><div>Infanta Mercedes, 17 · 28020 Madrid</div>
               <b>Metro</b><div>Tetuán · Estrecho</div>
               <b>Horario</b><div>13.00–15.39 / 20.00–22.39</div>
-              <b>Aforo</b><div>36 comensales · 40 m²</div>
+              <b>Aforo</b><div>~40 comensales</div>
               <b>Reserva</b><div style={{ color: '#1f8a5b', fontWeight: 500 }}>Sí · online</div>
             </div>
 
