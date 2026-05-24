@@ -557,7 +557,7 @@ function EstadoLocal({ tramos }) {
       </div>);
   }
   // Texto coherente: siempre la hora del próximo tramo de apertura.
-  const frase = `Cerrado. Nos vemos a partir de las ${est.hora}h`;
+  const frase = `Nos vemos a partir de las ${est.hora}h`;
   return (
     <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
       <span className="dot dot-closed" /> {frase}
