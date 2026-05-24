@@ -111,11 +111,11 @@ img { display: block; max-width: 100%; }
 /* ™ alineado al TOP de las letras (como el logo de marca).
    vertical-align calculado con la métrica de Helvetica: para que el top del
    ™ (a 0.52em) coincida con el cap-top de la "M", la subida es ~0.23em.
-   AJUSTE FINO: si el ™ queda un pelín bajo, sube --tm-rise (p.ej 0.27em);
-   si queda alto, bájalo (p.ej 0.19em). */
+   AJUSTE FINO: si el ™ queda un pelín bajo, sube --tm-rise (p.ej 0.70em);
+   si queda alto, bájalo (p.ej 0.60em). Valor actual confirmado: 0.66em. */
 .topbar .brand-tm {
   font-size: 0.52em;
-  vertical-align: var(--tm-rise, 0.23em);
+  vertical-align: var(--tm-rise, 0.66em);
   line-height: 0;
   margin-left: 0.06em;
   letter-spacing: 0;

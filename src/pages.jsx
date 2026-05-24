@@ -248,13 +248,6 @@ function Home() {
             </button>
             <a className="btn red" href={UBER_URL} target="_blank" rel="noreferrer">Uber Eats →</a>
           </div>
-          {toast &&
-            <div className="home-toast" role="status">
-              {toast === "uber" ?
-                <span>Próximamente. De momento puedes pedir para recoger en <a href={UBER_URL} target="_blank" rel="noreferrer">Uber Eats →</a></span> :
-                <span>Próximamente.</span>}
-            </div>
-          }
         </div>
       </section>
 
@@ -366,6 +359,15 @@ function Home() {
           Chamberí: turnos | Tetuán: reservas
         </div>
       </section>
+
+      {/* Toast flotante "Próximamente" (Take Away / Merch) · fijo abajo */}
+      {toast &&
+        <div className="home-toast" role="status">
+          {toast === "uber" ?
+            <span>Próximamente. De momento puedes pedir para recoger en <a href={UBER_URL} target="_blank" rel="noreferrer">Uber Eats →</a></span> :
+            <span>Próximamente.</span>}
+        </div>
+      }
     </div>);
 
 }
