@@ -187,8 +187,23 @@
           "ingredients": "Navidad todo el año",
           "price": "2,85",
           "tags": [],
-          "available": true,
+          "available": false,
           "image": "/img/dumplings/turron.jpg",
+          "logo": ""
+        },
+        {
+          "id": "coco",
+          "n": 0,
+          "name": "Coco",
+          "tagline": "",
+          "ingredients": "Chanel",
+          "price": "2,85",
+          "tags": [
+            "NEW"
+          ],
+          "available": true,
+          "featured": false,
+          "image": "/img/dumplings/coco.jpg",
           "logo": ""
         },
         {
