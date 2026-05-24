@@ -328,12 +328,12 @@ function Home() {
         </a>
         <a className="map-cell" href="#" onClick={(e) => e.preventDefault()}>
           <div className="n">[08]</div>
-          <div className="t">DD* Radio →</div>
+          <div className="t">DD*Radio →</div>
           <div className="d">SPOTIFY</div>
         </a>
         <a className="map-cell" href="#" onClick={(e) => e.preventDefault()}>
           <div className="n">[09]</div>
-          <div className="t">DD* Mer®ch →</div>
+          <div className="t">DD*Mer®ch →</div>
           <div className="d">PRÓXIMAMENTE</div>
         </a>
       </nav>
