@@ -372,7 +372,7 @@ function Home() {
       <section className="spec-foot" id="home-end">
         <div>
           <b>{t("Año", "Year")}</b>
-          © DOSMIL24
+          © {window.i18n.autoLocalize("DOSMIL24")}
         </div>
         <div>
           <b>{t("Locales", "Locations")}</b>
@@ -457,7 +457,7 @@ function Menu() {
           <div className="row between">
             <div>
               <h1 className="menu-h">{t("Carta", "Menu")}</h1>
-              <div className="menu-sub">{t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated")} {data.updated}</div>
+              <div className="menu-sub">{t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated")} {window.i18n.autoLocalize(data.updated)}</div>
             </div>
           </div>
         </div>
@@ -660,14 +660,14 @@ function EstadoLocal({ tramos }) {
   const est = estadoApertura(tramos);
   if (est.abierto) {
     return (
-      <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
+      <div className="row gap-s tiny estado-local" style={{ marginBottom: 16 }}>
         <span className="dot dot-live" /> {t("Abierto · cierra", "Open · closes")} {est.hora}h
       </div>);
   }
   // Texto coherente: siempre la hora del próximo tramo de apertura.
   const frase = t(`Nos vemos a partir de las ${est.hora}h`, `See you from ${est.hora}h`);
   return (
-    <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
+    <div className="row gap-s tiny estado-local" style={{ marginBottom: 16 }}>
       <span className="dot dot-closed" /> {frase}
     </div>);
 }
@@ -687,7 +687,7 @@ function Locales() {
           <div>
             <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
             <h2>Chamberí.</h2>
-            <div className="tiny muted" style={{ marginTop: 8 }}>{t("Local original · desde DOSMIL24", "Original spot · since DOSMIL24")}</div>
+            <div className="tiny muted" style={{ marginTop: 8 }}>{t("Local original · desde DOSMIL24", "Original spot · since TWENTY24")}</div>
 
             <div className="info">
               <b>{t("Dirección", "Address")}</b><div>Blasco de Garay, 10 · 28015 Madrid</div>
@@ -712,7 +712,7 @@ function Locales() {
           <div>
             <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
             <h2>Tetuán.</h2>
-            <div className="tiny muted" style={{ marginTop: 8 }}>{t("SEGUNDO LOCAL · DESDE DOSMIL26", "SECOND SPOT · SINCE DOSMIL26")}</div>
+            <div className="tiny muted" style={{ marginTop: 8 }}>{t("SEGUNDO LOCAL · DESDE DOSMIL26", "SECOND SPOT · SINCE TWENTY26")}</div>
 
             <div className="info">
               <b>{t("Dirección", "Address")}</b><div>Infanta Mercedes, 17 · 28020 Madrid</div>
@@ -746,7 +746,7 @@ function Locales() {
         <div><b>{t("Interiorismo", "Interior design")}</b>Nota Estudio</div>
         <div><b>{t("Identidad", "Identity")}</b>Yerai Gómez</div>
         <div><b>{t("Cocina", "Kitchen")}</b>Kéril Gómez · BCC</div>
-        <div><b>{t("Año apertura", "Opening year")}</b>CHAMBERÍ · DOSMIL24 | TETUÁN · DOSMIL26</div>
+        <div><b>{t("Año apertura", "Opening year")}</b>{window.i18n.autoLocalize("CHAMBERÍ · DOSMIL24 | TETUÁN · DOSMIL26")}</div>
       </section>
     </div>);
 

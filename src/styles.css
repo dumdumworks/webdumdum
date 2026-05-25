@@ -192,8 +192,10 @@ img { display: block; max-width: 100%; }
   .topbar .right { display: none !important; }
   /* Mostramos el botón hamburguesa */
   .topbar-burger { display: flex !important; }
-  /* Grupo derecho móvil (Reservar permanente + hamburguesa) visible */
-  .topbar-mobile-right { display: flex !important; }
+  /* Grupo derecho móvil (idioma + Reservar permanente + hamburguesa) visible */
+  .topbar-mobile-right { display: flex !important; gap: 12px; }
+  .topbar-mobile-right .lang-toggle { flex: none; padding: 6px 2px; }
+  .topbar-mobile-right .topbar-reservar-mobile { flex: none; }
   /* El nav móvil pasa a panel desplegable bajo la barra */
   .topbar .nav-mobile {
     display: flex;
@@ -246,9 +248,6 @@ img { display: block; max-width: 100%; }
 @keyframes dotPulseRed {
   0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,0,30,0.5); }
   50% { opacity: 0.55; box-shadow: 0 0 0 4px rgba(255,0,30,0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .dot-live { animation: none; }
 }
 
 /* ---------- Hover / interactions ---------- */
