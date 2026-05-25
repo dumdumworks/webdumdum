@@ -27,7 +27,9 @@ collections:
             fields:
               - { name: "id", label: "ID interno", widget: "string", hint: "No usar espacios ni acentos. Ej: dumplings" }
               - { name: "title", label: "Titulo de la seccion", widget: "string" }
+              - { name: "title_en", label: "Titulo de la seccion (EN)", widget: "string", required: false, hint: "Version en ingles. Si lo dejas vacio, se muestra el espanol." }
               - { name: "note", label: "Nota bajo el titulo", widget: "string", required: false }
+              - { name: "note_en", label: "Nota bajo el titulo (EN)", widget: "string", required: false, hint: "Version en ingles. Si lo dejas vacio, se muestra el espanol." }
               - name: "items"
                 label: "Platos"
                 widget: "list"
@@ -37,8 +39,11 @@ collections:
                   - { name: "id", label: "ID interno", widget: "string", hint: "Sin espacios ni acentos. Ej: muaythai" }
                   - { name: "n", label: "Numero", widget: "number", value_type: "int", default: 0 }
                   - { name: "name", label: "Nombre del plato", widget: "string" }
+                  - { name: "name_en", label: "Nombre del plato (EN)", widget: "string", required: false, hint: "Version en ingles. Si lo dejas vacio, se muestra el espanol." }
                   - { name: "tagline", label: "Tagline (mayusculas)", widget: "string", required: false }
+                  - { name: "tagline_en", label: "Tagline (EN)", widget: "string", required: false, hint: "Version en ingles. Si lo dejas vacio, se muestra el espanol." }
                   - { name: "ingredients", label: "Ingredientes", widget: "text", required: false }
+                  - { name: "ingredients_en", label: "Ingredientes (EN)", widget: "text", required: false, hint: "Version en ingles. Si lo dejas vacio, se muestra el espanol." }
                   - { name: "price", label: "Precio (sin EUR, ej: 9,50)", widget: "string" }
                   - name: "tags"
                     label: "Etiquetas"
