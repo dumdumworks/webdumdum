@@ -376,15 +376,19 @@ function Home() {
         </div>
         <div>
           <b>{t("Locales", "Locations")}</b>
-          {t("02 (so far) / Madrid / Chamberí · Tetuán", "02 (so far) / Madrid / Chamberí · Tetuán")}
-        </div>
-        <div>
-          <b>{t("Carta", "Menu")}</b>
-          {t("Mensual / vapor", "Monthly / steamed")}
+          <a className="spec-link" href="/locales">
+            <strong style={{ fontWeight: 700 }}>Madrid</strong> {"→"} Chamberí | Tetuán
+          </a>
         </div>
         <div>
           <b>{t("Sistema", "System")}</b>
-          {t("Chamberí: turnos | Tetuán: reservas", "Chamberí: walk-in | Tetuán: booking")}
+          <a className="spec-link" href="/locales">
+            {t("Chamberí: turnos | Tetuán: reservas", "Chamberí: walk-in | Tetuán: booking")}
+          </a>
+        </div>
+        <div>
+          <b>{t("Carta", "Menu")}</b>
+          {t("Una vez al mes, un dumpling nuevo", "Once a month, a new dumpling")}
         </div>
       </section>
 
@@ -863,7 +867,6 @@ function Locales() {
               style={{ width: "100%", height: "100%", border: 0 }} />
           </div>
         </div>
-      </div>
 
         <div className="locale-card">
           <div>
@@ -889,8 +892,9 @@ function Locales() {
               style={{ width: "100%", height: "100%", border: 0 }} />
           </div>
         </div>
+      </div>
 
-<section className="spec-foot">
+      <section className="spec-foot">
         <div><b>{t("Interiorismo", "Interior design")}</b>Nota Estudio</div>
         <div><b>{t("Identidad", "Identity")}</b>Yerai Gómez</div>
         <div><b>{t("Cocina", "Kitchen")}</b>Kéril Gómez · BCC</div>

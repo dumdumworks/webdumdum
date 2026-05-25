@@ -310,6 +310,18 @@
   border-right: 1px solid var(--line);
 }
 .spec-foot > div:last-child { border-right: none; }
+/* Enlaces dentro del spec-foot (Locales, Sistema): mismo aspecto que el
+   texto normal, con un subrayado sutil solo al pasar el ratón. */
+.spec-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.spec-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
 .spec-foot b { font-weight: 500; display: block; margin-bottom: 8px; color: rgba(255,0,30,0.55); }
 
 /* Marquee */
