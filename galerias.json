@@ -94,27 +94,27 @@
   "prensa": [
     {
       "src": "/img/prensa/elpais.jpg",
-      "url": "",
+      "url": "https://elpais.com/espana/madrid/2026-02-20/dum-dum-taura-studio-y-matcha-atelier-tres-planes-que-demuestran-que-lo-poco-es-doblemente-bueno.html",
       "pos": "50% 50%"
     },
     {
       "src": "/img/prensa/vogue.jpg",
-      "url": "",
+      "url": "https://www.vogue.es/articulos/restaurantes-comida-rapida-ricos-madrid",
       "pos": "50% 50%"
     },
     {
       "src": "/img/prensa/forbes.jpg",
-      "url": "",
+      "url": "https://forbes.es/forbestravel/875173/el-madrid-mas-cool-los-10-lugares-que-no-te-puedes-perder-en-tu-proxima-escapada/",
       "pos": "50% 50%"
     },
     {
       "src": "/img/prensa/neo2.jpg",
-      "url": "",
+      "url": "https://www.neo2.com/dum-dum-bernabeu/",
       "pos": "50% 50%"
     },
     {
       "src": "/img/prensa/marca.jpg",
-      "url": "",
+      "url": "https://www.marca.com/tiramillas/gastronomia/2025/10/13/dum-dum-une-dos-espanas-dumpling-croqueta-jamon.html",
       "pos": "50% 50%"
     }
   ],
