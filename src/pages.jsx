@@ -1096,6 +1096,7 @@ const WEB3FORMS_KEY = "7b16c2a8-ccbd-4c0a-8d29-0562bd8646a0";
 const EVENTOS_EMAIL = "dumdum@dum-dum.es";
 
 function EventosForm() {
+  const lang = useLang();
   const [form, setForm] = React.useState({ nombre: "", empresa: "", email: "", telefono: "", fecha: "", asistentes: "", mensaje: "" });
   const [state, setState] = React.useState("idle"); // idle · sending · ok · error
   const [errMsg, setErrMsg] = React.useState("");
@@ -1119,7 +1120,7 @@ function EventosForm() {
     e.preventDefault();
     if (!form.nombre || !form.email || !form.telefono || !form.fecha) {
       setState("error");
-      setErrMsg("Rellena los campos obligatorios: nombre, email, teléfono y fecha del evento.");
+      setErrMsg(t("Rellena los campos obligatorios: nombre, email, teléfono y fecha del evento.", "Please fill in the required fields: name, email, phone and event date."));
       return;
     }
     setState("sending");
@@ -1162,24 +1163,24 @@ function EventosForm() {
         setForm({ nombre: "", empresa: "", email: "", telefono: "", fecha: "", asistentes: "", mensaje: "" });
       } else {
         setState("error");
-        setErrMsg(data.message || "No se pudo enviar. Inténtalo de nuevo o escríbenos directamente.");
+        setErrMsg(data.message || t("No se pudo enviar. Inténtalo de nuevo o escríbenos directamente.", "Couldn't send. Try again or email us directly."));
       }
     } catch (err) {
       setState("error");
-      setErrMsg("No hay conexión. Inténtalo de nuevo.");
+      setErrMsg(t("No hay conexión. Inténtalo de nuevo.", "No connection. Please try again."));
     }
   };
 
   if (state === "ok") {
     return (
       <div className="ev-form ev-form-ok">
-        <div className="tiny muted">Mensaje enviado</div>
+        <div className="tiny muted">{t("Mensaje enviado", "Message sent")}</div>
         <h3 className="h-2" style={{ marginTop: 12 }}>
-          Gracias. <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>Te contestamos cuanto antes.</em>
+          {t("Gracias.", "Thank you.")} <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>{t("Te contestamos cuanto antes.", "We'll get back to you asap.")}</em>
         </h3>
         <button type="button" className="btn" style={{ marginTop: 24 }}
         onClick={() => setState("idle")}>
-          Enviar otra solicitud
+          {t("Enviar otra solicitud", "Send another request")}
         </button>
       </div>);
 
@@ -1189,24 +1190,24 @@ function EventosForm() {
     <form className="ev-form" onSubmit={submit}>
       <div className="ev-form-row ev-form-row-3">
         <label className="ev-field">
-          <span>Nombre y apellido *</span>
+          <span>{t("Nombre y apellido *", "Full name *")}</span>
           <input
             type="text"
             value={form.nombre}
             onChange={(e) => set("nombre", e.target.value)}
             required
-            placeholder="Tu nombre" />
+            placeholder={t("Tu nombre", "Your name")} />
         </label>
         <label className="ev-field">
-          <span>Empresa</span>
+          <span>{t("Empresa", "Company")}</span>
           <input
             type="text"
             value={form.empresa}
             onChange={(e) => set("empresa", e.target.value)}
-            placeholder="Tu empresa (opcional)" />
+            placeholder={t("Tu empresa (opcional)", "Your company (optional)")} />
         </label>
         <label className="ev-field">
-          <span>Email *</span>
+          <span>{t("Email *", "Email *")}</span>
           <input
             type="email"
             value={form.email}
@@ -1218,7 +1219,7 @@ function EventosForm() {
 
       <div className="ev-form-row ev-form-row-3">
         <label className="ev-field">
-          <span>Teléfono *</span>
+          <span>{t("Teléfono *", "Phone *")}</span>
           <input
             type="tel"
             value={form.telefono}
@@ -1227,7 +1228,7 @@ function EventosForm() {
             placeholder="+34 600 000 000" />
         </label>
         <label className="ev-field">
-          <span>Fecha del evento *</span>
+          <span>{t("Fecha del evento *", "Event date *")}</span>
           <input
             type="date"
             value={form.fecha}
@@ -1235,31 +1236,31 @@ function EventosForm() {
             required />
         </label>
         <label className="ev-field">
-          <span>Número de asistentes</span>
+          <span>{t("Número de asistentes", "Number of guests")}</span>
           <select
             value={form.asistentes}
             onChange={(e) => set("asistentes", e.target.value)}
             className="ev-select">
-            <option value="">Selecciona…</option>
-            <option value="Menos de 10">Menos de 10</option>
-            <option value="Entre 10 y 15">Entre 10 y 15</option>
-            <option value="Entre 15 y 20">Entre 15 y 20</option>
-            <option value="Entre 20 y 25">Entre 20 y 25</option>
-            <option value="Entre 25 y 30">Entre 25 y 30</option>
-            <option value="Entre 30 y 35">Entre 30 y 35</option>
-            <option value="Entre 35 y 40">Entre 35 y 40</option>
-            <option value="Más de 40">Más de 40</option>
+            <option value="">{t("Selecciona…", "Select…")}</option>
+            <option value="Menos de 10">{t("Menos de 10", "Fewer than 10")}</option>
+            <option value="Entre 10 y 15">{t("Entre 10 y 15", "10 to 15")}</option>
+            <option value="Entre 15 y 20">{t("Entre 15 y 20", "15 to 20")}</option>
+            <option value="Entre 20 y 25">{t("Entre 20 y 25", "20 to 25")}</option>
+            <option value="Entre 25 y 30">{t("Entre 25 y 30", "25 to 30")}</option>
+            <option value="Entre 30 y 35">{t("Entre 30 y 35", "30 to 35")}</option>
+            <option value="Entre 35 y 40">{t("Entre 35 y 40", "35 to 40")}</option>
+            <option value="Más de 40">{t("Más de 40", "More than 40")}</option>
           </select>
         </label>
       </div>
 
       <label className="ev-field">
-        <span>¿Qué necesitas?</span>
+        <span>{t("¿Qué necesitas?", "What do you need?")}</span>
         <textarea
           value={form.mensaje}
           onChange={(e) => set("mensaje", e.target.value)}
           rows={5}
-          placeholder="Tipo de evento, comentarios…" />
+          placeholder={t("Tipo de evento, comentarios…", "Type of event, comments…")} />
       </label>
 
       {state === "error" &&
@@ -1268,7 +1269,7 @@ function EventosForm() {
 
       <button type="submit" className="btn red" disabled={state === "sending"}
       style={{ marginTop: 12 }}>
-        {state === "sending" ? "Enviando…" : "Enviar solicitud →"}
+        {state === "sending" ? t("Enviando…", "Sending…") : (t("Enviar solicitud", "Send request") + " →")}
       </button>
     </form>);
 
@@ -1592,20 +1593,23 @@ function Quienes() {
 
 // ── CONTACTO ──────────────────────────────────────────────────
 function Contacto() {
+  const lang = useLang();
   return (
     <div data-screen-label="contacto">
       <section className="contact">
         <div>
-          <div className="tiny muted">[04] Contacto</div>
-          <h1 style={{ marginTop: 16 }}>Saluda<span style={{ color: 'var(--red)' }}>.</span></h1>
+          <div className="tiny muted">[04] {t("Contacto", "Contact")}</div>
+          <h1 style={{ marginTop: 16 }}>{t("Saluda", "Say hi")}<span style={{ color: 'var(--red)' }}>.</span></h1>
           <p className="body" style={{ marginTop: 24 }}>
-            Por si te apetece preguntar, criticar, colaborar, vender,
-            invitar, contratar o invitarnos. La puerta y la bandeja están abiertas.
+            {t(
+              "Por si te apetece preguntar, criticar, colaborar, vender, invitar, contratar o invitarnos. La puerta y la bandeja están abiertas.",
+              "In case you fancy asking, complaining, collaborating, selling, inviting, hiring or treating us. The door and the inbox are open."
+            )}
           </p>
 
           <div style={{ marginTop: 48, display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <div className="tiny muted">Horario atención</div>
-            <div className="mono">LUN — VIE · 10.00 – 18.00</div>
+            <div className="tiny muted">{t("Horario atención", "Support hours")}</div>
+            <div className="mono">{t("LUN — VIE · 10.00 – 18.00", "MON — FRI · 10.00 – 18.00")}</div>
           </div>
         </div>
 
@@ -1624,9 +1628,9 @@ function Contacto() {
 
       <section className="spec-foot">
         <div><b>Email</b>dumdum@dum-dum.es</div>
-        <div><b>Reservas</b>Chamberí: turnos | Tetuán: reservas</div>
+        <div><b>{t("Reservas", "Booking")}</b>{t("Chamberí: turnos | Tetuán: reservas", "Chamberí: walk-in | Tetuán: booking")}</div>
         <div><b>Instagram</b>@dumdum_es</div>
-        <div><b>Teléfono</b>+34 614 746 065</div>
+        <div><b>{t("Teléfono", "Phone")}</b>+34 614 746 065</div>
       </section>
     </div>);
 

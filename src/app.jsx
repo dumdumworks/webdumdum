@@ -43,8 +43,8 @@ function NotFound() {
   return (
     <section style={{padding:'18vh var(--gutter)', textAlign:'left'}}>
       <div className="tiny muted">[404]</div>
-      <h1 className="h-display" style={{marginTop:16}}>Por aquí<br/>no hay carta.</h1>
-      <a href="#/" className="btn red" style={{marginTop:32}}>Volver al inicio →</a>
+      <h1 className="h-display" style={{marginTop:16}}>{window.i18n.t("Por aquí", "Nothing on")}<br/>{window.i18n.t("no hay carta.", "the menu here.")}</h1>
+      <a href="#/" className="btn red" style={{marginTop:32}}>{window.i18n.t("Volver al inicio", "Back home")} →</a>
     </section>
   );
 }
