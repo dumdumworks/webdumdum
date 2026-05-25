@@ -4,19 +4,49 @@
 
 function useRoute() {
   const [route, setRoute] = React.useState(
-    window.location.hash.slice(1) || "/"
+    window.location.pathname || "/"
   );
   React.useEffect(() => {
-    const onHash = () =>
-    setRoute(window.location.hash.slice(1) || "/");
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
+    const onNav = () =>
+    setRoute(window.location.pathname || "/");
+    // popstate cubre el botón atrás/adelante del navegador.
+    window.addEventListener("popstate", onNav);
+    // evento propio que dispara nav() al cambiar de ruta sin recargar.
+    window.addEventListener("dumdum:navigate", onNav);
+    return () => {
+      window.removeEventListener("popstate", onNav);
+      window.removeEventListener("dumdum:navigate", onNav);
+    };
   }, []);
   return route;
 }
 
 function nav(path) {
-  window.location.hash = path;
+  // Navegación sin recargar (URLs limpias, sin #).
+  if (window.location.pathname !== path) {
+    window.history.pushState({}, "", path);
+    window.dispatchEvent(new Event("dumdum:navigate"));
+  }
+}
+
+// Interceptor global: los clics en enlaces internos (href que empieza por "/")
+// navegan sin recargar la página. Los externos (http, tel, mailto) y los que
+// abren en pestaña nueva se dejan pasar con normalidad.
+if (typeof window !== "undefined" && !window.__dumdumLinkHandler) {
+  window.__dumdumLinkHandler = true;
+  document.addEventListener("click", function (e) {
+    // Respetar cmd/ctrl/click central (abrir en pestaña nueva).
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest ? e.target.closest("a") : null;
+    if (!a) return;
+    var href = a.getAttribute("href");
+    if (!href) return;
+    // Solo interceptar rutas internas absolutas ("/algo"), no externas ni anclas.
+    if (href.charAt(0) !== "/" || href.indexOf("//") === 0) return;
+    if (a.target === "_blank") return;
+    e.preventDefault();
+    nav(href);
+  });
 }
 
 // ─── Sistema de idioma (ES / EN) ──────────────────────────────
@@ -230,12 +260,12 @@ function TopBar({ route }) {
 
   return (
     <header className={`topbar ${menuOpen ? "menu-open" : ""}`} data-screen-label="top-bar">
-      <a href="#/" className="brand">DUM DUM<span className="brand-tm">™</span></a>
+      <a href="/" className="brand">DUM DUM<span className="brand-tm">™</span></a>
 
       {/* Nav DESKTOP centrado en la página */}
       <nav className="nav nav-desktop">
         {deskLinks.map((l) =>
-        <a key={l.p} href={`#${l.p}`} className={route === l.p ? "active" : ""}>
+        <a key={l.p} href={l.p} className={route === l.p ? "active" : ""}>
             {l.label}
           </a>
         )}
@@ -248,7 +278,7 @@ function TopBar({ route }) {
           <React.Fragment><span className="dot dot-live" /> {t("Abierto hasta las", "Open until")} {est.hora}h</React.Fragment> :
           <React.Fragment><span className="dot dot-closed" /> {t("Cerrado. Nos vemos a las", "Closed. See you at")} {est.hora}h</React.Fragment>}
         </span>
-        <a href="#/locales" className="topbar-reservar">{t("Reservar", "Book")} →</a>
+        <a href="/locales" className="topbar-reservar">{t("Reservar", "Book")} →</a>
         <LangToggle />
       </div>
 
@@ -257,14 +287,14 @@ function TopBar({ route }) {
         {mobileLinks.map((l, i) =>
         l.ext ?
         <a key={i} href={l.href} target="_blank" rel="noreferrer">{l.label}</a> :
-        <a key={i} href={`#${l.p}`} className={route === l.p ? "active" : ""}>{l.label}</a>
+        <a key={i} href={l.p} className={route === l.p ? "active" : ""}>{l.label}</a>
         )}
       </nav>
 
       {/* Grupo derecho MÓVIL: idioma + Reservar permanente + hamburguesa */}
       <div className="topbar-mobile-right">
         <LangToggle />
-        <a href="#/locales" className="topbar-reservar topbar-reservar-mobile">{t("Reservar", "Book")} →</a>
+        <a href="/locales" className="topbar-reservar topbar-reservar-mobile">{t("Reservar", "Book")} →</a>
         <button
           className="topbar-burger"
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
@@ -295,7 +325,7 @@ function Footer() {
           <b>Tetuán</b>
           <div>Infanta Mercedes, 17</div>
           <div>28020 Madrid</div>
-          <div style={{ marginTop: 8 }}><a href="#/locales" className="link-hover">{t("Reservar", "Book")} →</a></div>
+          <div style={{ marginTop: 8 }}><a href="/locales" className="link-hover">{t("Reservar", "Book")} →</a></div>
         </div>
         <div>
           <b>{t("Horarios", "Hours")}</b>

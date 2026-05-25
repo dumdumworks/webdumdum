@@ -239,8 +239,8 @@ function Home() {
           </div>
 
           <div className="hero-actions hero-actions-4">
-            <a className="btn" href="#/locales">{t("Reservar", "Book")} →</a>
-            <a className="btn" href="#/locales">{t("Llegar", "Directions")} →</a>
+            <a className="btn" href="/locales">{t("Reservar", "Book")} →</a>
+            <a className="btn" href="/locales">{t("Llegar", "Directions")} →</a>
             <button
               type="button"
               className="btn"
@@ -297,7 +297,7 @@ function Home() {
               <React.Fragment>Nine dumplings. A new one every month. Of the nine, at least 2 vegetarian. Of the nine, <strong style={{ fontWeight: 700 }}>not one conventional</strong>.</React.Fragment>
             )}
           </p>
-          <a className="btn" href="#/menu" style={{ marginTop: 32 }}>{t("Leer carta de mayo", "Read May's menu")} →</a>
+          <a className="btn" href="/menu" style={{ marginTop: 32 }}>{t("Leer carta de mayo", "Read May's menu")} →</a>
         </div>
         <div>
           <div className="tiny muted" style={{ marginBottom: 16 }}>/ {t("SISTEMA", "SYSTEM")}</div>
@@ -309,14 +309,14 @@ function Home() {
             )}
           </p>
           <div className="row gap-m" style={{ marginTop: 32 }}>
-            <a className="btn" href="#/locales">{t("Reservar en Tetuán", "Book at Tetuán")} →</a>
+            <a className="btn" href="/locales">{t("Reservar en Tetuán", "Book at Tetuán")} →</a>
           </div>
         </div>
       </section>
 
       {/* Flat map nav · 9 celdas en 3 columnas */}
       <nav className="map-nav map-nav-3">
-        <a className="map-cell" href="#/menu">
+        <a className="map-cell" href="/menu">
           <div className="n">[01]</div>
           <div className="t">{t("La carta", "Menu")} →</div>
           <div className="d">{t("ECHA UN VISTAZO", "TAKE A LOOK")}</div>
@@ -331,17 +331,17 @@ function Home() {
           <div className="t">Take Away →</div>
           <div className="d">{t("PRÓXIMAMENTE", "COMING SOON")}</div>
         </a>
-        <a className="map-cell" href="#/locales">
+        <a className="map-cell" href="/locales">
           <div className="n">[04]</div>
           <div className="t">{t("Locales", "Locations")} →</div>
           <div className="d">CHAMBERÍ #015 + TETUÁN #020</div>
         </a>
-        <a className="map-cell" href="#/eventos">
+        <a className="map-cell" href="/eventos">
           <div className="n">[05]</div>
           <div className="t">{t("Eventos", "Events")} →</div>
           <div className="d">{t("AFTER WORKS · CUMPLES · DIVORCIOS?", "AFTER WORKS · BIRTHDAYS · DIVORCES?")}</div>
         </a>
-        <a className="map-cell" href="#/contacto">
+        <a className="map-cell" href="/contacto">
           <div className="n">[06]</div>
           <div className="t">{t("Contacto", "Contact")} →</div>
           <div className="d">{t("SALÚDAME SIEMPRE", "SAY HI ANYTIME")}</div>
@@ -560,7 +560,7 @@ function Menu() {
         <div className="menu-foot">
           <div className="menu-foot-left">
             {/* href="#" PROVISIONAL · cambiar cuando exista el editor/PDF de alérgenos */}
-            <a className="btn menu-foot-btn" href="#">{t("Alérgenos", "Allergens")} →</a>
+            <a className="btn menu-foot-btn" href="#" onClick={(e) => e.preventDefault()}>{t("Alérgenos", "Allergens")} →</a>
             <div className="menu-foot-text">{t(
               "Si tienes alguna alergia, alguna intolerancia o, simplemente, dudas, pregúntanos, que somos muy majos.",
               "If you have any allergy, any intolerance or, simply, questions, just ask us — we're really nice."
@@ -1398,7 +1398,7 @@ function Eventos() {
                 <React.Fragment>Homemade dumplings,<br />surprising,<br /></React.Fragment>),
               t("para todos.", "for everyone."))}
           </h2>
-          <a className="btn" href="#/menu" style={{ marginTop: 32 }}>
+          <a className="btn" href="/menu" style={{ marginTop: 32 }}>
             {t("Ver la carta", "See the menu")} →
           </a>
         </div>

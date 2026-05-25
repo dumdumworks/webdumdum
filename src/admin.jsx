@@ -54,7 +54,7 @@ function Login({ onOk }) {
           <div className="mono" style={{fontSize:12, marginTop:4}}>desobediencia</div>
         </div>
 
-        <a href="#/" className="tiny muted link-hover" style={{display:'inline-block', marginTop:16}}>← Volver a la web</a>
+        <a href="/" className="tiny muted link-hover" style={{display:'inline-block', marginTop:16}}>← Volver a la web</a>
       </form>
     </div>
   );
@@ -191,7 +191,7 @@ function AdminApp({ onLogout }) {
         <div className="row gap-m">
           {savedFlash && <span style={{color:'#7fff9e'}}>✓ Guardado</span>}
           {dirty && !savedFlash && <span style={{color:'#ffb84d'}}>● Cambios sin guardar</span>}
-          <a href="#/menu" target="_blank" rel="noreferrer" style={{color:'#fff'}}>↗ Ver carta</a>
+          <a href="/menu" target="_blank" rel="noreferrer" style={{color:'#fff'}}>↗ Ver carta</a>
           <button onClick={reset} style={{color:'rgba(255,255,255,0.6)'}}>Reset</button>
           <button onClick={onLogout} style={{color:'rgba(255,255,255,0.6)'}}>Salir</button>
           <button onClick={() => exportDataJsx(data)} className="btn" style={{padding:'8px 14px', fontSize:11, background:'#fff', color:'var(--ink)'}}>⤓ Exportar data.jsx</button>
