@@ -77,8 +77,44 @@ function autoLocalize(text) {
   });
   return out;
 }
+// ─── Textos de la sección Eventos (editables en Sveltia → eventos.json) ──
+// Lee un campo de eventos.json según idioma. En EN usa "<key>_en"; si está
+// vacío, cae al español. Si eventos.json no se cargó o falta la clave,
+// devuelve "" y el componente usa su texto de respaldo escrito en el código.
+function ev(key) {
+  const data = (typeof window !== "undefined" && window.PUBLISHED_EVENTOS) || null;
+  if (!data) return "";
+  if (getLang() === "en") {
+    const en = data[key + "_en"];
+    if (en != null && String(en).trim() !== "") return String(en);
+  }
+  const es = data[key];
+  return es != null ? String(es) : "";
+}
+// Convierte el mini-markdown de los textos de Eventos en JSX:
+//  · **texto**  → <strong>texto</strong>  (negrita, la del botón de Sveltia)
+//  · " / "       → salto de línea <br/>     (saltos fijos de los títulos)
+// Devuelve un React.Fragment con las partes. Si text está vacío, null.
+function mdToJsx(text) {
+  if (text == null || String(text).trim() === "") return null;
+  const lines = String(text).split(/\s*\/\s*/);
+  const out = [];
+  lines.forEach((line, li) => {
+    // Partir por **negrita** conservando los delimitadores
+    const parts = line.split(/(\*\*[^*]+\*\*)/g);
+    parts.forEach((part, pi) => {
+      if (/^\*\*[^*]+\*\*$/.test(part)) {
+        out.push(React.createElement("strong", { key: li + "-" + pi }, part.slice(2, -2)));
+      } else if (part !== "") {
+        out.push(part);
+      }
+    });
+    if (li < lines.length - 1) out.push(React.createElement("br", { key: "br-" + li }));
+  });
+  return React.createElement(React.Fragment, null, out);
+}
 // Exponer global para que pages.jsx / app.jsx lo usen.
-window.i18n = { getLang, setLang, useLang, t, autoLocalize };
+window.i18n = { getLang, setLang, useLang, t, autoLocalize, ev, mdToJsx };
 
 // ─── Top bar ──────────────────────────────────────────────────
 // Cálculo de apertura propio (autosuficiente, no depende de pages.jsx),

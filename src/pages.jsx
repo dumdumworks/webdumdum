@@ -1309,20 +1309,43 @@ function EventosForm() {
 // ── EVENTOS ───────────────────────────────────────────────────
 function Eventos() {
   const lang = useLang();
+  // Helpers de contenido editable (eventos.json vía Sveltia) con FALLBACK
+  // total al texto escrito aquí: si el editor no aporta nada, se ve igual
+  // que siempre. `eb` = bloque de texto/párrafo. `eh` = título (negro+rojo).
+  const RED = { fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' };
+  const eb = (key, fallback) => {
+    const j = window.i18n.mdToJsx(window.i18n.ev(key));
+    return j != null ? j : fallback;
+  };
+  const eh = (key, keyRed, fbNegro, fbRed) => {
+    const negro = window.i18n.mdToJsx(window.i18n.ev(key));
+    const rojoTxt = window.i18n.ev(keyRed);
+    const rojo = rojoTxt && rojoTxt.trim() !== "" ? window.i18n.mdToJsx(rojoTxt) : null;
+    // Si el editor no aporta el título, usar el fallback completo del código.
+    if (negro == null && rojo == null) return fbNegro;
+    return (
+      <React.Fragment>
+        {negro != null ? negro : fbNegro}
+        {(rojo != null || fbRed != null) && (negro != null || fbNegro != null) ? " " : null}
+        {rojo != null ? <em style={RED}>{rojo}</em> : (fbRed != null ? <em style={RED}>{fbRed}</em> : null)}
+      </React.Fragment>
+    );
+  };
   return (
     <div data-screen-label="eventos">
       {/* HERO */}
       <section className="ev-hero">
         <div className="tiny muted">[05] {t("Eventos", "Events")}</div>
         <h1 className="h-display" style={{ marginTop: 16 }}>
-          {t("Un sitio cool", "A cool place")}<br />
-          <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>{t("para eventos cool.", "for cool events.")}</em>
+          {eh("hero_title", "hero_title_red",
+            t("Un sitio cool", "A cool place"),
+            t("para eventos cool.", "for cool events."))}
         </h1>
         <p className="body" style={{ marginTop: 32, fontSize: 18 }}>
-          {t(
+          {eb("hero_body", t(
             <React.Fragment>En el corazón de Tetuán y diseñado por <strong>Nota Estudio</strong>. 55 m² diáfanos, cocina abierta, hasta 35 personas, equipo de sonido potente y luz pensada. Un sitio a la altura de tu evento.</React.Fragment>,
             <React.Fragment>In the heart of Tetuán, designed by <strong>Nota Estudio</strong>. 55 m² open-plan, open kitchen, up to 35 people, a powerful sound system and considered lighting. A place worthy of your event.</React.Fragment>
-          )}
+          ))}
         </p>
       </section>
 
@@ -1331,16 +1354,18 @@ function Eventos() {
         <div>
           <div className="tiny muted">[01] {t("Espacio", "Space")}</div>
           <h2 className="h-1" style={{ marginTop: 16 }}>
-            {t(<React.Fragment>Un sitio bien diseñado,<br />funcional, en el que<br />apetece estar.</React.Fragment>,
-               <React.Fragment>A well-designed,<br />functional place<br />you'll want to be in.</React.Fragment>)}
+            {eh("espacio_title", "espacio_title_red",
+              t(<React.Fragment>Un sitio bien diseñado,<br />funcional, en el que<br />apetece estar.</React.Fragment>,
+                <React.Fragment>A well-designed,<br />functional place<br />you'll want to be in.</React.Fragment>),
+              null)}
           </h2>
         </div>
         <div>
           <p className="body">
-            {t(
+            {eb("espacio_body", t(
               <React.Fragment>Espacio diáfano de <strong>55 m²</strong> con <strong>cocina abierta</strong> integrada en la sala. Combina un aire <strong>minimal y urbano</strong> con un <strong>coolness cosmopolita</strong>. Configurable según necesidades del evento.</React.Fragment>,
               <React.Fragment>An open-plan <strong>55 m²</strong> space with an <strong>open kitchen</strong> integrated into the room. It blends a <strong>minimal, urban</strong> feel with <strong>cosmopolitan coolness</strong>. Configurable to your event's needs.</React.Fragment>
-            )}
+            ))}
           </p>
           <div className="ev-list">
             <div><b>{t("TAMAÑO / AFORO", "SIZE / CAPACITY")}</b><span>{t("55M2 / 40 PERSONAS", "55M2 / 40 PEOPLE")}
@@ -1363,24 +1388,25 @@ function Eventos() {
         <div>
           <div className="tiny muted">[02] {t("Producto", "Product")}</div>
           <h2 className="h-1" style={{ marginTop: 16 }}>
-            {t(<React.Fragment>Dumplings caseros,<br />sorprendentes,<br /></React.Fragment>,
-               <React.Fragment>Homemade dumplings,<br />surprising,<br /></React.Fragment>)}
-            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>{t("para todos.", "for everyone.")}</em>
+            {eh("producto_title", "producto_title_red",
+              t(<React.Fragment>Dumplings caseros,<br />sorprendentes,<br /></React.Fragment>,
+                <React.Fragment>Homemade dumplings,<br />surprising,<br /></React.Fragment>),
+              t("para todos.", "for everyone."))}
           </h2>
           <a className="btn" href="#/menu" style={{ marginTop: 32 }}>
             {t("Ver la carta", "See the menu")} →
           </a>
         </div>
         <div>
-          <p className="body">{t(
+          <p className="body">{eb("producto_body", t(
             <React.Fragment>DUM DUM™ es uno de los <strong>referentes de dumplings en Madrid</strong>. Masa <strong>fina y agradable</strong>, rellenos <strong>generosos</strong>, recetas que <strong>sorprenden</strong>. Del Cheese Burger al Carbonara, pasando por el famoso Gamba K-Pop o el Honey Pumpkin. Y siempre con <strong>opciones divertidas para vegetarianos</strong>.</React.Fragment>,
             <React.Fragment>DUM DUM™ is one of the <strong>go-to dumpling spots in Madrid</strong>. <strong>Thin, pleasant</strong> dough, <strong>generous</strong> fillings, recipes that <strong>surprise</strong>. From the Cheese Burger to the Carbonara, plus the famous Gamba K-Pop or the Honey Pumpkin. And always with <strong>fun options for vegetarians</strong>.</React.Fragment>
-          )}
+          ))}
           </p>
-          <p className="body" style={{ marginTop: 16 }}>{t(
+          <p className="body" style={{ marginTop: 16 }}>{eb("producto_body2", t(
             <React.Fragment>Un producto pensado para <strong>divertir, sorprender</strong> y dar de comer a <strong>todos los paladares</strong>.</React.Fragment>,
             <React.Fragment>Food made to <strong>entertain, surprise</strong> and feed <strong>every palate</strong>.</React.Fragment>
-          )}
+          ))}
           </p>
 
           <ProductoSlider />
@@ -1392,17 +1418,18 @@ function Eventos() {
         <div>
           <div className="tiny muted">[03] {t("Prensa", "Press")}</div>
           <h2 className="h-1" style={{ marginTop: 16 }}>
-            {t(<React.Fragment>Un lugar de actualidad que<br /></React.Fragment>,
-               <React.Fragment>A place in the spotlight that<br /></React.Fragment>)}
-            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>{t("genera atención.", "draws attention.")}</em>
+            {eh("prensa_title", "prensa_title_red",
+              t(<React.Fragment>Un lugar de actualidad que<br /></React.Fragment>,
+                <React.Fragment>A place in the spotlight that<br /></React.Fragment>),
+              t("genera atención.", "draws attention."))}
           </h2>
         </div>
         <div>
           <p className="body">
-            {t(
+            {eb("prensa_body", t(
               <React.Fragment><strong>Concepto gastronómico disruptivo</strong>, espacio con <strong>identidad</strong> y cuidado por los detalles. Eso ha llamado la atención de los <strong>grandes medios nacionales</strong>.</React.Fragment>,
               <React.Fragment>A <strong>disruptive food concept</strong>, a space with <strong>identity</strong> and care for detail. That has caught the eye of <strong>major national media</strong>.</React.Fragment>
-            )}
+            ))}
           </p>
 
           <PrensaSlider />
@@ -1414,17 +1441,18 @@ function Eventos() {
         <div>
           <div className="tiny muted">[04] {t("Redes", "Social")}</div>
           <h2 className="h-1" style={{ marginTop: 16 }}>
-            {t(<React.Fragment>Generador de contenido<br /></React.Fragment>,
-               <React.Fragment>A content engine<br /></React.Fragment>)}
-            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>{t("que se hace viral.", "that goes viral.")}</em>
+            {eh("redes_title", "redes_title_red",
+              t(<React.Fragment>Generador de contenido<br /></React.Fragment>,
+                <React.Fragment>A content engine<br /></React.Fragment>),
+              t("que se hace viral.", "that goes viral."))}
           </h2>
         </div>
         <div>
           <p className="body">
-            {t(
+            {eb("redes_body", t(
               <React.Fragment><strong>Expertos gastro, perfiles lifestyle</strong> y gente con <strong>muy buen algoritmo</strong> se han pasado por DUM DUM™ y lo han <strong>compartido con sus comunidades</strong>.</React.Fragment>,
               <React.Fragment><strong>Food experts, lifestyle profiles</strong> and people with a <strong>great algorithm</strong> have stopped by DUM DUM™ and <strong>shared it with their communities</strong>.</React.Fragment>
-            )}
+            ))}
           </p>
           <div className="ev-stats">
             <div><b>{t("Millones", "Millions")}</b><span>{t("de visualizaciones", "of views")}</span></div>
@@ -1441,9 +1469,10 @@ function Eventos() {
         <div>
           <div className="tiny muted">[05] {t("Universo", "Universe")}</div>
           <h2 className="h-1" style={{ marginTop: 16 }}>
-            {t(<React.Fragment>Una marca con identidad,<br />fresca,</React.Fragment>,
-               <React.Fragment>A brand with identity,<br />fresh,</React.Fragment>)}
-            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}> {t("pensada para entretener.", "built to entertain.")}</em>
+            {eh("universo_title", "universo_title_red",
+              t(<React.Fragment>Una marca con identidad,<br />fresca,</React.Fragment>,
+                <React.Fragment>A brand with identity,<br />fresh,</React.Fragment>),
+              t("pensada para entretener.", "built to entertain."))}
           </h2>
           <a className="btn"
           href="https://www.instagram.com/dumdum.plings"
@@ -1455,10 +1484,10 @@ function Eventos() {
         </div>
         <div>
           <p className="body">
-            {t(
+            {eb("universo_body", t(
               <React.Fragment>DUM DUM™ existe con una motivación: <strong>que la gente lo pase bien</strong>. Esa experiencia arranca <strong>mucho antes</strong> de entrar al restaurante. Por eso aprovechamos <strong>cada punto de contacto</strong> para generar <strong>momentos memorables</strong>: cada post, cada campaña, cada respuesta a cada reseña.</React.Fragment>,
               <React.Fragment>DUM DUM™ exists with one motivation: <strong>for people to have a good time</strong>. That experience starts <strong>long before</strong> you walk into the restaurant. So we make the most of <strong>every touchpoint</strong> to create <strong>memorable moments</strong>: every post, every campaign, every reply to every review.</React.Fragment>
-            )}
+            ))}
           </p>
 
           <UniversoSlider />
@@ -1473,27 +1502,27 @@ function Eventos() {
             Kéril<br />
             <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>&amp;</em> Yerai.
           </h2>
-          <div className="tiny muted" style={{ marginTop: 12 }}>{t("Dos hermanos · de Elche a Madrid", "Two brothers · from Elche to Madrid")}</div>
+          <div className="tiny muted" style={{ marginTop: 12 }}>{eb("frente_subtitle", t("Dos hermanos · de Elche a Madrid", "Two brothers · from Elche to Madrid"))}</div>
         </div>
         <div>
           <p className="body">
-            {t(<React.Fragment>Aprendieron a <strong>trabajar juntos</strong> en el hotel donde trabajaban sus padres.</React.Fragment>,
-               <React.Fragment>They learned to <strong>work together</strong> at the hotel where their parents worked.</React.Fragment>)}
+            {eb("frente_body1", t(<React.Fragment>Aprendieron a <strong>trabajar juntos</strong> en el hotel donde trabajaban sus padres.</React.Fragment>,
+               <React.Fragment>They learned to <strong>work together</strong> at the hotel where their parents worked.</React.Fragment>))}
           </p>
           <p className="body" style={{ marginTop: 16 }}>
-            {t(<React.Fragment><strong>Kéril</strong> se formó como <strong>chef</strong> y ha sido chef ejecutivo en sitios muy guays. Es un capo.</React.Fragment>,
-               <React.Fragment><strong>Kéril</strong> trained as a <strong>chef</strong> and has been executive chef at some very cool places. He's a boss.</React.Fragment>)}
+            {eb("frente_body2", t(<React.Fragment><strong>Kéril</strong> se formó como <strong>chef</strong> y ha sido chef ejecutivo en sitios muy guays. Es un capo.</React.Fragment>,
+               <React.Fragment><strong>Kéril</strong> trained as a <strong>chef</strong> and has been executive chef at some very cool places. He's a boss.</React.Fragment>))}
           </p>
           <p className="body" style={{ marginTop: 16 }}>
-            {t(<React.Fragment><strong>Yerai</strong> se formó como <strong>publicista</strong> y ha sido <strong>director creativo</strong> de marcas muy grandes.</React.Fragment>,
-               <React.Fragment><strong>Yerai</strong> trained in <strong>advertising</strong> and has been <strong>creative director</strong> for very big brands.</React.Fragment>)}
+            {eb("frente_body3", t(<React.Fragment><strong>Yerai</strong> se formó como <strong>publicista</strong> y ha sido <strong>director creativo</strong> de marcas muy grandes.</React.Fragment>,
+               <React.Fragment><strong>Yerai</strong> trained in <strong>advertising</strong> and has been <strong>creative director</strong> for very big brands.</React.Fragment>))}
           </p>
           <p className="body" style={{ marginTop: 16 }}>
-            {t(<React.Fragment>Son gente maja. <strong>Rigurosos. Creativos. Muy humanos.</strong></React.Fragment>,
-               <React.Fragment>They're good people. <strong>Rigorous. Creative. Very human.</strong></React.Fragment>)}
+            {eb("frente_body4", t(<React.Fragment>Son gente maja. <strong>Rigurosos. Creativos. Muy humanos.</strong></React.Fragment>,
+               <React.Fragment>They're good people. <strong>Rigorous. Creative. Very human.</strong></React.Fragment>))}
           </p>
           <p className="body" style={{ marginTop: 16 }}>
-            {t("Ya les conocerás.", "You'll get to know them.")}
+            {eb("frente_body5", t("Ya les conocerás.", "You'll get to know them."))}
           </p>
         </div>
       </section>
@@ -1541,8 +1570,9 @@ function Eventos() {
         <div>
           <div className="tiny muted">[08] {t("Contacto", "Contact")}</div>
           <h2 className="h-1" style={{ marginTop: 16, maxWidth: '12ch' }}>
-            {t("Cuéntanos qué evento tienes en la", "Tell us what event you have in")}
-            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}> {t("cabeza.", "mind.")}</em>
+            {eh("contacto_title", "contacto_title_red",
+              t("Cuéntanos qué evento tienes en la", "Tell us what event you have in"),
+              t("cabeza.", "mind."))}
           </h2>
         </div>
         <div>
