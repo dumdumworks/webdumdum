@@ -93,10 +93,8 @@ collections:
           - { name: "producto_title_en", label: "Producto · título (EN)", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
           - { name: "producto_title_red", label: "Producto · título (parte en rojo)", widget: "string", required: false }
           - { name: "producto_title_red_en", label: "Producto · título en rojo (EN)", widget: "string", required: false }
-          - { name: "producto_body", label: "Producto · párrafo 1", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
-          - { name: "producto_body_en", label: "Producto · párrafo 1 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
-          - { name: "producto_body2", label: "Producto · párrafo 2", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
-          - { name: "producto_body2_en", label: "Producto · párrafo 2 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "producto_body", label: "Producto · texto", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true, hint: "Escribe todo seguido. Deja una línea en blanco entre párrafos y la web los separa sola." }
+          - { name: "producto_body_en", label: "Producto · texto (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
 
           # ── Prensa ──
           - { name: "prensa_title", label: "Prensa · título", widget: "string", required: false }
@@ -125,16 +123,8 @@ collections:
           # ── Al frente (Kéril & Yerai) ──
           - { name: "frente_subtitle", label: "Al frente · subtítulo", widget: "string", required: false }
           - { name: "frente_subtitle_en", label: "Al frente · subtítulo (EN)", widget: "string", required: false }
-          - { name: "frente_body1", label: "Al frente · párrafo 1", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
-          - { name: "frente_body1_en", label: "Al frente · párrafo 1 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
-          - { name: "frente_body2", label: "Al frente · párrafo 2", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
-          - { name: "frente_body2_en", label: "Al frente · párrafo 2 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
-          - { name: "frente_body3", label: "Al frente · párrafo 3", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
-          - { name: "frente_body3_en", label: "Al frente · párrafo 3 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
-          - { name: "frente_body4", label: "Al frente · párrafo 4", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
-          - { name: "frente_body4_en", label: "Al frente · párrafo 4 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
-          - { name: "frente_body5", label: "Al frente · párrafo 5", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
-          - { name: "frente_body5_en", label: "Al frente · párrafo 5 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "frente_body", label: "Al frente · texto", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true, hint: "Escribe todo seguido. Deja una línea en blanco entre párrafos y la web los separa sola." }
+          - { name: "frente_body_en", label: "Al frente · texto (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
 
           # ── Contacto (título del formulario) ──
           - { name: "contacto_title", label: "Contacto · título", widget: "string", required: false }
