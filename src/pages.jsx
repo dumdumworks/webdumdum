@@ -1586,13 +1586,13 @@ function Contacto() {
 
         <div>
           <a className="big" href="mailto:dumdum@dum-dum.es">
-            dumdum@dum-dum.es <span className="arr">↗</span>
+            dumdum@dum-dum.es <span className="arr">↗︎</span>
           </a>
           <a className="big" href="#" onClick={(e) => e.preventDefault()}>
-            Instagram <span className="arr">↗</span>
+            Instagram <span className="arr">↗︎</span>
           </a>
           <a className="big" href="tel:+34614746065">
-            +34 614 746 065 <span className="arr">↗</span>
+            +34 614 746 065 <span className="arr">↗︎</span>
           </a>
         </div>
       </section>
@@ -1601,7 +1601,7 @@ function Contacto() {
         <div><b>Email</b>dumdum@dum-dum.es</div>
         <div><b>Reservas</b>Chamberí: turnos | Tetuán: reservas</div>
         <div><b>Instagram</b>@dumdum_es</div>
-        <div><b>TikTok</b>@dumdum.es</div>
+        <div><b>Teléfono</b>+34 614 746 065</div>
       </section>
     </div>);
 
