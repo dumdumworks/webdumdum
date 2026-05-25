@@ -30,10 +30,10 @@
   align-items: center;
   gap: clamp(20px, 4vw, 64px);
 }
-/* info-l a la derecha de su columna (pegado al logo), info-r a la izquierda
-   de la suya → el logo queda centrado en la página de forma simétrica. */
-.hero-info-l { justify-self: end; text-align: right; }
-.hero-info-r { justify-self: start; text-align: left; }
+/* info-l ocupa su columna y alinea su texto a la IZQUIERDA;
+   info-r ocupa la suya y alinea su texto a la DERECHA. */
+.hero-info-l { justify-self: stretch; text-align: left; }
+.hero-info-r { justify-self: stretch; text-align: right; }
 .hero-logo { grid-column: 2; }
 
 .hero-info {
@@ -125,19 +125,8 @@
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-/* Responsive: ≤1100px, el bloque info se mantiene a los lados del logo. */
-@media (max-width: 1100px) {
-  .hero-stage {
-    grid-template-columns: auto auto auto;
-    grid-template-areas:
-      "info-l logo info-r";
-    row-gap: 24px;
-    column-gap: clamp(16px, 3vw, 40px);
-  }
-  .hero-info-l { grid-area: info-l; }
-  .hero-info-r { grid-area: info-r; }
-  .hero-logo { grid-area: logo; }
-}
+/* El grid base (1fr auto 1fr) mantiene el logo centrado hasta el
+   breakpoint móvil de 780px, donde pasa a columna. */
 
 /* Tablet ≤780px: stack en columna */
 @media (max-width: 780px) {
@@ -163,11 +152,14 @@
   .hero-info-r { margin-top: -20px; }
   .hero-info,
   .hero-info-l,
-  .hero-info-r { text-align: center; white-space: normal; }
+  .hero-info-r {
+    justify-self: center !important;
+    text-align: center !important;
+    white-space: normal;
+  }
   .hero-coord-l,
   .hero-coord-r { justify-self: center; text-align: center; }
   .hero-logo { width: min(39vw, 180px); }
-  .hero-actions { width: 100%; flex-direction: column; align-items: stretch; }
   .hero-actions .btn { justify-content: center; padding: 14px 20px; }
   /* Los 4 botones de la home en 2 columnas iguales (2×2) en móvil */
   .hero-actions-4 {

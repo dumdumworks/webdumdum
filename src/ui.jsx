@@ -90,15 +90,24 @@ function TopBar({ route }) {
     <header className={`topbar ${menuOpen ? "menu-open" : ""}`} data-screen-label="top-bar">
       <a href="#/" className="brand">DUM DUM<span className="brand-tm">™</span></a>
 
-      {/* Nav DESKTOP: principales + botón Reservar destacado */}
+      {/* Nav DESKTOP centrado en la página */}
       <nav className="nav nav-desktop">
         {deskLinks.map((l) =>
         <a key={l.p} href={`#${l.p}`} className={route === l.p ? "active" : ""}>
             {l.label}
           </a>
         )}
-        <a href="#/locales" className="topbar-reservar">Reservar →</a>
       </nav>
+
+      {/* Derecha (desktop): estado abierto/cerrado + botón Reservar destacado */}
+      <div className="right">
+        <span className="row gap-s">
+          {est.abierto ?
+          <React.Fragment><span className="dot dot-live" /> Abierto hasta las {est.hora}h</React.Fragment> :
+          <React.Fragment><span className="dot dot-closed" /> Cerrado. Nos vemos a las {est.hora}h</React.Fragment>}
+        </span>
+        <a href="#/locales" className="topbar-reservar">Reservar →</a>
+      </div>
 
       {/* Nav MÓVIL: panel desplegable con los 9 */}
       <nav className="nav nav-mobile">

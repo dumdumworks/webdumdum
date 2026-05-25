@@ -86,7 +86,7 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--line);
   padding: 14px var(--gutter);
   display: flex; align-items: center; justify-content: space-between;
-  font-family: var(--font-mono); text-transform: uppercase; font-weight: 600;
+  font-family: "JetBrains Mono", ui-monospace, monospace; text-transform: uppercase; font-weight: 600;
   font-size: 12px;
   letter-spacing: 0.04em;
 }
@@ -95,13 +95,19 @@ img { display: block; max-width: 100%; }
 .topbar a:hover::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: var(--red);
 }
-/* Nav DESKTOP: a la derecha, en línea, con el botón Reservar destacado */
+/* Nav DESKTOP centrado respecto a la PÁGINA (posición absoluta centrada,
+   queda centrado pase lo que pase con los anchos de brand y derecha). */
 .topbar .nav-desktop {
   display: flex;
   gap: 24px;
   align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .topbar .nav-mobile { display: none; }
+/* Bloque derecho: estado abierto/cerrado + botón Reservar */
+.topbar .right { display: flex; gap: 16px; align-items: center; }
 /* Botón Reservar destacado en el header (rojo pleno) */
 .topbar-reservar {
   background: var(--red);
@@ -109,6 +115,7 @@ img { display: block; max-width: 100%; }
   padding: 8px 16px !important;
   border-radius: 999px;
   transition: background .18s ease;
+  white-space: nowrap;
 }
 .topbar-reservar:hover { background: var(--ink); }
 .topbar-reservar::after { display: none !important; }
@@ -158,8 +165,9 @@ img { display: block; max-width: 100%; }
    carga DESPUÉS (styles.css @importa styles-2.css al inicio), y
    así estas reglas ganan en el orden de cascada. */
 @media (max-width: 880px) {
-  /* En móvil ocultamos el nav de escritorio */
+  /* En móvil ocultamos el nav de escritorio y el bloque derecho */
   .topbar .nav-desktop { display: none !important; }
+  .topbar .right { display: none !important; }
   /* Mostramos el botón hamburguesa */
   .topbar-burger { display: flex !important; }
   /* El nav móvil pasa a panel desplegable bajo la barra */
