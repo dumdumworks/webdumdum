@@ -185,6 +185,7 @@ function TopBar({ route }) {
 
 // ─── Footer ───────────────────────────────────────────────────
 function Footer() {
+  const lang = useLang();
   return (
     <footer className="foot" data-screen-label="footer">
       <div className="foot-word">DUM DUM<span className="tm">™</span></div>
@@ -194,22 +195,22 @@ function Footer() {
           <b>Chamberí</b>
           <div>Blasco de Garay, 10</div>
           <div>28015 Madrid</div>
-          <div style={{ marginTop: 8, color: 'var(--red)' }}>Sin reserva</div>
+          <div style={{ marginTop: 8, color: 'var(--red)' }}>{t("Sin reserva", "No booking")}</div>
         </div>
         <div>
           <b>Tetuán</b>
           <div>Infanta Mercedes, 17</div>
           <div>28020 Madrid</div>
-          <div style={{ marginTop: 8 }}><a href="#" className="link-hover">Reservar →</a></div>
+          <div style={{ marginTop: 8 }}><a href="#/locales" className="link-hover">{t("Reservar", "Book")} →</a></div>
         </div>
         <div>
-          <b>Horarios</b>
+          <b>{t("Horarios", "Hours")}</b>
           <div>13.00 — 15.39</div>
           <div>20.00 — 22.39</div>
-          <div style={{ marginTop: 8 }}>Todos los días</div>
+          <div style={{ marginTop: 8 }}>{t("Todos los días", "Every day")}</div>
         </div>
         <div>
-          <b>Redes</b>
+          <b>{t("Redes", "Social")}</b>
           <div><a href="#" className="link-hover">Instagram</a></div>
           <div><a href="#" className="link-hover"></a></div>
           <div><a href="#" className="link-hover">Uber Eats</a></div>
@@ -217,7 +218,7 @@ function Footer() {
       </div>
 
       <div className="foot-bot">
-        <div>© DUM DUM™ · Dumplings &amp; Desobediencia · Madrid</div>
+        <div>© DUM DUM™ · Dumplings &amp; {t("Desobediencia", "Disobedience")} · Madrid</div>
         <div></div>
       </div>
     </footer>);

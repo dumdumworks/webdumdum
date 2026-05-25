@@ -618,6 +618,7 @@ function estadoApertura(tramos) {
 window.estadoApertura = estadoApertura;
 
 function EstadoLocal({ tramos }) {
+  const lang = useLang();
   // Recalcula el estado cada minuto para mantenerlo al día sin recargar.
   const [, setTick] = React.useState(0);
   React.useEffect(() => {
@@ -629,11 +630,11 @@ function EstadoLocal({ tramos }) {
   if (est.abierto) {
     return (
       <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
-        <span className="dot dot-live" /> Abierto · cierra {est.hora}h
+        <span className="dot dot-live" /> {t("Abierto · cierra", "Open · closes")} {est.hora}h
       </div>);
   }
   // Texto coherente: siempre la hora del próximo tramo de apertura.
-  const frase = `Nos vemos a partir de las ${est.hora}h`;
+  const frase = t(`Nos vemos a partir de las ${est.hora}h`, `See you from ${est.hora}h`);
   return (
     <div className="row gap-s tiny" style={{ marginBottom: 16 }}>
       <span className="dot dot-closed" /> {frase}
@@ -641,12 +642,13 @@ function EstadoLocal({ tramos }) {
 }
 
 function Locales() {
+  const lang = useLang();
   const [resvSoon, setResvSoon] = React.useState(false);
   return (
     <div data-screen-label="locales">
       <section style={{ padding: '14vh var(--gutter) 6vh', borderBottom: '1px solid var(--line)' }}>
-        <div className="tiny muted">[02] Locales</div>
-        <h1 className="h-display" style={{ marginTop: 16 }}>Dos casas<br />en Madrid.</h1>
+        <div className="tiny muted">[02] {t("Locales", "Locations")}</div>
+        <h1 className="h-display" style={{ marginTop: 16 }}>{t("Dos casas", "Two homes")}<br />{t("en Madrid.", "in Madrid.")}</h1>
       </section>
 
       <div className="locales">
@@ -654,14 +656,14 @@ function Locales() {
           <div>
             <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
             <h2>Chamberí.</h2>
-            <div className="tiny muted" style={{ marginTop: 8 }}>Local original · desde DOSMIL24</div>
+            <div className="tiny muted" style={{ marginTop: 8 }}>{t("Local original · desde DOSMIL24", "Original spot · since DOSMIL24")}</div>
 
             <div className="info">
-              <b>Dirección</b><div>Blasco de Garay, 10 · 28015 Madrid</div>
-              <b>Metro</b><div>Argüelles · San Bernardo</div>
-              <b>Horario</b><div>13.00–15.39 / 20.00–22.39</div>
-              <b>Aforo</b><div>~32 comensales</div>
-              <b>Reserva</b><div style={{ color: 'var(--red)' }}>Sin reserva · por turnos</div>
+              <b>{t("Dirección", "Address")}</b><div>Blasco de Garay, 10 · 28015 Madrid</div>
+              <b>{t("Metro", "Metro")}</b><div>Argüelles · San Bernardo</div>
+              <b>{t("Horario", "Hours")}</b><div>13.00–15.39 / 20.00–22.39</div>
+              <b>{t("Aforo", "Capacity")}</b><div>{t("~32 comensales", "~32 seats")}</div>
+              <b>{t("Reserva", "Booking")}</b><div style={{ color: 'var(--red)' }}>{t("Sin reserva · por turnos", "No booking · walk-in")}</div>
             </div>
           </div>
 
@@ -679,14 +681,14 @@ function Locales() {
           <div>
             <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
             <h2>Tetuán.</h2>
-            <div className="tiny muted" style={{ marginTop: 8 }}>SEGUNDO LOCAL · DESDE DOSMIL26</div>
+            <div className="tiny muted" style={{ marginTop: 8 }}>{t("SEGUNDO LOCAL · DESDE DOSMIL26", "SECOND SPOT · SINCE DOSMIL26")}</div>
 
             <div className="info">
-              <b>Dirección</b><div>Infanta Mercedes, 17 · 28020 Madrid</div>
-              <b>Metro</b><div>Tetuán · Estrecho</div>
-              <b>Horario</b><div>13.00–15.39 / 20.00–22.39</div>
-              <b>Aforo</b><div>~40 comensales</div>
-              <b>Reserva</b><div style={{ color: '#1f8a5b', fontWeight: 500 }}>Sí · online / +34 614 746 065</div>
+              <b>{t("Dirección", "Address")}</b><div>Infanta Mercedes, 17 · 28020 Madrid</div>
+              <b>{t("Metro", "Metro")}</b><div>Tetuán · Estrecho</div>
+              <b>{t("Horario", "Hours")}</b><div>13.00–15.39 / 20.00–22.39</div>
+              <b>{t("Aforo", "Capacity")}</b><div>{t("~40 comensales", "~40 seats")}</div>
+              <b>{t("Reserva", "Booking")}</b><div style={{ color: '#1f8a5b', fontWeight: 500 }}>{t("Sí · online", "Yes · online")} / +34 614 746 065</div>
             </div>
 
             <a
@@ -694,7 +696,7 @@ function Locales() {
               href="#"
               onClick={(e) => { e.preventDefault(); setResvSoon(true); }}
               style={{ marginTop: 24 }}>
-              {resvSoon ? "Próximamente" : "Reservar →"}
+              {resvSoon ? t("Próximamente", "Coming soon") : (t("Reservar", "Book") + " →")}
             </a>
           </div>
 
@@ -710,10 +712,10 @@ function Locales() {
       </div>
 
       <section className="spec-foot">
-        <div><b>Interiorismo</b>Nota Estudio</div>
-        <div><b>Identidad</b>Yerai Gómez</div>
-        <div><b>Cocina</b>Kéril Gómez · BCC</div>
-        <div><b>Año apertura</b>CHAMBERÍ · DOSMIL24 | TETUÁN · DOSMIL26</div>
+        <div><b>{t("Interiorismo", "Interior design")}</b>Nota Estudio</div>
+        <div><b>{t("Identidad", "Identity")}</b>Yerai Gómez</div>
+        <div><b>{t("Cocina", "Kitchen")}</b>Kéril Gómez · BCC</div>
+        <div><b>{t("Año apertura", "Opening year")}</b>CHAMBERÍ · DOSMIL24 | TETUÁN · DOSMIL26</div>
       </section>
     </div>);
 
@@ -1274,46 +1276,50 @@ function EventosForm() {
 
 // ── EVENTOS ───────────────────────────────────────────────────
 function Eventos() {
+  const lang = useLang();
   return (
     <div data-screen-label="eventos">
       {/* HERO */}
       <section className="ev-hero">
-        <div className="tiny muted">[05] Eventos</div>
+        <div className="tiny muted">[05] {t("Eventos", "Events")}</div>
         <h1 className="h-display" style={{ marginTop: 16 }}>
-          Un sitio cool<br />
-          <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>para eventos cool.</em>
+          {t("Un sitio cool", "A cool place")}<br />
+          <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>{t("para eventos cool.", "for cool events.")}</em>
         </h1>
         <p className="body" style={{ marginTop: 32, fontSize: 18 }}>
-          En el corazón de Tetuán y diseñado por <strong>Nota Estudio</strong>. 55 m² diáfanos, cocina abierta,
-          hasta 35 personas, equipo de sonido potente y luz pensada. Un sitio
-          a la altura de tu evento.
+          {t(
+            <React.Fragment>En el corazón de Tetuán y diseñado por <strong>Nota Estudio</strong>. 55 m² diáfanos, cocina abierta, hasta 35 personas, equipo de sonido potente y luz pensada. Un sitio a la altura de tu evento.</React.Fragment>,
+            <React.Fragment>In the heart of Tetuán, designed by <strong>Nota Estudio</strong>. 55 m² open-plan, open kitchen, up to 35 people, a powerful sound system and considered lighting. A place worthy of your event.</React.Fragment>
+          )}
         </p>
       </section>
 
       {/* ESPACIO */}
       <section className="ev-split">
         <div>
-          <div className="tiny muted">[01] Espacio</div>
+          <div className="tiny muted">[01] {t("Espacio", "Space")}</div>
           <h2 className="h-1" style={{ marginTop: 16 }}>
-            Un sitio bien diseñado,<br />funcional, en el que<br />apetece estar.
+            {t(<React.Fragment>Un sitio bien diseñado,<br />funcional, en el que<br />apetece estar.</React.Fragment>,
+               <React.Fragment>A well-designed,<br />functional place<br />you'll want to be in.</React.Fragment>)}
           </h2>
         </div>
         <div>
           <p className="body">
-            Espacio diáfano de <strong>55 m²</strong> con <strong>cocina abierta</strong> integrada en la sala. Combina un
-            aire <strong>minimal y urbano</strong> con un <strong>coolness cosmopolita</strong>. Configurable según
-            necesidades del evento.
+            {t(
+              <React.Fragment>Espacio diáfano de <strong>55 m²</strong> con <strong>cocina abierta</strong> integrada en la sala. Combina un aire <strong>minimal y urbano</strong> con un <strong>coolness cosmopolita</strong>. Configurable según necesidades del evento.</React.Fragment>,
+              <React.Fragment>An open-plan <strong>55 m²</strong> space with an <strong>open kitchen</strong> integrated into the room. It blends a <strong>minimal, urban</strong> feel with <strong>cosmopolitan coolness</strong>. Configurable to your event's needs.</React.Fragment>
+            )}
           </p>
           <div className="ev-list">
-            <div><b>TAMAÑO / AFORO</b><span>55M2 / 40 PERSONAS
+            <div><b>{t("TAMAÑO / AFORO", "SIZE / CAPACITY")}</b><span>{t("55M2 / 40 PERSONAS", "55M2 / 40 PEOPLE")}
               </span></div>
-            <div><b>Barra central</b><span>Sí · grande</span></div>
-            <div><b>Mesas bajas</b><span>9 · hasta 3 personas c/u</span></div>
-            <div><b>Mesas altas</b><span>2 · hasta 5 personas c/u</span></div>
-            <div><b>Barra pequeña</b><span>Hasta 4 personas</span></div>
-            <div><b>Audio</b><span>Equipo potente</span></div>
-            <div><b>Iluminación</b><span>Diseño óptimo</span></div>
-            <div><b>Despejado</b><span>Opción sin mesas</span></div>
+            <div><b>{t("Barra central", "Central bar")}</b><span>{t("Sí · grande", "Yes · large")}</span></div>
+            <div><b>{t("Mesas bajas", "Low tables")}</b><span>{t("9 · hasta 3 personas c/u", "9 · up to 3 people each")}</span></div>
+            <div><b>{t("Mesas altas", "High tables")}</b><span>{t("2 · hasta 5 personas c/u", "2 · up to 5 people each")}</span></div>
+            <div><b>{t("Barra pequeña", "Small bar")}</b><span>{t("Hasta 4 personas", "Up to 4 people")}</span></div>
+            <div><b>{t("Audio", "Audio")}</b><span>{t("Equipo potente", "Powerful system")}</span></div>
+            <div><b>{t("Iluminación", "Lighting")}</b><span>{t("Diseño óptimo", "Optimal design")}</span></div>
+            <div><b>{t("Despejado", "Cleared")}</b><span>{t("Opción sin mesas", "Table-free option")}</span></div>
           </div>
 
           <EspacioSlider />
@@ -1323,20 +1329,26 @@ function Eventos() {
       {/* PRODUCTO */}
       <section className="ev-split">
         <div>
-          <div className="tiny muted">[02] Producto</div>
+          <div className="tiny muted">[02] {t("Producto", "Product")}</div>
           <h2 className="h-1" style={{ marginTop: 16 }}>
-            Dumplings caseros,<br />sorprendentes,<br />
-            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>para todos.</em>
+            {t(<React.Fragment>Dumplings caseros,<br />sorprendentes,<br /></React.Fragment>,
+               <React.Fragment>Homemade dumplings,<br />surprising,<br /></React.Fragment>)}
+            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>{t("para todos.", "for everyone.")}</em>
           </h2>
           <a className="btn" href="#/menu" style={{ marginTop: 32 }}>
-            Ver la carta →
+            {t("Ver la carta", "See the menu")} →
           </a>
         </div>
         <div>
-          <p className="body">DUM DUM™ es uno de los <strong>referentes de dumplings en Madrid</strong>. Masa <strong>fina y agradable</strong>, rellenos <strong>generosos</strong>, recetas que <strong>sorprenden</strong>. Del Cheese Burger al Carbonara, pasando por el famoso Gamba K-Pop o el Honey Pumpkin. Y siempre con <strong>opciones divertidas para vegetarianos</strong>.
-
+          <p className="body">{t(
+            <React.Fragment>DUM DUM™ es uno de los <strong>referentes de dumplings en Madrid</strong>. Masa <strong>fina y agradable</strong>, rellenos <strong>generosos</strong>, recetas que <strong>sorprenden</strong>. Del Cheese Burger al Carbonara, pasando por el famoso Gamba K-Pop o el Honey Pumpkin. Y siempre con <strong>opciones divertidas para vegetarianos</strong>.</React.Fragment>,
+            <React.Fragment>DUM DUM™ is one of the <strong>go-to dumpling spots in Madrid</strong>. <strong>Thin, pleasant</strong> dough, <strong>generous</strong> fillings, recipes that <strong>surprise</strong>. From the Cheese Burger to the Carbonara, plus the famous Gamba K-Pop or the Honey Pumpkin. And always with <strong>fun options for vegetarians</strong>.</React.Fragment>
+          )}
           </p>
-          <p className="body" style={{ marginTop: 16 }}>Un producto pensado para <strong>divertir, sorprender</strong> y dar de comer a <strong>todos los paladares</strong>.
+          <p className="body" style={{ marginTop: 16 }}>{t(
+            <React.Fragment>Un producto pensado para <strong>divertir, sorprender</strong> y dar de comer a <strong>todos los paladares</strong>.</React.Fragment>,
+            <React.Fragment>Food made to <strong>entertain, surprise</strong> and feed <strong>every palate</strong>.</React.Fragment>
+          )}
           </p>
 
           <ProductoSlider />
@@ -1346,16 +1358,19 @@ function Eventos() {
       {/* PRENSA */}
       <section className="ev-split">
         <div>
-          <div className="tiny muted">[03] Prensa</div>
+          <div className="tiny muted">[03] {t("Prensa", "Press")}</div>
           <h2 className="h-1" style={{ marginTop: 16 }}>
-            Un lugar de actualidad que<br />
-            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>genera atención.</em>
+            {t(<React.Fragment>Un lugar de actualidad que<br /></React.Fragment>,
+               <React.Fragment>A place in the spotlight that<br /></React.Fragment>)}
+            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>{t("genera atención.", "draws attention.")}</em>
           </h2>
         </div>
         <div>
           <p className="body">
-            <strong>Concepto gastronómico disruptivo</strong>, espacio con <strong>identidad</strong> y cuidado por
-            los detalles. Eso ha llamado la atención de los <strong>grandes medios nacionales</strong>.
+            {t(
+              <React.Fragment><strong>Concepto gastronómico disruptivo</strong>, espacio con <strong>identidad</strong> y cuidado por los detalles. Eso ha llamado la atención de los <strong>grandes medios nacionales</strong>.</React.Fragment>,
+              <React.Fragment>A <strong>disruptive food concept</strong>, a space with <strong>identity</strong> and care for detail. That has caught the eye of <strong>major national media</strong>.</React.Fragment>
+            )}
           </p>
 
           <PrensaSlider />
@@ -1365,21 +1380,24 @@ function Eventos() {
       {/* REDES */}
       <section className="ev-split">
         <div>
-          <div className="tiny muted">[04] Redes</div>
+          <div className="tiny muted">[04] {t("Redes", "Social")}</div>
           <h2 className="h-1" style={{ marginTop: 16 }}>
-            Generador de contenido<br />
-            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>que se hace viral.</em>
+            {t(<React.Fragment>Generador de contenido<br /></React.Fragment>,
+               <React.Fragment>A content engine<br /></React.Fragment>)}
+            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>{t("que se hace viral.", "that goes viral.")}</em>
           </h2>
         </div>
         <div>
           <p className="body">
-            <strong>Expertos gastro, perfiles lifestyle</strong> y gente con <strong>muy buen algoritmo</strong>
-            se han pasado por DUM DUM™ y lo han <strong>compartido con sus comunidades</strong>.
+            {t(
+              <React.Fragment><strong>Expertos gastro, perfiles lifestyle</strong> y gente con <strong>muy buen algoritmo</strong> se han pasado por DUM DUM™ y lo han <strong>compartido con sus comunidades</strong>.</React.Fragment>,
+              <React.Fragment><strong>Food experts, lifestyle profiles</strong> and people with a <strong>great algorithm</strong> have stopped by DUM DUM™ and <strong>shared it with their communities</strong>.</React.Fragment>
+            )}
           </p>
           <div className="ev-stats">
-            <div><b>Millones</b><span>de visualizaciones</span></div>
-            <div><b>Miles</b><span>de reacciones</span></div>
-            <div><b>Viral</b><span>la palabra que más se repite</span></div>
+            <div><b>{t("Millones", "Millions")}</b><span>{t("de visualizaciones", "of views")}</span></div>
+            <div><b>{t("Miles", "Thousands")}</b><span>{t("de reacciones", "of reactions")}</span></div>
+            <div><b>Viral</b><span>{t("la palabra que más se repite", "the word that comes up most")}</span></div>
           </div>
 
           <RedesSlider />
@@ -1389,26 +1407,26 @@ function Eventos() {
       {/* UNIVERSO */}
       <section className="ev-split">
         <div>
-          <div className="tiny muted">[05] Universo</div>
+          <div className="tiny muted">[05] {t("Universo", "Universe")}</div>
           <h2 className="h-1" style={{ marginTop: 16 }}>
-            Una marca con identidad,<br />fresca,
-            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}> pensada
-para entretener.</em>
+            {t(<React.Fragment>Una marca con identidad,<br />fresca,</React.Fragment>,
+               <React.Fragment>A brand with identity,<br />fresh,</React.Fragment>)}
+            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}> {t("pensada para entretener.", "built to entertain.")}</em>
           </h2>
           <a className="btn"
           href="https://www.instagram.com/dumdum.es/"
           target="_blank"
           rel="noreferrer"
           style={{ marginTop: 32 }}>
-            Visitar Instagram →
+            {t("Visitar Instagram", "Visit Instagram")} →
           </a>
         </div>
         <div>
           <p className="body">
-            DUM DUM™ existe con una motivación: <strong>que la gente lo pase bien</strong>. Esa
-            experiencia arranca <strong>mucho antes</strong> de entrar al restaurante. Por eso
-            aprovechamos <strong>cada punto de contacto</strong> para generar <strong>momentos memorables</strong>:
-            cada post, cada campaña, cada respuesta a cada reseña.
+            {t(
+              <React.Fragment>DUM DUM™ existe con una motivación: <strong>que la gente lo pase bien</strong>. Esa experiencia arranca <strong>mucho antes</strong> de entrar al restaurante. Por eso aprovechamos <strong>cada punto de contacto</strong> para generar <strong>momentos memorables</strong>: cada post, cada campaña, cada respuesta a cada reseña.</React.Fragment>,
+              <React.Fragment>DUM DUM™ exists with one motivation: <strong>for people to have a good time</strong>. That experience starts <strong>long before</strong> you walk into the restaurant. So we make the most of <strong>every touchpoint</strong> to create <strong>memorable moments</strong>: every post, every campaign, every reply to every review.</React.Fragment>
+            )}
           </p>
 
           <UniversoSlider />
@@ -1418,38 +1436,40 @@ para entretener.</em>
       {/* AL FRENTE */}
       <section className="ev-split">
         <div>
-          <div className="tiny muted">[06] Al frente</div>
+          <div className="tiny muted">[06] {t("Al frente", "At the helm")}</div>
           <h2 className="h-1" style={{ marginTop: 16 }}>
             Kéril<br />
             <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>&amp;</em> Yerai.
           </h2>
-          <div className="tiny muted" style={{ marginTop: 12 }}>Dos hermanos · de Elche a Madrid</div>
+          <div className="tiny muted" style={{ marginTop: 12 }}>{t("Dos hermanos · de Elche a Madrid", "Two brothers · from Elche to Madrid")}</div>
         </div>
         <div>
           <p className="body">
-            Aprendieron a <strong>trabajar juntos</strong> en el hotel donde trabajaban sus padres.
+            {t(<React.Fragment>Aprendieron a <strong>trabajar juntos</strong> en el hotel donde trabajaban sus padres.</React.Fragment>,
+               <React.Fragment>They learned to <strong>work together</strong> at the hotel where their parents worked.</React.Fragment>)}
           </p>
           <p className="body" style={{ marginTop: 16 }}>
-            <strong>Kéril</strong> se formó como <strong>chef</strong> y ha sido chef ejecutivo en sitios muy guays.
-            Es un capo.
+            {t(<React.Fragment><strong>Kéril</strong> se formó como <strong>chef</strong> y ha sido chef ejecutivo en sitios muy guays. Es un capo.</React.Fragment>,
+               <React.Fragment><strong>Kéril</strong> trained as a <strong>chef</strong> and has been executive chef at some very cool places. He's a boss.</React.Fragment>)}
           </p>
           <p className="body" style={{ marginTop: 16 }}>
-            <strong>Yerai</strong> se formó como <strong>publicista</strong> y ha sido <strong>director creativo</strong> de marcas
-            muy grandes.
+            {t(<React.Fragment><strong>Yerai</strong> se formó como <strong>publicista</strong> y ha sido <strong>director creativo</strong> de marcas muy grandes.</React.Fragment>,
+               <React.Fragment><strong>Yerai</strong> trained in <strong>advertising</strong> and has been <strong>creative director</strong> for very big brands.</React.Fragment>)}
           </p>
           <p className="body" style={{ marginTop: 16 }}>
-            Son gente maja. <strong>Rigurosos. Creativos. Muy humanos.</strong>
+            {t(<React.Fragment>Son gente maja. <strong>Rigurosos. Creativos. Muy humanos.</strong></React.Fragment>,
+               <React.Fragment>They're good people. <strong>Rigorous. Creative. Very human.</strong></React.Fragment>)}
           </p>
           <p className="body" style={{ marginTop: 16 }}>
-            Ya les conocerás.
+            {t("Ya les conocerás.", "You'll get to know them.")}
           </p>
         </div>
       </section>
 
       {/* SERVICIOS */}
       <section className="ev-services">
-        <div className="tiny muted">[07] Servicios</div>
-        <h2 className="h-1" style={{ marginTop: 16, maxWidth: '20ch' }}>Qué hacemos.</h2>
+        <div className="tiny muted">[07] {t("Servicios", "Services")}</div>
+        <h2 className="h-1" style={{ marginTop: 16, maxWidth: '20ch' }}>{t("Qué hacemos.", "What we do.")}</h2>
 
         <div className="ev-services-grid">
           <div className="ev-service">
@@ -1470,16 +1490,16 @@ para entretener.</em>
           </div>
           <div className="ev-service">
             <div className="n">[05]</div>
-            <div className="t">Presentaciones</div>
+            <div className="t">{t("Presentaciones", "Launches")}</div>
           </div>
           <div className="ev-service">
             <div className="n">[06]</div>
-            <div className="t">Alquiler de espacio</div>
+            <div className="t">{t("Alquiler de espacio", "Venue rental")}</div>
           </div>
         </div>
 
         <p className="tiny muted" style={{ marginTop: 24 }}>
-          * Si necesitas un evento fuera del restaurante, pregúntanos.
+          {t("* Si necesitas un evento fuera del restaurante, pregúntanos.", "* If you need an event outside the restaurant, just ask.")}
         </p>
       </section>
 
@@ -1487,10 +1507,10 @@ para entretener.</em>
       {/* FORMULARIO */}
       <section className="ev-split ev-split--contact" id="contact-eventos">
         <div>
-          <div className="tiny muted">[08] Contacto</div>
+          <div className="tiny muted">[08] {t("Contacto", "Contact")}</div>
           <h2 className="h-1" style={{ marginTop: 16, maxWidth: '12ch' }}>
-            Cuéntanos qué evento tienes en la
-            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}> cabeza.</em>
+            {t("Cuéntanos qué evento tienes en la", "Tell us what event you have in")}
+            <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}> {t("cabeza.", "mind.")}</em>
           </h2>
         </div>
         <div>
