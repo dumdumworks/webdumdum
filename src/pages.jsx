@@ -405,9 +405,32 @@ function Menu() {
   const lang = useLang();
   const [data, setData] = React.useState(window.DumDumData.loadMenu());
 
+  // Helper: devuelve el campo en el idioma activo. Si estamos en EN y existe
+  // el campo "_en" con contenido, lo usa; si no, cae al español (fallback).
+  const tf = (obj, field) => {
+    if (!obj) return "";
+    let val;
+    if (lang === "en") {
+      const en = obj[field + "_en"];
+      val = (en && String(en).trim() !== "") ? en : (obj[field] || "");
+    } else {
+      val = obj[field] || "";
+    }
+    // En las descripciones de producto: normalizar " · " a coma normal y
+    // pasar a minúscula la letra que quede tras una coma (corrección
+    // ortográfica). Los nombres propios se repasan manualmente en el editor.
+    if (field === "ingredients") {
+      val = String(val)
+        .replace(/\s*·\s*/g, ", ")
+        .replace(/,\s+(\p{Lu})/gu, (m, letra) => ", " + letra.toLowerCase());
+    }
+    return val;
+  };
+
   // Galería del lightbox: lista de platos con foto que muestran el botón
   // (entrantes + dumplings; postres/bebidas van en 2 col y no llevan botón).
   // Se construye en el orden de la carta para poder navegar como carrusel.
+  // (Va DESPUÉS de tf porque lo usa.)
   const gallery = React.useMemo(() => {
     const out = [];
     data.sections.forEach((sec) => {
@@ -447,28 +470,6 @@ function Menu() {
       };
     }
   }, [photoIdx, gallery.length]);
-
-  // Helper: devuelve el campo en el idioma activo. Si estamos en EN y existe
-  // el campo "_en" con contenido, lo usa; si no, cae al español (fallback).
-  const tf = (obj, field) => {
-    if (!obj) return "";
-    let val;
-    if (lang === "en") {
-      const en = obj[field + "_en"];
-      val = (en && String(en).trim() !== "") ? en : (obj[field] || "");
-    } else {
-      val = obj[field] || "";
-    }
-    // En las descripciones de producto: normalizar " · " a coma normal y
-    // pasar a minúscula la letra que quede tras una coma (corrección
-    // ortográfica). Los nombres propios se repasan manualmente en el editor.
-    if (field === "ingredients") {
-      val = String(val)
-        .replace(/\s*·\s*/g, ", ")
-        .replace(/,\s+(\p{Lu})/gu, (m, letra) => ", " + letra.toLowerCase());
-    }
-    return val;
-  };
 
   // Detectar móvil (≤879px) para renderizar el botón "Volver arriba"
   // SOLO en móvil. Se actualiza al redimensionar / girar el dispositivo.
