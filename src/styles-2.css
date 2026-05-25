@@ -592,10 +592,6 @@
   background: var(--red);
   color: var(--bg);
   border-color: var(--red);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 4px 9px;
-  font-size: 10px;
 }
 
 /* Sobre tarjeta destacada (fondo rojo), invertir: pill crema, texto rojo */
@@ -603,10 +599,6 @@
   background: var(--bg);
   color: var(--red);
   border-color: var(--bg);
-  font-weight: 700;
-  font-size: 11px;
-  padding: 5px 11px;
-  letter-spacing: 0.06em;
 }
 
 .dish .logo-slot {
