@@ -940,13 +940,6 @@
   grid-template-columns: 1fr 1fr;
   border-bottom: 1px solid var(--line);
 }
-/* Indicador "Abierto/Cerrado" de cada local · tipografía monoespaciada
-   real (JetBrains Mono) en ambos idiomas y en móvil + desktop. */
-.estado-local {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
 .locale-card {
   padding: 56px var(--gutter);
   border-right: 1px solid var(--line);
