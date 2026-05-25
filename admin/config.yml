@@ -12,7 +12,7 @@ public_folder: "img/dumplings"
 
 collections:
   - name: "galeria-imagenes"
-    label: "Galería de Imágenes"
+    label: "Contenido de la web"
     files:
       - name: "carta"
         label: "Carta"
@@ -61,8 +61,89 @@ collections:
                   - { name: "image", label: "Foto del plato", widget: "image", required: false }
                   - { name: "logo", label: "Logo (avanzado, dejar vacio)", widget: "string", required: false }
 
+      - name: "textos-eventos"
+        label: "Eventos · Textos"
+        file: "eventos.json"
+        fields:
+          # PÁRRAFOS: editor con botón de NEGRITA. Escribe libre; para resaltar
+          # una palabra, selecciónala y pulsa el botón de negrita (B).
+          # TÍTULOS: campo "negro" (texto principal) + campo "rojo" (la parte
+          # que sale en rojo). El color y los saltos los pone la web sola.
+          # Para cada texto hay versión ES y versión EN (si dejas EN vacío,
+          # se muestra el español).
+
+          # ── Hero ──
+          - { name: "hero_title", label: "Hero · título", widget: "string", required: false }
+          - { name: "hero_title_en", label: "Hero · título (EN)", widget: "string", required: false }
+          - { name: "hero_title_red", label: "Hero · título (parte en rojo)", widget: "string", required: false }
+          - { name: "hero_title_red_en", label: "Hero · título en rojo (EN)", widget: "string", required: false }
+          - { name: "hero_body", label: "Hero · párrafo", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "hero_body_en", label: "Hero · párrafo (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+
+          # ── Espacio ──
+          - { name: "espacio_title", label: "Espacio · título", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
+          - { name: "espacio_title_en", label: "Espacio · título (EN)", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
+          - { name: "espacio_title_red", label: "Espacio · título (parte en rojo)", widget: "string", required: false }
+          - { name: "espacio_title_red_en", label: "Espacio · título en rojo (EN)", widget: "string", required: false }
+          - { name: "espacio_body", label: "Espacio · párrafo", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "espacio_body_en", label: "Espacio · párrafo (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+
+          # ── Producto ──
+          - { name: "producto_title", label: "Producto · título", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
+          - { name: "producto_title_en", label: "Producto · título (EN)", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
+          - { name: "producto_title_red", label: "Producto · título (parte en rojo)", widget: "string", required: false }
+          - { name: "producto_title_red_en", label: "Producto · título en rojo (EN)", widget: "string", required: false }
+          - { name: "producto_body", label: "Producto · párrafo 1", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "producto_body_en", label: "Producto · párrafo 1 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "producto_body2", label: "Producto · párrafo 2", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "producto_body2_en", label: "Producto · párrafo 2 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+
+          # ── Prensa ──
+          - { name: "prensa_title", label: "Prensa · título", widget: "string", required: false }
+          - { name: "prensa_title_en", label: "Prensa · título (EN)", widget: "string", required: false }
+          - { name: "prensa_title_red", label: "Prensa · título (parte en rojo)", widget: "string", required: false }
+          - { name: "prensa_title_red_en", label: "Prensa · título en rojo (EN)", widget: "string", required: false }
+          - { name: "prensa_body", label: "Prensa · párrafo", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "prensa_body_en", label: "Prensa · párrafo (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+
+          # ── Redes ──
+          - { name: "redes_title", label: "Redes · título", widget: "string", required: false }
+          - { name: "redes_title_en", label: "Redes · título (EN)", widget: "string", required: false }
+          - { name: "redes_title_red", label: "Redes · título (parte en rojo)", widget: "string", required: false }
+          - { name: "redes_title_red_en", label: "Redes · título en rojo (EN)", widget: "string", required: false }
+          - { name: "redes_body", label: "Redes · párrafo", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "redes_body_en", label: "Redes · párrafo (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+
+          # ── Universo ──
+          - { name: "universo_title", label: "Universo · título", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
+          - { name: "universo_title_en", label: "Universo · título (EN)", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
+          - { name: "universo_title_red", label: "Universo · título (parte en rojo)", widget: "string", required: false }
+          - { name: "universo_title_red_en", label: "Universo · título en rojo (EN)", widget: "string", required: false }
+          - { name: "universo_body", label: "Universo · párrafo", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "universo_body_en", label: "Universo · párrafo (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+
+          # ── Al frente (Kéril & Yerai) ──
+          - { name: "frente_subtitle", label: "Al frente · subtítulo", widget: "string", required: false }
+          - { name: "frente_subtitle_en", label: "Al frente · subtítulo (EN)", widget: "string", required: false }
+          - { name: "frente_body1", label: "Al frente · párrafo 1", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "frente_body1_en", label: "Al frente · párrafo 1 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "frente_body2", label: "Al frente · párrafo 2", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "frente_body2_en", label: "Al frente · párrafo 2 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "frente_body3", label: "Al frente · párrafo 3", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "frente_body3_en", label: "Al frente · párrafo 3 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "frente_body4", label: "Al frente · párrafo 4", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "frente_body4_en", label: "Al frente · párrafo 4 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "frente_body5", label: "Al frente · párrafo 5", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          - { name: "frente_body5_en", label: "Al frente · párrafo 5 (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+
+          # ── Contacto (título del formulario) ──
+          - { name: "contacto_title", label: "Contacto · título", widget: "string", required: false }
+          - { name: "contacto_title_en", label: "Contacto · título (EN)", widget: "string", required: false }
+          - { name: "contacto_title_red", label: "Contacto · título (parte en rojo)", widget: "string", required: false }
+          - { name: "contacto_title_red_en", label: "Contacto · título en rojo (EN)", widget: "string", required: false }
+
       - name: "imagenes-eventos"
-        label: "Imágenes de Eventos"
+        label: "Eventos · Imágenes"
         file: "galerias.json"
         fields:
           - name: "espacio"
