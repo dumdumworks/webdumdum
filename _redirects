@@ -1,0 +1,4 @@
+# Cloudflare Pages — SPA con URLs limpias (sin #)
+# Cualquier ruta que no sea un archivo real sirve index.html (200, no redirección)
+# para que el router de React la gestione. Sin esto, /menu daría 404 al recargar.
+/*    /index.html   200
