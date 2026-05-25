@@ -402,7 +402,19 @@ function Home() {
 
 // ── CARTA (mobile QR) ─────────────────────────────────────────
 function Menu() {
+  const lang = useLang();
   const [data, setData] = React.useState(window.DumDumData.loadMenu());
+
+  // Helper: devuelve el campo en el idioma activo. Si estamos en EN y existe
+  // el campo "_en" con contenido, lo usa; si no, cae al español (fallback).
+  const tf = (obj, field) => {
+    if (!obj) return "";
+    if (lang === "en") {
+      const en = obj[field + "_en"];
+      if (en && String(en).trim() !== "") return en;
+    }
+    return obj[field] || "";
+  };
 
   // Detectar móvil (≤879px) para renderizar el botón "Volver arriba"
   // SOLO en móvil. Se actualiza al redimensionar / girar el dispositivo.
@@ -451,8 +463,8 @@ function Menu() {
         {data.sections.map((sec) =>
         <section key={sec.id} className={`menu-section section--${sec.id} ${sec.id === "bebidas" ? "section-mobile-only" : ""}`}>
             <div className="menu-sectionhead">
-              <h3>{sec.title}</h3>
-              <div className="meta">{sec.note}</div>
+              <h3>{tf(sec, "title")}</h3>
+              <div className="meta">{tf(sec, "note")}</div>
             </div>
 
             <div className={`dish-grid ${sec.id === "postres" ? "dish-grid-2col-m" : ""} ${sec.id === "bebidas" ? "dish-grid-2col-m drinks-grid" : ""}`}>
@@ -462,7 +474,7 @@ function Menu() {
                   <div className="num m-only">[nº{String(it.n).padStart(2, "0")}]</div>
                   <div className="body m-only">
                     <div className="name-row">
-                      <span className="name" style={{ fontSize: "20px" }}>{it.name}</span>
+                      <span className="name" style={{ fontSize: "20px" }}>{tf(it, "name")}</span>
                       {it.tags && it.tags.map((t) => {
                     const u = t.toUpperCase();
                     const label = u === "PICANTE" ? "HOT 🌶" : u === "VEG" ? "VEG 🌱" : t;
@@ -471,8 +483,8 @@ function Menu() {
 
                   })}
                     </div>
-                    {it.tagline && <div className="tagline">{it.tagline}</div>}
-                    {it.ingredients && <div className="ingr" style={{ fontSize: "13px" }}>{it.ingredients}</div>}
+                    {tf(it, "tagline") && <div className="tagline">{tf(it, "tagline")}</div>}
+                    {tf(it, "ingredients") && <div className="ingr" style={{ fontSize: "13px" }}>{tf(it, "ingredients")}</div>}
                   </div>
                   {it.logo && <div className="m-only"><DishLogo logo={it.logo} /></div>}
                   <div className="price tnum m-only" style={{ fontSize: "11px" }}>{it.price} €</div>
@@ -480,9 +492,9 @@ function Menu() {
                   {/* ─── Layout DESKTOP (visible ≥880px) ──────────────── */}
                   <div className="dish-img">
                     {it.image ?
-                <img src={it.image} alt={it.name} /> :
+                <img src={it.image} alt={tf(it, "name")} /> :
                 <div className="dish-img-ph">
-                          <span className="ph-label">[{it.name}]</span>
+                          <span className="ph-label">[{tf(it, "name")}]</span>
                           <span className="ph-sub">product shot · 4:5</span>
                         </div>}
                     {it.tags && it.tags.filter((t) => !["VEG", "PICANTE"].includes(t.toUpperCase())).length > 0 &&
@@ -501,7 +513,7 @@ function Menu() {
                       <span className="price tnum">{it.price} €</span>
                     </div>
                     <div className="dish-card-row dish-card-name">
-                      <span className="name">{it.name}</span>
+                      <span className="name">{tf(it, "name")}</span>
                       {it.tags && it.tags.filter((t) => ["VEG", "PICANTE"].includes(t.toUpperCase())).map((t) => {
                     const u = t.toUpperCase();
                     const label = u === "PICANTE" ? "HOT 🌶" : u === "VEG" ? "VEG 🌱" : t;
@@ -511,8 +523,8 @@ function Menu() {
                   })}
                     </div>
                     <div className="dish-card-row dish-card-text">
-                      {it.tagline && <div className="tagline">{it.tagline}</div>}
-                      {it.ingredients && <div className="ingr">{it.ingredients}</div>}
+                      {tf(it, "tagline") && <div className="tagline">{tf(it, "tagline")}</div>}
+                      {tf(it, "ingredients") && <div className="ingr">{tf(it, "ingredients")}</div>}
                     </div>
                   </div>
                 </article>
