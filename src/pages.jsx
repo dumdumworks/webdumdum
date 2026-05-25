@@ -834,31 +834,6 @@ function Locales() {
         <div className="locale-card">
           <div>
             <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
-            <h2>Chamberí.</h2>
-            <div className="tiny muted" style={{ marginTop: 8 }}>{t("Local original · desde DOSMIL24", "Original spot · since TWENTY24")}</div>
-
-            <div className="info">
-              <b>{t("Dirección", "Address")}</b><div>Blasco de Garay, 10 · 28015 Madrid</div>
-              <b>{t("Metro", "Metro")}</b><div>Argüelles · San Bernardo</div>
-              <b>{t("Horario", "Hours")}</b><div>13.00–15.39 / 20.00–22.39</div>
-              <b>{t("Aforo", "Capacity")}</b><div>{t("~32 comensales", "~32 seats")}</div>
-              <b>{t("Reserva", "Booking")}</b><div style={{ color: 'var(--red)' }}>{t("Sin reserva · por turnos", "No booking · walk-in")}</div>
-            </div>
-          </div>
-
-          <div className="locale-map">
-            <iframe
-              title="Mapa Chamberí"
-              src="https://www.google.com/maps?q=DUM+DUM+Blasco+de+Garay+10+Madrid&output=embed"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              style={{ width: "100%", height: "100%", border: 0 }} />
-          </div>
-        </div>
-
-        <div className="locale-card">
-          <div>
-            <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
             <h2>Tetuán.</h2>
             <div className="tiny muted" style={{ marginTop: 8 }}>{t("SEGUNDO LOCAL · DESDE DOSMIL26", "SECOND SPOT · SINCE TWENTY26")}</div>
 
@@ -890,7 +865,32 @@ function Locales() {
         </div>
       </div>
 
-      <section className="spec-foot">
+        <div className="locale-card">
+          <div>
+            <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
+            <h2>Chamberí.</h2>
+            <div className="tiny muted" style={{ marginTop: 8 }}>{t("Local original · desde DOSMIL24", "Original spot · since TWENTY24")}</div>
+
+            <div className="info">
+              <b>{t("Dirección", "Address")}</b><div>Blasco de Garay, 10 · 28015 Madrid</div>
+              <b>{t("Metro", "Metro")}</b><div>Argüelles · San Bernardo</div>
+              <b>{t("Horario", "Hours")}</b><div>13.00–15.39 / 20.00–22.39</div>
+              <b>{t("Aforo", "Capacity")}</b><div>{t("~32 comensales", "~32 seats")}</div>
+              <b>{t("Reserva", "Booking")}</b><div style={{ color: 'var(--red)' }}>{t("Sin reserva · por turnos", "No booking · walk-in")}</div>
+            </div>
+          </div>
+
+          <div className="locale-map">
+            <iframe
+              title="Mapa Chamberí"
+              src="https://www.google.com/maps?q=DUM+DUM+Blasco+de+Garay+10+Madrid&output=embed"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              style={{ width: "100%", height: "100%", border: 0 }} />
+          </div>
+        </div>
+
+<section className="spec-foot">
         <div><b>{t("Interiorismo", "Interior design")}</b>Nota Estudio</div>
         <div><b>{t("Identidad", "Identity")}</b>Yerai Gómez</div>
         <div><b>{t("Cocina", "Kitchen")}</b>Kéril Gómez · BCC</div>
