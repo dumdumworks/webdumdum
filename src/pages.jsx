@@ -409,11 +409,22 @@ function Menu() {
   // el campo "_en" con contenido, lo usa; si no, cae al español (fallback).
   const tf = (obj, field) => {
     if (!obj) return "";
+    let val;
     if (lang === "en") {
       const en = obj[field + "_en"];
-      if (en && String(en).trim() !== "") return en;
+      val = (en && String(en).trim() !== "") ? en : (obj[field] || "");
+    } else {
+      val = obj[field] || "";
     }
-    return obj[field] || "";
+    // En las descripciones de producto: normalizar " · " a coma normal y
+    // pasar a minúscula la letra que quede tras una coma (corrección
+    // ortográfica). Los nombres propios se repasan manualmente en el editor.
+    if (field === "ingredients") {
+      val = String(val)
+        .replace(/\s*·\s*/g, ", ")
+        .replace(/,\s+(\p{Lu})/gu, (m, letra) => ", " + letra.toLowerCase());
+    }
+    return val;
   };
 
   // Detectar móvil (≤879px) para renderizar el botón "Volver arriba"
@@ -445,8 +456,8 @@ function Menu() {
         <div className="menu-head">
           <div className="row between">
             <div>
-              <h1 className="menu-h">{data.header && data.header.title || "Carta"}</h1>
-              <div className="menu-sub">{data.header && data.header.subtitle || "DUM DUM™ · Actualizada"} {data.updated}</div>
+              <h1 className="menu-h">{t("Carta", "Menu")}</h1>
+              <div className="menu-sub">{t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated")} {data.updated}</div>
             </div>
           </div>
         </div>
@@ -455,7 +466,9 @@ function Menu() {
         <aside className="menu-disclaimer">
             <span className="menu-disclaimer-arrow" aria-hidden="true">→</span>
             <div className="menu-disclaimer-bubble">
-              <p dangerouslySetInnerHTML={{ __html: data.disclaimer }} />
+              {lang === "en" ?
+                <p>Each portion is 6 dumplings. For 2 people, <strong>4 portions</strong> is the magic number. <strong>5</strong> means you came hungry. <strong>6… 112</strong> 💀<br/>Give it a think, <strong>it's a one-time order</strong> 😉</p> :
+                <p dangerouslySetInnerHTML={{ __html: data.disclaimer }} />}
             </div>
           </aside>
         }
@@ -537,22 +550,28 @@ function Menu() {
         <aside className="menu-chopsticks-note">
           <span className="menu-chopsticks-arrow" aria-hidden="true">→</span>
           <div className="menu-chopsticks-bubble">
-            <p><b>¡Por cierto!</b> Hay palillos para los que todavía no sepan comer con las manos. Aunque hoy podría ser un buen día para aprender 😉</p>
+            <p>{t(
+              <React.Fragment><b>¡Por cierto!</b> Hay palillos para los que todavía no sepan comer con las manos. Aunque hoy podría ser un buen día para aprender 😉</React.Fragment>,
+              <React.Fragment><b>By the way!</b> We've got chopsticks for those who still can't eat with their hands. Although today might be a good day to learn 😉</React.Fragment>
+            )}</p>
           </div>
         </aside>
 
         <div className="menu-foot">
           <div className="menu-foot-left">
             {/* href="#" PROVISIONAL · cambiar cuando exista el editor/PDF de alérgenos */}
-            <a className="btn menu-foot-btn" href="#">Alérgenos →</a>
-            <div className="menu-foot-text">Si tienes alguna alergia, alguna intolerancia o, simplemente, dudas, pregúntanos, que somos muy majos.</div>
+            <a className="btn menu-foot-btn" href="#">{t("Alérgenos", "Allergens")} →</a>
+            <div className="menu-foot-text">{t(
+              "Si tienes alguna alergia, alguna intolerancia o, simplemente, dudas, pregúntanos, que somos muy majos.",
+              "If you have any allergy, any intolerance or, simply, questions, just ask us — we're really nice."
+            )}</div>
           </div>
           {isMobile &&
           <button
             className="btn menu-foot-btn menu-top-btn"
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-            Volver arriba <span className="menu-top-arrow" aria-hidden="true">↑</span>
+            {t("Volver arriba", "Back to top")} <span className="menu-top-arrow" aria-hidden="true">↑</span>
           </button>
           }
         </div>
