@@ -69,6 +69,12 @@ function autoLocalize(text) {
     if (w[0] === w[0].toUpperCase()) return en;
     return en.toLowerCase();
   });
+  // "IVA incluido" → "VAT included" (respeta la capitalización del original)
+  out = out.replace(/\bIVA\s+incluido\b/gi, (m) => {
+    if (m === m.toUpperCase()) return "VAT INCLUDED";
+    if (m[0] === m[0].toUpperCase()) return "VAT included";
+    return "vat included";
+  });
   return out;
 }
 // Exponer global para que pages.jsx / app.jsx lo usen.
