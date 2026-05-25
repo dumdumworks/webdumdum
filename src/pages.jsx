@@ -933,7 +933,7 @@ function EspacioSlider() {
 
   const photos = data.gallery && data.gallery.espacio || ESPACIO_PHOTOS_FALLBACK;
   return (
-    <GallerySlider photos={photos} visible={2} label="Espacio" />);
+    <GallerySlider photos={photos} visible={2} label="Espacio" ratio="3 / 4" />);
 
 }
 
@@ -1131,7 +1131,7 @@ function ProductoSlider() {
   }, [photos, data, lang]);
 
   return (
-    <GallerySlider photos={photosConNombre} visible={2} label="Producto" placeholderLabel="Producto" lightboxStyle="dish" />);
+    <GallerySlider photos={photosConNombre} visible={2} label="Producto" placeholderLabel="Producto" ratio="3 / 4" lightboxStyle="dish" />);
 
 }
 
