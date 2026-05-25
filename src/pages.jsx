@@ -248,7 +248,14 @@ function Home() {
             </button>
             <a className="btn red" href={UBER_URL} target="_blank" rel="noreferrer">Uber Eats →</a>
           </div>
-          <div className="hero-scroll" aria-hidden="true">↓</div>
+          <button
+            type="button"
+            className="hero-scroll"
+            aria-label="Bajar"
+            onClick={() => {
+              const el = document.getElementById("home-end");
+              if (el) el.scrollIntoView({ behavior: "smooth", block: "end" });
+            }}>↓</button>
         </div>
       </section>
 
@@ -347,7 +354,7 @@ function Home() {
       </nav>
 
       {/* Spec footer */}
-      <section className="spec-foot">
+      <section className="spec-foot" id="home-end">
         <div>
           <b>Año</b>
           © DOSMIL24

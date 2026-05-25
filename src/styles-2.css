@@ -91,7 +91,12 @@
   font-weight: 600;
   color: var(--red);
   line-height: 1;
-  margin-top: 8px;
+  margin: 0 auto;
+  margin-top: 4px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
   animation: scrollNudge 1.6s ease-in-out infinite;
 }
 @keyframes scrollNudge {
@@ -145,7 +150,7 @@
 @media (max-width: 780px) {
   .home-index {
     min-height: calc(100vh - 56px);
-    padding: 24px var(--gutter) 52px;
+    padding: 24px var(--gutter) 72px;
     justify-content: center;
   }
   .hero-index { gap: 44px; padding: 0; }
@@ -1950,8 +1955,11 @@
 @media (max-width: 520px) {
   .map-cell.span-6, .map-cell.span-4, .map-cell.span-3 { grid-column: span 1; }
   .row2, .row3 { grid-template-columns: 1fr; }
-  .spec-foot { grid-template-columns: 1fr; }
-  .spec-foot > div { border-right: none; border-bottom: 1px solid var(--line); }
+  /* Info inferior (Año/Locales/Carta/Sistema) en 2 columnas simétricas */
+  .spec-foot { grid-template-columns: 1fr 1fr; }
+  .spec-foot > div { border-bottom: 1px solid var(--line); }
+  .spec-foot > div:nth-child(2n) { border-right: none; }
+  .spec-foot > div:nth-child(2n+1) { border-right: 1px solid var(--line); }
   /* Footer en 2 columnas también en móviles pequeños (no tan largo) */
   .foot-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
 }
