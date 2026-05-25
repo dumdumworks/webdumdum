@@ -51,9 +51,10 @@ function calcAperturaTopbar(tramos) {
 
 function TopBar({ route }) {
   const UBER_URL = "https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY";
-  // Menú: mismos destinos que la rejilla de la home.
-  // ext: true → enlace externo (abre en nueva pestaña). Si no, ruta interna (#/...).
-  const links = [
+  const SPOTIFY_URL = "https://open.spotify.com/playlist/75oqGRFz3CXErzrfBQTuVd?si=62f669c4e6674ff1";
+
+  // Menú móvil (hamburguesa): los 9 destinos de la rejilla de la home.
+  const mobileLinks = [
   { p: "/menu", label: "La carta" },
   { href: UBER_URL, label: "Uber Eats", ext: true },
   { href: UBER_URL, label: "Take Away", ext: true },
@@ -61,8 +62,15 @@ function TopBar({ route }) {
   { p: "/eventos", label: "Eventos" },
   { p: "/contacto", label: "Contacto" },
   { href: "#", label: "Instagram", ext: true },
-  { href: "#", label: "DD*Radio", ext: true },
+  { href: SPOTIFY_URL, label: "DD*Radio", ext: true },
   { href: "#", label: "DD*Mer®ch", ext: true }];
+
+  // Nav de DESKTOP: solo los principales (sin redes/tienda).
+  const deskLinks = [
+  { p: "/menu", label: "La carta" },
+  { p: "/locales", label: "Locales" },
+  { p: "/eventos", label: "Eventos" },
+  { p: "/contacto", label: "Contacto" }];
 
   // Estado de apertura, recalculado cada minuto
   const TRAMOS = [[780, 939], [1200, 1359]];
@@ -81,24 +89,26 @@ function TopBar({ route }) {
   return (
     <header className={`topbar ${menuOpen ? "menu-open" : ""}`} data-screen-label="top-bar">
       <a href="#/" className="brand">DUM DUM<span className="brand-tm">™</span></a>
-      <nav className="nav">
-        {links.map((l, i) =>
-        l.ext ?
-        <a key={i} href={l.href} target="_blank" rel="noreferrer">
-            {l.label}
-          </a> :
-        <a key={i} href={`#${l.p}`} className={route === l.p ? "active" : ""}>
+
+      {/* Nav DESKTOP: principales + botón Reservar destacado */}
+      <nav className="nav nav-desktop">
+        {deskLinks.map((l) =>
+        <a key={l.p} href={`#${l.p}`} className={route === l.p ? "active" : ""}>
             {l.label}
           </a>
         )}
+        <a href="#/locales" className="topbar-reservar">Reservar →</a>
       </nav>
-      <div className="right">
-        <span className="row gap-s">
-          {est.abierto ?
-          <React.Fragment><span className="dot dot-live" /> Abierto hasta las {est.hora}h</React.Fragment> :
-          <React.Fragment><span className="dot dot-closed" /> Cerrado. Nos vemos a las {est.hora}h</React.Fragment>}
-        </span>
-      </div>
+
+      {/* Nav MÓVIL: panel desplegable con los 9 */}
+      <nav className="nav nav-mobile">
+        {mobileLinks.map((l, i) =>
+        l.ext ?
+        <a key={i} href={l.href} target="_blank" rel="noreferrer">{l.label}</a> :
+        <a key={i} href={`#${l.p}`} className={route === l.p ? "active" : ""}>{l.label}</a>
+        )}
+      </nav>
+
       <button
         className="topbar-burger"
         aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
@@ -183,22 +193,9 @@ function Loader({ onDone }) {
 
   const pct = count;
   return (
-    <div className={`loader ${out ? "out" : ""}`}>
-      <div className="loader-top">
-        <span>DUM DUM™ · Madrid · DOSMIL24 →</span>
-        <span>Specimen No. 04 / 26</span>
-      </div>
-
+    <div className={`loader loader-bare ${out ? "out" : ""}`}>
       <div className="loader-mid">
         <div className="loader-count-big">{String(pct).padStart(3, "0")}<span className="loader-pct">%</span></div>
-      </div>
-
-      <div>
-        <div className="loader-bar"><i style={{ width: pct + "%" }} /></div>
-        <div className="loader-bot">
-          <span>Cargando</span>
-          <span>Sin reserva · 13.00 / 20.00</span>
-        </div>
       </div>
     </div>);
 

@@ -95,15 +95,23 @@ img { display: block; max-width: 100%; }
 .topbar a:hover::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: var(--red);
 }
-/* Nav centrado respecto a la PÁGINA (no respecto al hueco entre brand y right).
-   Posición absoluta centrada → queda perfectamente centrado pase lo que pase
-   con los anchos del logo y del estado. */
-.topbar .nav {
-  display: flex; gap: 24px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+/* Nav DESKTOP: a la derecha, en línea, con el botón Reservar destacado */
+.topbar .nav-desktop {
+  display: flex;
+  gap: 24px;
+  align-items: center;
 }
+.topbar .nav-mobile { display: none; }
+/* Botón Reservar destacado en el header (rojo pleno) */
+.topbar-reservar {
+  background: var(--red);
+  color: #fff !important;
+  padding: 8px 16px !important;
+  border-radius: 999px;
+  transition: background .18s ease;
+}
+.topbar-reservar:hover { background: var(--ink); }
+.topbar-reservar::after { display: none !important; }
 .topbar .brand {
   font-family: var(--font-display); font-weight: 600; font-size: 14px;
   letter-spacing: -0.01em; text-transform: none;
@@ -150,12 +158,13 @@ img { display: block; max-width: 100%; }
    carga DESPUÉS (styles.css @importa styles-2.css al inicio), y
    así estas reglas ganan en el orden de cascada. */
 @media (max-width: 880px) {
-  /* Ocultamos el estado abierto/cerrado (descuadraba la barra) */
-  .topbar .right { display: none !important; }
+  /* En móvil ocultamos el nav de escritorio */
+  .topbar .nav-desktop { display: none !important; }
   /* Mostramos el botón hamburguesa */
   .topbar-burger { display: flex !important; }
-  /* El menú pasa a panel desplegable bajo la barra */
-  .topbar .nav {
+  /* El nav móvil pasa a panel desplegable bajo la barra */
+  .topbar .nav-mobile {
+    display: flex;
     position: absolute;
     top: 100%;
     left: 0;
@@ -171,19 +180,19 @@ img { display: block; max-width: 100%; }
     overflow: hidden;
     transition: max-height 0.32s ease, padding 0.32s ease;
   }
-  .topbar.menu-open .nav {
+  .topbar.menu-open .nav-mobile {
     max-height: calc(100vh - 60px);
     overflow-y: auto;
     padding: 8px 20px 16px;
     border-bottom-width: 1px;
   }
-  .topbar .nav a {
+  .topbar .nav-mobile a {
     width: 100%;
     padding: 14px 0;
     font-size: 14px;
     border-bottom: 1px solid var(--line-soft);
   }
-  .topbar .nav a:last-child { border-bottom: none; }
+  .topbar .nav-mobile a:last-child { border-bottom: none; }
 }
 
 .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); display: inline-block; }
@@ -274,6 +283,9 @@ img { display: block; max-width: 100%; }
   flex: 1;
   display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
 }
+/* Loader minimalista: solo el número, centrado en toda la pantalla */
+.loader-bare { justify-content: center; align-items: center; padding: 0; }
+.loader-bare .loader-mid { flex: none; align-items: center; }
 .loader-count-big {
   font-family: var(--font-display);
   font-weight: 500;

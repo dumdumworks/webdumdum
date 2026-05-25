@@ -238,7 +238,7 @@ function Home() {
           </div>
 
           <div className="hero-actions hero-actions-4">
-            <a className="btn" href="#" onClick={(e) => e.preventDefault()}>Reservar →</a>
+            <a className="btn" href="#/locales">Reservar →</a>
             <a className="btn" href="#/locales">Llegar →</a>
             <button
               type="button"
@@ -346,7 +346,7 @@ function Home() {
           <div className="t">Instagram →</div>
           <div className="d">@DUMDUM.PLINGS</div>
         </a>
-        <a className="map-cell" href="#" onClick={(e) => e.preventDefault()}>
+        <a className="map-cell" href="https://open.spotify.com/playlist/75oqGRFz3CXErzrfBQTuVd?si=62f669c4e6674ff1" target="_blank" rel="noreferrer">
           <div className="n">[08]</div>
           <div className="t">DD*Radio →</div>
           <div className="d">SPOTIFY</div>
