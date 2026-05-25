@@ -254,7 +254,7 @@ function Home() {
             aria-label="Bajar"
             onClick={() => {
               const el = document.getElementById("home-end");
-              if (el) el.scrollIntoView({ behavior: "smooth", block: "end" });
+              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
             }}>↓</button>
         </div>
       </section>

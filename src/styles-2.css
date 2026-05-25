@@ -245,6 +245,10 @@
   background: var(--bg);
   transition: background .25s ease;
 }
+/* Refuerzo: en desktop (>780px) NUNCA se muestra, pase lo que pase */
+@media (min-width: 781px) {
+  .map-cell-seal { display: none !important; }
+}
 /* El sello se pinta con máscara: el color lo da background-color, así
    puede invertirse (rojo→crema) igual que el texto de las demás celdas. */
 .map-cell-seal .seal-mark {
