@@ -46,6 +46,14 @@
           .then(function (g) { if (g) { window.PUBLISHED_GALLERY = g; } })
           .catch(function () {});
       })
+      .then(function () {
+        // Cargar los textos de la seccion Eventos (editables en Sveltia).
+        // Si falta o falla, la web usa los textos de respaldo del codigo.
+        return fetch("eventos.json?ts=" + Date.now())
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (e) { if (e) { window.PUBLISHED_EVENTOS = e; } })
+          .catch(function () {});
+      })
       .then(function () { window.__bootDumDum(); });
   </script>
 </body>
