@@ -1,7 +1,7 @@
 {
   "espacio": [
     {
-      "src": "img/espacio/01-fachada.jpg",
+      "src": "img/espacio/11-merchandising.jpg",
       "pos": "50% 50%"
     },
     {
@@ -37,15 +37,11 @@
       "pos": "50% 50%"
     },
     {
-      "src": "img/espacio/11-merchandising.jpg",
-      "pos": "50% 50%"
-    },
-    {
       "src": "img/espacio/12-suelo-barra-alta.jpg",
       "pos": "50% 50%"
     },
     {
-      "src": "",
+      "src": "img/espacio/01-fachada.jpg",
       "pos": "50% 50%"
     }
   ],
