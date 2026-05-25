@@ -202,6 +202,7 @@ function DraggableClaim() {
 
 // ── HOME ──────────────────────────────────────────────────────
 function Home() {
+  const lang = useLang();
   // Toast "Próximamente" (Take Away, Merch). Mensaje + visibilidad.
   const [toast, setToast] = React.useState(null);
   const toastTimer = React.useRef(null);
@@ -221,7 +222,7 @@ function Home() {
           <div className="hero-stage">
             {/* Bloque horario, pegado a la izda del logo */}
             <div className="hero-info hero-info-l">
-              <div>TODOS LOS DÍAS</div>
+              <div>{t("TODOS LOS DÍAS", "EVERY DAY")}</div>
               <div>13.00 – 15.39 &amp; 20.00 – 22.39</div>
             </div>
 
@@ -238,8 +239,8 @@ function Home() {
           </div>
 
           <div className="hero-actions hero-actions-4">
-            <a className="btn" href="#/locales">Reservar →</a>
-            <a className="btn" href="#/locales">Llegar →</a>
+            <a className="btn" href="#/locales">{t("Reservar", "Book")} →</a>
+            <a className="btn" href="#/locales">{t("Llegar", "Directions")} →</a>
             <button
               type="button"
               className="btn"
@@ -288,23 +289,27 @@ function Home() {
       {/* Feature strip */}
       <section className="feature-strip">
         <div>
-          <div className="tiny muted" style={{ marginBottom: 16 }}>/ CARTA</div>
-          <h2>Una carta corta<br /><em style={{ color: 'var(--red)', fontStyle: 'normal', fontWeight: 'inherit' }}>que cambia cada mes.</em></h2>
+          <div className="tiny muted" style={{ marginBottom: 16 }}>/ {t("CARTA", "MENU")}</div>
+          <h2>{t("Una carta corta", "A short menu")}<br /><em style={{ color: 'var(--red)', fontStyle: 'normal', fontWeight: 'inherit' }}>{t("que cambia cada mes.", "that changes every month.")}</em></h2>
           <p className="body" style={{ marginTop: 24 }}>
-            Nueve dumplings. Uno nuevo cada mes. De los nueve,
-            mínimo 2 vegetarianos. De los nueve, <strong style={{ fontWeight: 700 }}>ni uno convencional</strong>.
+            {t(
+              <React.Fragment>Nueve dumplings. Uno nuevo cada mes. De los nueve, mínimo 2 vegetarianos. De los nueve, <strong style={{ fontWeight: 700 }}>ni uno convencional</strong>.</React.Fragment>,
+              <React.Fragment>Nine dumplings. A new one every month. Of the nine, at least 2 vegetarian. Of the nine, <strong style={{ fontWeight: 700 }}>not one conventional</strong>.</React.Fragment>
+            )}
           </p>
-          <a className="btn" href="#/menu" style={{ marginTop: 32 }}>Leer carta de mayo →</a>
+          <a className="btn" href="#/menu" style={{ marginTop: 32 }}>{t("Leer carta de mayo", "Read May's menu")} →</a>
         </div>
         <div>
-          <div className="tiny muted" style={{ marginBottom: 16 }}>/ SISTEMA</div>
-          <h2>Chamberí sin reserva.<br /><em style={{ color: 'var(--red)', fontStyle: 'normal', fontWeight: 'inherit' }}>Con reserva en Tetuán.</em></h2>
+          <div className="tiny muted" style={{ marginBottom: 16 }}>/ {t("SISTEMA", "SYSTEM")}</div>
+          <h2>{t("Chamberí sin reserva.", "Chamberí, no booking.")}<br /><em style={{ color: 'var(--red)', fontStyle: 'normal', fontWeight: 'inherit' }}>{t("Con reserva en Tetuán.", "Tetuán, by booking.")}</em></h2>
           <p className="body" style={{ marginTop: 24 }}>
-            En Blasco de Garay llegas y a comer. En Infanta Mercedes puedes
-            reservar online o probar suerte. En ambos vamos como balas.
+            {t(
+              "En Blasco de Garay llegas y a comer. En Infanta Mercedes puedes reservar online o probar suerte. En ambos vamos como balas.",
+              "At Blasco de Garay you just walk in and eat. At Infanta Mercedes you can book online or try your luck. At both, we move fast."
+            )}
           </p>
           <div className="row gap-m" style={{ marginTop: 32 }}>
-            <a className="btn" href="#/locales">Reservar en Tetuán →</a>
+            <a className="btn" href="#/locales">{t("Reservar en Tetuán", "Book at Tetuán")} →</a>
           </div>
         </div>
       </section>
@@ -313,33 +318,33 @@ function Home() {
       <nav className="map-nav map-nav-3">
         <a className="map-cell" href="#/menu">
           <div className="n">[01]</div>
-          <div className="t">La carta →</div>
-          <div className="d">ECHA UN VISTAZO</div>
+          <div className="t">{t("La carta", "Menu")} →</div>
+          <div className="d">{t("ECHA UN VISTAZO", "TAKE A LOOK")}</div>
         </a>
         <a className="map-cell" href="https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY" target="_blank" rel="noreferrer">
           <div className="n">[02]</div>
           <div className="t">Uber Eats →</div>
-          <div className="d">NI TE MUEVAS</div>
+          <div className="d">{t("NI TE MUEVAS", "DON'T EVEN MOVE")}</div>
         </a>
         <a className="map-cell" href="#" onClick={(e) => { e.preventDefault(); showToast("uber"); }}>
           <div className="n">[03]</div>
           <div className="t">Take Away →</div>
-          <div className="d">PRÓXIMAMENTE</div>
+          <div className="d">{t("PRÓXIMAMENTE", "COMING SOON")}</div>
         </a>
         <a className="map-cell" href="#/locales">
           <div className="n">[04]</div>
-          <div className="t">Locales →</div>
+          <div className="t">{t("Locales", "Locations")} →</div>
           <div className="d">CHAMBERÍ #015 + TETUÁN #020</div>
         </a>
         <a className="map-cell" href="#/eventos">
           <div className="n">[05]</div>
-          <div className="t">Eventos →</div>
-          <div className="d">AFTER WORKS · CUMPLES · DIVORCIOS?</div>
+          <div className="t">{t("Eventos", "Events")} →</div>
+          <div className="d">{t("AFTER WORKS · CUMPLES · DIVORCIOS?", "AFTER WORKS · BIRTHDAYS · DIVORCES?")}</div>
         </a>
         <a className="map-cell" href="#/contacto">
           <div className="n">[06]</div>
-          <div className="t">Contacto →</div>
-          <div className="d">SALÚDAME SIEMPRE</div>
+          <div className="t">{t("Contacto", "Contact")} →</div>
+          <div className="d">{t("SALÚDAME SIEMPRE", "SAY HI ANYTIME")}</div>
         </a>
         <a className="map-cell" href="#" onClick={(e) => e.preventDefault()}>
           <div className="n">[07]</div>
@@ -354,7 +359,7 @@ function Home() {
         <a className="map-cell" href="#" onClick={(e) => { e.preventDefault(); showToast("soon"); }}>
           <div className="n">[09]</div>
           <div className="t">DD*Mer®ch →</div>
-          <div className="d">PRÓXIMAMENTE</div>
+          <div className="d">{t("PRÓXIMAMENTE", "COMING SOON")}</div>
         </a>
         {/* Celda-sello · rellena el hueco de la rejilla en móvil (2 col).
             Al pinchar/hover invierte colores como el resto de celdas. */}
@@ -366,20 +371,20 @@ function Home() {
       {/* Spec footer */}
       <section className="spec-foot" id="home-end">
         <div>
-          <b>Año</b>
+          <b>{t("Año", "Year")}</b>
           © DOSMIL24
         </div>
         <div>
-          <b>Locales</b>
-          02 (so far) / Madrid / Chamberí · Tetuán
+          <b>{t("Locales", "Locations")}</b>
+          {t("02 (so far) / Madrid / Chamberí · Tetuán", "02 (so far) / Madrid / Chamberí · Tetuán")}
         </div>
         <div>
-          <b>Carta</b>
-          Mensual / vapor
+          <b>{t("Carta", "Menu")}</b>
+          {t("Mensual / vapor", "Monthly / steamed")}
         </div>
         <div>
-          <b>Sistema</b>
-          Chamberí: turnos | Tetuán: reservas
+          <b>{t("Sistema", "System")}</b>
+          {t("Chamberí: turnos | Tetuán: reservas", "Chamberí: walk-in | Tetuán: booking")}
         </div>
       </section>
 
@@ -387,8 +392,8 @@ function Home() {
       {toast &&
         <div className="home-toast" role="status">
           {toast === "uber" ?
-            <span>Próximamente. De momento puedes pedir para recoger en <a href={UBER_URL} target="_blank" rel="noreferrer">Uber Eats →</a></span> :
-            <span>Próximamente.</span>}
+            <span>{t("Próximamente. De momento puedes pedir para recoger en ", "Coming soon. For now you can order pickup on ")}<a href={UBER_URL} target="_blank" rel="noreferrer">Uber Eats →</a></span> :
+            <span>{t("Próximamente.", "Coming soon.")}</span>}
         </div>
       }
     </div>);

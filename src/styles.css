@@ -136,6 +136,25 @@ img { display: block; max-width: 100%; }
   letter-spacing: 0;
 }
 .topbar .right { display: flex; gap: 16px; align-items: center; }
+/* Selector de idioma ES / EN */
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  cursor: pointer;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--red);
+  text-transform: uppercase;
+}
+.lang-toggle span { opacity: 0.4; transition: opacity .18s ease; }
+.lang-toggle span.on { opacity: 1; }
+.lang-toggle .sep { opacity: 0.4; }
 /* Grupo derecho móvil (Reservar + hamburguesa) · oculto en desktop */
 .topbar-mobile-right { display: none; align-items: center; gap: 14px; }
 .topbar-reservar-mobile { font-size: 11px; padding: 7px 14px !important; }

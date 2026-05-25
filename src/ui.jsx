@@ -19,6 +19,37 @@ function nav(path) {
   window.location.hash = path;
 }
 
+// ─── Sistema de idioma (ES / EN) ──────────────────────────────
+// Estado global simple: se guarda en localStorage y notifica a los
+// componentes suscritos para que se re-rendericen al cambiar.
+const LANG_KEY = "dumdum.lang";
+const _langListeners = new Set();
+function getLang() {
+  try { return localStorage.getItem(LANG_KEY) === "en" ? "en" : "es"; }
+  catch (e) { return "es"; }
+}
+function setLang(l) {
+  try { localStorage.setItem(LANG_KEY, l === "en" ? "en" : "es"); } catch (e) {}
+  document.documentElement.lang = l;
+  _langListeners.forEach((fn) => fn());
+}
+// Hook: devuelve el idioma actual y re-renderiza cuando cambia.
+function useLang() {
+  const [, force] = React.useState(0);
+  React.useEffect(() => {
+    const fn = () => force((n) => n + 1);
+    _langListeners.add(fn);
+    return () => _langListeners.delete(fn);
+  }, []);
+  return getLang();
+}
+// Helper de traducción: t(textoES, textoEN). Si falta EN, cae a ES.
+function t(es, en) {
+  return getLang() === "en" ? (en || es) : es;
+}
+// Exponer global para que pages.jsx / app.jsx lo usen.
+window.i18n = { getLang, setLang, useLang, t };
+
 // ─── Top bar ──────────────────────────────────────────────────
 // Cálculo de apertura propio (autosuficiente, no depende de pages.jsx),
 // usando SIEMPRE la hora de Madrid.
@@ -49,28 +80,45 @@ function calcAperturaTopbar(tramos) {
   return { abierto: false, hora: fmt(tramos[0][0]) };
 }
 
+// ─── Selector de idioma ES / EN ───────────────────────────────
+function LangToggle() {
+  const lang = useLang();
+  return (
+    <button
+      type="button"
+      className="lang-toggle"
+      onClick={() => setLang(lang === "es" ? "en" : "es")}
+      aria-label={lang === "es" ? "Switch to English" : "Cambiar a español"}>
+      <span className={lang === "es" ? "on" : ""}>ES</span>
+      <span className="sep">/</span>
+      <span className={lang === "en" ? "on" : ""}>EN</span>
+    </button>);
+
+}
+
 function TopBar({ route }) {
+  const lang = useLang();
   const UBER_URL = "https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY";
   const SPOTIFY_URL = "https://open.spotify.com/playlist/75oqGRFz3CXErzrfBQTuVd?si=62f669c4e6674ff1";
 
   // Menú móvil (hamburguesa): los 9 destinos de la rejilla de la home.
   const mobileLinks = [
-  { p: "/menu", label: "La carta" },
+  { p: "/menu", label: t("La carta", "Menu") },
   { href: UBER_URL, label: "Uber Eats", ext: true },
   { href: UBER_URL, label: "Take Away", ext: true },
-  { p: "/locales", label: "Locales" },
-  { p: "/eventos", label: "Eventos" },
-  { p: "/contacto", label: "Contacto" },
+  { p: "/locales", label: t("Locales", "Locations") },
+  { p: "/eventos", label: t("Eventos", "Events") },
+  { p: "/contacto", label: t("Contacto", "Contact") },
   { href: "#", label: "Instagram", ext: true },
   { href: SPOTIFY_URL, label: "DD*Radio", ext: true },
   { href: "#", label: "DD*Mer®ch", ext: true }];
 
   // Nav de DESKTOP: solo los principales (sin redes/tienda).
   const deskLinks = [
-  { p: "/menu", label: "La carta" },
-  { p: "/locales", label: "Locales" },
-  { p: "/eventos", label: "Eventos" },
-  { p: "/contacto", label: "Contacto" }];
+  { p: "/menu", label: t("La carta", "Menu") },
+  { p: "/locales", label: t("Locales", "Locations") },
+  { p: "/eventos", label: t("Eventos", "Events") },
+  { p: "/contacto", label: t("Contacto", "Contact") }];
 
   // Estado de apertura, recalculado cada minuto
   const TRAMOS = [[780, 939], [1200, 1359]];
@@ -99,14 +147,15 @@ function TopBar({ route }) {
         )}
       </nav>
 
-      {/* Derecha (desktop): estado abierto/cerrado + botón Reservar destacado */}
+      {/* Derecha (desktop): estado abierto/cerrado + Reservar + idioma */}
       <div className="right">
         <span className="row gap-s">
           {est.abierto ?
-          <React.Fragment><span className="dot dot-live" /> Abierto hasta las {est.hora}h</React.Fragment> :
-          <React.Fragment><span className="dot dot-closed" /> Cerrado. Nos vemos a las {est.hora}h</React.Fragment>}
+          <React.Fragment><span className="dot dot-live" /> {t("Abierto hasta las", "Open until")} {est.hora}h</React.Fragment> :
+          <React.Fragment><span className="dot dot-closed" /> {t("Cerrado. Nos vemos a las", "Closed. See you at")} {est.hora}h</React.Fragment>}
         </span>
-        <a href="#/locales" className="topbar-reservar">Reservar →</a>
+        <a href="#/locales" className="topbar-reservar">{t("Reservar", "Book")} →</a>
+        <LangToggle />
       </div>
 
       {/* Nav MÓVIL: panel desplegable con los 9 */}
@@ -118,9 +167,10 @@ function TopBar({ route }) {
         )}
       </nav>
 
-      {/* Grupo derecho MÓVIL: botón Reservar permanente + hamburguesa */}
+      {/* Grupo derecho MÓVIL: idioma + Reservar permanente + hamburguesa */}
       <div className="topbar-mobile-right">
-        <a href="#/locales" className="topbar-reservar topbar-reservar-mobile">Reservar →</a>
+        <LangToggle />
+        <a href="#/locales" className="topbar-reservar topbar-reservar-mobile">{t("Reservar", "Book")} →</a>
         <button
           className="topbar-burger"
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
