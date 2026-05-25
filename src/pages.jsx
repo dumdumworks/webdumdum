@@ -897,7 +897,7 @@ function Locales() {
       </div>
 
       <section className="spec-foot">
-        <div><b>{t("Interiorismo", "Interior design")}</b>Nota Estudio</div>
+        <div><b>{t("Interiorismo", "Interior design")}</b><a className="spec-link" href="https://nota-estudio.com/" target="_blank" rel="noreferrer">Nota Estudio</a></div>
         <div><b>{t("Identidad", "Identity")}</b>Yerai Gómez</div>
         <div><b>{t("Cocina", "Kitchen")}</b>Kéril Gómez · BCC</div>
         <div><b>{t("Año apertura", "Opening year")}</b>{window.i18n.autoLocalize("CHAMBERÍ · DOSMIL24 | TETUÁN · DOSMIL26")}</div>
