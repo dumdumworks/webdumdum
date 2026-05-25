@@ -91,7 +91,33 @@
       "pos": "50% 50%"
     }
   ],
-  "prensa": [],
+  "prensa": [
+    {
+      "src": "/img/prensa/elpais.jpg",
+      "url": "",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "/img/prensa/vogue.jpg",
+      "url": "",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "/img/prensa/forbes.jpg",
+      "url": "",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "/img/prensa/neo2.jpg",
+      "url": "",
+      "pos": "50% 50%"
+    },
+    {
+      "src": "/img/prensa/marca.jpg",
+      "url": "",
+      "pos": "50% 50%"
+    }
+  ],
   "redes": [
     {
       "url": "https://www.instagram.com/reel/DEvEUOst0Wa/"
