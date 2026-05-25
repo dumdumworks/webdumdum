@@ -253,8 +253,7 @@ function Home() {
             className="hero-scroll"
             aria-label="Bajar"
             onClick={() => {
-              const el = document.getElementById("home-end");
-              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+              window.scrollBy({ top: window.innerHeight * 0.85, left: 0, behavior: "smooth" });
             }}>↓</button>
         </div>
       </section>
