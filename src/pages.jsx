@@ -304,7 +304,7 @@ function Home() {
             reservar online o probar suerte. En ambos vamos como balas.
           </p>
           <div className="row gap-m" style={{ marginTop: 32 }}>
-            <a className="btn" href="#" onClick={(e) => e.preventDefault()}>Reservar en Tetuán →</a>
+            <a className="btn" href="#/locales">Reservar en Tetuán →</a>
           </div>
         </div>
       </section>
@@ -636,6 +636,7 @@ function EstadoLocal({ tramos }) {
 }
 
 function Locales() {
+  const [resvSoon, setResvSoon] = React.useState(false);
   return (
     <div data-screen-label="locales">
       <section style={{ padding: '14vh var(--gutter) 6vh', borderBottom: '1px solid var(--line)' }}>
@@ -680,11 +681,15 @@ function Locales() {
               <b>Metro</b><div>Tetuán · Estrecho</div>
               <b>Horario</b><div>13.00–15.39 / 20.00–22.39</div>
               <b>Aforo</b><div>~40 comensales</div>
-              <b>Reserva</b><div style={{ color: '#1f8a5b', fontWeight: 500 }}>Sí · online</div>
+              <b>Reserva</b><div style={{ color: '#1f8a5b', fontWeight: 500 }}>Sí · online / +34 614 746 065</div>
             </div>
 
-            <a className="btn red" href="#" onClick={(e) => e.preventDefault()} style={{ marginTop: 24 }}>
-              Reservar en Tetuán →
+            <a
+              className="btn red"
+              href="#"
+              onClick={(e) => { e.preventDefault(); setResvSoon(true); }}
+              style={{ marginTop: 24 }}>
+              {resvSoon ? "Próximamente" : "Reservar →"}
             </a>
           </div>
 
@@ -1586,8 +1591,8 @@ function Contacto() {
           <a className="big" href="#" onClick={(e) => e.preventDefault()}>
             Instagram <span className="arr">↗</span>
           </a>
-          <a className="big" href="#" onClick={(e) => e.preventDefault()}>
-             <span className="arr"></span>
+          <a className="big" href="tel:+34614746065">
+            +34 614 746 065 <span className="arr">↗</span>
           </a>
         </div>
       </section>
