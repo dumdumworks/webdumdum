@@ -47,8 +47,32 @@ function useLang() {
 function t(es, en) {
   return getLang() === "en" ? (en || es) : es;
 }
+// Auto-traducción de texto que viene del editor (Sveltia) en modo EN:
+//  · "DOSMIL26" → "TWENTY26"  (mayúsculas o minúsculas)
+//  · meses en español → inglés (Mayo → May, etc.)
+const _MESES_EN = {
+  "enero": "January", "febrero": "February", "marzo": "March", "abril": "April",
+  "mayo": "May", "junio": "June", "julio": "July", "agosto": "August",
+  "septiembre": "September", "setiembre": "September", "octubre": "October",
+  "noviembre": "November", "diciembre": "December"
+};
+function autoLocalize(text) {
+  if (getLang() !== "en" || text == null) return text;
+  let out = String(text);
+  // DOSMIL(num) → TWENTY(num), preservando mayúsc/minúsc del original
+  out = out.replace(/dosmil/gi, (m) => (m === m.toLowerCase() ? "twenty" : "TWENTY"));
+  // Meses: respeta la capitalización de la primera letra (Mayo→May, MAYO→MAY)
+  out = out.replace(/\b([A-Za-zÁÉÍÓÚáéíóúÑñ]+)\b/g, (w) => {
+    const en = _MESES_EN[w.toLowerCase()];
+    if (!en) return w;
+    if (w === w.toUpperCase()) return en.toUpperCase();
+    if (w[0] === w[0].toUpperCase()) return en;
+    return en.toLowerCase();
+  });
+  return out;
+}
 // Exponer global para que pages.jsx / app.jsx lo usen.
-window.i18n = { getLang, setLang, useLang, t };
+window.i18n = { getLang, setLang, useLang, t, autoLocalize };
 
 // ─── Top bar ──────────────────────────────────────────────────
 // Cálculo de apertura propio (autosuficiente, no depende de pages.jsx),
