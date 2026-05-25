@@ -1414,6 +1414,27 @@
   .ev-slider-track { grid-template-columns: 1fr; gap: 8px; }
   .ev-slider-cols-3 .ev-slider-track { grid-template-columns: 1fr; }
   .ev-slider-cols-2 .ev-slider-track { grid-template-columns: 1fr; }
+
+  /* Carrusel deslizable en móvil: las fotos van en fila horizontal y
+     se desplazan con el dedo (scroll nativo). El scroll-snap hace que
+     cada foto "encaje" centrada, pasando de una en una. */
+  .ev-slider-track-mobile {
+    display: flex;
+    grid-template-columns: none;
+    gap: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none;          /* Firefox: oculta la barra */
+  }
+  .ev-slider-track-mobile::-webkit-scrollbar { display: none; } /* Safari/Chrome */
+  .ev-slider-track-mobile .ev-slider-slot {
+    flex: 0 0 100%;                 /* cada foto ocupa el ancho completo */
+    width: 100%;
+    scroll-snap-align: center;
+    animation: none;                /* sin la animación de entrada en el carrusel */
+  }
 }
 
 /* Foto grid de la sección Producto */

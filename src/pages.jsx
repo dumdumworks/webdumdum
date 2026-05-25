@@ -1112,8 +1112,26 @@ function ProductoSlider() {
 
   const fallback = Array.from({ length: 9 }, () => ({ src: null, pos: "50% 50%" }));
   const photos = data.gallery && data.gallery.producto || fallback;
+
+  // Las fotos de Producto son las mismas de los platos. Para que el visor
+  // sea idéntico al de la carta (con nombre incluido), derivamos el nombre
+  // del plato cruzando el archivo de la foto (src) con el menú.
+  const lang = useLang();
+  const photosConNombre = React.useMemo(() => {
+    const porImagen = {};
+    (data.sections || []).forEach((sec) => {
+      (sec.items || []).forEach((it) => {
+        if (it.image) {
+          const en = it.name_en && String(it.name_en).trim() !== "" ? it.name_en : it.name;
+          porImagen[it.image] = lang === "en" ? (en || it.name || "") : (it.name || "");
+        }
+      });
+    });
+    return photos.map((p) => ({ ...p, name: p.name || porImagen[p.src] || "" }));
+  }, [photos, data, lang]);
+
   return (
-    <GallerySlider photos={photos} visible={2} label="Producto" placeholderLabel="Producto" />);
+    <GallerySlider photos={photosConNombre} visible={2} label="Producto" placeholderLabel="Producto" lightboxStyle="dish" />);
 
 }
 
@@ -1138,10 +1156,37 @@ function PrensaSlider() {
 }
 
 // ── Slider genérico ───────────────────────────────────────────
-function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLabel = "Espacio", cta = null, ratio = "4 / 3" }) {
+function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLabel = "Espacio", cta = null, ratio = "4 / 3", lightboxStyle = "default" }) {
   const total = photos.length;
   const [idx, setIdx] = React.useState(0);
   const [lightbox, setLightbox] = React.useState(null); // índice de foto ampliada, o null
+
+  // Detectar móvil (≤879px): en móvil la galería es un carrusel deslizable
+  // (scroll horizontal con snap, de una en una); en desktop, slice + flechas.
+  const [isMobile, setIsMobile] = React.useState(
+    typeof window !== "undefined" && window.matchMedia("(max-width: 879px)").matches
+  );
+  React.useEffect(() => {
+    const mq = window.matchMedia("(max-width: 879px)");
+    const onChange = (e) => setIsMobile(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  // En móvil: ref a la pista para mover el scroll con las flechas y para
+  // saber qué foto está centrada (actualiza el contador "01 / NN").
+  const trackRef = React.useRef(null);
+  const onTrackScroll = () => {
+    const el = trackRef.current;
+    if (!el) return;
+    const i = Math.round(el.scrollLeft / el.clientWidth);
+    setIdx(Math.max(0, Math.min(total - 1, i)));
+  };
+  const scrollToMobile = (i) => {
+    const el = trackRef.current;
+    if (!el) return;
+    el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
+  };
 
   if (total === 0) {
     return (
@@ -1171,45 +1216,90 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
     n: (idx + i) % total + 1
   }));
 
+  // Navegación de las flechas: en móvil mueve el scroll de la pista;
+  // en desktop avanza el slice como antes.
+  const goPrev = () => { if (isMobile) scrollToMobile(Math.max(0, idx - 1)); else prev(); };
+  const goNext = () => { if (isMobile) scrollToMobile(Math.min(total - 1, idx + 1)); else next(); };
+
   return (
     <div className={`ev-slider ev-slider-cols-${visible}`}>
       <div className="ev-slider-head">
         <div className="tiny muted">{label} · {String(idx + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</div>
         <div className="ev-slider-ctrls">
-          <button onClick={prev} aria-label="Anterior" className="ev-slider-btn">←</button>
-          <button onClick={next} aria-label="Siguiente" className="ev-slider-btn">→</button>
+          <button onClick={goPrev} aria-label="Anterior" className="ev-slider-btn">←</button>
+          <button onClick={goNext} aria-label="Siguiente" className="ev-slider-btn">→</button>
         </div>
       </div>
-      <div className="ev-slider-track">
-        {slice.map(({ item, n }, i) =>
-        <div className="ev-slider-slot" key={`${idx}-${i}`} style={{ aspectRatio: ratio }}>
-            {item.src ?
+
+      {isMobile ?
+      // ── MÓVIL: carrusel deslizable (scroll horizontal con snap) ──
+      <div className="ev-slider-track ev-slider-track-mobile" ref={trackRef} onScroll={onTrackScroll}>
+          {photos.map((item, i) =>
+        <div className="ev-slider-slot" key={i} style={{ aspectRatio: ratio }}>
+              {item.src ?
           <img src={item.src} alt="" loading="lazy" decoding="async" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
-            onClick={() => setLightbox((idx + i) % total)} /> :
+            onClick={() => setLightbox(i)} /> :
 
           <div className="ev-slider-ph">
-                <span>[ {placeholderLabel} · {String(n).padStart(2, "0")} ]</span>
-              </div>
+                  <span>[ {placeholderLabel} · {String(i + 1).padStart(2, "0")} ]</span>
+                </div>
           }
-            {cta &&
+              {cta &&
           <a className="ev-slider-cta"
           href={item.url || "#"}
           target={item.url ? "_blank" : undefined}
           rel="noreferrer"
           onClick={(e) => {if (!item.url) e.preventDefault();}}>
-                {cta}
-              </a>
+                  {cta}
+                </a>
           }
-          </div>
+            </div>
         )}
-      </div>
-      <Lightbox
-        photos={photos}
-        index={lightbox}
-        label={label}
-        onClose={() => setLightbox(null)}
-        onNav={(d) => setLightbox((p) => (p + d + total) % total)}
-      />
+        </div> :
+
+      // ── DESKTOP: slice + flechas (como antes) ──
+      <div className="ev-slider-track">
+          {slice.map(({ item, n }, i) =>
+        <div className="ev-slider-slot" key={`${idx}-${i}`} style={{ aspectRatio: ratio }}>
+              {item.src ?
+          <img src={item.src} alt="" loading="lazy" decoding="async" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
+            onClick={() => setLightbox((idx + i) % total)} /> :
+
+          <div className="ev-slider-ph">
+                  <span>[ {placeholderLabel} · {String(n).padStart(2, "0")} ]</span>
+                </div>
+          }
+              {cta &&
+          <a className="ev-slider-cta"
+          href={item.url || "#"}
+          target={item.url ? "_blank" : undefined}
+          rel="noreferrer"
+          onClick={(e) => {if (!item.url) e.preventDefault();}}>
+                  {cta}
+                </a>
+          }
+            </div>
+        )}
+        </div>
+      }
+
+      {lightboxStyle === "dish" ?
+        (lightbox !== null &&
+          <DishLightbox
+            items={photos.map((p, i) => ({ id: i, src: p.src, name: p.name || "" }))}
+            index={lightbox}
+            onPrev={() => setLightbox((p) => (p - 1 + total) % total)}
+            onNext={() => setLightbox((p) => (p + 1) % total)}
+            onClose={() => setLightbox(null)}
+          />) :
+        <Lightbox
+          photos={photos}
+          index={lightbox}
+          label={label}
+          onClose={() => setLightbox(null)}
+          onNav={(d) => setLightbox((p) => (p + d + total) % total)}
+        />
+      }
     </div>);
 
 }
@@ -1220,6 +1310,44 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
 // diseño del sitio (rojo, mono, transiciones suaves).
 function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
   const open = index !== null && index !== undefined;
+
+  // Swipe táctil (móvil): deslizar izquierda/derecha para navegar,
+  // igual que el carrusel de la carta.
+  const [drag, setDrag] = React.useState(0);
+  const [animating, setAnimating] = React.useState(false);
+  const startX = React.useRef(null);
+  const startY = React.useRef(null);
+  const width = React.useRef(typeof window !== "undefined" ? window.innerWidth : 360);
+  const locked = React.useRef(null);
+
+  const onTouchStart = (e) => {
+    const tch = e.touches[0];
+    startX.current = tch.clientX;
+    startY.current = tch.clientY;
+    locked.current = null;
+    width.current = window.innerWidth;
+    setAnimating(false);
+  };
+  const onTouchMove = (e) => {
+    if (startX.current === null) return;
+    const dx = e.touches[0].clientX - startX.current;
+    const dy = e.touches[0].clientY - startY.current;
+    if (locked.current === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+      locked.current = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+    }
+    if (locked.current === "x") setDrag(dx);
+  };
+  const onTouchEnd = () => {
+    if (locked.current === "x") {
+      const threshold = width.current * 0.2;
+      if (drag <= -threshold) onNav(1);
+      else if (drag >= threshold) onNav(-1);
+    }
+    setAnimating(true);
+    setDrag(0);
+    startX.current = null;
+    locked.current = null;
+  };
 
   React.useEffect(() => {
     if (!open) return;
@@ -1258,9 +1386,18 @@ function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
 
       <button className="lb-nav lb-prev" onClick={(e) => { e.stopPropagation(); onNav(-1); }} aria-label="Anterior">←</button>
 
-      <div className="lb-stage" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="lb-stage"
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        style={{
+          transform: `translateX(${drag}px)`,
+          transition: animating ? "transform 0.25s cubic-bezier(0.16,1,0.3,1)" : "none"
+        }}>
         {item.src &&
-          <img src={item.src} alt="" className="lb-img" style={{ objectPosition: item.pos || "50% 50%" }} />}
+          <img src={item.src} alt="" className="lb-img" draggable="false" style={{ objectPosition: item.pos || "50% 50%" }} />}
       </div>
 
       <button className="lb-nav lb-next" onClick={(e) => { e.stopPropagation(); onNav(1); }} aria-label="Siguiente">→</button>
