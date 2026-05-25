@@ -1317,6 +1317,13 @@ function Eventos() {
     const j = window.i18n.mdToJsx(window.i18n.ev(key));
     return j != null ? j : fallback;
   };
+  // `ebp` = párrafos en campo único: el editor escribe todo seguido (con una
+  // línea en blanco entre párrafos) y la web los reparte en <p> sola. Si el
+  // editor no aporta nada, usa `fallbackParas` (los <p> escritos en el código).
+  const ebp = (key, fallbackParas) => {
+    const ps = window.i18n.mdParas(window.i18n.ev(key), { className: "body" });
+    return ps != null ? ps : fallbackParas;
+  };
   const eh = (key, keyRed, fbNegro, fbRed) => {
     const negro = window.i18n.mdToJsx(window.i18n.ev(key));
     const rojoTxt = window.i18n.ev(keyRed);
@@ -1368,7 +1375,7 @@ function Eventos() {
             ))}
           </p>
           <div className="ev-list">
-            <div><b>{t("TAMAÑO / AFORO", "SIZE / CAPACITY")}</b><span>{t("55M2 / 40 PERSONAS", "55M2 / 40 PEOPLE")}
+            <div><b>{t("TAMAÑO / AFORO", "SIZE / CAPACITY")}</b><span>{t("55m² / 40 personas sentadas / 60 de pie", "55m² / 40 seated / 60 standing")}
               </span></div>
             <div><b>{t("Barra central", "Central bar")}</b><span>{t("Sí · grande", "Yes · large")}</span></div>
             <div><b>{t("Mesas bajas", "Low tables")}</b><span>{t("9 · hasta 3 personas c/u", "9 · up to 3 people each")}</span></div>
@@ -1398,16 +1405,16 @@ function Eventos() {
           </a>
         </div>
         <div>
-          <p className="body">{eb("producto_body", t(
-            <React.Fragment>DUM DUM™ es uno de los <strong>referentes de dumplings en Madrid</strong>. Masa <strong>fina y agradable</strong>, rellenos <strong>generosos</strong>, recetas que <strong>sorprenden</strong>. Del Cheese Burger al Carbonara, pasando por el famoso Gamba K-Pop o el Honey Pumpkin. Y siempre con <strong>opciones divertidas para vegetarianos</strong>.</React.Fragment>,
-            <React.Fragment>DUM DUM™ is one of the <strong>go-to dumpling spots in Madrid</strong>. <strong>Thin, pleasant</strong> dough, <strong>generous</strong> fillings, recipes that <strong>surprise</strong>. From the Cheese Burger to the Carbonara, plus the famous Gamba K-Pop or the Honey Pumpkin. And always with <strong>fun options for vegetarians</strong>.</React.Fragment>
-          ))}
-          </p>
-          <p className="body" style={{ marginTop: 16 }}>{eb("producto_body2", t(
-            <React.Fragment>Un producto pensado para <strong>divertir, sorprender</strong> y dar de comer a <strong>todos los paladares</strong>.</React.Fragment>,
-            <React.Fragment>Food made to <strong>entertain, surprise</strong> and feed <strong>every palate</strong>.</React.Fragment>
-          ))}
-          </p>
+          {ebp("producto_body", [
+            <p className="body" key="pf0">{t(
+              <React.Fragment>DUM DUM™ es uno de los <strong>referentes de dumplings en Madrid</strong>. Masa <strong>fina y agradable</strong>, rellenos <strong>generosos</strong>, recetas que <strong>sorprenden</strong>. Del Cheese Burger al Carbonara, pasando por el famoso Gamba K-Pop o el Honey Pumpkin. Y siempre con <strong>opciones divertidas para vegetarianos</strong>.</React.Fragment>,
+              <React.Fragment>DUM DUM™ is one of the <strong>go-to dumpling spots in Madrid</strong>. <strong>Thin, pleasant</strong> dough, <strong>generous</strong> fillings, recipes that <strong>surprise</strong>. From the Cheese Burger to the Carbonara, plus the famous Gamba K-Pop or the Honey Pumpkin. And always with <strong>fun options for vegetarians</strong>.</React.Fragment>
+            )}</p>,
+            <p className="body" key="pf1" style={{ marginTop: 16 }}>{t(
+              <React.Fragment>Un producto pensado para <strong>divertir, sorprender</strong> y dar de comer a <strong>todos los paladares</strong>.</React.Fragment>,
+              <React.Fragment>Food made to <strong>entertain, surprise</strong> and feed <strong>every palate</strong>.</React.Fragment>
+            )}</p>
+          ])}
 
           <ProductoSlider />
         </div>
@@ -1505,25 +1512,17 @@ function Eventos() {
           <div className="tiny muted" style={{ marginTop: 12 }}>{eb("frente_subtitle", t("Dos hermanos · de Elche a Madrid", "Two brothers · from Elche to Madrid"))}</div>
         </div>
         <div>
-          <p className="body">
-            {eb("frente_body1", t(<React.Fragment>Aprendieron a <strong>trabajar juntos</strong> en el hotel donde trabajaban sus padres.</React.Fragment>,
-               <React.Fragment>They learned to <strong>work together</strong> at the hotel where their parents worked.</React.Fragment>))}
-          </p>
-          <p className="body" style={{ marginTop: 16 }}>
-            {eb("frente_body2", t(<React.Fragment><strong>Kéril</strong> se formó como <strong>chef</strong> y ha sido chef ejecutivo en sitios muy guays. Es un capo.</React.Fragment>,
-               <React.Fragment><strong>Kéril</strong> trained as a <strong>chef</strong> and has been executive chef at some very cool places. He's a boss.</React.Fragment>))}
-          </p>
-          <p className="body" style={{ marginTop: 16 }}>
-            {eb("frente_body3", t(<React.Fragment><strong>Yerai</strong> se formó como <strong>publicista</strong> y ha sido <strong>director creativo</strong> de marcas muy grandes.</React.Fragment>,
-               <React.Fragment><strong>Yerai</strong> trained in <strong>advertising</strong> and has been <strong>creative director</strong> for very big brands.</React.Fragment>))}
-          </p>
-          <p className="body" style={{ marginTop: 16 }}>
-            {eb("frente_body4", t(<React.Fragment>Son gente maja. <strong>Rigurosos. Creativos. Muy humanos.</strong></React.Fragment>,
-               <React.Fragment>They're good people. <strong>Rigorous. Creative. Very human.</strong></React.Fragment>))}
-          </p>
-          <p className="body" style={{ marginTop: 16 }}>
-            {eb("frente_body5", t("Ya les conocerás.", "You'll get to know them."))}
-          </p>
+          {ebp("frente_body", [
+            <p className="body" key="ff0">{t(<React.Fragment>Aprendieron a <strong>trabajar juntos</strong> en el hotel donde trabajaban sus padres.</React.Fragment>,
+               <React.Fragment>They learned to <strong>work together</strong> at the hotel where their parents worked.</React.Fragment>)}</p>,
+            <p className="body" key="ff1" style={{ marginTop: 16 }}>{t(<React.Fragment><strong>Kéril</strong> se formó como <strong>chef</strong> y ha sido chef ejecutivo en sitios muy guays. Es un capo.</React.Fragment>,
+               <React.Fragment><strong>Kéril</strong> trained as a <strong>chef</strong> and has been executive chef at some very cool places. He's a boss.</React.Fragment>)}</p>,
+            <p className="body" key="ff2" style={{ marginTop: 16 }}>{t(<React.Fragment><strong>Yerai</strong> se formó como <strong>publicista</strong> y ha sido <strong>director creativo</strong> de marcas muy grandes.</React.Fragment>,
+               <React.Fragment><strong>Yerai</strong> trained in <strong>advertising</strong> and has been <strong>creative director</strong> for very big brands.</React.Fragment>)}</p>,
+            <p className="body" key="ff3" style={{ marginTop: 16 }}>{t(<React.Fragment>Son gente maja. <strong>Rigurosos. Creativos. Muy humanos.</strong></React.Fragment>,
+               <React.Fragment>They're good people. <strong>Rigorous. Creative. Very human.</strong></React.Fragment>)}</p>,
+            <p className="body" key="ff4" style={{ marginTop: 16 }}>{t("Ya les conocerás.", "You'll get to know them.")}</p>
+          ])}
         </div>
       </section>
 

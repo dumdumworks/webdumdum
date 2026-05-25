@@ -91,30 +91,58 @@ function ev(key) {
   const es = data[key];
   return es != null ? String(es) : "";
 }
-// Convierte el mini-markdown de los textos de Eventos en JSX:
+// Convierte una línea de mini-markdown en partes JSX inline:
 //  · **texto**  → <strong>texto</strong>  (negrita, la del botón de Sveltia)
-//  · " / "       → salto de línea <br/>     (saltos fijos de los títulos)
-// Devuelve un React.Fragment con las partes. Si text está vacío, null.
-function mdToJsx(text) {
-  if (text == null || String(text).trim() === "") return null;
+//  · " / "       → salto de línea <br/>     (saltos fijos dentro de un título)
+function mdInline(text, keyPrefix) {
+  const kp = keyPrefix == null ? "" : keyPrefix + "-";
   const lines = String(text).split(/\s*\/\s*/);
   const out = [];
   lines.forEach((line, li) => {
-    // Partir por **negrita** conservando los delimitadores
     const parts = line.split(/(\*\*[^*]+\*\*)/g);
     parts.forEach((part, pi) => {
       if (/^\*\*[^*]+\*\*$/.test(part)) {
-        out.push(React.createElement("strong", { key: li + "-" + pi }, part.slice(2, -2)));
+        out.push(React.createElement("strong", { key: kp + li + "-" + pi }, part.slice(2, -2)));
       } else if (part !== "") {
         out.push(part);
       }
     });
-    if (li < lines.length - 1) out.push(React.createElement("br", { key: "br-" + li }));
+    if (li < lines.length - 1) out.push(React.createElement("br", { key: kp + "br-" + li }));
   });
-  return React.createElement(React.Fragment, null, out);
+  return out;
+}
+// Texto inline (títulos): devuelve un Fragment. Si vacío, null.
+function mdToJsx(text) {
+  if (text == null || String(text).trim() === "") return null;
+  return React.createElement(React.Fragment, null, mdInline(text, "t"));
+}
+// Párrafos (campo único de Sveltia): separa por LÍNEAS EN BLANCO y devuelve
+// un array de <p>, cada uno con su negrita. Así escribes todo seguido y la
+// web reparte los párrafos sola, sin que calcules saltos. Si vacío, null.
+//  · pProps: props base aplicadas a cada <p> (className, etc.)
+//  · gap: separación (px) entre párrafos a partir del segundo (def. 16)
+function mdParas(text, pProps, gap) {
+  if (text == null || String(text).trim() === "") return null;
+  const sep = (gap == null) ? 16 : gap;
+  // Normalizar saltos y partir por una o más líneas en blanco.
+  const blocks = String(text)
+    .replace(/\r\n/g, "\n")
+    .split(/\n\s*\n+/)
+    .map((b) => b.trim())
+    .filter((b) => b !== "");
+  if (blocks.length === 0) return null;
+  return blocks.map((block, bi) => {
+    const base = Object.assign({ key: "p-" + bi }, pProps || {});
+    // El primer párrafo conserva las props tal cual; los siguientes reciben
+    // separación superior (replica el marginTop:16 que había entre párrafos).
+    if (bi > 0) {
+      base.style = Object.assign({}, (pProps && pProps.style) || {}, { marginTop: sep });
+    }
+    return React.createElement("p", base, mdInline(block, "b" + bi));
+  });
 }
 // Exponer global para que pages.jsx / app.jsx lo usen.
-window.i18n = { getLang, setLang, useLang, t, autoLocalize, ev, mdToJsx };
+window.i18n = { getLang, setLang, useLang, t, autoLocalize, ev, mdToJsx, mdParas };
 
 // ─── Top bar ──────────────────────────────────────────────────
 // Cálculo de apertura propio (autosuficiente, no depende de pages.jsx),
