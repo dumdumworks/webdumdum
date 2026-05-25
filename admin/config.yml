@@ -75,48 +75,36 @@ collections:
           # ── Hero ──
           - { name: "hero_title", label: "Hero · título", widget: "string", required: false }
           - { name: "hero_title_en", label: "Hero · título (EN)", widget: "string", required: false }
-          - { name: "hero_title_red", label: "Hero · título (parte en rojo)", widget: "string", required: false }
-          - { name: "hero_title_red_en", label: "Hero · título en rojo (EN)", widget: "string", required: false }
           - { name: "hero_body", label: "Hero · párrafo", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
           - { name: "hero_body_en", label: "Hero · párrafo (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
 
           # ── Espacio ──
           - { name: "espacio_title", label: "Espacio · título", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
           - { name: "espacio_title_en", label: "Espacio · título (EN)", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
-          - { name: "espacio_title_red", label: "Espacio · título (parte en rojo)", widget: "string", required: false }
-          - { name: "espacio_title_red_en", label: "Espacio · título en rojo (EN)", widget: "string", required: false }
           - { name: "espacio_body", label: "Espacio · párrafo", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
           - { name: "espacio_body_en", label: "Espacio · párrafo (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
 
           # ── Producto ──
           - { name: "producto_title", label: "Producto · título", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
           - { name: "producto_title_en", label: "Producto · título (EN)", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
-          - { name: "producto_title_red", label: "Producto · título (parte en rojo)", widget: "string", required: false }
-          - { name: "producto_title_red_en", label: "Producto · título en rojo (EN)", widget: "string", required: false }
           - { name: "producto_body", label: "Producto · texto", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true, hint: "Escribe todo seguido. Deja una línea en blanco entre párrafos y la web los separa sola." }
           - { name: "producto_body_en", label: "Producto · texto (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
 
           # ── Prensa ──
           - { name: "prensa_title", label: "Prensa · título", widget: "string", required: false }
           - { name: "prensa_title_en", label: "Prensa · título (EN)", widget: "string", required: false }
-          - { name: "prensa_title_red", label: "Prensa · título (parte en rojo)", widget: "string", required: false }
-          - { name: "prensa_title_red_en", label: "Prensa · título en rojo (EN)", widget: "string", required: false }
           - { name: "prensa_body", label: "Prensa · párrafo", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
           - { name: "prensa_body_en", label: "Prensa · párrafo (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
 
           # ── Redes ──
           - { name: "redes_title", label: "Redes · título", widget: "string", required: false }
           - { name: "redes_title_en", label: "Redes · título (EN)", widget: "string", required: false }
-          - { name: "redes_title_red", label: "Redes · título (parte en rojo)", widget: "string", required: false }
-          - { name: "redes_title_red_en", label: "Redes · título en rojo (EN)", widget: "string", required: false }
           - { name: "redes_body", label: "Redes · párrafo", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
           - { name: "redes_body_en", label: "Redes · párrafo (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
 
           # ── Universo ──
           - { name: "universo_title", label: "Universo · título", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
           - { name: "universo_title_en", label: "Universo · título (EN)", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
-          - { name: "universo_title_red", label: "Universo · título (parte en rojo)", widget: "string", required: false }
-          - { name: "universo_title_red_en", label: "Universo · título en rojo (EN)", widget: "string", required: false }
           - { name: "universo_body", label: "Universo · párrafo", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
           - { name: "universo_body_en", label: "Universo · párrafo (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
 
@@ -129,8 +117,6 @@ collections:
           # ── Contacto (título del formulario) ──
           - { name: "contacto_title", label: "Contacto · título", widget: "string", required: false }
           - { name: "contacto_title_en", label: "Contacto · título (EN)", widget: "string", required: false }
-          - { name: "contacto_title_red", label: "Contacto · título (parte en rojo)", widget: "string", required: false }
-          - { name: "contacto_title_red_en", label: "Contacto · título en rojo (EN)", widget: "string", required: false }
 
       - name: "imagenes-eventos"
         label: "Eventos · Imágenes"
