@@ -405,6 +405,23 @@ function Menu() {
   const lang = useLang();
   const [data, setData] = React.useState(window.DumDumData.loadMenu());
 
+  // Lightbox de foto (solo móvil): guarda la foto y el nombre del plato a
+  // mostrar. null = cerrado. Al abrirse se bloquea el scroll del fondo para
+  // no perder el sitio en la carta; al cerrarse se restaura.
+  const [photo, setPhoto] = React.useState(null);
+  React.useEffect(() => {
+    if (photo) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      const onKey = (e) => { if (e.key === "Escape") setPhoto(null); };
+      window.addEventListener("keydown", onKey);
+      return () => {
+        document.body.style.overflow = prev;
+        window.removeEventListener("keydown", onKey);
+      };
+    }
+  }, [photo]);
+
   // Helper: devuelve el campo en el idioma activo. Si estamos en EN y existe
   // el campo "_en" con contenido, lo usa; si no, cae al español (fallback).
   const tf = (obj, field) => {
@@ -498,6 +515,13 @@ function Menu() {
                     </div>
                     {tf(it, "tagline") && <div className="tagline">{tf(it, "tagline")}</div>}
                     {tf(it, "ingredients") && <div className="ingr" style={{ fontSize: "13px" }}>{tf(it, "ingredients")}</div>}
+                    {it.image &&
+                      <button
+                        type="button"
+                        className="dish-photo-btn m-only"
+                        onClick={() => setPhoto({ src: it.image, name: tf(it, "name") })}>
+                        {t("Ver foto", "View photo")} <span aria-hidden="true">→</span>
+                      </button>}
                   </div>
                   {it.logo && <div className="m-only"><DishLogo logo={it.logo} /></div>}
                   <div className="price tnum m-only" style={{ fontSize: "11px" }}>{it.price} €</div>
@@ -576,6 +600,15 @@ function Menu() {
           }
         </div>
       </div>
+
+      {photo &&
+        <div className="dish-lightbox" onClick={() => setPhoto(null)} role="dialog" aria-modal="true">
+          <button type="button" className="dish-lightbox-close" aria-label={t("Cerrar", "Close")} onClick={() => setPhoto(null)}>✕</button>
+          <figure className="dish-lightbox-fig" onClick={(e) => e.stopPropagation()}>
+            <img src={photo.src} alt={photo.name} />
+            <figcaption>{photo.name}</figcaption>
+          </figure>
+        </div>}
     </div>);
 
 }

@@ -1959,3 +1959,110 @@
   /* Footer en 2 columnas también en móviles pequeños (no tan largo) */
   .foot-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   BOTÓN "VER FOTO" + LIGHTBOX (solo móvil ≤879px)
+   El botón aparece en cada plato con foto; abre la foto vertical
+   (4:5, igual que en desktop) en un overlay ágil que no descuadra
+   la lectura de la carta. En desktop la foto ya se ve, así que
+   el botón se oculta.
+   ───────────────────────────────────────────────────────────── */
+.dish-photo-btn { display: none; }
+
+@media (max-width: 879px) {
+  .dish-photo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    margin-left: auto;        /* alineado a la derecha (como la maqueta) */
+    padding: 5px 12px;
+    background: transparent;
+    color: var(--red);
+    border: 1.5px solid var(--red);
+    border-radius: 999px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  /* El body del plato es flex en columna; empujamos el botón a la derecha */
+  .dish .body.m-only { display: flex; flex-direction: column; }
+  .dish-photo-btn:active {
+    background: var(--red);
+    color: var(--bg);
+  }
+  .dish-photo-btn span { font-size: 12px; line-height: 1; }
+}
+
+/* Lightbox: overlay a pantalla completa con la foto centrada */
+.dish-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(20, 0, 4, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: dishLbFade 0.18s ease both;
+  -webkit-tap-highlight-color: transparent;
+}
+@keyframes dishLbFade { from { opacity: 0; } to { opacity: 1; } }
+
+.dish-lightbox-fig {
+  margin: 0;
+  width: auto;
+  max-width: min(78vw, 420px);
+  display: flex;
+  flex-direction: column;
+  animation: dishLbPop 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes dishLbPop {
+  from { opacity: 0; transform: scale(0.94) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.dish-lightbox-fig img {
+  width: 100%;
+  aspect-ratio: 4 / 5;          /* vertical, igual que en desktop */
+  object-fit: cover;
+  display: block;
+  border: 1.5px solid var(--red);
+  border-radius: 12px;
+  background: var(--bg);
+}
+.dish-lightbox-fig figcaption {
+  margin-top: 12px;
+  text-align: center;
+  color: var(--bg);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dish-lightbox-close {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1.5px solid var(--bg);
+  background: transparent;
+  color: var(--bg);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.dish-lightbox-close:active { background: var(--bg); color: var(--red); }
