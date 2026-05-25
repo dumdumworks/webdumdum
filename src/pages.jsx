@@ -253,7 +253,18 @@ function Home() {
             className="hero-scroll"
             aria-label="Bajar"
             onClick={() => {
-              window.scrollBy({ top: window.innerHeight * 0.85, left: 0, behavior: "smooth" });
+              const start = window.scrollY;
+              const distance = window.innerHeight * 1.05;
+              const duration = 900;
+              const t0 = performance.now();
+              // easeOutCubic: arranca con ritmo y frena suave al final (grácil)
+              const ease = (t) => 1 - Math.pow(1 - t, 3);
+              const step = (now) => {
+                const p = Math.min((now - t0) / duration, 1);
+                window.scrollTo(0, start + distance * ease(p));
+                if (p < 1) requestAnimationFrame(step);
+              };
+              requestAnimationFrame(step);
             }}>↓</button>
         </div>
       </section>
