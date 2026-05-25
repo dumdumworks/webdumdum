@@ -173,8 +173,6 @@
   }
   .hero-actions-4 .btn { width: 100%; }
   .hero-scroll { display: block; }
-  /* Celda-sello visible en móvil (rellena el hueco de la rejilla 2 col) */
-  .map-cell-seal { display: flex; }
 }
 .hero-wordmark {
   font-family: var(--font-display);
@@ -234,8 +232,8 @@
   background: var(--bg);
   transition: background .25s ease;
 }
-/* Refuerzo: en desktop (>780px) NUNCA se muestra, pase lo que pase */
-@media (min-width: 781px) {
+/* Refuerzo: en desktop (>880px) NUNCA se muestra, pase lo que pase */
+@media (min-width: 881px) {
   .map-cell-seal { display: none !important; }
 }
 /* El sello se pinta con máscara: el color lo da background-color, así
@@ -1934,6 +1932,11 @@
   .hero { padding: 12vh 0 8vh; }
   .hero-meta { position: static; text-align: left; margin-top: 24px; }
   .map-nav-3 { grid-template-columns: repeat(2, 1fr); }
+  /* Celda-sello visible aquí mismo: rellena el hueco que deja la rejilla
+     de 2 columnas con 9 celdas. Debe encenderse en el MISMO punto que la
+     rejilla pasa a 2 col, o queda un hueco descuadrado en la franja
+     781–880px (móviles anchos / horizontal / plegables). */
+  .map-cell-seal { display: flex; }
   .map-cell.span-6, .map-cell.span-4, .map-cell.span-3 { grid-column: span 1; }
   .map-cell.span-12 { grid-column: span 2; }
   .feature-strip, .about-body, .locales, .contact { grid-template-columns: 1fr; }
