@@ -346,7 +346,7 @@ function Home() {
           <div className="t">{t("Contacto", "Contact")} →</div>
           <div className="d">{t("SALÚDAME SIEMPRE", "SAY HI ANYTIME")}</div>
         </a>
-        <a className="map-cell" href="#" onClick={(e) => e.preventDefault()}>
+        <a className="map-cell" href="https://www.instagram.com/dumdum.plings" target="_blank" rel="noreferrer">
           <div className="n">[07]</div>
           <div className="t">Instagram →</div>
           <div className="d">@DUMDUM.PLINGS</div>
@@ -1415,7 +1415,7 @@ function Eventos() {
             <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}> {t("pensada para entretener.", "built to entertain.")}</em>
           </h2>
           <a className="btn"
-          href="https://www.instagram.com/dumdum.es/"
+          href="https://www.instagram.com/dumdum.plings"
           target="_blank"
           rel="noreferrer"
           style={{ marginTop: 32 }}>
@@ -1617,7 +1617,7 @@ function Contacto() {
           <a className="big" href="mailto:dumdum@dum-dum.es">
             dumdum@dum-dum.es <span className="arr">↗︎</span>
           </a>
-          <a className="big" href="#" onClick={(e) => e.preventDefault()}>
+          <a className="big" href="https://www.instagram.com/dumdum.plings" target="_blank" rel="noreferrer">
             Instagram <span className="arr">↗︎</span>
           </a>
           <a className="big" href="tel:+34614746065">
@@ -1629,7 +1629,7 @@ function Contacto() {
       <section className="spec-foot">
         <div><b>Email</b>dumdum@dum-dum.es</div>
         <div><b>{t("Reservas", "Booking")}</b>{t("Chamberí: turnos | Tetuán: reservas", "Chamberí: walk-in | Tetuán: booking")}</div>
-        <div><b>Instagram</b>@dumdum_es</div>
+        <div><b>Instagram</b>@dumdum.plings</div>
         <div><b>{t("Teléfono", "Phone")}</b>+34 614 746 065</div>
       </section>
     </div>);

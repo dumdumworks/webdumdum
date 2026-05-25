@@ -109,7 +109,7 @@ function TopBar({ route }) {
   { p: "/locales", label: t("Locales", "Locations") },
   { p: "/eventos", label: t("Eventos", "Events") },
   { p: "/contacto", label: t("Contacto", "Contact") },
-  { href: "#", label: "Instagram", ext: true },
+  { href: "https://www.instagram.com/dumdum.plings", label: "Instagram", ext: true },
   { href: SPOTIFY_URL, label: "DD*Radio", ext: true },
   { href: "#", label: "DD*Mer®ch", ext: true }];
 
@@ -211,7 +211,7 @@ function Footer() {
         </div>
         <div>
           <b>{t("Redes", "Social")}</b>
-          <div><a href="#" className="link-hover">Instagram</a></div>
+          <div><a href="https://www.instagram.com/dumdum.plings" target="_blank" rel="noreferrer" className="link-hover">Instagram</a></div>
           <div><a href="#" className="link-hover"></a></div>
           <div><a href="#" className="link-hover">Uber Eats</a></div>
         </div>
