@@ -136,6 +136,9 @@ img { display: block; max-width: 100%; }
   letter-spacing: 0;
 }
 .topbar .right { display: flex; gap: 16px; align-items: center; }
+/* Grupo derecho móvil (Reservar + hamburguesa) · oculto en desktop */
+.topbar-mobile-right { display: none; align-items: center; gap: 14px; }
+.topbar-reservar-mobile { font-size: 11px; padding: 7px 14px !important; }
 /* Botón hamburguesa · oculto en desktop, visible en móvil (ver responsive) */
 .topbar-burger {
   display: none;
@@ -170,6 +173,8 @@ img { display: block; max-width: 100%; }
   .topbar .right { display: none !important; }
   /* Mostramos el botón hamburguesa */
   .topbar-burger { display: flex !important; }
+  /* Grupo derecho móvil (Reservar permanente + hamburguesa) visible */
+  .topbar-mobile-right { display: flex !important; }
   /* El nav móvil pasa a panel desplegable bajo la barra */
   .topbar .nav-mobile {
     display: flex;

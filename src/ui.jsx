@@ -118,13 +118,17 @@ function TopBar({ route }) {
         )}
       </nav>
 
-      <button
-        className="topbar-burger"
-        aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
-        aria-expanded={menuOpen}
-        onClick={() => setMenuOpen((o) => !o)}>
-        <span /><span /><span />
-      </button>
+      {/* Grupo derecho MÓVIL: botón Reservar permanente + hamburguesa */}
+      <div className="topbar-mobile-right">
+        <a href="#/locales" className="topbar-reservar topbar-reservar-mobile">Reservar →</a>
+        <button
+          className="topbar-burger"
+          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((o) => !o)}>
+          <span /><span /><span />
+        </button>
+      </div>
     </header>);
 
 }
