@@ -1961,42 +1961,57 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   BOTÓN "VER FOTO" + LIGHTBOX (solo móvil ≤879px)
-   El botón aparece en cada plato con foto; abre la foto vertical
-   (4:5, igual que en desktop) en un overlay ágil que no descuadra
-   la lectura de la carta. En desktop la foto ya se ve, así que
-   el botón se oculta.
+   BOTÓN "FOTO" + LIGHTBOX (solo móvil ≤879px)
+   El botón vive en la MISMA columna que el precio (3ª columna del
+   grid del plato), cae abajo (a la altura de la última línea de
+   ingredientes) y tiene el tamaño de las etiquetas VEG/HOT.
    ───────────────────────────────────────────────────────────── */
 .dish-photo-btn { display: none; }
+.dish-price-col { display: contents; }
 
 @media (max-width: 879px) {
+  /* La 3ª columna (precio + botón) ocupa toda la altura del plato
+     y reparte: precio arriba, botón abajo. */
+  .dish-price-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    align-self: stretch;
+    height: 100%;
+    gap: 8px;
+  }
   .dish-photo-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    margin-top: 10px;
-    margin-left: auto;        /* alineado a la derecha (como la maqueta) */
-    padding: 5px 12px;
+    justify-content: center;
+    padding: 3px 9px;
     background: transparent;
     color: var(--red);
     border: 1.5px solid var(--red);
-    border-radius: 999px;
+    border-radius: 6px;
     font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     cursor: pointer;
+    white-space: nowrap;
     -webkit-tap-highlight-color: transparent;
     transition: background 0.15s ease, color 0.15s ease;
   }
-  /* El body del plato es flex en columna; empujamos el botón a la derecha */
-  .dish .body.m-only { display: flex; flex-direction: column; }
   .dish-photo-btn:active {
     background: var(--red);
     color: var(--bg);
   }
-  .dish-photo-btn span { font-size: 12px; line-height: 1; }
+  /* En las rejillas de 2 columnas (postres/mochis y bebidas) el layout es
+     apilado y estrecho: ahí el botón no encaja, así que se oculta. Solo
+     aparece en el layout de 3 columnas (dumplings, entrantes). */
+  .dish-grid-2col-m .dish-photo-btn { display: none; }
+  .dish-grid-2col-m .dish-price-col {
+    display: block;
+    height: auto;
+  }
 }
 
 /* Lightbox: overlay a pantalla completa con la foto centrada */

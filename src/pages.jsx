@@ -515,16 +515,18 @@ function Menu() {
                     </div>
                     {tf(it, "tagline") && <div className="tagline">{tf(it, "tagline")}</div>}
                     {tf(it, "ingredients") && <div className="ingr" style={{ fontSize: "13px" }}>{tf(it, "ingredients")}</div>}
+                  </div>
+                  {it.logo && <div className="m-only"><DishLogo logo={it.logo} /></div>}
+                  <div className="dish-price-col m-only">
+                    <div className="price tnum" style={{ fontSize: "11px" }}>{it.price} €</div>
                     {it.image &&
                       <button
                         type="button"
-                        className="dish-photo-btn m-only"
+                        className="dish-photo-btn"
                         onClick={() => setPhoto({ src: it.image, name: tf(it, "name") })}>
-                        {t("Ver foto", "View photo")} <span aria-hidden="true">→</span>
+                        {t("Foto", "Photo")}
                       </button>}
                   </div>
-                  {it.logo && <div className="m-only"><DishLogo logo={it.logo} /></div>}
-                  <div className="price tnum m-only" style={{ fontSize: "11px" }}>{it.price} €</div>
 
                   {/* ─── Layout DESKTOP (visible ≥880px) ──────────────── */}
                   <div className="dish-img">
