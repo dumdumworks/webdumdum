@@ -388,7 +388,9 @@ function Home() {
         </div>
         <div>
           <b>{t("Carta", "Menu")}</b>
-          {t("Una vez al mes, un dumpling nuevo", "Once a month, a new dumpling")}
+          <a className="spec-link" href="/menu">
+            {t("Una vez al mes, un dumpling nuevo", "Once a month, a new dumpling")}
+          </a>
         </div>
       </section>
 
@@ -1974,10 +1976,10 @@ function Contacto() {
       </section>
 
       <section className="spec-foot">
-        <div><b>Email</b>dumdum@dum-dum.es</div>
-        <div><b>{t("Reservas", "Booking")}</b>{t("Chamberí: turnos | Tetuán: reservas", "Chamberí: walk-in | Tetuán: booking")}</div>
-        <div><b>Instagram</b>@dumdum.plings</div>
-        <div><b>{t("Teléfono", "Phone")}</b>+34 614 746 065</div>
+        <div><b>Email</b><a className="spec-link" href="mailto:dumdum@dum-dum.es">dumdum@dum-dum.es</a></div>
+        <div><b>Instagram</b><a className="spec-link" href="https://www.instagram.com/dumdum.plings" target="_blank" rel="noreferrer">@dumdum.plings</a></div>
+        <div><b>{t("Teléfono", "Phone")}</b><a className="spec-link" href="tel:+34614746065">+34 614 746 065</a></div>
+        <div><b>{t("Reservas", "Booking")}</b><a className="spec-link" href="/locales">{t("Chamberí: turnos | Tetuán: reservas", "Chamberí: walk-in | Tetuán: booking")}</a></div>
       </section>
     </div>);
 
