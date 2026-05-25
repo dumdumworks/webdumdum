@@ -1311,8 +1311,7 @@ function Eventos() {
   const lang = useLang();
   // Helpers de contenido editable (eventos.json vía Sveltia) con FALLBACK
   // total al texto escrito aquí: si el editor no aporta nada, se ve igual
-  // que siempre. `eb` = bloque de texto/párrafo. `eh` = título (negro+rojo).
-  const RED = { fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' };
+  // que siempre. `eb` = bloque de texto/párrafo. `eh` = título (un campo).
   const eb = (key, fallback) => {
     const j = window.i18n.mdToJsx(window.i18n.ev(key));
     return j != null ? j : fallback;
@@ -1324,19 +1323,18 @@ function Eventos() {
     const ps = window.i18n.mdParas(window.i18n.ev(key), { className: "body" });
     return ps != null ? ps : fallbackParas;
   };
-  const eh = (key, keyRed, fbNegro, fbRed) => {
+  // `eh` = título en UN solo campo (sin parte roja). Usa el texto del editor
+  // (con sus saltos " / " si los tuviera) o, si está vacío, el fallback del
+  // código. Mantiene 4 args por compatibilidad con las llamadas: si hay que
+  // usar fallback, combina el texto negro y el que antes era rojo en una pieza.
+  const eh = (key, _keyRedIgnored, fbNegro, fbRed) => {
     const negro = window.i18n.mdToJsx(window.i18n.ev(key));
-    const rojoTxt = window.i18n.ev(keyRed);
-    const rojo = rojoTxt && rojoTxt.trim() !== "" ? window.i18n.mdToJsx(rojoTxt) : null;
-    // Si el editor no aporta el título, usar el fallback completo del código.
-    if (negro == null && rojo == null) return fbNegro;
-    return (
-      <React.Fragment>
-        {negro != null ? negro : fbNegro}
-        {(rojo != null || fbRed != null) && (negro != null || fbNegro != null) ? " " : null}
-        {rojo != null ? <em style={RED}>{rojo}</em> : (fbRed != null ? <em style={RED}>{fbRed}</em> : null)}
-      </React.Fragment>
-    );
+    if (negro != null) return negro;
+    // Fallback: el título escrito en el código (negro + lo que antes era rojo).
+    if (fbRed != null) {
+      return <React.Fragment>{fbNegro} {fbRed}</React.Fragment>;
+    }
+    return fbNegro;
   };
   return (
     <div data-screen-label="eventos">
