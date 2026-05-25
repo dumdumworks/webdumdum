@@ -405,22 +405,48 @@ function Menu() {
   const lang = useLang();
   const [data, setData] = React.useState(window.DumDumData.loadMenu());
 
-  // Lightbox de foto (solo móvil): guarda la foto y el nombre del plato a
-  // mostrar. null = cerrado. Al abrirse se bloquea el scroll del fondo para
-  // no perder el sitio en la carta; al cerrarse se restaura.
-  const [photo, setPhoto] = React.useState(null);
+  // Galería del lightbox: lista de platos con foto que muestran el botón
+  // (entrantes + dumplings; postres/bebidas van en 2 col y no llevan botón).
+  // Se construye en el orden de la carta para poder navegar como carrusel.
+  const gallery = React.useMemo(() => {
+    const out = [];
+    data.sections.forEach((sec) => {
+      if (sec.id === "postres" || sec.id === "bebidas") return;
+      sec.items.forEach((it) => {
+        if (it.available !== false && it.image) {
+          out.push({ id: it.id, src: it.image, name: tf(it, "name") });
+        }
+      });
+    });
+    return out;
+  }, [data, lang]);
+
+  // Índice de la foto abierta en el lightbox (null = cerrado).
+  const [photoIdx, setPhotoIdx] = React.useState(null);
+  const openPhoto = (dishId) => {
+    const i = gallery.findIndex((g) => g.id === dishId);
+    setPhotoIdx(i >= 0 ? i : 0);
+  };
+  const closePhoto = () => setPhotoIdx(null);
+  const prevPhoto = () => setPhotoIdx((i) => (i > 0 ? i - 1 : gallery.length - 1));
+  const nextPhoto = () => setPhotoIdx((i) => (i < gallery.length - 1 ? i + 1 : 0));
+
   React.useEffect(() => {
-    if (photo) {
+    if (photoIdx !== null) {
       const prev = document.body.style.overflow;
       document.body.style.overflow = "hidden";
-      const onKey = (e) => { if (e.key === "Escape") setPhoto(null); };
+      const onKey = (e) => {
+        if (e.key === "Escape") closePhoto();
+        else if (e.key === "ArrowLeft") prevPhoto();
+        else if (e.key === "ArrowRight") nextPhoto();
+      };
       window.addEventListener("keydown", onKey);
       return () => {
         document.body.style.overflow = prev;
         window.removeEventListener("keydown", onKey);
       };
     }
-  }, [photo]);
+  }, [photoIdx, gallery.length]);
 
   // Helper: devuelve el campo en el idioma activo. Si estamos en EN y existe
   // el campo "_en" con contenido, lo usa; si no, cae al español (fallback).
@@ -506,10 +532,8 @@ function Menu() {
                     <div className="name-row">
                       <span className="name" style={{ fontSize: "20px" }}>{tf(it, "name")}</span>
                       {it.tags && it.tags.map((t) => {
-                    const u = t.toUpperCase();
-                    const label = u === "PICANTE" ? "HOT 🌶" : u === "VEG" ? "VEG 🌱" : t;
                     return (
-                      <span key={t} className={`tag ${tagClass(t)}`} style={{ fontSize: "10px" }}>{label}</span>);
+                      <span key={t} className={`tag ${tagClass(t)}`} style={{ fontSize: "10px" }}>{tagLabel(t)}</span>);
 
                   })}
                     </div>
@@ -523,7 +547,7 @@ function Menu() {
                       <button
                         type="button"
                         className="dish-photo-btn"
-                        onClick={() => setPhoto({ src: it.image, name: tf(it, "name") })}>
+                        onClick={() => openPhoto(it.id)}>
                         {t("Foto", "Photo")}
                       </button>}
                   </div>
@@ -539,7 +563,7 @@ function Menu() {
                     {it.tags && it.tags.filter((t) => !["VEG", "PICANTE"].includes(t.toUpperCase())).length > 0 &&
                 <div className="dish-tags-overlay">
                         {it.tags.filter((t) => !["VEG", "PICANTE"].includes(t.toUpperCase())).map((t) =>
-                  <span key={t} className={`tag ${tagClass(t)}`}>{t}</span>
+                  <span key={t} className={`tag ${tagClass(t)}`}>{tagLabel(t)}</span>
                   )}
                       </div>
                 }
@@ -554,10 +578,8 @@ function Menu() {
                     <div className="dish-card-row dish-card-name">
                       <span className="name">{tf(it, "name")}</span>
                       {it.tags && it.tags.filter((t) => ["VEG", "PICANTE"].includes(t.toUpperCase())).map((t) => {
-                    const u = t.toUpperCase();
-                    const label = u === "PICANTE" ? "HOT 🌶" : u === "VEG" ? "VEG 🌱" : t;
                     return (
-                      <span key={t} className={`tag tag-inline ${tagClass(t)}`}>{label}</span>);
+                      <span key={t} className={`tag tag-inline ${tagClass(t)}`}>{tagLabel(t)}</span>);
 
                   })}
                     </div>
@@ -603,16 +625,106 @@ function Menu() {
         </div>
       </div>
 
-      {photo &&
-        <div className="dish-lightbox" onClick={() => setPhoto(null)} role="dialog" aria-modal="true">
-          <button type="button" className="dish-lightbox-close" aria-label={t("Cerrar", "Close")} onClick={() => setPhoto(null)}>✕</button>
-          <figure className="dish-lightbox-fig" onClick={(e) => e.stopPropagation()}>
-            <img src={photo.src} alt={photo.name} />
-            <figcaption>{photo.name}</figcaption>
-          </figure>
-        </div>}
+      {photoIdx !== null && gallery.length > 0 &&
+        <DishLightbox
+          items={gallery}
+          index={photoIdx}
+          onPrev={prevPhoto}
+          onNext={nextPhoto}
+          onClose={closePhoto}
+        />}
     </div>);
 
+}
+
+// Lightbox tipo carrusel: muestra la foto del plato y permite deslizar
+// izquierda/derecha (swipe en móvil, flechas y teclado en general) para
+// navegar por toda la galería de platos con foto.
+function DishLightbox({ items, index, onPrev, onNext, onClose }) {
+  const [drag, setDrag] = React.useState(0);   // desplazamiento actual del dedo (px)
+  const [animating, setAnimating] = React.useState(false);
+  const startX = React.useRef(null);
+  const startY = React.useRef(null);
+  const width = React.useRef(typeof window !== "undefined" ? window.innerWidth : 360);
+  const locked = React.useRef(null); // "x" o "y" según la dirección del gesto
+
+  const item = items[index];
+
+  const onTouchStart = (e) => {
+    const tch = e.touches[0];
+    startX.current = tch.clientX;
+    startY.current = tch.clientY;
+    locked.current = null;
+    width.current = window.innerWidth;
+    setAnimating(false);
+  };
+  const onTouchMove = (e) => {
+    if (startX.current === null) return;
+    const dx = e.touches[0].clientX - startX.current;
+    const dy = e.touches[0].clientY - startY.current;
+    // Decidir si el gesto es horizontal (navegar) o vertical (ignorar/cerrar)
+    if (locked.current === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+      locked.current = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+    }
+    if (locked.current === "x") {
+      setDrag(dx);
+    }
+  };
+  const onTouchEnd = () => {
+    if (locked.current === "x") {
+      const threshold = width.current * 0.2;
+      if (drag <= -threshold) { onNext(); }
+      else if (drag >= threshold) { onPrev(); }
+    }
+    setAnimating(true);
+    setDrag(0);
+    startX.current = null;
+    locked.current = null;
+  };
+
+  return (
+    <div className="dish-lightbox" onClick={onClose} role="dialog" aria-modal="true">
+      <button type="button" className="dish-lightbox-close" aria-label="Cerrar" onClick={onClose}>✕</button>
+
+      <button type="button" className="dish-lightbox-nav prev" aria-label="Anterior"
+        onClick={(e) => { e.stopPropagation(); onPrev(); }}>‹</button>
+      <button type="button" className="dish-lightbox-nav next" aria-label="Siguiente"
+        onClick={(e) => { e.stopPropagation(); onNext(); }}>›</button>
+
+      <figure
+        className="dish-lightbox-fig"
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        style={{
+          transform: `translateX(${drag}px)`,
+          transition: animating ? "transform 0.25s cubic-bezier(0.16,1,0.3,1)" : "none"
+        }}>
+        <img src={item.src} alt={item.name} draggable="false" />
+        <figcaption>
+          <span className="dish-lightbox-name">{item.name}</span>
+          <span className="dish-lightbox-count">{index + 1} / {items.length}</span>
+        </figcaption>
+      </figure>
+    </div>
+  );
+}
+
+// ── tagLabel ───────────────────────────────────────────────────
+// Traducción y formato de las etiquetas (VEG, HOT, etc.) en un solo
+// sitio, para que el texto sea idéntico en móvil y desktop y cambie
+// con el idioma. Para añadir una etiqueta nueva en el futuro, basta
+// con sumar una línea aquí.
+function tagLabel(tg) {
+  const u = (tg || "").toUpperCase();
+  if (u === "PICANTE") return t("HOT 🌶", "HOT 🌶");
+  if (u === "VEG") return t("VEG 🌱", "VEG 🌱");
+  if (u === "POR TIEMPO LIMITADO") return t("POR TIEMPO LIMITADO", "LIMITED TIME OFFER");
+  if (u === "NEW") return t("NEW", "NEW");
+  if (u === "DEL MES") return t("DEL MES", "OF THE MONTH");
+  if (u === "TOP") return "TOP";
+  return tg;
 }
 
 function tagClass(t) {

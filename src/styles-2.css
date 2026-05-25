@@ -582,6 +582,7 @@
   border: 1px solid var(--line);
   border-radius: 4px;
   background: var(--bg);
+  text-align: left;
 }
 .tag.red { color: var(--red); border-color: var(--red); }
 .tag.veg { color: #1f8a5b; border-color: #1f8a5b; }
@@ -652,33 +653,40 @@
     border-bottom: 0;
     border-radius: 8px;
   }
-  .dish.is-featured .num.m-only,
-  .dish.is-featured .price.m-only,
-  .dish.is-featured .name,
-  .dish.is-featured .tagline,
-  .dish.is-featured .ingr {
+  /* ── REGLA GENERAL ──────────────────────────────────────────
+     Dentro de un plato destacado, TODO el contenido va en crema.
+     Cualquier texto o elemento nuevo que se añada en el futuro
+     hereda este color automáticamente (no hay que parchearlo).
+     Las excepciones de más abajo (más específicas) lo ajustan
+     donde haga falta. */
+  .dish.is-featured,
+  .dish.is-featured * {
     color: var(--bg);
+    border-color: var(--bg);
   }
+
+  /* ── EXCEPCIONES (lo que NO es crema plano) ─────────────────── */
+  /* Número de plato: crema atenuado */
   .dish.is-featured .num.m-only {
     color: rgba(255,250,243,0.7);
   }
-  .dish.is-featured .tag {
-    background: transparent;
-    border-color: var(--bg);
-    color: var(--bg);
+  /* Botón "Foto": al pulsarlo invierte a crema de fondo + texto rojo */
+  .dish.is-featured .dish-photo-btn:active {
+    background: var(--bg);
+    color: var(--red);
   }
-  .dish.is-featured .tag.veg {
-    border-color: var(--bg);
-    color: var(--bg);
-  }
-  /* HOT y POR TIEMPO LIMITADO comparten la misma lógica de
-     color en tarjetas destacadas: pill crema con texto rojo. */
+  /* Etiquetas HOT y POR TIEMPO LIMITADO: pill crema con texto rojo */
   .dish.is-featured .tag.hot,
   .dish.is-featured .tag.limited {
     background: var(--bg);
     color: var(--red);
     border-color: var(--bg);
   }
+  /* Etiquetas neutras (VEG, etc.): transparente con borde y texto crema */
+  .dish.is-featured .tag {
+    background: transparent;
+  }
+  /* Logo: borde crema tenue */
   .dish.is-featured .logo-slot {
     border-color: rgba(255,250,243,0.3);
   }
@@ -1810,35 +1818,34 @@
     margin: 0;
   }
 
-  /* ─── Featured (Cheeseburger, Castiza, Gamba K-Pop) ──────── */
+  /* ─── Featured (desktop) ─────────────────────────────────────
+     REGLA GENERAL: la ficha de texto (.dish-card) va en rojo de
+     fondo y TODO su contenido en crema. Se acota a .dish-card (no
+     a todo .dish) para NO tocar el borde rojo de la foto .dish-img,
+     que en desktop sí se ve. Cualquier elemento nuevo dentro de la
+     ficha hereda crema automáticamente. */
   .dish.is-featured .dish-card {
     background: var(--red);
     border-color: var(--red);
   }
-  .dish.is-featured .dish-card-row {
-    border-bottom-color: var(--bg);
-  }
-  .dish.is-featured .dish-card-meta .num,
-  .dish.is-featured .dish-card-meta .price {
-    color: var(--bg);
-  }
-  .dish.is-featured .dish-card-meta .num { color: rgba(255,250,243,0.7); }
-  .dish.is-featured .dish-card-meta .price {
-    border-left-color: var(--bg);
-  }
-  .dish.is-featured .name,
-  .dish.is-featured .tagline {
-    color: var(--bg);
-  }
-  .dish.is-featured .ingr {
-    color: var(--bg);
-  }
-  .dish.is-featured .tag.veg {
+  .dish.is-featured .dish-card,
+  .dish.is-featured .dish-card * {
     color: var(--bg);
     border-color: var(--bg);
   }
-  /* HOT y POR TIEMPO LIMITADO comparten la misma lógica de
-     color en tarjetas destacadas: pill crema con texto rojo. */
+
+  /* ── EXCEPCIONES ─────────────────────────────────────────────── */
+  /* Separadores de fila: borde crema (ya cubierto por la regla, se
+     mantiene explícito por claridad del borde inferior) */
+  .dish.is-featured .dish-card-row { border-bottom-color: var(--bg); }
+  /* Número de plato: crema atenuado */
+  .dish.is-featured .dish-card-meta .num { color: rgba(255,250,243,0.7); }
+  /* Botón "Foto" (si lo hubiera en desktop) al pulsar: invierte */
+  .dish.is-featured .dish-card .dish-photo-btn:active {
+    background: var(--bg);
+    color: var(--red);
+  }
+  /* Etiquetas HOT y POR TIEMPO LIMITADO: pill crema con texto rojo */
   .dish.is-featured .tag.hot,
   .dish.is-featured .tag.limited {
     background: var(--bg);
@@ -2035,11 +2042,10 @@
   max-width: min(78vw, 420px);
   display: flex;
   flex-direction: column;
-  animation: dishLbPop 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-@keyframes dishLbPop {
-  from { opacity: 0; transform: scale(0.94) translateY(8px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
+  will-change: transform;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: pan-y;          /* permite scroll vertical, captura swipe horizontal */
 }
 
 .dish-lightbox-fig img {
@@ -2050,16 +2056,51 @@
   border: 1.5px solid var(--red);
   border-radius: 12px;
   background: var(--bg);
+  -webkit-user-drag: none;
+  pointer-events: none;          /* la imagen no captura el gesto, lo hace la figura */
 }
 .dish-lightbox-fig figcaption {
   margin-top: 12px;
   text-align: center;
   color: var(--bg);
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dish-lightbox-name { font-size: 13px; }
+.dish-lightbox-count { font-size: 11px; opacity: 0.6; }
+
+/* Flechas de navegación del carrusel (laterales) */
+.dish-lightbox-nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255,250,243,0.5);
+  background: rgba(20,0,4,0.35);
+  color: var(--bg);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  -webkit-tap-highlight-color: transparent;
+  padding-bottom: 3px;
+}
+.dish-lightbox-nav.prev { left: 14px; }
+.dish-lightbox-nav.next { right: 14px; }
+.dish-lightbox-nav:active { background: var(--bg); color: var(--red); }
+/* En pantallas muy estrechas, las flechas estorban menos discretas */
+@media (max-width: 400px) {
+  .dish-lightbox-nav { width: 38px; height: 38px; font-size: 22px; }
 }
 
 .dish-lightbox-close {
