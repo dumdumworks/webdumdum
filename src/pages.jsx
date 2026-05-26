@@ -764,10 +764,16 @@ function Menu() {
               <h3 className="alerg-title">{t("Tabla de alérgenos", "Allergen table")}</h3>
               <div className="alerg-table-wrap">
                 <table className="alerg-table">
+                  <colgroup>
+                    <col className="alerg-col-plato" />
+                    {ALERGENOS.map((a) => <col key={a.id} />)}
+                  </colgroup>
                   <thead>
                     <tr>
-                      <th>{t("Plato", "Dish")}</th>
-                      {ALERGENOS.map((a) => <th key={a.id} className="alerg-th-rot"><span>{alLabel(a.id)}</span></th>)}
+                      <th className="alerg-namecol"></th>
+                      {ALERGENOS.map((a) =>
+                        <th key={a.id}><span className="alerg-vhead"><span>{alLabel(a.id)}</span></span></th>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -775,7 +781,7 @@ function Menu() {
                       <tr key={p.id}>
                         <td className="alerg-td-name">{p.name}</td>
                         {ALERGENOS.map((a) =>
-                          <td key={a.id} className="alerg-td-dot">{p.alergenos.includes(a.id) ? "●" : ""}</td>
+                          <td key={a.id} className="alerg-td-dot">{p.alergenos.includes(a.id) ? <span className="alerg-mark"></span> : ""}</td>
                         )}
                       </tr>
                     )}

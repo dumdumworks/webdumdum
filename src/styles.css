@@ -464,7 +464,7 @@ img { display: block; max-width: 100%; }
    Ventana de Alérgenos (modal en la carta) · diseño refinado v2
    ─────────────────────────────────────────────────────────── */
 :root{
-  --alerg-stroke: 1.5px;     /* grosor único: botones y líneas */
+  --alerg-stroke: 1px;       /* mismo grosor que el resto de la web (.btn y .hr usan 1px) */
   --alerg-pad: 56px;         /* aire uniforme en los 4 lados */
   --alerg-gap: 34px;         /* aire simétrico alrededor de cada línea separadora */
   --alerg-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -602,15 +602,31 @@ img { display: block; max-width: 100%; }
   color:var(--red); opacity:0.55; margin:var(--alerg-gap) 0 0;
 }
 
-/* Tabla completa */
+/* Tabla completa · cabeceras verticales rojas con texto crema */
 .alerg-table-wrap{ overflow-x:auto; margin-top:var(--alerg-gap); }
-.alerg-table{ border-collapse:collapse; width:100%; font-family:var(--alerg-mono); }
-.alerg-table th, .alerg-table td{ border:var(--alerg-stroke) solid var(--line-soft); padding:7px 9px; }
-.alerg-table thead th{ color:var(--red); font-size:9px; text-transform:uppercase; vertical-align:bottom; }
-.alerg-th-rot{ height:96px; white-space:nowrap; }
-.alerg-th-rot span{ writing-mode:vertical-rl; transform:rotate(180deg); display:inline-block; font-weight:600; letter-spacing:0.02em; }
-.alerg-td-name{ font-family:var(--font-display); font-size:13px; color:var(--red); white-space:nowrap; }
-.alerg-td-dot{ text-align:center; color:var(--red); font-size:12px; }
+.alerg-table{ border-collapse:separate; border-spacing:0; width:100%; table-layout:fixed; font-family:var(--alerg-mono); }
+.alerg-table col.alerg-col-plato{ width:200px; }
+.alerg-table thead th{ vertical-align:bottom; padding:0 0 14px; }
+.alerg-table thead th.alerg-namecol{ background:none; }
+/* píldora roja vertical de cabecera */
+.alerg-vhead{
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--red); color:var(--bg); border-radius:8px;
+  width:34px; min-height:140px; padding:14px 0; margin:0 auto;
+}
+.alerg-vhead span{
+  writing-mode:vertical-rl; transform:rotate(180deg);
+  font-family:var(--alerg-mono); font-weight:600; font-size:14px;
+  letter-spacing:0.03em; text-transform:uppercase; white-space:nowrap;
+}
+.alerg-td-name{
+  text-align:left; font-family:var(--font-display); font-size:17px; color:var(--red);
+  white-space:nowrap; padding:13px 16px 13px 0;
+  border-bottom:var(--alerg-stroke) solid var(--line-soft);
+}
+.alerg-td-dot{ text-align:center; border-bottom:var(--alerg-stroke) solid var(--line-soft); }
+.alerg-td-dot .alerg-mark{ display:inline-block; width:12px; height:12px; border-radius:50%; background:var(--red); }
+.alerg-table tbody tr:last-child td{ border-bottom:none; }
 
 /* Móvil */
 @media (max-width:879px){
@@ -625,6 +641,9 @@ img { display: block; max-width: 100%; }
   .alerg-chips button.wide{ grid-column:span 2; }
   .alerg-chips button{ font-size:11px; padding:10px 8px; }
   .alerg-list-name{ font-size:15px; }
-  .alerg-table td, .alerg-table th{ font-size:9px; padding:4px 5px; }
-  .alerg-td-name{ font-size:11px; }
+  .alerg-table col.alerg-col-plato{ width:130px; }
+  .alerg-vhead{ width:28px; min-height:118px; }
+  .alerg-vhead span{ font-size:12px; }
+  .alerg-td-name{ font-size:13px; padding:10px 10px 10px 0; }
+  .alerg-td-dot .alerg-mark{ width:10px; height:10px; }
 }
