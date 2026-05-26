@@ -494,7 +494,7 @@ img { display: block; max-width: 100%; }
 }
 
 /* Aire uniforme en los 4 lados (mismo valor arriba/abajo/lados) */
-.alerg-scroll{ overflow-y:auto; padding:var(--alerg-pad); }
+.alerg-scroll{ overflow-y:auto; padding:var(--alerg-pad); min-width:0; }
 /* El primer y último elemento no añaden margen extra: así el aire
    superior e inferior de la caja es exactamente --alerg-pad. */
 .alerg-scroll > *:first-child{ margin-top:0; }
@@ -646,9 +646,19 @@ img { display: block; max-width: 100%; }
   .alerg-chips button.wide{ grid-column:span 2; }
   .alerg-chips button{ font-size:11px; padding:10px 8px; }
   .alerg-list-name{ font-size:15px; }
-  .alerg-table col.alerg-col-plato{ width:120px; }
-  .alerg-table col.alerg-col-al{ width:30px; }
-  .alerg-table thead th.alerg-al{ height:120px; }
-  .alerg-vhead span{ font-size:11px; }
-  .alerg-td-name{ font-size:12px; padding:9px 8px; }
+
+  /* ── Tabla en móvil ──
+     Camino robusto: la tabla mantiene su tamaño natural (anchos fijos en px)
+     y el contenedor permite SCROLL HORIZONTAL. Predecible, sin cálculos frágiles. */
+  .alerg-table-wrap{
+    overflow-x:auto; overflow-y:visible;
+    -webkit-overflow-scrolling:touch;   /* scroll suave en iOS */
+  }
+  .alerg-table{ table-layout:fixed; width:auto; }   /* ancho = suma de columnas */
+  .alerg-table col.alerg-col-plato{ width:150px; }
+  .alerg-table col.alerg-col-al{ width:32px; }
+  .alerg-table thead th.alerg-al{ height:128px; }
+  .alerg-vhead span{ font-size:12px; }
+  .alerg-td-name{ font-size:13px; padding:11px 12px; white-space:nowrap; }
+  .alerg-td-dot .alerg-mark{ width:9px; height:9px; }
 }
