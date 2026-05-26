@@ -495,6 +495,10 @@ img { display: block; max-width: 100%; }
 
 /* Aire uniforme en los 4 lados (mismo valor arriba/abajo/lados) */
 .alerg-scroll{ overflow-y:auto; padding:var(--alerg-pad); }
+/* El primer y último elemento no añaden margen extra: así el aire
+   superior e inferior de la caja es exactamente --alerg-pad. */
+.alerg-scroll > *:first-child{ margin-top:0; }
+.alerg-scroll > *:last-child{ margin-bottom:0; }
 
 /* Pestañas: dos botones separados, centrados respecto a la línea de abajo */
 .alerg-tabs{
@@ -505,30 +509,38 @@ img { display: block; max-width: 100%; }
   flex:1; cursor:pointer;
   background:none; border:var(--alerg-stroke) solid var(--red);
   border-radius:999px;
-  font-family:var(--alerg-mono); text-transform:uppercase;
+  font-family:var(--font-display); text-transform:uppercase;
   font-size:14px; font-weight:600; letter-spacing:0.02em;
   color:var(--red); padding:13px 16px;
   transition:background .12s, color .12s;
 }
 .alerg-tabs button.on{ background:var(--red); color:var(--bg); }
 
-/* Líneas separadoras: todas mismo grosor, con aire simétrico arriba/abajo */
+/* Líneas separadoras: todas mismo grosor, sin margen propio
+   (el aire lo dan los elementos vecinos, controlado abajo) */
 .alerg-sep{ height:var(--alerg-stroke); background:var(--red); border:none; margin:0; }
 
-/* Títulos: ambos (Marca... / Estos son...) MISMO tamaño */
-.alerg-title{
+/* Títulos: ambos MISMO tamaño. line-height:1 elimina el espacio
+   fantasma del texto para que el aire sea visualmente exacto. */
+.alerg-title, .alerg-result-head{
   font-family:var(--font-display); font-weight:700;
-  font-size:24px; color:var(--red);
-  margin:var(--alerg-gap) 0 6px;
+  font-size:24px; line-height:1; color:var(--red);
+  margin:0; padding:0;
 }
-.alerg-result-head{
-  font-family:var(--font-display); font-weight:700;
-  font-size:24px; color:var(--red);
-  margin:var(--alerg-gap) 0 6px;
-}
+/* Aire SIMÉTRICO alrededor de cada línea separadora:
+   el bloque de arriba deja --alerg-gap por debajo (margin-bottom)
+   y el título de abajo deja --alerg-gap por encima (margin-top). */
+.alerg-tabs{ margin:0 0 var(--alerg-gap); }
+.alerg-sep + .alerg-title,
+.alerg-sep + .alerg-result{ margin-top:var(--alerg-gap); }
+.alerg-chips{ margin:0 0 var(--alerg-gap); }
+
+/* El subtítulo "Selecciona..." va pegado a su título (poco aire)
+   y deja un aire fijo hasta los botones. */
 .alerg-intro{
-  font-family:var(--alerg-mono); font-size:13px;
-  color:var(--red); margin:0 0 22px; opacity:0.85;
+  font-family:var(--alerg-mono); font-size:13px; line-height:1.3;
+  color:var(--red); opacity:0.85;
+  margin:10px 0 var(--alerg-gap);
 }
 
 /* Rejilla de alérgenos: 5 columnas iguales; frutos de cáscara = doble */
@@ -552,12 +564,14 @@ img { display: block; max-width: 100%; }
 
 /* Resultado */
 .alerg-result{ margin:0; }
+.alerg-result .alerg-result-head{ margin-bottom:16px; }
 .alerg-list{ list-style:none; margin:0; padding:0; }
 .alerg-list li{
   display:flex; justify-content:space-between; align-items:baseline;
   gap:16px; padding:13px 0; border-bottom:var(--alerg-stroke) solid var(--line-soft);
 }
-.alerg-list li:last-child{ border-bottom:none; }
+.alerg-list li:first-child{ padding-top:0; }
+.alerg-list li:last-child{ border-bottom:none; padding-bottom:0; }
 .alerg-list-name{ font-family:var(--font-display); font-size:17px; color:var(--red); }
 .alerg-list-sec{
   font-family:var(--alerg-mono); text-transform:uppercase;
