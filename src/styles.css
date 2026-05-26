@@ -459,3 +459,104 @@ img { display: block; max-width: 100%; }
 @media (max-width: 640px) {
   .ig-slot { height: 680px; }
 }
+
+/* ───────────────────────────────────────────────────────────
+   Ventana de Alérgenos (modal en la carta)
+   ─────────────────────────────────────────────────────────── */
+.alerg-overlay{
+  position:fixed; inset:0; z-index:9999;
+  background:rgba(40,0,5,0.45);
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+}
+.alerg-modal{
+  position:relative;
+  background:var(--bg);
+  border:2px solid var(--red);
+  width:100%; max-width:760px;
+  max-height:88vh; overflow:hidden;
+  display:flex; flex-direction:column;
+}
+.alerg-close{
+  position:absolute; top:10px; right:14px;
+  background:none; border:none; cursor:pointer;
+  font-family:var(--font-display); font-size:30px; line-height:1;
+  color:var(--red); padding:4px 8px;
+}
+.alerg-tabs{
+  display:flex; border-bottom:2px solid var(--line);
+  flex:0 0 auto; padding-right:48px;
+}
+.alerg-tabs button{
+  flex:1; background:none; border:none; cursor:pointer;
+  font-family:var(--font-mono); text-transform:uppercase;
+  font-size:13px; font-weight:600; letter-spacing:0.04em;
+  color:var(--red); padding:16px 12px;
+  border-right:2px solid var(--line);
+}
+.alerg-tabs button:last-child{ border-right:none; }
+.alerg-tabs button.on{ background:var(--red); color:var(--bg); }
+.alerg-body{
+  padding:24px 28px 28px;
+  overflow-y:auto;
+}
+.alerg-title{
+  font-family:var(--font-display); font-weight:700;
+  font-size:26px; color:var(--red); margin:0 0 8px;
+}
+.alerg-intro{
+  font-family:var(--font-mono); font-size:14px;
+  color:var(--red); margin:0 0 18px; opacity:0.85;
+}
+.alerg-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+.alerg-chips button{
+  background:none; border:1.5px solid var(--red); cursor:pointer;
+  font-family:var(--font-mono); text-transform:uppercase;
+  font-size:12px; font-weight:600; letter-spacing:0.03em;
+  color:var(--red); padding:8px 14px; border-radius:999px;
+  transition:background .12s, color .12s;
+}
+.alerg-chips button.on{ background:var(--red); color:var(--bg); }
+.alerg-result{ margin-top:22px; border-top:1px solid var(--line-soft); padding-top:18px; }
+.alerg-result-head{
+  font-family:var(--font-mono); text-transform:uppercase;
+  font-size:13px; font-weight:700; letter-spacing:0.04em;
+  color:var(--red); margin-bottom:12px;
+}
+.alerg-list{ list-style:none; margin:0; padding:0; }
+.alerg-list li{
+  display:flex; justify-content:space-between; align-items:baseline;
+  gap:16px; padding:9px 0; border-bottom:1px solid var(--line-soft);
+}
+.alerg-list-name{ font-family:var(--font-display); font-size:17px; color:var(--red); }
+.alerg-list-sec{
+  font-family:var(--font-mono); text-transform:uppercase;
+  font-size:11px; letter-spacing:0.04em; color:var(--red); opacity:0.6;
+  white-space:nowrap;
+}
+.alerg-result-ok{
+  font-family:var(--font-mono); font-size:14px; color:var(--red);
+  background:var(--line-soft); padding:14px 16px; line-height:1.5;
+}
+.alerg-legal{
+  font-family:var(--font-mono); font-size:11px; line-height:1.5;
+  color:var(--red); opacity:0.6; margin:22px 0 0;
+}
+/* Tabla completa */
+.alerg-table-wrap{ overflow-x:auto; }
+.alerg-table{ border-collapse:collapse; width:100%; font-family:var(--font-mono); }
+.alerg-table th, .alerg-table td{ border:1px solid var(--line-soft); padding:6px 8px; }
+.alerg-table thead th{ color:var(--red); font-size:10px; text-transform:uppercase; vertical-align:bottom; }
+.alerg-th-rot{ height:90px; white-space:nowrap; }
+.alerg-th-rot span{ writing-mode:vertical-rl; transform:rotate(180deg); display:inline-block; font-weight:600; }
+.alerg-td-name{ font-family:var(--font-display); font-size:14px; color:var(--red); white-space:nowrap; }
+.alerg-td-dot{ text-align:center; color:var(--red); font-size:13px; }
+
+@media (max-width:879px){
+  .alerg-body{ padding:18px 18px 22px; }
+  .alerg-title{ font-size:21px; }
+  .alerg-tabs button{ font-size:11px; padding:13px 8px; }
+  .alerg-list-name{ font-size:15px; }
+  .alerg-table td, .alerg-table th{ font-size:9px; padding:4px 5px; }
+  .alerg-td-name{ font-size:11px; }
+}

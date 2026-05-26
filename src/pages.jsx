@@ -411,6 +411,37 @@ function Menu() {
   const lang = useLang();
   const [data, setData] = React.useState(window.DumDumData.loadMenu());
 
+  // ── Alérgenos (los 14 de declaración obligatoria UE) ──
+  // id = clave que se guarda en cada plato (campo "alergenos" en Sveltia).
+  const ALERGENOS = [
+    { id: "gluten", es: "Gluten", en: "Gluten" },
+    { id: "crustaceos", es: "Crustáceos", en: "Crustaceans" },
+    { id: "huevos", es: "Huevos", en: "Eggs" },
+    { id: "pescado", es: "Pescado", en: "Fish" },
+    { id: "cacahuetes", es: "Cacahuetes", en: "Peanuts" },
+    { id: "soja", es: "Soja", en: "Soy" },
+    { id: "lacteos", es: "Lácteos", en: "Milk" },
+    { id: "frutos_cascara", es: "Frutos de cáscara", en: "Nuts" },
+    { id: "apio", es: "Apio", en: "Celery" },
+    { id: "mostaza", es: "Mostaza", en: "Mustard" },
+    { id: "sesamo", es: "Sésamo", en: "Sesame" },
+    { id: "sulfitos", es: "Sulfitos", en: "Sulphites" },
+    { id: "altramuces", es: "Altramuces", en: "Lupin" },
+    { id: "moluscos", es: "Moluscos", en: "Molluscs" }
+  ];
+  const alLabel = (id) => {
+    const a = ALERGENOS.find(x => x.id === id);
+    return a ? (lang === "en" ? a.en : a.es) : id;
+  };
+
+  // Estado de la ventana de alérgenos: null = cerrada, "select" = selector,
+  // "tabla" = tabla general. selSel = alérgenos marcados por el cliente.
+  const [alergView, setAlergView] = React.useState(null);
+  const [selAlerg, setSelAlerg] = React.useState([]);
+  const toggleSelAlerg = (id) =>
+    setSelAlerg((s) => s.includes(id) ? s.filter(x => x !== id) : [...s, id]);
+
+
   // Helper: devuelve el campo en el idioma activo. Si estamos en EN y existe
   // el campo "_en" con contenido, lo usa; si no, cae al español (fallback).
   const tf = (obj, field) => {
@@ -449,6 +480,27 @@ function Menu() {
     });
     return out;
   }, [data, lang]);
+
+  // Lista plana de todos los platos disponibles con sus alérgenos,
+  // para la ventana de alérgenos (selector y tabla general).
+  const platosAlerg = React.useMemo(() => {
+    const out = [];
+    data.sections.forEach((sec) => {
+      sec.items.forEach((it) => {
+        if (it.available !== false) {
+          out.push({ id: it.id, name: tf(it, "name"), seccion: tf(sec, "title"), alergenos: it.alergenos || [] });
+        }
+      });
+    });
+    return out;
+  }, [data, lang]);
+
+  // Platos que el cliente NO puede tomar = los que contienen ALGUNO
+  // de los alérgenos que ha marcado.
+  const platosNoPuede = React.useMemo(() => {
+    if (selAlerg.length === 0) return [];
+    return platosAlerg.filter((p) => p.alergenos.some((a) => selAlerg.includes(a)));
+  }, [platosAlerg, selAlerg]);
 
   // Índice de la foto abierta en el lightbox (null = cerrado).
   const [photoIdx, setPhotoIdx] = React.useState(null);
@@ -614,8 +666,8 @@ function Menu() {
 
         <div className="menu-foot">
           <div className="menu-foot-left">
-            {/* href="#" PROVISIONAL · cambiar cuando exista el editor/PDF de alérgenos */}
-            <a className="btn menu-foot-btn" href="#" onClick={(e) => e.preventDefault()}>{t("Alérgenos", "Allergens")} →</a>
+            {/* Botón que abre la ventana de alérgenos (selector + tabla general) */}
+            <a className="btn menu-foot-btn" href="#" onClick={(e) => { e.preventDefault(); setSelAlerg([]); setAlergView("select"); }}>{t("Alérgenos", "Allergens")} →</a>
             <div className="menu-foot-text">{t(
               "Si tienes alguna alergia, alguna intolerancia o, simplemente, dudas, pregúntanos, que somos muy majos.",
               "If you have any allergy, any intolerance or, simply, questions, just ask us — we're really nice."
@@ -640,6 +692,97 @@ function Menu() {
           onNext={nextPhoto}
           onClose={closePhoto}
         />}
+
+      {/* ───────── Ventana de Alérgenos ───────── */}
+      {alergView &&
+      <div className="alerg-overlay" onClick={() => setAlergView(null)}>
+        <div className="alerg-modal" onClick={(e) => e.stopPropagation()}>
+          <button className="alerg-close" type="button" aria-label={t("Cerrar", "Close")} onClick={() => setAlergView(null)}>×</button>
+
+          {/* Pestañas */}
+          <div className="alerg-tabs">
+            <button type="button" className={alergView === "select" ? "on" : ""} onClick={() => setAlergView("select")}>
+              {t("Filtrar por mi alergia", "Filter by my allergy")}
+            </button>
+            <button type="button" className={alergView === "tabla" ? "on" : ""} onClick={() => setAlergView("tabla")}>
+              {t("Tabla completa", "Full table")}
+            </button>
+          </div>
+
+          {alergView === "select" &&
+          <div className="alerg-body">
+            <h3 className="alerg-title">{t("Marca lo que NO puedes tomar", "Select what you CAN'T have")}</h3>
+            <p className="alerg-intro">{t(
+              "Selecciona tus alérgenos y te diremos qué platos debes evitar.",
+              "Select your allergens and we'll tell you which dishes to avoid."
+            )}</p>
+            <div className="alerg-chips">
+              {ALERGENOS.map((a) =>
+                <button key={a.id} type="button"
+                  className={selAlerg.includes(a.id) ? "on" : ""}
+                  onClick={() => toggleSelAlerg(a.id)}>
+                  {alLabel(a.id)}
+                </button>
+              )}
+            </div>
+
+            {selAlerg.length > 0 &&
+            <div className="alerg-result">
+              {platosNoPuede.length > 0 ?
+                <React.Fragment>
+                  <div className="alerg-result-head">{t("Estos son los productos que NO puedes tomar", "These are the dishes you CAN'T have")}</div>
+                  <ul className="alerg-list">
+                    {platosNoPuede.map((p) =>
+                      <li key={p.id}>
+                        <span className="alerg-list-name">{p.name}</span>
+                        <span className="alerg-list-sec">{p.seccion}</span>
+                      </li>
+                    )}
+                  </ul>
+                </React.Fragment> :
+                <div className="alerg-result-ok">{t(
+                  "¡Buenas noticias! Ningún plato de la carta contiene los alérgenos que has marcado.",
+                  "Good news! No dish on the menu contains the allergens you selected."
+                )}</div>
+              }
+            </div>}
+
+            <p className="alerg-legal">{t(
+              "Nuestros platos se elaboran en una cocina donde se manipulan todos los alérgenos; pueden existir trazas. Ante cualquier alergia, consúltanos.",
+              "Our dishes are prepared in a kitchen that handles all allergens; traces may be present. For any allergy, please ask us."
+            )}</p>
+          </div>}
+
+          {alergView === "tabla" &&
+          <div className="alerg-body">
+            <h3 className="alerg-title">{t("Tabla de alérgenos", "Allergen table")}</h3>
+            <div className="alerg-table-wrap">
+              <table className="alerg-table">
+                <thead>
+                  <tr>
+                    <th>{t("Plato", "Dish")}</th>
+                    {ALERGENOS.map((a) => <th key={a.id} className="alerg-th-rot"><span>{alLabel(a.id)}</span></th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {platosAlerg.map((p) =>
+                    <tr key={p.id}>
+                      <td className="alerg-td-name">{p.name}</td>
+                      {ALERGENOS.map((a) =>
+                        <td key={a.id} className="alerg-td-dot">{p.alergenos.includes(a.id) ? "●" : ""}</td>
+                      )}
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <p className="alerg-legal">{t(
+              "Nuestros platos se elaboran en una cocina donde se manipulan todos los alérgenos; pueden existir trazas. Ante cualquier alergia, consúltanos.",
+              "Our dishes are prepared in a kitchen that handles all allergens; traces may be present. For any allergy, please ask us."
+            )}</p>
+          </div>}
+        </div>
+      </div>}
     </div>);
 
 }
