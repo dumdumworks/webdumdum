@@ -22,6 +22,11 @@
             "PICANTE",
             "NEW"
           ],
+          "alergenos": [
+            "huevos",
+            "moluscos",
+            "sulfitos"
+          ],
           "available": true,
           "image": "/img/dumplings/latindilla.jpg",
           "logo": ""
@@ -46,6 +51,13 @@
           "ingredients_en": "Chicken dumpling · Peanut sauce · Red onion Cilantro · Crunchy peanuts",
           "price": "8,95",
           "tags": [],
+          "alergenos": [
+            "gluten",
+            "cacahuetes",
+            "frutos_cascara",
+            "lacteos",
+            "sesamo"
+          ],
           "available": true,
           "image": "img/dumplings/muay.jpg",
           "logo": ""
@@ -63,6 +75,12 @@
           "tags": [
             "VEG"
           ],
+          "alergenos": [
+            "gluten",
+            "frutos_cascara",
+            "lacteos"
+          ],
+          "available": true,
           "image": "img/dumplings/honey.jpg",
           "logo": ""
         },
@@ -77,6 +95,12 @@
           "ingredients_en": "Beef dumpling · Sautéed onion · Cheddar · Pickle · Ketchup · Mustard",
           "price": "9,50",
           "tags": [],
+          "alergenos": [
+            "gluten",
+            "mostaza",
+            "lacteos"
+          ],
+          "available": true,
           "image": "img/dumplings/burger.jpg",
           "logo": ""
         },
@@ -91,6 +115,11 @@
           "ingredients_en": "Bacon dumpling · Egg yolk sauce · Parmesan cheese",
           "price": "8,95",
           "tags": [],
+          "alergenos": [
+            "gluten",
+            "lacteos"
+          ],
+          "available": true,
           "image": "img/dumplings/carbonara.jpg",
           "logo": ""
         },
@@ -105,6 +134,12 @@
           "ingredients_en": "Steak dumpling · Caramelized onion · Green pepper · Brown butter · Crispy panko",
           "price": "9,25",
           "tags": [],
+          "alergenos": [
+            "gluten",
+            "lacteos",
+            "sulfitos"
+          ],
+          "available": true,
           "image": "img/dumplings/pepito.jpg",
           "logo": ""
         },
@@ -122,6 +157,12 @@
             "POR TIEMPO LIMITADO",
             "PICANTE"
           ],
+          "alergenos": [
+            "gluten",
+            "mostaza",
+            "lacteos"
+          ],
+          "available": true,
           "featured": true,
           "image": "img/dumplings/castizo.jpg",
           "logo": ""
@@ -139,6 +180,12 @@
           "tags": [
             "VEG"
           ],
+          "alergenos": [
+            "gluten",
+            "frutos_cascara",
+            "lacteos"
+          ],
+          "available": true,
           "image": "img/dumplings/moussaka.jpg",
           "logo": ""
         },
@@ -156,6 +203,11 @@
             "PICANTE",
             "NEW"
           ],
+          "alergenos": [
+            "gluten",
+            "sulfitos"
+          ],
+          "available": true,
           "image": "img/dumplings/sweet.jpg",
           "logo": ""
         },
@@ -170,6 +222,12 @@
           "ingredients_en": "Chicken dumpling · Leek · Teriyaki drip · Sesame bling · Spring onion",
           "price": "8,75",
           "tags": [],
+          "alergenos": [
+            "gluten",
+            "soja",
+            "sesamo"
+          ],
+          "available": true,
           "image": "img/dumplings/teriyaki.jpg",
           "logo": ""
         },
@@ -184,6 +242,13 @@
           "ingredients_en": "Shrimp dumpling · Cabbage · Kimchi mayo",
           "price": "11,25",
           "tags": [],
+          "alergenos": [
+            "gluten",
+            "crustaceos",
+            "huevos",
+            "sulfitos"
+          ],
+          "available": true,
           "image": "img/dumplings/gamba.jpg",
           "logo": ""
         }
@@ -207,6 +272,11 @@
           "ingredients_en": "Game Over",
           "price": "2,85",
           "tags": [],
+          "alergenos": [
+            "lacteos",
+            "huevos"
+          ],
+          "available": true,
           "image": "/img/dumplings/cheese.jpg",
           "logo": ""
         },
@@ -221,6 +291,10 @@
           "ingredients_en": "Fields Forever",
           "price": "2,85",
           "tags": [],
+          "alergenos": [
+            "lacteos"
+          ],
+          "available": true,
           "image": "/img/dumplings/petit.jpg",
           "logo": ""
         },
@@ -252,6 +326,10 @@
           "tags": [
             "NEW"
           ],
+          "alergenos": [
+            "lacteos",
+            "huevos"
+          ],
           "available": true,
           "featured": true,
           "image": "/img/dumplings/coco.jpg",
@@ -268,6 +346,9 @@
           "ingredients_en": "Fressshhh!",
           "price": "2,85",
           "tags": [],
+          "alergenos": [
+            "lacteos"
+          ],
           "featured": false,
           "image": "/img/dumplings/mango.jpg",
           "logo": ""
@@ -283,6 +364,10 @@
           "ingredients_en": "Sweet!",
           "price": "2,85",
           "tags": [],
+          "alergenos": [
+            "lacteos",
+            "huevos"
+          ],
           "available": true,
           "featured": false,
           "image": "/img/dumplings/chocolate.jpg",
@@ -299,6 +384,9 @@
           "ingredients_en": "Drake?",
           "price": "2,85",
           "tags": [],
+          "alergenos": [
+            "lacteos"
+          ],
           "available": true,
           "featured": false,
           "image": "/img/dumplings/pasion.jpg",
@@ -324,6 +412,9 @@
           "ingredients_en": "",
           "price": "3,75",
           "tags": [],
+          "alergenos": [
+            "gluten"
+          ],
           "available": true,
           "featured": false,
           "image": "",
@@ -340,6 +431,9 @@
           "ingredients_en": "",
           "price": "4,20",
           "tags": [],
+          "alergenos": [
+            "gluten"
+          ],
           "available": true,
           "featured": false,
           "image": "",
@@ -350,12 +444,15 @@
           "n": 0,
           "name": "Cerveza Lupia",
           "name_en": "Lupia Beer",
-          "tagline": "Close to an IPA",
-          "tagline_en": "",
+          "tagline": "Cerca a una IPA",
+          "tagline_en": "Close to an IPA",
           "ingredients": "",
           "ingredients_en": "",
           "price": "4,20",
           "tags": [],
+          "alergenos": [
+            "gluten"
+          ],
           "available": true,
           "featured": false,
           "image": "",
@@ -372,6 +469,9 @@
           "ingredients_en": "",
           "price": "4,00",
           "tags": [],
+          "alergenos": [
+            "gluten"
+          ],
           "available": true,
           "featured": false,
           "image": "",
@@ -388,6 +488,9 @@
           "ingredients_en": "",
           "price": "4,00",
           "tags": [],
+          "alergenos": [
+            "sulfitos"
+          ],
           "available": true,
           "featured": false,
           "image": "",
@@ -404,6 +507,9 @@
           "ingredients_en": "",
           "price": "3,75",
           "tags": [],
+          "alergenos": [
+            "gluten"
+          ],
           "available": true,
           "featured": false,
           "image": "",
@@ -500,6 +606,9 @@
           "ingredients_en": "",
           "price": "3,00",
           "tags": [],
+          "alergenos": [
+            "sulfitos"
+          ],
           "available": true,
           "featured": false,
           "image": "",
