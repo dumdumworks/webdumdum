@@ -56,6 +56,27 @@ collections:
                       - { label: "Vegetariano (VEG)", value: "VEG" }
                       - { label: "Nuevo (NEW)", value: "NEW" }
                       - { label: "Por tiempo limitado", value: "POR TIEMPO LIMITADO" }
+                  - name: "alergenos"
+                    label: "Alérgenos"
+                    widget: "select"
+                    multiple: true
+                    required: false
+                    hint: "Marca los alérgenos que contiene este plato (los 14 de declaración obligatoria de la UE)."
+                    options:
+                      - { label: "Gluten", value: "gluten" }
+                      - { label: "Crustáceos", value: "crustaceos" }
+                      - { label: "Huevos", value: "huevos" }
+                      - { label: "Pescado", value: "pescado" }
+                      - { label: "Cacahuetes", value: "cacahuetes" }
+                      - { label: "Soja", value: "soja" }
+                      - { label: "Lácteos", value: "lacteos" }
+                      - { label: "Frutos de cáscara", value: "frutos_cascara" }
+                      - { label: "Apio", value: "apio" }
+                      - { label: "Mostaza", value: "mostaza" }
+                      - { label: "Sésamo", value: "sesamo" }
+                      - { label: "Sulfitos", value: "sulfitos" }
+                      - { label: "Altramuces", value: "altramuces" }
+                      - { label: "Moluscos", value: "moluscos" }
                   - { name: "available", label: "Plato disponible (desmarca para ocultarlo de la web)", widget: "boolean", required: false, default: true }
                   - { name: "featured", label: "Plato destacado", widget: "boolean", required: false, default: false }
                   - { name: "image", label: "Foto del plato", widget: "image", required: false }
