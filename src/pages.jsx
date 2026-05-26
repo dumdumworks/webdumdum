@@ -1637,7 +1637,7 @@ function Eventos() {
             t("Un sitio cool", "A cool place"),
             t("para eventos cool.", "for cool events."))}
         </h1>
-        <div className="ev-hero-row" style={{ marginTop: 32, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: 32 }}>
+        <div className="ev-hero-row" style={{ marginTop: 32, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 32 }}>
           <p className="body" style={{ fontSize: 18, flex: "1 1 420px", minWidth: 0, margin: 0 }}>
             {eb("hero_body", t(
               <React.Fragment>En el corazón de Tetuán y diseñado por <strong>Nota Estudio</strong>. 55 m² diáfanos, cocina abierta, hasta 35 personas, equipo de sonido potente y luz pensada. Un sitio a la altura de tu evento.</React.Fragment>,

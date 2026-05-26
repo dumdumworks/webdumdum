@@ -1299,6 +1299,7 @@
     text-align: center;
   }
   .ev-hero p { margin-left: auto; margin-right: auto; }
+  .ev-hero-row { justify-content: center; }
   .ev-hero-meta {
     grid-template-columns: 1fr 1fr 1fr;
     margin-top: 28px;
