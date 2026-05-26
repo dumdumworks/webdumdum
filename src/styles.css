@@ -574,7 +574,6 @@ img { display: block; max-width: 100%; }
   transition:background .12s, color .12s;
 }
 .alerg-chips button.on{ background:var(--red); color:var(--bg); }
-.alerg-chips button.wide{ grid-column:span 2; }
 
 /* Resultado */
 .alerg-result{ margin:0; }
@@ -603,6 +602,7 @@ img { display: block; max-width: 100%; }
 }
 
 /* Tabla completa · rejilla de celdas, cabecera roja a sangre de celda */
+.alerg-rotate-hint{ display:none; }   /* solo visible en móvil-vertical */
 .alerg-table-wrap{ overflow-x:auto; margin-top:var(--alerg-gap); }
 .alerg-table{ border-collapse:collapse; width:100%; table-layout:fixed; font-family:var(--alerg-mono); }
 .alerg-table col.alerg-col-plato{ width:170px; }
@@ -643,22 +643,47 @@ img { display: block; max-width: 100%; }
   .alerg-tabs button{ font-size:11px; padding:12px 10px; }
   .alerg-title, .alerg-result-head{ font-size:19px; }
   .alerg-chips{ grid-template-columns:repeat(2, 1fr); gap:10px; }
-  .alerg-chips button.wide{ grid-column:span 2; }
   .alerg-chips button{ font-size:11px; padding:10px 8px; }
   .alerg-list-name{ font-size:15px; }
 
   /* ── Tabla en móvil ──
-     Camino robusto: la tabla mantiene su tamaño natural (anchos fijos en px)
-     y el contenedor permite SCROLL HORIZONTAL. Predecible, sin cálculos frágiles. */
-  .alerg-table-wrap{
-    overflow-x:auto; overflow-y:visible;
-    -webkit-overflow-scrolling:touch;   /* scroll suave en iOS */
-  }
-  .alerg-table{ table-layout:fixed; width:auto; }   /* ancho = suma de columnas */
+     VERTICAL (portrait): se muestra la tabla completa en miniatura (escalada
+       para caber entera) + una pista para girar el móvil.
+     HORIZONTAL (landscape): la tabla a tamaño cómodo y legible. */
+  .alerg-table-wrap{ overflow-x:auto; overflow-y:visible; -webkit-overflow-scrolling:touch; }
+  .alerg-table{ table-layout:fixed; width:auto; }
   .alerg-table col.alerg-col-plato{ width:150px; }
-  .alerg-table col.alerg-col-al{ width:32px; }
-  .alerg-table thead th.alerg-al{ height:128px; }
-  .alerg-vhead span{ font-size:12px; }
-  .alerg-td-name{ font-size:13px; padding:11px 12px; white-space:nowrap; }
-  .alerg-td-dot .alerg-mark{ width:9px; height:9px; }
+  .alerg-table col.alerg-col-al{ width:34px; }
+  .alerg-table thead th.alerg-al{ height:130px; }
+  .alerg-vhead span{ font-size:13px; }
+  .alerg-td-name{ font-size:14px; padding:12px 14px; white-space:nowrap; }
+  .alerg-td-dot .alerg-mark{ width:10px; height:10px; }
+
+  /* pista para girar el móvil (solo visible en vertical) */
+  .alerg-rotate-hint{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    font-family:var(--alerg-mono); text-transform:uppercase;
+    font-size:12px; letter-spacing:0.04em; color:var(--red);
+    margin:0 0 16px;
+  }
+  .alerg-rotate-hint svg{ width:16px; height:16px; }
+}
+
+/* VERTICAL (portrait) en móvil: tabla en miniatura, sin scroll, completa a la vista */
+@media (max-width:879px) and (orientation:portrait){
+  .alerg-rotate-hint{ display:flex; }
+  /* la tabla se escala para caber entera en el ancho disponible */
+  .alerg-mini{ overflow:hidden; }
+  .alerg-mini .alerg-table-wrap{ overflow:visible; }
+  .alerg-mini .alerg-table{
+    transform-origin:top left;
+    /* el factor de escala lo ajusta JS según el ancho real; fallback 0.5 */
+    transform:scale(var(--alerg-scale, 0.5));
+  }
+}
+
+/* HORIZONTAL (landscape) en móvil: tabla a tamaño cómodo, oculta la pista */
+@media (max-width:879px) and (orientation:landscape){
+  .alerg-rotate-hint{ display:none; }
+  .alerg-mini .alerg-table{ transform:none; }
 }

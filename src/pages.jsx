@@ -441,6 +441,41 @@ function Menu() {
   const toggleSelAlerg = (id) =>
     setSelAlerg((s) => s.includes(id) ? s.filter(x => x !== id) : [...s, id]);
 
+  // Miniatura de la tabla en móvil-vertical: escala la tabla para que quepa
+  // entera en el ancho disponible, y reserva la altura correcta (el transform
+  // no afecta al flujo, así que la calculamos a mano para no dejar hueco).
+  const miniRef = React.useRef(null);
+  React.useEffect(() => {
+    if (alergView !== "tabla") return;
+    const fit = () => {
+      const wrap = miniRef.current;
+      if (!wrap) return;
+      const table = wrap.querySelector(".alerg-table");
+      if (!table) return;
+      const portrait = window.matchMedia("(max-width:879px) and (orientation:portrait)").matches;
+      if (portrait) {
+        table.style.transform = "none";          // medir tamaño natural
+        const natW = table.offsetWidth;
+        const natH = table.offsetHeight;
+        const avail = wrap.clientWidth;
+        const scale = Math.min(1, avail / natW);
+        table.style.transform = "scale(" + scale + ")";
+        wrap.style.height = (natH * scale) + "px"; // reserva la altura escalada
+      } else {
+        table.style.transform = "none";
+        wrap.style.height = "";
+      }
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    window.addEventListener("orientationchange", fit);
+    return () => {
+      window.removeEventListener("resize", fit);
+      window.removeEventListener("orientationchange", fit);
+    };
+  }, [alergView, lang, data]);
+
+
 
   // Helper: devuelve el campo en el idioma activo. Si estamos en EN y existe
   // el campo "_en" con contenido, lo usa; si no, cae al español (fallback).
@@ -721,7 +756,7 @@ function Menu() {
               <div className="alerg-chips">
                 {ALERGENOS.map((a) =>
                   <button key={a.id} type="button"
-                    className={(selAlerg.includes(a.id) ? "on" : "") + (a.id === "frutos_cascara" ? " wide" : "")}
+                    className={selAlerg.includes(a.id) ? "on" : ""}
                     onClick={() => toggleSelAlerg(a.id)}>
                     {alLabel(a.id)}
                   </button>
@@ -762,31 +797,39 @@ function Menu() {
             <React.Fragment>
               <hr className="alerg-sep" />
               <h3 className="alerg-title">{t("Tabla de alérgenos", "Allergen table")}</h3>
-              <div className="alerg-table-wrap">
-                <table className="alerg-table">
-                  <colgroup>
-                    <col className="alerg-col-plato" />
-                    {ALERGENOS.map((a) => <col key={a.id} className="alerg-col-al" />)}
-                  </colgroup>
-                  <thead>
-                    <tr>
-                      <th className="alerg-namecol"></th>
-                      {ALERGENOS.map((a) =>
-                        <th key={a.id} className="alerg-al"><div className="alerg-vhead"><span>{a.id === "frutos_cascara" ? t("Fr. de cáscara", "Tree nuts") : alLabel(a.id)}</span></div></th>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {platosAlerg.map((p) =>
-                      <tr key={p.id}>
-                        <td className="alerg-td-name">{p.name}</td>
+              <div className="alerg-rotate-hint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 12a9 9 0 1 1-3-6.7" /><path d="M21 3v5h-5" />
+                </svg>
+                {t("Gira el móvil para ver la tabla", "Rotate your phone to view the table")}
+              </div>
+              <div className="alerg-mini" ref={miniRef}>
+                <div className="alerg-table-wrap">
+                  <table className="alerg-table">
+                    <colgroup>
+                      <col className="alerg-col-plato" />
+                      {ALERGENOS.map((a) => <col key={a.id} className="alerg-col-al" />)}
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th className="alerg-namecol"></th>
                         {ALERGENOS.map((a) =>
-                          <td key={a.id} className="alerg-td-dot">{p.alergenos.includes(a.id) ? <span className="alerg-mark"></span> : ""}</td>
+                          <th key={a.id} className="alerg-al"><div className="alerg-vhead"><span>{a.id === "frutos_cascara" ? t("Fr. de cáscara", "Tree nuts") : alLabel(a.id)}</span></div></th>
                         )}
                       </tr>
-                    )}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {platosAlerg.map((p) =>
+                        <tr key={p.id}>
+                          <td className="alerg-td-name">{p.name}</td>
+                          {ALERGENOS.map((a) =>
+                            <td key={a.id} className="alerg-td-dot">{p.alergenos.includes(a.id) ? <span className="alerg-mark"></span> : ""}</td>
+                          )}
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
               <p className="alerg-legal">{t(
                 "Nuestros platos se elaboran en una cocina donde se manipulan todos los alérgenos; pueden existir trazas. Ante cualquier alergia, consúltanos.",
