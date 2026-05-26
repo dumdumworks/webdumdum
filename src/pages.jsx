@@ -301,7 +301,7 @@ function Home() {
         </div>
         <div>
           <div className="tiny muted" style={{ marginBottom: 16 }}>/ {t("SISTEMA", "SYSTEM")}</div>
-          <h2>{t("Chamberí sin reserva.", "Chamberí, no booking.")}<br /><em style={{ color: 'var(--red)', fontStyle: 'normal', fontWeight: 'inherit' }}>{t("Con reserva en Tetuán.", "Tetuán, by booking.")}</em></h2>
+          <h2>{t("Chamberí sin reserva.", "Chamberí, no booking.")}<br /><em style={{ color: 'var(--red)', fontStyle: 'normal', fontWeight: 'inherit' }}>{t("Con reserva en Bernabéu.", "Bernabéu, by booking.")}</em></h2>
           <p className="body" style={{ marginTop: 24 }}>
             {t(
               "En Blasco de Garay llegas y a comer. En Infanta Mercedes puedes reservar online o probar suerte. En ambos vamos como balas.",
@@ -309,7 +309,7 @@ function Home() {
             )}
           </p>
           <div className="row gap-m" style={{ marginTop: 32 }}>
-            <a className="btn" href="/locales">{t("Reservar en Tetuán", "Book at Tetuán")} →</a>
+            <a className="btn" href="/locales">{t("Reservar en Bernabéu", "Book at Bernabéu")} →</a>
           </div>
         </div>
       </section>
@@ -334,7 +334,7 @@ function Home() {
         <a className="map-cell" href="/locales">
           <div className="n">[04]</div>
           <div className="t">{t("Locales", "Locations")} →</div>
-          <div className="d">CHAMBERÍ #015 + TETUÁN #020</div>
+          <div className="d">CHAMBERÍ #015 + BERNABÉU #020</div>
         </a>
         <a className="map-cell" href="/eventos">
           <div className="n">[05]</div>
@@ -377,13 +377,13 @@ function Home() {
         <div>
           <b>{t("Locales", "Locations")}</b>
           <a className="spec-link" href="/locales">
-            <strong style={{ fontWeight: 700 }}>Madrid</strong> {"→"} Chamberí | Tetuán
+            <strong style={{ fontWeight: 700 }}>Madrid</strong> {"→"} Chamberí | Bernabéu
           </a>
         </div>
         <div>
           <b>{t("Sistema", "System")}</b>
           <a className="spec-link" href="/locales">
-            {t("Chamberí: turnos | Tetuán: reservas", "Chamberí: walk-in | Tetuán: booking")}
+            {t("Chamberí: turnos | Bernabéu: reservas", "Chamberí: walk-in | Bernabéu: booking")}
           </a>
         </div>
         <div>
@@ -1039,7 +1039,7 @@ function Locales() {
         <div className="locale-card">
           <div>
             <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
-            <h2>Tetuán.</h2>
+            <h2>Bernabéu.</h2>
             <div className="tiny muted" style={{ marginTop: 8 }}>{t("SEGUNDO LOCAL · DESDE DOSMIL26", "SECOND SPOT · SINCE TWENTY26")}</div>
 
             <div className="info">
@@ -1061,7 +1061,7 @@ function Locales() {
 
           <div className="locale-map">
             <iframe
-              title="Mapa Tetuán"
+              title="Mapa Bernabéu"
               src="https://www.google.com/maps?q=DUM+DUM+Infanta+Mercedes+17+Madrid&output=embed"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -1099,7 +1099,7 @@ function Locales() {
         <div><b>{t("Interiorismo", "Interior design")}</b><a className="spec-link" href="https://nota-estudio.com/" target="_blank" rel="noreferrer">Nota Estudio</a></div>
         <div><b>{t("Identidad", "Identity")}</b>Yerai Gómez</div>
         <div><b>{t("Cocina", "Kitchen")}</b>Kéril Gómez · BCC</div>
-        <div><b>{t("Año apertura", "Opening year")}</b>{window.i18n.autoLocalize("CHAMBERÍ · DOSMIL24 | TETUÁN · DOSMIL26")}</div>
+        <div><b>{t("Año apertura", "Opening year")}</b>{window.i18n.autoLocalize("CHAMBERÍ · DOSMIL24 | BERNABÉU · DOSMIL26")}</div>
       </section>
     </div>);
 
@@ -1839,8 +1839,8 @@ function Eventos() {
         <div className="ev-hero-row" style={{ marginTop: 32, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 32 }}>
           <p className="body" style={{ fontSize: 18, flex: "1 1 420px", minWidth: 0, margin: 0 }}>
             {eb("hero_body", t(
-              <React.Fragment>En el corazón de Tetuán y diseñado por <strong>Nota Estudio</strong>. 55 m² diáfanos, cocina abierta, hasta 35 personas, equipo de sonido potente y luz pensada. Un sitio a la altura de tu evento.</React.Fragment>,
-              <React.Fragment>In the heart of Tetuán, designed by <strong>Nota Estudio</strong>. 55 m² open-plan, open kitchen, up to 35 people, a powerful sound system and considered lighting. A place worthy of your event.</React.Fragment>
+              <React.Fragment>A 7 minutos del Santiago Bernabéu y diseñado por <strong>Nota Estudio</strong>. 55 m² diáfanos, cocina abierta, hasta 35 personas, equipo de sonido potente y luz pensada. Un sitio a la altura de tu evento.</React.Fragment>,
+              <React.Fragment>A 7-minute walk from Santiago Bernabéu, designed by <strong>Nota Estudio</strong>. 55 m² open-plan, open kitchen, up to 35 people, a powerful sound system and considered lighting. A place worthy of your event.</React.Fragment>
             ))}
           </p>
           <a className="btn" href="/img/DUMDUM_DOSSIER_EVENTOS.pdf" target="_blank" rel="noreferrer" style={{ flex: "0 0 auto" }}>
@@ -2183,7 +2183,7 @@ function Contacto() {
         <div><b>Email</b><a className="spec-link" href="mailto:dumdum@dum-dum.es">dumdum@dum-dum.es</a></div>
         <div><b>Instagram</b><a className="spec-link" href="https://www.instagram.com/dumdum.plings" target="_blank" rel="noreferrer">@dumdum.plings</a></div>
         <div><b>{t("Teléfono", "Phone")}</b><a className="spec-link" href="tel:+34614746065">+34 614 746 065</a></div>
-        <div><b>{t("Reservas", "Booking")}</b><a className="spec-link" href="/locales">{t("Chamberí: turnos | Tetuán: reservas", "Chamberí: walk-in | Tetuán: booking")}</a></div>
+        <div><b>{t("Reservas", "Booking")}</b><a className="spec-link" href="/locales">{t("Chamberí: turnos | Bernabéu: reservas", "Chamberí: walk-in | Bernabéu: booking")}</a></div>
       </section>
     </div>);
 
