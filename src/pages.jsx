@@ -1637,12 +1637,17 @@ function Eventos() {
             t("Un sitio cool", "A cool place"),
             t("para eventos cool.", "for cool events."))}
         </h1>
-        <p className="body" style={{ marginTop: 32, fontSize: 18 }}>
-          {eb("hero_body", t(
-            <React.Fragment>En el corazón de Tetuán y diseñado por <strong>Nota Estudio</strong>. 55 m² diáfanos, cocina abierta, hasta 35 personas, equipo de sonido potente y luz pensada. Un sitio a la altura de tu evento.</React.Fragment>,
-            <React.Fragment>In the heart of Tetuán, designed by <strong>Nota Estudio</strong>. 55 m² open-plan, open kitchen, up to 35 people, a powerful sound system and considered lighting. A place worthy of your event.</React.Fragment>
-          ))}
-        </p>
+        <div className="ev-hero-row" style={{ marginTop: 32, display: "flex", flexWrap: "wrap", alignItems: "flex-start", gap: 32 }}>
+          <p className="body" style={{ fontSize: 18, flex: "1 1 420px", minWidth: 0, margin: 0 }}>
+            {eb("hero_body", t(
+              <React.Fragment>En el corazón de Tetuán y diseñado por <strong>Nota Estudio</strong>. 55 m² diáfanos, cocina abierta, hasta 35 personas, equipo de sonido potente y luz pensada. Un sitio a la altura de tu evento.</React.Fragment>,
+              <React.Fragment>In the heart of Tetuán, designed by <strong>Nota Estudio</strong>. 55 m² open-plan, open kitchen, up to 35 people, a powerful sound system and considered lighting. A place worthy of your event.</React.Fragment>
+            ))}
+          </p>
+          <a className="btn" href="/img/DUMDUM_DOSSIER_EVENTOS.pdf" target="_blank" rel="noreferrer" style={{ flex: "0 0 auto" }}>
+            {t("Descargar dossier", "Download dossier")} ↓
+          </a>
+        </div>
       </section>
 
       {/* ESPACIO */}
