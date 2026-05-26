@@ -766,13 +766,13 @@ function Menu() {
                 <table className="alerg-table">
                   <colgroup>
                     <col className="alerg-col-plato" />
-                    {ALERGENOS.map((a) => <col key={a.id} />)}
+                    {ALERGENOS.map((a) => <col key={a.id} className="alerg-col-al" />)}
                   </colgroup>
                   <thead>
                     <tr>
                       <th className="alerg-namecol"></th>
                       {ALERGENOS.map((a) =>
-                        <th key={a.id}><span className="alerg-vhead"><span>{alLabel(a.id)}</span></span></th>
+                        <th key={a.id} className="alerg-al"><div className="alerg-vhead"><span>{alLabel(a.id)}</span></div></th>
                       )}
                     </tr>
                   </thead>

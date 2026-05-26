@@ -602,31 +602,35 @@ img { display: block; max-width: 100%; }
   color:var(--red); opacity:0.55; margin:var(--alerg-gap) 0 0;
 }
 
-/* Tabla completa · cabeceras verticales rojas con texto crema */
+/* Tabla completa · rejilla de celdas, cabecera roja a sangre de celda */
 .alerg-table-wrap{ overflow-x:auto; margin-top:var(--alerg-gap); }
-.alerg-table{ border-collapse:separate; border-spacing:0; width:100%; table-layout:fixed; font-family:var(--alerg-mono); }
-.alerg-table col.alerg-col-plato{ width:200px; }
-.alerg-table thead th{ vertical-align:bottom; padding:0 0 14px; }
-.alerg-table thead th.alerg-namecol{ background:none; }
-/* píldora roja vertical de cabecera */
+.alerg-table{ border-collapse:collapse; width:100%; table-layout:fixed; font-family:var(--alerg-mono); }
+.alerg-table col.alerg-col-plato{ width:170px; }
+.alerg-table col.alerg-col-al{ width:34px; }
+/* rejilla completa: todas las celdas con borde fino (mismo grosor que la web) */
+.alerg-table th, .alerg-table td{ border:var(--alerg-stroke) solid var(--line-soft); padding:0; }
+.alerg-table thead th.alerg-namecol{ border:none; background:none; }
+/* cabecera: celda ENTERA roja; texto crema girado, alineado ABAJO con flex */
+.alerg-table thead th.alerg-al{ background:var(--red); height:135px; padding:0; }
 .alerg-vhead{
-  display:inline-flex; align-items:center; justify-content:center;
-  background:var(--red); color:var(--bg); border-radius:8px;
-  width:34px; min-height:140px; padding:14px 0; margin:0 auto;
+  display:flex; align-items:flex-end; justify-content:center;
+  height:100%; padding-bottom:12px; box-sizing:border-box;
 }
 .alerg-vhead span{
   writing-mode:vertical-rl; transform:rotate(180deg);
-  font-family:var(--alerg-mono); font-weight:600; font-size:14px;
-  letter-spacing:0.03em; text-transform:uppercase; white-space:nowrap;
+  color:var(--bg); font-family:var(--alerg-mono); font-weight:600;
+  font-size:12px; line-height:1; letter-spacing:0.02em;
+  text-transform:uppercase; white-space:nowrap;
 }
+/* nombre de plato: más pequeño para armonizar con los alérgenos */
 .alerg-td-name{
-  text-align:left; font-family:var(--font-display); font-size:17px; color:var(--red);
-  white-space:nowrap; padding:13px 16px 13px 0;
-  border-bottom:var(--alerg-stroke) solid var(--line-soft);
+  text-align:left; vertical-align:middle;
+  font-family:var(--font-display); font-size:13px; color:var(--red);
+  white-space:nowrap; padding:10px 12px;
 }
-.alerg-td-dot{ text-align:center; border-bottom:var(--alerg-stroke) solid var(--line-soft); }
-.alerg-td-dot .alerg-mark{ display:inline-block; width:12px; height:12px; border-radius:50%; background:var(--red); }
-.alerg-table tbody tr:last-child td{ border-bottom:none; }
+/* punto centrado H y V en su celda (centro coincide con el del nombre) */
+.alerg-td-dot{ text-align:center; vertical-align:middle; }
+.alerg-td-dot .alerg-mark{ display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--red); vertical-align:middle; }
 
 /* Móvil */
 @media (max-width:879px){
@@ -641,9 +645,9 @@ img { display: block; max-width: 100%; }
   .alerg-chips button.wide{ grid-column:span 2; }
   .alerg-chips button{ font-size:11px; padding:10px 8px; }
   .alerg-list-name{ font-size:15px; }
-  .alerg-table col.alerg-col-plato{ width:130px; }
-  .alerg-vhead{ width:28px; min-height:118px; }
-  .alerg-vhead span{ font-size:12px; }
-  .alerg-td-name{ font-size:13px; padding:10px 10px 10px 0; }
-  .alerg-td-dot .alerg-mark{ width:10px; height:10px; }
+  .alerg-table col.alerg-col-plato{ width:120px; }
+  .alerg-table col.alerg-col-al{ width:30px; }
+  .alerg-table thead th.alerg-al{ height:120px; }
+  .alerg-vhead span{ font-size:11px; }
+  .alerg-td-name{ font-size:12px; padding:9px 8px; }
 }
