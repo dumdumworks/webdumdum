@@ -414,20 +414,20 @@ function Menu() {
   // ── Alérgenos (los 14 de declaración obligatoria UE) ──
   // id = clave que se guarda en cada plato (campo "alergenos" en Sveltia).
   const ALERGENOS = [
-    { id: "gluten", es: "Gluten", en: "Gluten" },
     { id: "crustaceos", es: "Crustáceos", en: "Crustaceans" },
-    { id: "huevos", es: "Huevos", en: "Eggs" },
-    { id: "pescado", es: "Pescado", en: "Fish" },
-    { id: "cacahuetes", es: "Cacahuetes", en: "Peanuts" },
+    { id: "gluten", es: "Gluten", en: "Gluten" },
     { id: "soja", es: "Soja", en: "Soy" },
-    { id: "lacteos", es: "Lácteos", en: "Milk" },
-    { id: "frutos_cascara", es: "Frutos de cáscara", en: "Nuts" },
-    { id: "apio", es: "Apio", en: "Celery" },
-    { id: "mostaza", es: "Mostaza", en: "Mustard" },
     { id: "sesamo", es: "Sésamo", en: "Sesame" },
-    { id: "sulfitos", es: "Sulfitos", en: "Sulphites" },
     { id: "altramuces", es: "Altramuces", en: "Lupin" },
-    { id: "moluscos", es: "Moluscos", en: "Molluscs" }
+    { id: "moluscos", es: "Moluscos", en: "Molluscs" },
+    { id: "huevos", es: "Huevos", en: "Eggs" },
+    { id: "cacahuetes", es: "Cacahuetes", en: "Peanuts" },
+    { id: "lacteos", es: "Lácteos", en: "Milk" },
+    { id: "apio", es: "Apio", en: "Celery" },
+    { id: "pescado", es: "Pescado", en: "Fish" },
+    { id: "mostaza", es: "Mostaza", en: "Mustard" },
+    { id: "sulfitos", es: "Sulfitos", en: "Sulphites" },
+    { id: "frutos_cascara", es: "Frutos de cáscara", en: "Nuts" }
   ];
   const alLabel = (id) => {
     const a = ALERGENOS.find(x => x.id === id);
@@ -699,88 +699,95 @@ function Menu() {
         <div className="alerg-modal" onClick={(e) => e.stopPropagation()}>
           <button className="alerg-close" type="button" aria-label={t("Cerrar", "Close")} onClick={() => setAlergView(null)}>×</button>
 
-          {/* Pestañas */}
-          <div className="alerg-tabs">
-            <button type="button" className={alergView === "select" ? "on" : ""} onClick={() => setAlergView("select")}>
-              {t("Filtrar por mi alergia", "Filter by my allergy")}
-            </button>
-            <button type="button" className={alergView === "tabla" ? "on" : ""} onClick={() => setAlergView("tabla")}>
-              {t("Tabla completa", "Full table")}
-            </button>
-          </div>
-
-          {alergView === "select" &&
-          <div className="alerg-body">
-            <h3 className="alerg-title">{t("Marca lo que NO puedes tomar", "Select what you CAN'T have")}</h3>
-            <p className="alerg-intro">{t(
-              "Selecciona tus alérgenos y te diremos qué platos debes evitar.",
-              "Select your allergens and we'll tell you which dishes to avoid."
-            )}</p>
-            <div className="alerg-chips">
-              {ALERGENOS.map((a) =>
-                <button key={a.id} type="button"
-                  className={selAlerg.includes(a.id) ? "on" : ""}
-                  onClick={() => toggleSelAlerg(a.id)}>
-                  {alLabel(a.id)}
-                </button>
-              )}
+          <div className="alerg-scroll">
+            {/* Pestañas: dos botones separados */}
+            <div className="alerg-tabs">
+              <button type="button" className={alergView === "select" ? "on" : ""} onClick={() => setAlergView("select")}>
+                {t("Filtrar por mi alergia", "Filter by my allergy")}
+              </button>
+              <button type="button" className={alergView === "tabla" ? "on" : ""} onClick={() => setAlergView("tabla")}>
+                {t("Tabla completa", "Full table")}
+              </button>
             </div>
 
-            {selAlerg.length > 0 &&
-            <div className="alerg-result">
-              {platosNoPuede.length > 0 ?
-                <React.Fragment>
-                  <div className="alerg-result-head">{t("Estos son los productos que NO puedes tomar", "These are the dishes you CAN'T have")}</div>
-                  <ul className="alerg-list">
-                    {platosNoPuede.map((p) =>
-                      <li key={p.id}>
-                        <span className="alerg-list-name">{p.name}</span>
-                        <span className="alerg-list-sec">{p.seccion}</span>
-                      </li>
-                    )}
-                  </ul>
-                </React.Fragment> :
-                <div className="alerg-result-ok">{t(
-                  "¡Buenas noticias! Ningún plato de la carta contiene los alérgenos que has marcado.",
-                  "Good news! No dish on the menu contains the allergens you selected."
-                )}</div>
-              }
-            </div>}
+            {alergView === "select" &&
+            <React.Fragment>
+              <hr className="alerg-sep" />
+              <h3 className="alerg-title">{t("Marca lo que NO puedes tomar", "Select what you CAN'T have")}</h3>
+              <p className="alerg-intro">{t(
+                "Selecciona tus alérgenos y te diremos qué platos debes evitar.",
+                "Select your allergens and we'll tell you which dishes to avoid."
+              )}</p>
+              <div className="alerg-chips">
+                {ALERGENOS.map((a) =>
+                  <button key={a.id} type="button"
+                    className={(selAlerg.includes(a.id) ? "on" : "") + (a.id === "frutos_cascara" ? " wide" : "")}
+                    onClick={() => toggleSelAlerg(a.id)}>
+                    {alLabel(a.id)}
+                  </button>
+                )}
+              </div>
 
-            <p className="alerg-legal">{t(
-              "Nuestros platos se elaboran en una cocina donde se manipulan todos los alérgenos; pueden existir trazas. Ante cualquier alergia, consúltanos.",
-              "Our dishes are prepared in a kitchen that handles all allergens; traces may be present. For any allergy, please ask us."
-            )}</p>
-          </div>}
+              {selAlerg.length > 0 &&
+              <React.Fragment>
+                <hr className="alerg-sep" />
+                <div className="alerg-result">
+                  {platosNoPuede.length > 0 ?
+                    <React.Fragment>
+                      <div className="alerg-result-head">{t("Estos son los productos que NO puedes tomar", "These are the dishes you CAN'T have")}</div>
+                      <ul className="alerg-list">
+                        {platosNoPuede.map((p) =>
+                          <li key={p.id}>
+                            <span className="alerg-list-name">{p.name}</span>
+                            <span className="alerg-list-sec">{p.seccion}</span>
+                          </li>
+                        )}
+                      </ul>
+                    </React.Fragment> :
+                    <div className="alerg-result-ok">{t(
+                      "¡Buenas noticias! Ningún plato de la carta contiene los alérgenos que has marcado.",
+                      "Good news! No dish on the menu contains the allergens you selected."
+                    )}</div>
+                  }
+                </div>
+              </React.Fragment>}
 
-          {alergView === "tabla" &&
-          <div className="alerg-body">
-            <h3 className="alerg-title">{t("Tabla de alérgenos", "Allergen table")}</h3>
-            <div className="alerg-table-wrap">
-              <table className="alerg-table">
-                <thead>
-                  <tr>
-                    <th>{t("Plato", "Dish")}</th>
-                    {ALERGENOS.map((a) => <th key={a.id} className="alerg-th-rot"><span>{alLabel(a.id)}</span></th>)}
-                  </tr>
-                </thead>
-                <tbody>
-                  {platosAlerg.map((p) =>
-                    <tr key={p.id}>
-                      <td className="alerg-td-name">{p.name}</td>
-                      {ALERGENOS.map((a) =>
-                        <td key={a.id} className="alerg-td-dot">{p.alergenos.includes(a.id) ? "●" : ""}</td>
-                      )}
+              <p className="alerg-legal">{t(
+                "Nuestros platos se elaboran en una cocina donde se manipulan todos los alérgenos; pueden existir trazas. Ante cualquier alergia, consúltanos.",
+                "Our dishes are prepared in a kitchen that handles all allergens; traces may be present. For any allergy, please ask us."
+              )}</p>
+            </React.Fragment>}
+
+            {alergView === "tabla" &&
+            <React.Fragment>
+              <hr className="alerg-sep" />
+              <h3 className="alerg-title">{t("Tabla de alérgenos", "Allergen table")}</h3>
+              <div className="alerg-table-wrap">
+                <table className="alerg-table">
+                  <thead>
+                    <tr>
+                      <th>{t("Plato", "Dish")}</th>
+                      {ALERGENOS.map((a) => <th key={a.id} className="alerg-th-rot"><span>{alLabel(a.id)}</span></th>)}
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-            <p className="alerg-legal">{t(
-              "Nuestros platos se elaboran en una cocina donde se manipulan todos los alérgenos; pueden existir trazas. Ante cualquier alergia, consúltanos.",
-              "Our dishes are prepared in a kitchen that handles all allergens; traces may be present. For any allergy, please ask us."
-            )}</p>
-          </div>}
+                  </thead>
+                  <tbody>
+                    {platosAlerg.map((p) =>
+                      <tr key={p.id}>
+                        <td className="alerg-td-name">{p.name}</td>
+                        {ALERGENOS.map((a) =>
+                          <td key={a.id} className="alerg-td-dot">{p.alergenos.includes(a.id) ? "●" : ""}</td>
+                        )}
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              <p className="alerg-legal">{t(
+                "Nuestros platos se elaboran en una cocina donde se manipulan todos los alérgenos; pueden existir trazas. Ante cualquier alergia, consúltanos.",
+                "Our dishes are prepared in a kitchen that handles all allergens; traces may be present. For any allergy, please ask us."
+              )}</p>
+            </React.Fragment>}
+          </div>
         </div>
       </div>}
     </div>);

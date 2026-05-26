@@ -461,102 +461,136 @@ img { display: block; max-width: 100%; }
 }
 
 /* ───────────────────────────────────────────────────────────
-   Ventana de Alérgenos (modal en la carta)
+   Ventana de Alérgenos (modal en la carta) · diseño refinado
    ─────────────────────────────────────────────────────────── */
+:root{ --alerg-stroke: 1.5px; }  /* grosor único para botones y líneas */
+
 .alerg-overlay{
   position:fixed; inset:0; z-index:9999;
-  background:rgba(40,0,5,0.45);
+  background:rgba(40,0,5,0.40);
   display:flex; align-items:center; justify-content:center;
-  padding:24px;
+  padding:32px;
 }
 .alerg-modal{
   position:relative;
   background:var(--bg);
-  border:2px solid var(--red);
-  width:100%; max-width:760px;
+  border:var(--alerg-stroke) solid var(--red);
+  border-radius:28px;                 /* bordes redondeados y gráciles */
+  width:100%; max-width:880px;
   max-height:88vh; overflow:hidden;
   display:flex; flex-direction:column;
 }
 .alerg-close{
-  position:absolute; top:10px; right:14px;
+  position:absolute; top:26px; right:32px;
   background:none; border:none; cursor:pointer;
   font-family:var(--font-display); font-size:30px; line-height:1;
-  color:var(--red); padding:4px 8px;
+  color:var(--red); padding:4px 8px; z-index:2;
 }
+
+/* Cuerpo con scroll y aire generoso a los lados / arriba */
+.alerg-scroll{ overflow-y:auto; padding:48px 56px 40px; }
+
+/* Pestañas: dos botones SEPARADOS, en píldora */
 .alerg-tabs{
-  display:flex; border-bottom:2px solid var(--line);
-  flex:0 0 auto; padding-right:48px;
+  display:flex; gap:20px; margin:0 0 36px;
+  padding-right:40px;                 /* deja sitio a la X */
 }
 .alerg-tabs button{
-  flex:1; background:none; border:none; cursor:pointer;
+  flex:1; cursor:pointer;
+  background:none; border:var(--alerg-stroke) solid var(--red);
+  border-radius:999px;
   font-family:var(--font-mono); text-transform:uppercase;
-  font-size:13px; font-weight:600; letter-spacing:0.04em;
-  color:var(--red); padding:16px 12px;
-  border-right:2px solid var(--line);
+  font-size:15px; font-weight:600; letter-spacing:0.04em;
+  color:var(--red); padding:18px 16px;
+  transition:background .12s, color .12s;
 }
-.alerg-tabs button:last-child{ border-right:none; }
 .alerg-tabs button.on{ background:var(--red); color:var(--bg); }
-.alerg-body{
-  padding:24px 28px 28px;
-  overflow-y:auto;
-}
+
+/* Líneas separadoras: todas el mismo grosor */
+.alerg-sep{ height:var(--alerg-stroke); background:var(--red); border:none; margin:0; }
+
 .alerg-title{
   font-family:var(--font-display); font-weight:700;
-  font-size:26px; color:var(--red); margin:0 0 8px;
+  font-size:28px; color:var(--red); margin:32px 0 6px;
 }
 .alerg-intro{
   font-family:var(--font-mono); font-size:14px;
-  color:var(--red); margin:0 0 18px; opacity:0.85;
+  color:var(--red); margin:0 0 28px; opacity:0.85;
 }
-.alerg-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+
+/* Rejilla de alérgenos: 5 columnas iguales; "frutos de cáscara" ocupa 2 */
+.alerg-chips{
+  display:grid;
+  grid-template-columns:repeat(5, 1fr);
+  gap:16px;
+  margin:0 0 36px;
+}
 .alerg-chips button{
-  background:none; border:1.5px solid var(--red); cursor:pointer;
+  cursor:pointer;
+  background:none; border:var(--alerg-stroke) solid var(--red);
+  border-radius:999px;
   font-family:var(--font-mono); text-transform:uppercase;
-  font-size:12px; font-weight:600; letter-spacing:0.03em;
-  color:var(--red); padding:8px 14px; border-radius:999px;
+  font-size:13px; font-weight:600; letter-spacing:0.03em;
+  color:var(--red);
+  padding:15px 10px;
+  text-align:center;                  /* texto centrado en su botón */
   transition:background .12s, color .12s;
 }
 .alerg-chips button.on{ background:var(--red); color:var(--bg); }
-.alerg-result{ margin-top:22px; border-top:1px solid var(--line-soft); padding-top:18px; }
+.alerg-chips button.wide{ grid-column:span 2; }  /* doble ancho */
+
+/* Resultado: lista de platos a evitar */
+.alerg-result{ margin-top:4px; }
 .alerg-result-head{
-  font-family:var(--font-mono); text-transform:uppercase;
-  font-size:13px; font-weight:700; letter-spacing:0.04em;
-  color:var(--red); margin-bottom:12px;
+  font-family:var(--font-display); font-weight:700;
+  font-size:22px; color:var(--red); margin:0 0 18px;
 }
 .alerg-list{ list-style:none; margin:0; padding:0; }
 .alerg-list li{
   display:flex; justify-content:space-between; align-items:baseline;
-  gap:16px; padding:9px 0; border-bottom:1px solid var(--line-soft);
+  gap:16px; padding:14px 0; border-bottom:var(--alerg-stroke) solid var(--line-soft);
 }
-.alerg-list-name{ font-family:var(--font-display); font-size:17px; color:var(--red); }
+.alerg-list li:last-child{ border-bottom:none; }
+.alerg-list-name{ font-family:var(--font-display); font-size:18px; color:var(--red); }
 .alerg-list-sec{
   font-family:var(--font-mono); text-transform:uppercase;
-  font-size:11px; letter-spacing:0.04em; color:var(--red); opacity:0.6;
+  font-size:11px; letter-spacing:0.05em; color:var(--red); opacity:0.55;
   white-space:nowrap;
 }
 .alerg-result-ok{
   font-family:var(--font-mono); font-size:14px; color:var(--red);
-  background:var(--line-soft); padding:14px 16px; line-height:1.5;
+  background:var(--line-soft); border-radius:14px;
+  padding:18px 20px; line-height:1.5;
 }
 .alerg-legal{
-  font-family:var(--font-mono); font-size:11px; line-height:1.5;
-  color:var(--red); opacity:0.6; margin:22px 0 0;
+  font-family:var(--font-mono); font-size:11px; line-height:1.6;
+  color:var(--red); opacity:0.55; margin:32px 0 0;
 }
+
 /* Tabla completa */
 .alerg-table-wrap{ overflow-x:auto; }
 .alerg-table{ border-collapse:collapse; width:100%; font-family:var(--font-mono); }
-.alerg-table th, .alerg-table td{ border:1px solid var(--line-soft); padding:6px 8px; }
+.alerg-table th, .alerg-table td{ border:var(--alerg-stroke) solid var(--line-soft); padding:7px 9px; }
 .alerg-table thead th{ color:var(--red); font-size:10px; text-transform:uppercase; vertical-align:bottom; }
-.alerg-th-rot{ height:90px; white-space:nowrap; }
-.alerg-th-rot span{ writing-mode:vertical-rl; transform:rotate(180deg); display:inline-block; font-weight:600; }
+.alerg-th-rot{ height:96px; white-space:nowrap; }
+.alerg-th-rot span{ writing-mode:vertical-rl; transform:rotate(180deg); display:inline-block; font-weight:600; letter-spacing:0.03em; }
 .alerg-td-name{ font-family:var(--font-display); font-size:14px; color:var(--red); white-space:nowrap; }
 .alerg-td-dot{ text-align:center; color:var(--red); font-size:13px; }
 
+/* Móvil */
 @media (max-width:879px){
-  .alerg-body{ padding:18px 18px 22px; }
-  .alerg-title{ font-size:21px; }
-  .alerg-tabs button{ font-size:11px; padding:13px 8px; }
-  .alerg-list-name{ font-size:15px; }
+  .alerg-overlay{ padding:14px; }
+  .alerg-modal{ border-radius:20px; }
+  .alerg-scroll{ padding:30px 22px 26px; }
+  .alerg-close{ top:18px; right:20px; }
+  .alerg-tabs{ gap:12px; margin-bottom:26px; padding-right:34px; }
+  .alerg-tabs button{ font-size:12px; padding:14px 10px; }
+  .alerg-title{ font-size:22px; }
+  .alerg-chips{ grid-template-columns:repeat(2, 1fr); gap:10px; }
+  .alerg-chips button.wide{ grid-column:span 2; }
+  .alerg-chips button{ font-size:12px; padding:13px 8px; }
+  .alerg-result-head{ font-size:18px; }
+  .alerg-list-name{ font-size:16px; }
   .alerg-table td, .alerg-table th{ font-size:9px; padding:4px 5px; }
   .alerg-td-name{ font-size:11px; }
 }
