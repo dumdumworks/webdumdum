@@ -46,7 +46,7 @@
           "ingredients_en": "Chicken dumpling · Peanut sauce · Red onion Cilantro · Crunchy peanuts",
           "price": "8,95",
           "tags": [],
-          "available": false,
+          "available": true,
           "image": "img/dumplings/muay.jpg",
           "logo": ""
         },
