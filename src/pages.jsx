@@ -441,39 +441,27 @@ function Menu() {
   const toggleSelAlerg = (id) =>
     setSelAlerg((s) => s.includes(id) ? s.filter(x => x !== id) : [...s, id]);
 
-  // Miniatura de la tabla en móvil-vertical: escala la tabla para que quepa
-  // entera en el ancho disponible, y reserva la altura correcta (el transform
-  // no afecta al flujo, así que la calculamos a mano para no dejar hueco).
-  const miniRef = React.useRef(null);
+  // Degradado inferior: se oculta cuando el scroll llega al final (para no
+  // "mentir" indicando más contenido cuando ya no lo hay).
+  const scrollRef = React.useRef(null);
+  const [alergAtBottom, setAlergAtBottom] = React.useState(false);
   React.useEffect(() => {
-    if (alergView !== "tabla") return;
-    const fit = () => {
-      const wrap = miniRef.current;
-      if (!wrap) return;
-      const table = wrap.querySelector(".alerg-table");
-      if (!table) return;
-      const portrait = window.matchMedia("(max-width:879px) and (orientation:portrait)").matches;
-      if (portrait) {
-        table.style.transform = "none";          // medir tamaño natural
-        const natW = table.offsetWidth;
-        const natH = table.offsetHeight;
-        const avail = wrap.clientWidth;
-        const scale = Math.min(1, avail / natW);
-        table.style.transform = "scale(" + scale + ")";
-        wrap.style.height = (natH * scale) + "px"; // reserva la altura escalada
-      } else {
-        table.style.transform = "none";
-        wrap.style.height = "";
-      }
+    if (!alergView) return;
+    const el = scrollRef.current;
+    if (!el) return;
+    const check = () => {
+      const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 2;
+      const noScroll = el.scrollHeight <= el.clientHeight + 1;
+      setAlergAtBottom(atBottom || noScroll);
     };
-    fit();
-    window.addEventListener("resize", fit);
-    window.addEventListener("orientationchange", fit);
+    check();
+    el.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check);
     return () => {
-      window.removeEventListener("resize", fit);
-      window.removeEventListener("orientationchange", fit);
+      el.removeEventListener("scroll", check);
+      window.removeEventListener("resize", check);
     };
-  }, [alergView, lang, data]);
+  }, [alergView, selAlerg, lang, data]);
 
 
 
@@ -731,10 +719,12 @@ function Menu() {
       {/* ───────── Ventana de Alérgenos ───────── */}
       {alergView &&
       <div className="alerg-overlay" onClick={() => setAlergView(null)}>
-        <div className="alerg-modal" onClick={(e) => e.stopPropagation()}>
-          <button className="alerg-close" type="button" aria-label={t("Cerrar", "Close")} onClick={() => setAlergView(null)}>×</button>
+        <div className={"alerg-modal" + (alergAtBottom ? " at-bottom" : "")} onClick={(e) => e.stopPropagation()}>
+          <div className="alerg-closebar">
+            <button className="alerg-close" type="button" aria-label={t("Cerrar", "Close")} onClick={() => setAlergView(null)}>×</button>
+          </div>
 
-          <div className="alerg-scroll">
+          <div className="alerg-scroll" ref={scrollRef}>
             {/* Pestañas: dos botones separados */}
             <div className="alerg-tabs">
               <button type="button" className={alergView === "select" ? "on" : ""} onClick={() => setAlergView("select")}>
@@ -797,13 +787,19 @@ function Menu() {
             <React.Fragment>
               <hr className="alerg-sep" />
               <h3 className="alerg-title">{t("Tabla de alérgenos", "Allergen table")}</h3>
-              <div className="alerg-rotate-hint">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M21 12a9 9 0 1 1-3-6.7" /><path d="M21 3v5h-5" />
-                </svg>
-                {t("Gira el móvil para ver la tabla", "Rotate your phone to view the table")}
+
+              {/* VERTICAL: CTA limpio para girar el móvil (protagonista) */}
+              <div className="alerg-rotate-cta">
+                <div className="alerg-rotate-ico">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M21 12a9 9 0 1 1-3-6.7" /><path d="M21 3v5h-5" />
+                  </svg>
+                </div>
+                <div className="alerg-rotate-txt">{t("Gira el móvil para ver la tabla completa", "Rotate your phone to view the table")}</div>
               </div>
-              <div className="alerg-mini" ref={miniRef}>
+
+              {/* HORIZONTAL (y desktop): la tabla completa */}
+              <div className="alerg-table-full">
                 <div className="alerg-table-wrap">
                   <table className="alerg-table">
                     <colgroup>
