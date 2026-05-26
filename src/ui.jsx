@@ -273,7 +273,7 @@ function TopBar({ route }) {
 
       {/* Derecha (desktop): estado abierto/cerrado + Reservar + idioma */}
       <div className="right">
-        <span className="row gap-s">
+        <span className="row gap-s topbar-status">
           {est.abierto ?
           <React.Fragment><span className="dot dot-live" /> {t("Abierto hasta las", "Open until")} {est.hora}h</React.Fragment> :
           <React.Fragment><span className="dot dot-closed" /> {t("Cerrado. Nos vemos a las", "Closed. See you at")} {est.hora}h</React.Fragment>}

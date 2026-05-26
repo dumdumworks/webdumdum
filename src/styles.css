@@ -36,7 +36,7 @@ body {
    el alto de la pantalla y empuja su último bloque (el spec-foot con
    email/instagram/etc.) hasta abajo, pegándolo al footer rojo sin dejar
    hueco crema. El móvil mantiene su disposición propia (no se toca). */
-@media (min-width: 880px) {
+@media (min-width: 881px) {
   #root {
     min-height: 100vh;
     display: flex;
@@ -131,6 +131,13 @@ img { display: block; max-width: 100%; }
   transform: translateX(-50%);
 }
 .topbar .nav-mobile { display: none; }
+/* En anchos intermedios (entre el modo móvil y desktop amplio), el nav está
+   centrado en posición absoluta y el indicador de estado de la derecha se le
+   solaparía. Lo ocultamos en ese rango; reaparece en pantallas anchas donde
+   hay sitio de sobra. El botón Reservar y el idioma se mantienen siempre. */
+@media (max-width: 1100px) {
+  .topbar-status { display: none !important; }
+}
 /* Bloque derecho: estado abierto/cerrado + botón Reservar */
 .topbar .right { display: flex; gap: 16px; align-items: center; }
 /* Botón Reservar destacado en el header (rojo pleno) */
