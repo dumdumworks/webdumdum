@@ -3,6 +3,24 @@
 // ─────────────────────────────────────────────────────────────
 
 const TAG_OPTIONS = ["NEW", "VEG", "PICANTE", "DEL MES", "TOP"];
+
+// Los 14 alérgenos de declaración obligatoria (UE). id = clave estable, label = texto visible.
+const ALERGENO_OPTIONS = [
+  { id: "gluten", label: "Gluten" },
+  { id: "crustaceos", label: "Crustáceos" },
+  { id: "huevos", label: "Huevos" },
+  { id: "pescado", label: "Pescado" },
+  { id: "cacahuetes", label: "Cacahuetes" },
+  { id: "soja", label: "Soja" },
+  { id: "lacteos", label: "Lácteos" },
+  { id: "frutos_cascara", label: "Frutos de cáscara" },
+  { id: "apio", label: "Apio" },
+  { id: "mostaza", label: "Mostaza" },
+  { id: "sesamo", label: "Sésamo" },
+  { id: "sulfitos", label: "Sulfitos" },
+  { id: "altramuces", label: "Altramuces" },
+  { id: "moluscos", label: "Moluscos" }
+];
 const PRESET_OPTIONS = [
   { id: null, label: "Sin logo" },
   { id: "kpop", label: "K-POP" },
@@ -104,7 +122,7 @@ function AdminApp({ onLogout }) {
     sec.items.push({
       id: newId, n: maxN + 1, name: "Nuevo plato",
       tagline: "", ingredients: "", price: "0,00",
-      tags: [], logo: null
+      tags: [], alergenos: [], logo: null
     });
     setData(d);
     setSelectedId(newId);
@@ -974,6 +992,12 @@ function DishEditor({ section, item, onChange, onMove, onDelete }) {
     set("tags", next);
   };
 
+  const toggleAlergeno = (a) => {
+    const al = item.alergenos || [];
+    const next = al.includes(a) ? al.filter(x => x !== a) : [...al, a];
+    set("alergenos", next);
+  };
+
   const uploadLogo = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -1034,6 +1058,19 @@ function DishEditor({ section, item, onChange, onMove, onDelete }) {
               onClick={() => toggleTag(t)}
               className={item.tags?.includes(t) ? "on" : ""}>
               {t}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="field">
+        <label>Alérgenos</label>
+        <div className="tag-picker">
+          {ALERGENO_OPTIONS.map(a => (
+            <button key={a.id} type="button"
+              onClick={() => toggleAlergeno(a.id)}
+              className={item.alergenos?.includes(a.id) ? "on" : ""}>
+              {a.label}
             </button>
           ))}
         </div>
