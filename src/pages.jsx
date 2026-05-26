@@ -772,7 +772,7 @@ function Menu() {
                     <tr>
                       <th className="alerg-namecol"></th>
                       {ALERGENOS.map((a) =>
-                        <th key={a.id} className="alerg-al"><div className="alerg-vhead"><span>{alLabel(a.id)}</span></div></th>
+                        <th key={a.id} className="alerg-al"><div className="alerg-vhead"><span>{a.id === "frutos_cascara" ? t("Fr. de cáscara", "Tree nuts") : alLabel(a.id)}</span></div></th>
                       )}
                     </tr>
                   </thead>

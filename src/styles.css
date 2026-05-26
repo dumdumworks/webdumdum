@@ -610,8 +610,9 @@ img { display: block; max-width: 100%; }
 /* rejilla completa: todas las celdas con borde fino (mismo grosor que la web) */
 .alerg-table th, .alerg-table td{ border:var(--alerg-stroke) solid var(--line-soft); padding:0; }
 .alerg-table thead th.alerg-namecol{ border:none; background:none; }
-/* cabecera: celda ENTERA roja; texto crema girado, alineado ABAJO con flex */
-.alerg-table thead th.alerg-al{ background:var(--red); height:135px; padding:0; }
+/* cabecera: celda ENTERA roja; texto crema girado, alineado ABAJO con flex.
+   Separadores entre cabeceras de alérgenos en CREMA, visibles sobre el rojo. */
+.alerg-table thead th.alerg-al{ background:var(--red); height:135px; padding:0; border-color:var(--bg); }
 .alerg-vhead{
   display:flex; align-items:flex-end; justify-content:center;
   height:100%; padding-bottom:12px; box-sizing:border-box;
