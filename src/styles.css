@@ -48,6 +48,9 @@ body {
      spec-foot conserva su línea separadora y posición. */
   #root > main > [data-screen-label="contacto"] { flex: 1 0 auto; display: flex; flex-direction: column; }
   #root > main > [data-screen-label="contacto"] > .spec-foot { margin-top: auto; border-top: none; }
+  /* La sección .contact tiene una línea inferior que, al bajar el spec-foot,
+     quedaba flotando en el hueco. La quitamos en Contacto desktop. */
+  #root > main > [data-screen-label="contacto"] > .contact { border-bottom: none; }
 }
 
 a { color: inherit; text-decoration: none; }
