@@ -49,11 +49,12 @@
   white-space: nowrap;
 }
 
+
 .hero-logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(130px, 15vw, 230px);
+  width: 230px;
 }
 .hero-logo img {
   width: 100%;
