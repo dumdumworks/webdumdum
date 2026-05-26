@@ -47,9 +47,10 @@ body {
      quedaba aire). Las demás páginas (home, locales...) no se tocan: su
      spec-foot conserva su línea separadora y posición. */
   #root > main > [data-screen-label="contacto"] { flex: 1 0 auto; display: flex; flex-direction: column; }
-  #root > main > [data-screen-label="contacto"] > .spec-foot { margin-top: auto; border-top: none; }
+  #root > main > [data-screen-label="contacto"] > .spec-foot { margin-top: auto; }
   /* La sección .contact tiene una línea inferior que, al bajar el spec-foot,
-     quedaba flotando en el hueco. La quitamos en Contacto desktop. */
+     quedaba flotando en el hueco. La quitamos: el cierre superior de las
+     celdas lo da el border-top del propio spec-foot, pegado a ellas. */
   #root > main > [data-screen-label="contacto"] > .contact { border-bottom: none; }
 }
 

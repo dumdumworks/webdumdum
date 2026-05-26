@@ -1974,8 +1974,11 @@
   .feature-strip, .about-body, .locales, .contact { grid-template-columns: 1fr; }
   .feature-strip > div:first-child, .about-body > div:first-child, .locale-card { border-right: none; border-bottom: 1px solid var(--line); }
   .spec-foot { grid-template-columns: 1fr 1fr; }
+  /* Rejilla 2x2 con las 4 casillas diferenciadas: línea vertical entre las
+     dos columnas y línea horizontal entre las dos filas. */
+  .spec-foot > div { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
   .spec-foot > div:nth-child(2n) { border-right: none; }
-  .foot-grid { grid-template-columns: 1fr 1fr; }
+  .spec-foot > div:nth-last-child(-n+2) { border-bottom: none; }
   .admin-grid { grid-template-columns: 1fr; }
   .admin-side { border-right: none; border-bottom: 1px solid var(--line); max-height: 40vh; }
 }
@@ -1983,11 +1986,11 @@
 @media (max-width: 520px) {
   .map-cell.span-6, .map-cell.span-4, .map-cell.span-3 { grid-column: span 1; }
   .row2, .row3 { grid-template-columns: 1fr; }
-  /* Info inferior (Año/Locales/Carta/Sistema) en 2 columnas simétricas */
+  /* Info inferior (Año/Locales/Carta/Sistema): rejilla 2x2 con 4 casillas */
   .spec-foot { grid-template-columns: 1fr 1fr; }
-  .spec-foot > div { border-bottom: 1px solid var(--line); }
+  .spec-foot > div { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
   .spec-foot > div:nth-child(2n) { border-right: none; }
-  .spec-foot > div:nth-child(2n+1) { border-right: 1px solid var(--line); }
+  .spec-foot > div:nth-last-child(-n+2) { border-bottom: none; }
   /* Footer en 2 columnas también en móviles pequeños (no tan largo) */
   .foot-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
 }
