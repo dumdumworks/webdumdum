@@ -2,6 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <!-- El index NUNCA se cachea: así siempre lee la versión actual de CSS/JS
+       (el versionado ?v=... vive aquí; si este archivo se cacheara, nunca se
+       verían los cambios nuevos). -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <base href="/" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>DUM DUM&#8482; &#8212; Dumplings &amp; Desobediencia</title>
@@ -97,7 +103,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://use.typekit.net/avd6wfq.css">
-  <link rel="stylesheet" href="src/styles.css?v=20260527h" />
+  <link rel="stylesheet" href="src/styles.css?v=20260527i" />
   <script src="image-slot.js"></script>
 </head>
 <body>
@@ -112,7 +118,7 @@
   <script>
     window.__bootDumDum = function () {
       var files = ["src/data.jsx", "src/ui.jsx", "src/pages.jsx", "src/admin.jsx", "src/app.jsx"];
-      var ASSET_VER = "20260527h";
+      var ASSET_VER = "20260527i";
       files.forEach(function (src) {
         var s = document.createElement("script");
         s.type = "text/babel";
