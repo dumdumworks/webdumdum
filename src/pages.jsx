@@ -1817,12 +1817,14 @@ function EventosForm() {
       <div className="ev-form-err">{errMsg}</div>
       }
 
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, marginTop: 12 }}>
+      <div className="ev-form-actions">
         <button type="submit" className="btn red" disabled={state === "sending"}>
-          {state === "sending" ? t("Enviando…", "Sending…") : (t("Enviar solicitud", "Send request") + " →")}
+          {state === "sending"
+            ? <span className="btn-label">{t("Enviando…", "Sending…")}</span>
+            : <React.Fragment><span className="btn-label">{t("Enviar solicitud", "Send request")}</span><span className="btn-arrow">→</span></React.Fragment>}
         </button>
         <a className="btn" href="/img/DUMDUM_DOSSIER_EVENTOS.pdf" target="_blank" rel="noreferrer">
-          {t("Descargar dossier", "Download dossier")} ↓
+          <span className="btn-label">{t("Descargar dossier", "Download dossier")}</span><span className="btn-arrow">↓</span>
         </a>
       </div>
     </form>);

@@ -301,6 +301,16 @@ img { display: block; max-width: 100%; }
 .btn.red { background: var(--red); color: #fff; border-color: var(--red); }
 .btn.red:hover { background: var(--ink); border-color: var(--ink); }
 
+/* Acciones del form de eventos: en fila (desktop), apiladas en móvil al
+   ancho del botón más largo ("Enviar solicitud"). Texto a la izquierda y
+   flecha pegada a la derecha vía space-between. */
+.ev-form-actions{ display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:12px; }
+.btn-arrow{ margin-left:auto; padding-left:10px; }
+@media (max-width:880px){
+  .ev-form-actions{ flex-direction:column; align-items:stretch; width:fit-content; max-width:100%; }
+  .ev-form-actions .btn{ width:100%; justify-content:space-between; }
+}
+
 .btn-inline {
   display: inline-flex;
   align-items: center;
