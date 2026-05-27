@@ -746,7 +746,7 @@ function Menu() {
               <div className="alerg-chips">
                 {ALERGENOS.map((a) =>
                   <button key={a.id} type="button"
-                    className={selAlerg.includes(a.id) ? "on" : ""}
+                    className={(selAlerg.includes(a.id) ? "on" : "") + (a.id === "frutos_cascara" ? " nowrap-chip" : "")}
                     onClick={() => toggleSelAlerg(a.id)}>
                     {alLabel(a.id)}
                   </button>

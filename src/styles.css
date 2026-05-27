@@ -584,6 +584,12 @@ img { display: block; max-width: 100%; }
   transition:background .12s, color .12s;
 }
 .alerg-chips button.on{ background:var(--red); color:var(--bg); }
+/* solo "Frutos de cáscara": que nunca parta en dos líneas */
+.alerg-chips button.nowrap-chip{ white-space:nowrap; }
+/* en desktop su columna es estrecha (1/5): apretamos los lados solo de ese chip */
+@media (min-width:881px){
+  .alerg-chips button.nowrap-chip{ padding-left:4px; padding-right:4px; }
+}
 
 /* Resultado */
 .alerg-result{ margin:0; }
