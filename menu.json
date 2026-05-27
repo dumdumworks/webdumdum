@@ -607,9 +607,7 @@
           "ingredients_en": "",
           "price": "3,00",
           "tags": [],
-          "alergenos": [
-            "sulfitos"
-          ],
+          "alergenos": [],
           "available": true,
           "featured": false,
           "image": "",
