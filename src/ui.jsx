@@ -223,13 +223,14 @@ function LangToggle() {
 function TopBar({ route }) {
   const lang = useLang();
   const UBER_URL = "https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY";
+  const TAKEAWAY_URL = "https://dum-dumplings.square.site/#JDS6K2S5T4MZDWAP3H4JT2QP";
   const SPOTIFY_URL = "https://open.spotify.com/playlist/75oqGRFz3CXErzrfBQTuVd?si=62f669c4e6674ff1";
 
   // Menú móvil (hamburguesa): los 9 destinos de la rejilla de la home.
   const mobileLinks = [
   { p: "/menu", label: t("La carta", "Menu") },
   { href: UBER_URL, label: "Uber Eats", ext: true },
-  { href: UBER_URL, label: "Take Away", ext: true },
+  { href: TAKEAWAY_URL, label: "Take Away", ext: true },
   { p: "/locales", label: t("Locales", "Locations") },
   { p: "/eventos", label: t("Eventos", "Events") },
   { p: "/contacto", label: t("Contacto", "Contact") },
@@ -257,7 +258,42 @@ function TopBar({ route }) {
   // Al cambiar de página, cerramos el menú
   React.useEffect(() => { setMenuOpen(false); }, [route]);
 
+  // Modal "Pide ya" (Take Away | Uber Eats)
+  const [pideOpen, setPideOpen] = React.useState(false);
+  React.useEffect(() => { setPideOpen(false); }, [route]);
+  // En la página de menú (a la que se llega por el QR de las mesas) ocultamos
+  // "Pide ya" SOLO en móvil, para no inducir a pedir online estando en mesa.
+  const enMenu = route === "/menu";
+
+  // FAB "Pide ya" (solo móvil): arrastrable. Posición null = esquina inferior
+  // derecha por defecto; al arrastrar se guarda {x,y}. Distingue tap de drag.
+  const [fabPos, setFabPos] = React.useState(null);
+  const fabRef = React.useRef(null);
+  const fabDrag = React.useRef({ active: false, moved: false, dx: 0, dy: 0, sx: 0, sy: 0 });
+  const onFabDown = (e) => {
+    const el = fabRef.current; if (!el) return;
+    const r = el.getBoundingClientRect();
+    fabDrag.current = { active: true, moved: false, dx: e.clientX - r.left, dy: e.clientY - r.top, sx: e.clientX, sy: e.clientY };
+    el.setPointerCapture(e.pointerId);
+  };
+  const onFabMove = (e) => {
+    const d = fabDrag.current; if (!d.active) return;
+    // solo cuenta como arrastre si se mueve más de 6px (un tap normal no llega)
+    if (Math.abs(e.clientX - d.sx) > 6 || Math.abs(e.clientY - d.sy) > 6) d.moved = true;
+    if (!d.moved) return;
+    const nx = e.clientX - d.dx, ny = e.clientY - d.dy;
+    const el = fabRef.current; const w = el ? el.offsetWidth : 56; const h = el ? el.offsetHeight : 56;
+    const maxX = window.innerWidth - w - 8, maxY = window.innerHeight - h - 8;
+    setFabPos({ x: Math.max(8, Math.min(nx, maxX)), y: Math.max(8, Math.min(ny, maxY)) });
+  };
+  const onFabUp = (e) => {
+    const d = fabDrag.current; d.active = false;
+    const el = fabRef.current; if (el) el.releasePointerCapture(e.pointerId);
+    if (!d.moved) setPideOpen(true); // fue un tap, no un arrastre → abrir modal
+  };
+
   return (
+    <React.Fragment>
     <header className={`topbar ${menuOpen ? "menu-open" : ""}`} data-screen-label="top-bar">
       <a href="/" className="brand">DUM DUM<span className="brand-tm">™</span></a>
 
@@ -278,6 +314,7 @@ function TopBar({ route }) {
           <React.Fragment><span className="dot dot-closed" /> {t("Cerrado. Nos vemos a las", "Closed. See you at")} {est.hora}h</React.Fragment>}
         </span>
         <a href="/locales" className="topbar-reservar">{t("Reservar", "Book")} →</a>
+        <button type="button" className="topbar-pide" onClick={() => setPideOpen(true)}>{t("Pide ya!", "Order now!")}</button>
         <LangToggle />
       </div>
 
@@ -302,7 +339,43 @@ function TopBar({ route }) {
           <span /><span /><span />
         </button>
       </div>
-    </header>);
+    </header>
+
+    {!enMenu &&
+    <button
+      ref={fabRef}
+      type="button"
+      className="pide-fab"
+      onPointerDown={onFabDown}
+      onPointerMove={onFabMove}
+      onPointerUp={onFabUp}
+      style={fabPos ? { left: fabPos.x + "px", top: fabPos.y + "px", right: "auto", bottom: "auto" } : undefined}
+      aria-label={t("Pide ya", "Order now")}>
+      {t("Pide ya!", "Order now!")}
+    </button>
+    }
+
+    {pideOpen &&
+    <div className="pide-overlay" onClick={() => setPideOpen(false)}>
+      <div className="pide-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="pide-closebar">
+          <button className="pide-close" aria-label="Cerrar" onClick={() => setPideOpen(false)}>×</button>
+        </div>
+        <h3 className="pide-title">{t("¿Cómo quieres pedir?", "How would you like to order?")}</h3>
+        <div className="pide-options">
+          <a className="pide-card" href={TAKEAWAY_URL} target="_blank" rel="noreferrer">
+            <span className="pide-card-label">Take Away</span>
+            <span className="pide-card-sub">{t("Recoge en el local", "Pick up at the spot")}</span>
+          </a>
+          <a className="pide-card" href={UBER_URL} target="_blank" rel="noreferrer">
+            <span className="pide-card-label">Uber Eats</span>
+            <span className="pide-card-sub">{t("A domicilio", "Delivery")}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    }
+    </React.Fragment>);
 
 }
 

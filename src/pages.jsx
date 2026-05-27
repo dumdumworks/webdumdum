@@ -214,6 +214,7 @@ function Home() {
   React.useEffect(() => () => { if (toastTimer.current) clearTimeout(toastTimer.current); }, []);
 
   const UBER_URL = "https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY";
+  const TAKEAWAY_URL = "https://dum-dumplings.square.site/#JDS6K2S5T4MZDWAP3H4JT2QP";
 
   return (
     <div data-screen-label="home">
@@ -241,12 +242,13 @@ function Home() {
           <div className="hero-actions hero-actions-4">
             <a className="btn" href="/locales">{t("Reservar", "Book")} →</a>
             <a className="btn" href="/locales">{t("Llegar", "Directions")} →</a>
-            <button
-              type="button"
+            <a
               className="btn"
-              onClick={() => showToast("uber")}>
+              href={TAKEAWAY_URL}
+              target="_blank"
+              rel="noreferrer">
               Take Away →
-            </button>
+            </a>
             <a className="btn red" href={UBER_URL} target="_blank" rel="noreferrer">Uber Eats →</a>
           </div>
           <button
@@ -326,10 +328,10 @@ function Home() {
           <div className="t">Uber Eats →</div>
           <div className="d">{t("NI TE MUEVAS", "DON'T EVEN MOVE")}</div>
         </a>
-        <a className="map-cell" href="#" onClick={(e) => { e.preventDefault(); showToast("uber"); }}>
+        <a className="map-cell" href={TAKEAWAY_URL} target="_blank" rel="noreferrer">
           <div className="n">[03]</div>
           <div className="t">Take Away →</div>
-          <div className="d">{t("PRÓXIMAMENTE", "COMING SOON")}</div>
+          <div className="d">{t("PIDE ONLINE", "ORDER ONLINE")}</div>
         </a>
         <a className="map-cell" href="/locales">
           <div className="n">[04]</div>
