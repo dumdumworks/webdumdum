@@ -1069,6 +1069,14 @@ function EstadoLocal({ tramos }) {
 function Locales() {
   const lang = useLang();
   const [resvSoon, setResvSoon] = React.useState(false);
+  const resvBtnRef = React.useRef(null);
+  const [resvWidth, setResvWidth] = React.useState(null);
+  const onResvClick = (e) => {
+    e.preventDefault();
+    // fijar el ancho actual ANTES de cambiar el texto, para que no salte
+    if (resvBtnRef.current) setResvWidth(resvBtnRef.current.offsetWidth);
+    setResvSoon(true);
+  };
   return (
     <div data-screen-label="locales">
       <section style={{ padding: '14vh var(--gutter) 6vh', borderBottom: '1px solid var(--line)' }}>
@@ -1088,15 +1096,16 @@ function Locales() {
               <b>{t("Metro", "Metro")}</b><div>Tetuán · Estrecho</div>
               <b>{t("Horario", "Hours")}</b><div>13.00–15.39 / 20.00–22.39</div>
               <b>{t("Aforo", "Capacity")}</b><div>{t("~40 comensales", "~40 seats")}</div>
-              <b>{t("Reserva", "Booking")}</b><div style={{ color: '#1f8a5b', fontWeight: 500 }}>{t("Sí · online", "Yes · online")} / +34 614 746 065</div>
+              <b>{t("Reserva", "Booking")}</b><div style={{ color: '#1f8a5b', fontWeight: 500 }}>{t("Sí · online", "Yes · online")} / <svg className="tel-ico" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ display: 'inline-block', verticalAlign: '-1px', marginRight: '3px' }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg>+34 614 746 065</div>
             </div>
 
             <a
-              className="btn red"
-              href="#"
-              onClick={(e) => { e.preventDefault(); setResvSoon(true); }}
-              style={{ marginTop: 24 }}>
-              {resvSoon ? t("Próximamente", "Coming soon") : (t("Reservar en Bernabéu", "Book at Bernabéu") + " →")}
+              ref={resvBtnRef}
+              className={resvSoon ? "btn btn-call" : "btn red"}
+              href={resvSoon ? "tel:+34614746065" : "#"}
+              onClick={resvSoon ? undefined : onResvClick}
+              style={{ marginTop: 24, ...(resvWidth ? { width: resvWidth + "px", justifyContent: "center" } : {}) }}>
+              {resvSoon ? t("Llámanos · 614 746 065", "Call us · 614 746 065") : (t("Reservar en Bernabéu", "Book at Bernabéu") + " →")}
             </a>
           </div>
 

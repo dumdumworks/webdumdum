@@ -300,12 +300,15 @@ img { display: block; max-width: 100%; }
 .btn:hover { background: var(--ink); color: var(--bg); }
 .btn.red { background: var(--red); color: #fff; border-color: var(--red); }
 .btn.red:hover { background: var(--ink); border-color: var(--ink); }
+/* Botón "Llámanos": verde (mismo verde que el texto de reserva de la web) */
+.btn-call{ background:#1f8a5b; color:#fff; border-color:#1f8a5b; }
+.btn-call:hover{ background:#187049; border-color:#187049; }
 
 /* Acciones del form de eventos: en fila (desktop), apiladas en móvil. Ambos
    botones miden lo mismo (el ancho natural del más largo). Texto a la
    izquierda, flecha a la derecha, con el mínimo aire entre medias. */
 .ev-form-actions{ display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:12px; }
-.btn-arrow{ padding-left:14px; }
+.btn-arrow{ margin-left:-4px; }
 @media (max-width:880px){
   .ev-form-actions{ flex-direction:column; align-items:stretch; width:fit-content; max-width:100%; }
   .ev-form-actions .btn{ width:100%; justify-content:space-between; }
