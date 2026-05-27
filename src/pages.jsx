@@ -733,7 +733,19 @@ function Menu() {
           <button
             className="btn menu-foot-btn menu-top-btn"
             type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+            onClick={() => {
+              const start = window.scrollY;
+              const duration = 900;
+              const t0 = performance.now();
+              // mismo easeOutCubic que el resto de scrolls de la web
+              const ease = (t) => 1 - Math.pow(1 - t, 3);
+              const step = (now) => {
+                const p = Math.min((now - t0) / duration, 1);
+                window.scrollTo(0, start - start * ease(p));
+                if (p < 1) requestAnimationFrame(step);
+              };
+              requestAnimationFrame(step);
+            }}>
             {t("Volver arriba", "Back to top")} <span className="menu-top-arrow" aria-hidden="true">↑</span>
           </button>
           }
