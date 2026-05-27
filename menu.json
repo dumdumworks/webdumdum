@@ -25,7 +25,8 @@
           "alergenos": [
             "huevos",
             "moluscos",
-            "sulfitos"
+            "crustaceos",
+            "pescado"
           ],
           "available": true,
           "image": "/img/dumplings/latindilla.jpg",
@@ -55,7 +56,7 @@
             "gluten",
             "cacahuetes",
             "frutos_cascara",
-            "lacteos",
+            "sesamo",
             "sesamo"
           ],
           "available": true,
@@ -198,7 +199,9 @@
             "gluten",
             "crustaceos",
             "huevos",
-            "sulfitos"
+            "sulfitos",
+            "pescado",
+            "moluscos"
           ],
           "available": true,
           "image": "img/dumplings/gamba.jpg",
