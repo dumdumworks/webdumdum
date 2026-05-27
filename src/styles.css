@@ -120,15 +120,12 @@ img { display: block; max-width: 100%; }
 .topbar a:hover::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: var(--red);
 }
-/* Nav DESKTOP centrado respecto a la PÁGINA (posición absoluta centrada,
-   queda centrado pase lo que pase con los anchos de brand y derecha). */
+/* Logo + nav agrupados a la izquierda, con separación entre ambos */
+.topbar-left { display: flex; align-items: center; gap: 48px; }
 .topbar .nav-desktop {
   display: flex;
   gap: 24px;
   align-items: center;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
 }
 .topbar .nav-mobile { display: none; }
 /* En anchos intermedios (entre el modo móvil y desktop amplio), el nav está

@@ -309,16 +309,18 @@ function TopBar({ route }) {
   return (
     <React.Fragment>
     <header className={`topbar ${menuOpen ? "menu-open" : ""}`} data-screen-label="top-bar">
-      <a href="/" className="brand">DUM DUM<span className="brand-tm">™</span></a>
+      <div className="topbar-left">
+        <a href="/" className="brand">DUM DUM<span className="brand-tm">™</span></a>
 
-      {/* Nav DESKTOP centrado en la página */}
-      <nav className="nav nav-desktop">
-        {deskLinks.map((l) =>
-        <a key={l.p} href={l.p} className={route === l.p ? "active" : ""}>
-            {l.label}
-          </a>
-        )}
-      </nav>
+        {/* Nav DESKTOP a la izquierda, junto al logo */}
+        <nav className="nav nav-desktop">
+          {deskLinks.map((l) =>
+          <a key={l.p} href={l.p} className={route === l.p ? "active" : ""}>
+              {l.label}
+            </a>
+          )}
+        </nav>
+      </div>
 
       {/* Derecha (desktop): estado abierto/cerrado + Reservar + idioma */}
       <div className="right">
