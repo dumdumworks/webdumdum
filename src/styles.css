@@ -654,7 +654,9 @@ img { display: block; max-width: 100%; }
 @media (max-width:879px){
   :root{ --alerg-pad:24px; --alerg-gap:24px; }
   .alerg-overlay{ padding:12px; }
-  .alerg-modal{ border-radius:20px; }
+  /* Altura fija en móvil: el modal no "salta" al aparecer/desaparecer el
+     resultado; el contenido extra entra en el scroll interno. */
+  .alerg-modal{ border-radius:20px; height:88vh; }
   .alerg-closebar{ padding:16px 16px 0; }
   .alerg-tabs{ gap:12px; }
   .alerg-tabs button{ font-size:11px; padding:12px 10px; }

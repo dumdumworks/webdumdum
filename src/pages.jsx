@@ -444,7 +444,24 @@ function Menu() {
   // Degradado inferior: se oculta cuando el scroll llega al final (para no
   // "mentir" indicando más contenido cuando ya no lo hay).
   const scrollRef = React.useRef(null);
+  const resultRef = React.useRef(null);
   const [alergAtBottom, setAlergAtBottom] = React.useState(false);
+
+  // Al marcar el PRIMER alérgeno, deslizamos la vista hasta el resultado
+  // (en móvil queda fuera de pantalla y si no, parece que no pasa nada).
+  // Solo cuando se pasa de 0 a 1+ selección, para no marear en cada toque.
+  const prevSelLen = React.useRef(0);
+  React.useEffect(() => {
+    const was = prevSelLen.current;
+    prevSelLen.current = selAlerg.length;
+    if (was === 0 && selAlerg.length > 0 && resultRef.current) {
+      requestAnimationFrame(() => {
+        if (resultRef.current) {
+          resultRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    }
+  }, [selAlerg]);
   React.useEffect(() => {
     if (!alergView) return;
     const el = scrollRef.current;
@@ -756,7 +773,7 @@ function Menu() {
               {selAlerg.length > 0 &&
               <React.Fragment>
                 <hr className="alerg-sep" />
-                <div className="alerg-result">
+                <div className="alerg-result" ref={resultRef}>
                   {platosNoPuede.length > 0 ?
                     <React.Fragment>
                       <div className="alerg-result-head">{t("Estos son los productos que NO puedes tomar", "These are the dishes you CAN'T have")}</div>
