@@ -450,15 +450,31 @@ function Menu() {
   // Al marcar el PRIMER alérgeno, deslizamos la vista hasta el resultado
   // (en móvil queda fuera de pantalla y si no, parece que no pasa nada).
   // Solo cuando se pasa de 0 a 1+ selección, para no marear en cada toque.
+  // Animación propia con easing ease-out: arranca con ritmo y llega frenando.
   const prevSelLen = React.useRef(0);
   React.useEffect(() => {
     const was = prevSelLen.current;
     prevSelLen.current = selAlerg.length;
-    if (was === 0 && selAlerg.length > 0 && resultRef.current) {
+    if (was === 0 && selAlerg.length > 0) {
       requestAnimationFrame(() => {
-        if (resultRef.current) {
-          resultRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
+        const cont = scrollRef.current;
+        const target = resultRef.current;
+        if (!cont || !target) return;
+        const start = cont.scrollTop;
+        // posición del resultado relativa al contenedor de scroll
+        const end = start + target.getBoundingClientRect().top
+                    - cont.getBoundingClientRect().top - 12;
+        const dist = end - start;
+        if (Math.abs(dist) < 2) return;
+        const dur = 650; // ms
+        const t0 = performance.now();
+        const easeOut = (x) => 1 - Math.pow(1 - x, 3); // cubic ease-out: frena al final
+        const step = (now) => {
+          const p = Math.min((now - t0) / dur, 1);
+          cont.scrollTop = start + dist * easeOut(p);
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
       });
     }
   }, [selAlerg]);
