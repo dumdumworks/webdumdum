@@ -75,8 +75,7 @@
           "tags": [],
           "alergenos": [
             "gluten",
-            "lacteos",
-            "sulfitos"
+            "lacteos"
           ],
           "available": true,
           "image": "img/dumplings/pepito.jpg",
@@ -119,8 +118,7 @@
             "NEW"
           ],
           "alergenos": [
-            "gluten",
-            "sulfitos"
+            "gluten"
           ],
           "available": true,
           "image": "img/dumplings/sweet.jpg",
