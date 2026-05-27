@@ -241,7 +241,7 @@ function Home() {
           </div>
 
           <div className="hero-actions hero-actions-4">
-            <a className="btn" href="/locales">{t("Reservar", "Book")} →</a>
+            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("dumdum:open-reserve")); }}>{t("Reservar", "Book")} →</a>
             <a className="btn" href="/locales">{t("Llegar", "Directions")} →</a>
             <a
               className="btn"
@@ -312,7 +312,7 @@ function Home() {
             )}
           </p>
           <div className="row gap-m" style={{ marginTop: 32 }}>
-            <a className="btn" href="/locales">{t("Reservar en Bernabéu", "Book at Bernabéu")} →</a>
+            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("dumdum:open-reserve")); }}>{t("Reservar en Bernabéu", "Book at Bernabéu")} →</a>
           </div>
         </div>
       </section>
@@ -1071,15 +1071,6 @@ function EstadoLocal({ tramos }) {
 
 function Locales() {
   const lang = useLang();
-  const [resvSoon, setResvSoon] = React.useState(false);
-  const resvBtnRef = React.useRef(null);
-  const [resvWidth, setResvWidth] = React.useState(null);
-  const onResvClick = (e) => {
-    e.preventDefault();
-    // fijar el ancho actual ANTES de cambiar el texto, para que no salte
-    if (resvBtnRef.current) setResvWidth(resvBtnRef.current.offsetWidth);
-    setResvSoon(true);
-  };
   return (
     <div data-screen-label="locales">
       <section style={{ padding: '14vh var(--gutter) 6vh', borderBottom: '1px solid var(--line)' }}>
@@ -1103,12 +1094,11 @@ function Locales() {
             </div>
 
             <a
-              ref={resvBtnRef}
-              className={resvSoon ? "btn btn-call" : "btn red"}
-              href={resvSoon ? "tel:+34614746065" : "#"}
-              onClick={resvSoon ? undefined : onResvClick}
-              style={{ marginTop: 24, ...(resvWidth ? { width: resvWidth + "px", justifyContent: "center" } : {}) }}>
-              {resvSoon ? t("Llámanos · 614 746 065", "Call us · 614 746 065") : (t("Reservar en Bernabéu", "Book at Bernabéu") + " →")}
+              className="btn red"
+              href="#"
+              onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("dumdum:open-reserve")); }}
+              style={{ marginTop: 24 }}>
+              {t("Reservar en Bernabéu", "Book at Bernabéu")} →
             </a>
           </div>
 
@@ -2239,7 +2229,7 @@ function Contacto() {
         <div><b>Email</b><a className="spec-link" href="mailto:dumdum@dum-dum.es">dumdum@dum-dum.es</a></div>
         <div><b>Instagram</b><a className="spec-link" href="https://www.instagram.com/dumdum.plings" target="_blank" rel="noreferrer">@dumdum.plings</a></div>
         <div><b>{t("Teléfono", "Phone")}</b><a className="spec-link" href="tel:+34614746065">+34 614 746 065</a></div>
-        <div><b>{t("Reservas", "Booking")}</b><a className="spec-link" href="/locales">{t("Chamberí: turnos | Bernabéu: reservas", "Chamberí: walk-in | Bernabéu: booking")}</a></div>
+        <div><b>{t("Reservas", "Booking")}</b><a className="spec-link" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("dumdum:open-reserve")); }}>{t("Reservar mesa", "Book a table")}</a></div>
       </section>
     </div>);
 

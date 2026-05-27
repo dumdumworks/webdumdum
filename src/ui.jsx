@@ -205,6 +205,47 @@ function calcAperturaTopbar(tramos) {
 }
 
 // ─── Selector de idioma ES / EN ───────────────────────────────
+// Componente DishWidget: monta el widget de reservas de DISH dentro de un
+// contenedor. DISH carga su widget.js, lee la configuración global _hors y
+// rellena el div con el iframe del widget. Cada apertura se monta limpia.
+function DishWidget() {
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (!ref.current) return;
+    const tagid = "hors-hydra-27342526-f07a-4354-bec7-c7b0ce5d7615";
+    // Crear el div contenedor con el ID que DISH espera
+    const div = document.createElement("div");
+    div.id = tagid;
+    ref.current.appendChild(div);
+    // Configuración global del widget: ID + colores DUM DUM
+    window._hors = [
+      ["eid", "hydra-27342526-f07a-4354-bec7-c7b0ce5d7615"],
+      ["tagid", tagid],
+      ["width", "100%"],
+      ["height", ""],
+      ["foregroundColor", "#ff001e"],          // rojo DUM DUM para textos clave
+      ["backgroundColor", "#fffaf3"],          // crema DUM DUM
+      ["linkColor", "#ff001e"],
+      ["errorColor", "#ff001e"],
+      ["primaryButtonForegroundColor", "#fffaf3"],
+      ["primaryButtonBackgroundColor", "#ff001e"],
+      ["secondaryButtonForegroundColor", "#ff001e"],
+      ["secondaryButtonBackgroundColor", "#fffaf3"]
+    ];
+    // Cargar el script de DISH
+    const s = document.createElement("script");
+    s.src = "https://reservation.dish.co/widget.js";
+    s.async = true;
+    document.body.appendChild(s);
+    return () => {
+      // limpiar al desmontar (al cerrar el modal)
+      try { document.body.removeChild(s); } catch (e) {}
+      if (ref.current) ref.current.innerHTML = "";
+    };
+  }, []);
+  return <div ref={ref} className="dish-widget-host" />;
+}
+
 function LangToggle() {
   const lang = useLang();
   return (
@@ -262,6 +303,17 @@ function TopBar({ route }) {
   // Modal "Pide ya" (Take Away | Uber Eats)
   const [pideOpen, setPideOpen] = React.useState(false);
   React.useEffect(() => { setPideOpen(false); }, [route]);
+
+  // Modal de RESERVAS (DISH). Lo abren TODOS los botones "Reservar" de la web
+  // disparando el evento global "dumdum:open-reserve". Se cierra al pinchar
+  // fuera, al pulsar la X, o al cambiar de página.
+  const [reserveOpen, setReserveOpen] = React.useState(false);
+  React.useEffect(() => { setReserveOpen(false); }, [route]);
+  React.useEffect(() => {
+    const handler = () => setReserveOpen(true);
+    window.addEventListener("dumdum:open-reserve", handler);
+    return () => window.removeEventListener("dumdum:open-reserve", handler);
+  }, []);
   // En la página de menú (a la que se llega por el QR de las mesas) ocultamos
   // "Pide ya" SOLO en móvil, para no inducir a pedir online estando en mesa.
   // Detecta la página de menú de forma tolerante (con o sin barra final).
@@ -329,7 +381,7 @@ function TopBar({ route }) {
           <React.Fragment><span className="dot dot-live" /> {t("Abierto hasta las", "Open until")} {est.hora}h</React.Fragment> :
           <React.Fragment><span className="dot dot-closed" /> {t("Cerrado. Nos vemos a las", "Closed. See you at")} {est.hora}h</React.Fragment>}
         </span>
-        <a href="/locales" className="topbar-reservar">{t("Reservar", "Book")} →</a>
+        <button type="button" className="topbar-reservar" onClick={() => setReserveOpen(true)}>{t("Reservar", "Book")} →</button>
         <button type="button" className="topbar-pide" onClick={() => setPideOpen(true)}>{t("Pide ya!", "Order now!")} →</button>
         <LangToggle />
       </div>
@@ -346,7 +398,7 @@ function TopBar({ route }) {
       {/* Grupo derecho MÓVIL: idioma + Reservar permanente + hamburguesa */}
       <div className="topbar-mobile-right">
         <LangToggle />
-        <a href="/locales" className="topbar-reservar topbar-reservar-mobile">{t("Reservar", "Book")} →</a>
+        <button type="button" className="topbar-reservar topbar-reservar-mobile" onClick={() => setReserveOpen(true)}>{t("Reservar", "Book")} →</button>
         <button
           className="topbar-burger"
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
@@ -391,6 +443,20 @@ function TopBar({ route }) {
       </div>
     </div>
     }
+
+    {reserveOpen &&
+    <div className="reserve-overlay" onClick={() => setReserveOpen(false)}>
+      <div className="reserve-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="reserve-closebar">
+          <button className="reserve-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)}>×</button>
+        </div>
+        <h3 className="reserve-title">{t("Reservar mesa", "Book a table")}</h3>
+        <div className="reserve-widget-wrap">
+          <DishWidget />
+        </div>
+      </div>
+    </div>
+    }
     </React.Fragment>);
 
 }
@@ -413,7 +479,7 @@ function Footer() {
           <b>Bernabéu</b>
           <div>Infanta Mercedes, 17</div>
           <div>28020 Madrid</div>
-          <div style={{ marginTop: 8 }}><a href="/locales" className="link-hover">{t("Reservar", "Book")} →</a></div>
+          <div style={{ marginTop: 8 }}><a href="#" className="link-hover" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("dumdum:open-reserve")); }}>{t("Reservar", "Book")} →</a></div>
         </div>
         <div>
           <b>{t("Horarios", "Hours")}</b>

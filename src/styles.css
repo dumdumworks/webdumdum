@@ -244,6 +244,44 @@ img { display: block; max-width: 100%; }
   .pide-options{ flex-direction:column; }
   .pide-card{ padding:24px 16px; }
 }
+
+/* ── Modal de RESERVAS (widget DISH) ──────────────────────── */
+.reserve-overlay{
+  position:fixed; inset:0; z-index:9999;
+  background:rgba(40,0,5,0.40);
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+}
+.reserve-modal{
+  position:relative;
+  background:var(--bg);
+  border:1px solid var(--red);
+  border-radius:24px;
+  width:100%; max-width:640px;
+  max-height:90vh; max-height:90dvh;
+  padding:0 24px 24px;
+  display:flex; flex-direction:column;
+  overflow:hidden;
+}
+.reserve-closebar{ display:flex; justify-content:flex-end; padding:16px 0 0; flex:none; }
+.reserve-close{
+  background:none; border:none; cursor:pointer;
+  font-size:26px; line-height:1; color:var(--red); padding:4px 6px;
+}
+.reserve-title{
+  font-family:var(--font-display); color:var(--red);
+  font-size:22px; line-height:1.1; margin:4px 0 16px; text-align:center;
+  flex:none;
+}
+.reserve-widget-wrap{
+  flex:1; min-height:0; overflow-y:auto;
+  /* el widget de DISH se renderiza dentro de un iframe responsive */
+}
+.dish-widget-host{ width:100%; }
+@media (max-width:520px){
+  .reserve-overlay{ padding:12px; }
+  .reserve-modal{ border-radius:20px; padding:0 16px 16px; max-height:92vh; max-height:92dvh; }
+}
 .topbar .brand {
   font-family: var(--font-display); font-weight: 600; font-size: 14px;
   letter-spacing: -0.01em; text-transform: none;
