@@ -263,7 +263,8 @@ function TopBar({ route }) {
   React.useEffect(() => { setPideOpen(false); }, [route]);
   // En la página de menú (a la que se llega por el QR de las mesas) ocultamos
   // "Pide ya" SOLO en móvil, para no inducir a pedir online estando en mesa.
-  const enMenu = route === "/menu";
+  // Detecta la página de menú de forma tolerante (con o sin barra final).
+  const enMenu = /^\/menu\/?$/.test(route);
 
   // FAB "Pide ya" (solo móvil): arrastrable. Posición null = esquina inferior
   // derecha por defecto; al arrastrar se guarda {x,y}. Distingue tap de drag.
