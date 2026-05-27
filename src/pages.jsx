@@ -1084,7 +1084,7 @@ function Locales() {
               href="#"
               onClick={(e) => { e.preventDefault(); setResvSoon(true); }}
               style={{ marginTop: 24 }}>
-              {resvSoon ? t("Próximamente", "Coming soon") : (t("Reservar", "Book") + " →")}
+              {resvSoon ? t("Próximamente", "Coming soon") : (t("Reservar en Bernabéu", "Book at Bernabéu") + " →")}
             </a>
           </div>
 
@@ -1817,10 +1817,14 @@ function EventosForm() {
       <div className="ev-form-err">{errMsg}</div>
       }
 
-      <button type="submit" className="btn red" disabled={state === "sending"}
-      style={{ marginTop: 12 }}>
-        {state === "sending" ? t("Enviando…", "Sending…") : (t("Enviar solicitud", "Send request") + " →")}
-      </button>
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, marginTop: 12 }}>
+        <button type="submit" className="btn red" disabled={state === "sending"}>
+          {state === "sending" ? t("Enviando…", "Sending…") : (t("Enviar solicitud", "Send request") + " →")}
+        </button>
+        <a className="btn" href="/img/DUMDUM_DOSSIER_EVENTOS.pdf" target="_blank" rel="noreferrer">
+          {t("Descargar dossier", "Download dossier")} ↓
+        </a>
+      </div>
     </form>);
 
 }
@@ -1872,9 +1876,6 @@ function Eventos() {
               <React.Fragment>A 7-minute walk from Santiago Bernabéu, designed by <strong>Nota Estudio</strong>. 55 m² open-plan, open kitchen, up to 35 people, a powerful sound system and considered lighting. A place worthy of your event.</React.Fragment>
             ))}
           </p>
-          <a className="btn" href="/img/DUMDUM_DOSSIER_EVENTOS.pdf" target="_blank" rel="noreferrer" style={{ flex: "0 0 auto" }}>
-            {t("Descargar dossier", "Download dossier")} ↓
-          </a>
         </div>
       </section>
 

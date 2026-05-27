@@ -234,8 +234,7 @@ function TopBar({ route }) {
   { p: "/eventos", label: t("Eventos", "Events") },
   { p: "/contacto", label: t("Contacto", "Contact") },
   { href: "https://www.instagram.com/dumdum.plings", label: "Instagram", ext: true },
-  { href: SPOTIFY_URL, label: "DD*Radio", ext: true },
-  { href: "#", label: "DD*Mer®ch", ext: true }];
+  { href: SPOTIFY_URL, label: "DD*Radio", ext: true }];
 
   // Nav de DESKTOP: solo los principales (sin redes/tienda).
   const deskLinks = [
@@ -322,7 +321,7 @@ function Footer() {
           <div style={{ marginTop: 8, color: 'var(--red)' }}>{t("Sin reserva", "No booking")}</div>
         </div>
         <div>
-          <b>Tetuán</b>
+          <b>Bernabéu</b>
           <div>Infanta Mercedes, 17</div>
           <div>28020 Madrid</div>
           <div style={{ marginTop: 8 }}><a href="/locales" className="link-hover">{t("Reservar", "Book")} →</a></div>
