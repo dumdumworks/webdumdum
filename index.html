@@ -97,7 +97,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://use.typekit.net/avd6wfq.css">
-  <link rel="stylesheet" href="src/styles.css" />
+  <link rel="stylesheet" href="src/styles.css?v=20260527" />
   <script src="image-slot.js"></script>
 </head>
 <body>
@@ -112,11 +112,12 @@
   <script>
     window.__bootDumDum = function () {
       var files = ["src/data.jsx", "src/ui.jsx", "src/pages.jsx", "src/admin.jsx", "src/app.jsx"];
+      var ASSET_VER = "20260527";
       files.forEach(function (src) {
         var s = document.createElement("script");
         s.type = "text/babel";
         s.setAttribute("data-presets", "react");
-        s.src = src;
+        s.src = src + "?v=" + ASSET_VER;
         document.body.appendChild(s);
       });
       // Pedir a Babel que compile los scripts type=text/babel ya presentes.
