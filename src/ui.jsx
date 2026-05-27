@@ -291,6 +291,18 @@ function TopBar({ route }) {
     const el = fabRef.current; if (el) el.releasePointerCapture(e.pointerId);
     if (!d.moved) setPideOpen(true); // fue un tap, no un arrastre → abrir modal
   };
+  // El FAB pierde opacidad mientras se hace scroll y la recupera al parar.
+  const [fabScrolling, setFabScrolling] = React.useState(false);
+  React.useEffect(() => {
+    let timer = null;
+    const onScroll = () => {
+      setFabScrolling(true);
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => setFabScrolling(false), 600);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { window.removeEventListener("scroll", onScroll); if (timer) clearTimeout(timer); };
+  }, []);
 
   return (
     <React.Fragment>
@@ -314,7 +326,7 @@ function TopBar({ route }) {
           <React.Fragment><span className="dot dot-closed" /> {t("Cerrado. Nos vemos a las", "Closed. See you at")} {est.hora}h</React.Fragment>}
         </span>
         <a href="/locales" className="topbar-reservar">{t("Reservar", "Book")} →</a>
-        <button type="button" className="topbar-pide" onClick={() => setPideOpen(true)}>{t("Pide ya!", "Order now!")}</button>
+        <button type="button" className="topbar-pide" onClick={() => setPideOpen(true)}>{t("Pide ya!", "Order now!")} →</button>
         <LangToggle />
       </div>
 
@@ -345,13 +357,13 @@ function TopBar({ route }) {
     <button
       ref={fabRef}
       type="button"
-      className="pide-fab"
+      className={"pide-fab" + (fabScrolling ? " is-scrolling" : "")}
       onPointerDown={onFabDown}
       onPointerMove={onFabMove}
       onPointerUp={onFabUp}
       style={fabPos ? { left: fabPos.x + "px", top: fabPos.y + "px", right: "auto", bottom: "auto" } : undefined}
       aria-label={t("Pide ya", "Order now")}>
-      {t("Pide ya!", "Order now!")}
+      {t("Pide ya!", "Order now!")} →
     </button>
     }
 
