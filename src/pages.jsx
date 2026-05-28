@@ -1076,6 +1076,40 @@ function EstadoLocal({ tramos }) {
     </div>);
 }
 
+function BotonLlamarBernabeu() {
+  const lang = useLang();
+  const TEL = "+34614746065";
+  const TEL_HUMAN = "+34 614 74 60 65";
+  const [isMobile, setIsMobile] = React.useState(
+    typeof window !== "undefined" && window.matchMedia("(max-width: 879px)").matches
+  );
+  const [revealed, setRevealed] = React.useState(false);
+  React.useEffect(() => {
+    const mq = window.matchMedia("(max-width: 879px)");
+    const on = () => setIsMobile(mq.matches);
+    mq.addEventListener ? mq.addEventListener("change", on) : mq.addListener(on);
+    return () => { mq.removeEventListener ? mq.removeEventListener("change", on) : mq.removeListener(on); };
+  }, []);
+  const telIcon = (
+    <svg className="tel-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ display: 'inline-block', verticalAlign: '-2px', marginRight: '8px' }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
+  );
+  // Móvil: llama directo. Desktop: 1er click revela número, 2º llama.
+  const handleClick = (e) => {
+    if (isMobile) return; // deja que el href tel: actúe
+    e.preventDefault();
+    if (!revealed) { setRevealed(true); return; }
+    window.location.href = "tel:" + TEL;
+  };
+  const label = isMobile
+    ? t("Llamar a Bernabéu", "Call Bernabéu")
+    : (revealed ? TEL_HUMAN : t("Llamar a Bernabéu", "Call Bernabéu"));
+  return (
+    <a className="btn btn-call-green" href={"tel:" + TEL} onClick={handleClick}>
+      {telIcon}{label}
+    </a>
+  );
+}
+
 function Locales() {
   const lang = useLang();
   return (
@@ -1097,16 +1131,17 @@ function Locales() {
               <b>{t("Metro", "Metro")}</b><div>Tetuán · Estrecho</div>
               <b>{t("Horario", "Hours")}</b><div>13.00–15.39 / 20.00–22.39</div>
               <b>{t("Aforo", "Capacity")}</b><div>{t("~40 comensales", "~40 seats")}</div>
-              <b>{t("Reserva", "Booking")}</b><div style={{ color: '#1f8a5b', fontWeight: 500 }}><a href="tel:+34614746065" style={{ color: '#1f8a5b', textDecoration: 'none' }}><svg className="tel-ico" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ display: 'inline-block', verticalAlign: '-1px', marginRight: '4px' }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg>+34 614 746 065</a></div>
             </div>
 
-            <a
-              className="btn red"
-              href="#"
-              onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("dumdum:open-reserve")); }}
-              style={{ marginTop: 24 }}>
-              {t("Reservar en Bernabéu", "Book at Bernabéu")} →
-            </a>
+            <div className="locale-btns" style={{ marginTop: 24 }}>
+              <a
+                className="btn red"
+                href="#"
+                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("dumdum:open-reserve")); }}>
+                {t("Reservar en Bernabéu", "Book at Bernabéu")} →
+              </a>
+              <BotonLlamarBernabeu />
+            </div>
           </div>
 
           <div className="locale-map">
@@ -1130,7 +1165,12 @@ function Locales() {
               <b>{t("Metro", "Metro")}</b><div>Argüelles · San Bernardo</div>
               <b>{t("Horario", "Hours")}</b><div>13.00–15.39 / 20.00–22.39</div>
               <b>{t("Aforo", "Capacity")}</b><div>{t("~32 comensales", "~32 seats")}</div>
-              <b>{t("Reserva", "Booking")}</b><div style={{ color: 'var(--red)' }}>{t("Sin reserva · por turnos", "No booking · walk-in")}</div>
+            </div>
+
+            <div className="locale-btns" style={{ marginTop: 24 }}>
+              <span className="btn btn-disabled-dark" aria-disabled="true">
+                {t("Sin reservas · por turnos", "No booking · walk-in")}
+              </span>
             </div>
           </div>
 

@@ -454,6 +454,17 @@ img { display: block; max-width: 100%; }
 .btn-call{ background:#1f8a5b; color:#fff; border-color:#1f8a5b; letter-spacing:0.02em; white-space:nowrap; }
 .btn-call:hover{ background:#187049; border-color:#187049; }
 
+/* Botones de las fichas de locales: dos del mismo ancho, lado a lado, tanto en
+   desktop como en móvil. Cada uno ocupa la mitad (flex:1). */
+.locale-btns{ display:flex; gap:12px; align-items:stretch; }
+.locale-btns > .btn{ flex:1 1 0; justify-content:center; text-align:center; min-width:0; }
+/* Botón "Llamar a Bernabéu": verde con icono de teléfono. */
+.btn-call-green{ background:#1f8a5b; color:#fff; border-color:#1f8a5b; letter-spacing:0.02em; white-space:nowrap; }
+.btn-call-green:hover{ background:#187049; color:#fff; border-color:#187049; }
+/* Botón de Chamberí: negro, no clicable. */
+.btn-disabled-dark{ background:#1a1a1a; color:#fff; border-color:#1a1a1a; cursor:default; white-space:nowrap; }
+.btn-disabled-dark:hover{ background:#1a1a1a; color:#fff; border-color:#1a1a1a; }
+
 /* Acciones del form de eventos: en fila (desktop), apiladas en móvil. Ambos
    botones miden lo mismo (el ancho natural del más largo). Texto a la
    izquierda, flecha a la derecha, con el mínimo aire entre medias. */
