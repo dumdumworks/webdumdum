@@ -286,15 +286,13 @@ img { display: block; max-width: 100%; }
   .reserve-modal .alerg-scroll > .alerg-title,
   .reserve-modal .alerg-scroll > .alerg-intro,
   .reserve-modal .alerg-scroll > .alerg-sep{ width:281px !important; }
-  /* ENFOQUE NUEVO: en vez de margen negativo (que solapaba la línea), recortamos
-     el contenedor del widget justo después del botón "Reserve now" con max-height
-     + overflow:hidden, eliminando el espacio vacío que reserva el iframe. Así la
-     línea y el disclaimer caen de forma natural debajo, sin solapes.
-     --dish-h = altura a la que se recorta (hasta justo bajo el botón). */
-  .reserve-modal{ --dish-air-top: 14px; --dish-h: 230px; }
-  .reserve-modal .reserve-widget-wrap{ margin-bottom:0; max-height:var(--dish-h); overflow:hidden; }
-  /* Estructura: botón → 32px → línea → 32px → disclaimer. */
-  .reserve-modal .reserve-widget-wrap + .alerg-sep{ margin-top:32px; margin-bottom:32px; }
+  /* El widget DISH cambia de altura entre pasos (selección vs datos), así que NO
+     compensamos con valores fijos (se romperían en uno de los pasos). Aire
+     natural y estable: el widget respira con su propio espacio y la línea +
+     disclaimer van debajo con el gap normal del modal. */
+  .reserve-modal{ --dish-air-top: 14px; }
+  .reserve-modal .reserve-widget-wrap{ margin-bottom:0; max-height:none; overflow:visible; }
+  .reserve-modal .reserve-widget-wrap + .alerg-sep{ margin-top:var(--alerg-gap); margin-bottom:var(--alerg-gap); }
 }
 .topbar .brand {
   font-family: var(--font-display); font-weight: 600; font-size: 14px;
