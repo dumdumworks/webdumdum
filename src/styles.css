@@ -282,12 +282,12 @@ img { display: block; max-width: 100%; }
 .reserve-widget-wrap > div{ width:100% !important; max-width:100% !important; }
 @media (max-width:520px){
   .reserve-modal{ border-radius:20px; }
-  /* Líneas y textos al 100% del contenedor, igual que el host del widget, para
-     que compartan exactamente el mismo ancho sin números mágicos. */
+  /* Ancho del widget en móvil medido por el usuario: 281px. Líneas y textos a
+     ese ancho exacto, centrados. */
   .reserve-modal .alerg-scroll > .alerg-title,
   .reserve-modal .alerg-scroll > .alerg-intro,
-  .reserve-modal .alerg-scroll > .alerg-sep{ width:100% !important; }
-  .reserve-modal{ --dish-air-top: 14px; --dish-air-bottom: 140px; }
+  .reserve-modal .alerg-scroll > .alerg-sep{ width:281px !important; }
+  .reserve-modal{ --dish-air-top: 14px; --dish-air-bottom: 320px; }
 }
 .topbar .brand {
   font-family: var(--font-display); font-weight: 600; font-size: 14px;
