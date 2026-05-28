@@ -263,7 +263,7 @@ img { display: block; max-width: 100%; }
 
 /* AIRES VERTICALES. El iframe DISH mete espacio vacío bajo el botón; lo
    compensamos con margen negativo. Valor controlado por --dish-air-bottom. */
-.reserve-modal{ --dish-air-top: 14px; --dish-air-bottom: 70px; }
+.reserve-modal{ --dish-air-top: 14px; --dish-air-bottom: 90px; }
 .reserve-modal .alerg-intro{ margin-top:10px; margin-bottom:0; }
 .reserve-modal .alerg-sep{ margin-top:var(--alerg-gap); margin-bottom:var(--alerg-gap); }
 .reserve-modal .alerg-sep + .reserve-widget-wrap{ margin-top:calc(-1 * var(--dish-air-top)); }
