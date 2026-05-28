@@ -459,7 +459,7 @@ function TopBar({ route }) {
           <button className="alerg-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)}>×</button>
         </div>
         <div className="alerg-scroll">
-          <h3 className="alerg-title">{t("Pues a reservar mesita!", "Let's book you a table!")}</h3>
+          <h3 className="alerg-title">{t("A reservar mesa", "Let's book you a table!")}</h3>
           <p className="alerg-intro">{lang === "es"
             ? <React.Fragment>Solo por si: recuerda que <strong>solo hacemos reservas en el local de Bernabéu</strong>, en Infanta Mercedes, 17.</React.Fragment>
             : <React.Fragment>Just so you know: <strong>we only take reservations at our Bernabéu spot</strong>, Infanta Mercedes, 17.</React.Fragment>}</p>
