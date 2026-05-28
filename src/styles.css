@@ -291,7 +291,7 @@ img { display: block; max-width: 100%; }
   /* Estructura de abajo en móvil: botón → 32px → 2ª línea → 32px → disclaimer.
      La 2ª línea (la que precede al título "*Un tema!") lleva 32px a cada lado.
      El margin-top efectivo se combina con la compensación del widget (320px). */
-  .reserve-modal .reserve-widget-wrap + .alerg-sep{ margin-top:32px; margin-bottom:32px; }
+  .reserve-modal .reserve-widget-wrap + .alerg-sep{ margin-top:32px; margin-bottom:32px; position:relative; z-index:2; }
 }
 .topbar .brand {
   font-family: var(--font-display); font-weight: 600; font-size: 14px;
