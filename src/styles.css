@@ -465,6 +465,14 @@ img { display: block; max-width: 100%; }
 /* Botón de Chamberí: negro #1a1a1a, no clicable. */
 .locale-btns > .btn-disabled-dark{ background:#1a1a1a !important; color:#fff !important; border-color:#1a1a1a !important; cursor:default; }
 .locale-btns > .btn-disabled-dark:hover{ background:#1a1a1a !important; color:#fff !important; border-color:#1a1a1a !important; }
+/* Chamberí tiene un solo botón: que mida lo mismo que "Reservar en Bernabéu"
+   (la mitad del ancho menos medio gap), no todo el ancho de la tarjeta. */
+.locale-btns--single{ display:flex; }
+.locale-btns--single > .btn{ flex:0 0 auto; width:calc(50% - 6px); }
+/* El icono de teléfono solo en desktop; en móvil se oculta para centrar texto. */
+@media (max-width:880px){
+  .call-ico-wrap{ display:none; }
+}
 
 /* Acciones del form de eventos: en fila (desktop), apiladas en móvil. Ambos
    botones miden lo mismo (el ancho natural del más largo). Texto a la
