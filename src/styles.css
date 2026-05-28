@@ -251,21 +251,31 @@ img { display: block; max-width: 100%; }
 }
 
 /* ── Modal de RESERVAS (widget DISH) ──────────────────────── */
-/* Todo el contenido comparte el MISMO ancho y márgenes laterales: en vez de
-   dar max-width a cada hijo, ponemos un padding lateral fijo al scroll y los
-   hijos ocupan el 100% de ese ancho. El widget manda el ancho de referencia. */
 .alerg-modal.reserve-modal{ max-width:460px; }
 .reserve-modal .alerg-scroll{ padding-left:28px; padding-right:28px; }
-.reserve-modal .alerg-scroll > *{ max-width:none; margin-left:0; margin-right:0; }
-/* Aires alrededor de las líneas. El widget DISH añade ~22px de aire interno
-   propio (medido sobre captura real), así que del lado del widget restamos esa
-   cantidad para que el aire VISIBLE iguale al del otro lado de la línea. */
-.reserve-modal{ --dish-air: 22px; }
-.reserve-modal .alerg-intro{ margin:10px 0 0; }
-.reserve-modal .alerg-sep{ margin:var(--alerg-gap) 0; }
-.reserve-modal .alerg-sep + .reserve-widget-wrap{ margin-top:calc(-1 * var(--dish-air)); }
-.reserve-modal .reserve-widget-wrap{ margin:calc(-1 * var(--dish-air)) 0 0; }
+.reserve-modal .alerg-scroll > *{ max-width:none; }
+
+/* MÁRGENES LATERALES: el contenido visible del widget (iframe) queda más
+   estrecho que su contenedor por el padding interno del iframe (~20px/lado,
+   medido sobre captura). Metemos líneas y párrafos ese tanto para que su ancho
+   coincida con el del widget. El widget va a ancho completo. */
+.reserve-modal .alerg-title,
+.reserve-modal .alerg-intro,
+.reserve-modal .alerg-sep{ margin-left:20px; margin-right:20px; }
+
+/* AIRES VERTICALES alrededor de las líneas. El widget aporta aire interno
+   propio que difiere arriba (cabecera "DUM DUM | Bernabéu") y abajo (botón
+   "Reservar ahora"). Compensamos cada lado por separado para igualar el aire
+   VISIBLE arriba/abajo de cada línea. Valores medidos sobre captura real. */
+.reserve-modal{ --dish-air-top: 22px; --dish-air-bottom: 6px; }
+.reserve-modal .alerg-intro{ margin-top:10px; margin-bottom:0; }
+.reserve-modal .alerg-sep{ margin-top:var(--alerg-gap); margin-bottom:var(--alerg-gap); }
+/* línea 1 → widget (arriba del widget): resta el aire de su cabecera */
+.reserve-modal .alerg-sep + .reserve-widget-wrap{ margin-top:calc(-1 * var(--dish-air-top)); }
+/* widget → línea 2 (abajo del widget): resta el aire bajo el botón */
+.reserve-modal .reserve-widget-wrap{ margin-bottom:calc(-1 * var(--dish-air-bottom)); }
 .reserve-modal .alerg-sep + .alerg-title{ margin-top:0; }
+
 .reserve-modal strong{ font-weight:700; }
 .reserve-modal .alerg-intro::after,
 .reserve-modal .alerg-title::before,
