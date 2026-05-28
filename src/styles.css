@@ -255,25 +255,20 @@ img { display: block; max-width: 100%; }
 .reserve-modal .alerg-scroll{ padding-left:28px; padding-right:28px; }
 .reserve-modal .alerg-scroll > *{ max-width:none; }
 
-/* MÁRGENES LATERALES: el contenido visible del widget (iframe) queda más
-   estrecho que su contenedor por el padding interno del iframe (~20px/lado,
-   medido sobre captura). Metemos líneas y párrafos ese tanto para que su ancho
-   coincida con el del widget. El widget va a ancho completo. */
+/* MÁRGENES LATERALES: el título e intro ya quedan alineados con el widget por
+   el ancho del texto. La LÍNEA, al ser width:100%, se extiende más; le damos un
+   margen lateral mayor para que sus extremos coincidan con el widget (~21px). */
 .reserve-modal .alerg-title,
-.reserve-modal .alerg-intro,
-.reserve-modal .alerg-sep{ margin-left:10px; margin-right:10px; }
+.reserve-modal .alerg-intro{ margin-left:0; margin-right:0; }
+.reserve-modal .alerg-sep{ margin-left:21px; margin-right:21px; }
 
-/* AIRES VERTICALES. Medido sobre captura real: el iframe DISH tiene aire propio
-   DENTRO, distinto arriba (cabecera) y abajo (mucho espacio vacío bajo el botón
-   "Reservar ahora", ~46px de más). Compensamos con margen negativo cada lado
-   para que el aire VISIBLE arriba/abajo de cada línea iguale al de referencia
-   (línea → "DUM DUM | Bernabéu"). */
-.reserve-modal{ --dish-air-top: 22px; --dish-air-bottom: 46px; }
+/* AIRES VERTICALES. El iframe DISH tiene aire propio dentro (arriba poco, abajo
+   algo más bajo el botón). Compensamos con margen negativo moderado. OJO: si se
+   pasa, la línea se solapa con el botón y desaparece; mantener valores suaves. */
+.reserve-modal{ --dish-air-top: 14px; --dish-air-bottom: 14px; }
 .reserve-modal .alerg-intro{ margin-top:10px; margin-bottom:0; }
 .reserve-modal .alerg-sep{ margin-top:var(--alerg-gap); margin-bottom:var(--alerg-gap); }
-/* línea 1 → widget (arriba del widget): resta el aire de su cabecera */
 .reserve-modal .alerg-sep + .reserve-widget-wrap{ margin-top:calc(-1 * var(--dish-air-top)); }
-/* widget → línea 2 (abajo del widget): resta el gran aire vacío bajo el botón */
 .reserve-modal .reserve-widget-wrap{ margin-bottom:calc(-1 * var(--dish-air-bottom)); }
 .reserve-modal .alerg-sep + .alerg-title{ margin-top:0; }
 
