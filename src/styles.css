@@ -277,6 +277,13 @@ img { display: block; max-width: 100%; }
 .dish-widget-host{ width:100%; }
 @media (max-width:520px){
   .reserve-modal{ border-radius:20px; }
+  /* En móvil el widget DISH mide 318px (botón "Reservar ahora" = 318px, medido
+     en inspector). Fijamos líneas y textos a ese ancho, centrados, igual que en
+     desktop pero con el valor móvil. */
+  .reserve-modal .alerg-scroll > .alerg-title,
+  .reserve-modal .alerg-scroll > .alerg-intro,
+  .reserve-modal .alerg-scroll > .alerg-sep{ width:318px !important; }
+  .reserve-modal{ --dish-air-top: 8px; --dish-air-bottom: 24px; }
 }
 .topbar .brand {
   font-family: var(--font-display); font-weight: 600; font-size: 14px;
