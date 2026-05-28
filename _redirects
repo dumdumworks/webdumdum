@@ -1,4 +1,13 @@
 # Cloudflare Pages — SPA con URLs limpias (sin #)
-# Cualquier ruta que no sea un archivo real sirve index.html (200, no redirección)
-# para que el router de React la gestione. Sin esto, /menu daría 404 al recargar.
+
+# ── Redirecciones 301 de la web vieja (Readymag) ──────────────
+# La carta en inglés vivía en /menu_eng. Ahora la web es bilingüe
+# en /menu (botón ES/EN), así que consolidamos en /menu (mejor SEO:
+# una sola URL en vez de dos con el mismo contenido).
+/menu_eng    /menu    301
+
+# ── Router SPA ────────────────────────────────────────────────
+# Cualquier ruta que no sea un archivo real ni una redirección de
+# arriba sirve index.html (200, no redirección) para que el router
+# de React la gestione. Sin esto, /menu daría 404 al recargar.
 /*    /index.html   200
