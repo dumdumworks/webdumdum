@@ -275,15 +275,19 @@ img { display: block; max-width: 100%; }
 .reserve-modal .alerg-title::before,
 .reserve-modal .alerg-title::after{ display:none; }
 .dish-widget-host{ width:100%; }
+/* Forzar que el iframe/contenido de DISH ocupe todo el ancho del contenedor,
+   para que su borde coincida con el de líneas y textos (que van al 100%). */
+.dish-widget-host iframe,
+.reserve-widget-wrap iframe,
+.reserve-widget-wrap > div{ width:100% !important; max-width:100% !important; }
 @media (max-width:520px){
   .reserve-modal{ border-radius:20px; }
-  /* En móvil el widget DISH mide 318px (botón "Reservar ahora" = 318px, medido
-     en inspector). Fijamos líneas y textos a ese ancho, centrados, igual que en
-     desktop pero con el valor móvil. */
+  /* Líneas y textos al 100% del contenedor, igual que el host del widget, para
+     que compartan exactamente el mismo ancho sin números mágicos. */
   .reserve-modal .alerg-scroll > .alerg-title,
   .reserve-modal .alerg-scroll > .alerg-intro,
-  .reserve-modal .alerg-scroll > .alerg-sep{ width:318px !important; }
-  .reserve-modal{ --dish-air-top: 14px; --dish-air-bottom: 90px; }
+  .reserve-modal .alerg-scroll > .alerg-sep{ width:100% !important; }
+  .reserve-modal{ --dish-air-top: 14px; --dish-air-bottom: 140px; }
 }
 .topbar .brand {
   font-family: var(--font-display); font-weight: 600; font-size: 14px;
