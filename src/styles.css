@@ -283,7 +283,7 @@ img { display: block; max-width: 100%; }
   .reserve-modal .alerg-scroll > .alerg-title,
   .reserve-modal .alerg-scroll > .alerg-intro,
   .reserve-modal .alerg-scroll > .alerg-sep{ width:318px !important; }
-  .reserve-modal{ --dish-air-top: 8px; --dish-air-bottom: 24px; }
+  .reserve-modal{ --dish-air-top: 14px; --dish-air-bottom: 90px; }
 }
 .topbar .brand {
   font-family: var(--font-display); font-weight: 600; font-size: 14px;
