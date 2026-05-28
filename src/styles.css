@@ -261,18 +261,19 @@ img { display: block; max-width: 100%; }
    coincida con el del widget. El widget va a ancho completo. */
 .reserve-modal .alerg-title,
 .reserve-modal .alerg-intro,
-.reserve-modal .alerg-sep{ margin-left:20px; margin-right:20px; }
+.reserve-modal .alerg-sep{ margin-left:10px; margin-right:10px; }
 
-/* AIRES VERTICALES alrededor de las líneas. El widget aporta aire interno
-   propio que difiere arriba (cabecera "DUM DUM | Bernabéu") y abajo (botón
-   "Reservar ahora"). Compensamos cada lado por separado para igualar el aire
-   VISIBLE arriba/abajo de cada línea. Valores medidos sobre captura real. */
-.reserve-modal{ --dish-air-top: 22px; --dish-air-bottom: 6px; }
+/* AIRES VERTICALES. Medido sobre captura real: el iframe DISH tiene aire propio
+   DENTRO, distinto arriba (cabecera) y abajo (mucho espacio vacío bajo el botón
+   "Reservar ahora", ~46px de más). Compensamos con margen negativo cada lado
+   para que el aire VISIBLE arriba/abajo de cada línea iguale al de referencia
+   (línea → "DUM DUM | Bernabéu"). */
+.reserve-modal{ --dish-air-top: 22px; --dish-air-bottom: 46px; }
 .reserve-modal .alerg-intro{ margin-top:10px; margin-bottom:0; }
 .reserve-modal .alerg-sep{ margin-top:var(--alerg-gap); margin-bottom:var(--alerg-gap); }
 /* línea 1 → widget (arriba del widget): resta el aire de su cabecera */
 .reserve-modal .alerg-sep + .reserve-widget-wrap{ margin-top:calc(-1 * var(--dish-air-top)); }
-/* widget → línea 2 (abajo del widget): resta el aire bajo el botón */
+/* widget → línea 2 (abajo del widget): resta el gran aire vacío bajo el botón */
 .reserve-modal .reserve-widget-wrap{ margin-bottom:calc(-1 * var(--dish-air-bottom)); }
 .reserve-modal .alerg-sep + .alerg-title{ margin-top:0; }
 
