@@ -15,13 +15,13 @@ function getRoutesTable() {
   return [
     { prefix: "/",         exact: true,  component: "Home",
       title: "DUM DUM™ — Dumplings & Desobediencia",
-      desc: "Dumplings & Desobediencia en Madrid. Chamberí y Tetuán. Todos los días 13.00–15.39 y 20.00–22.39." },
+      desc: "Dumplings & Desobediencia en Madrid. Chamberí y Bernabéu. Todos los días 13.00–15.39 y 20.00–22.39." },
     { prefix: "/menu",     exact: false, component: "Menu",
       title: "DUM DUM™ — La carta",
       desc: "La carta de DUM DUM: dumplings que rompen las normas. Cheese Burger, Carbonara, Gamba K-Pop y más." },
     { prefix: "/locales",  exact: false, component: "Locales",
       title: "DUM DUM™ — Locales",
-      desc: "Nuestros dos locales en Madrid: Chamberí (Blasco de Garay, 10) y Tetuán (Infanta Mercedes, 17)." },
+      desc: "Nuestros dos locales en Madrid: Chamberí (Blasco de Garay, 10) y Bernabéu (Infanta Mercedes, 17)." },
     { prefix: "/eventos",  exact: false, component: "Eventos",
       title: "DUM DUM™ — Eventos",
       desc: "Un espacio con identidad para tu evento en Madrid. 55 m², cocina abierta, hasta 35 personas." },
@@ -34,20 +34,51 @@ function getRoutesTable() {
   ];
 }
 
-// Actualiza <title> y <meta name="description"> según la ruta (SEO por página).
-function applyHeadMeta(matched) {
+// Actualiza title, description, canonical, Open Graph y Twitter según la ruta
+// (SEO por página). Así cada página tiene su propia URL canónica y su propia
+// previsualización al compartir, no la de la home.
+const SITE_ORIGIN = "https://dum-dum.es";
+
+// Crea o actualiza un <meta>/<link> del <head>. selector identifica el tag;
+// si no existe, lo crea con los atributos de create.
+function setHeadTag(selector, create, attr, value) {
+  let el = document.querySelector(selector);
+  if (!el) {
+    el = document.createElement(create.tag);
+    for (const k in create.attrs) el.setAttribute(k, create.attrs[k]);
+    document.head.appendChild(el);
+  }
+  el.setAttribute(attr, value);
+}
+
+function applyHeadMeta(matched, route) {
   if (typeof document === "undefined") return;
   const def = "DUM DUM™ — Dumplings & Desobediencia";
-  document.title = (matched && matched.title) ? matched.title : def;
-  if (matched && matched.desc != null) {
-    let m = document.querySelector('meta[name="description"]');
-    if (!m) {
-      m = document.createElement("meta");
-      m.setAttribute("name", "description");
-      document.head.appendChild(m);
-    }
-    m.setAttribute("content", matched.desc);
-  }
+  const title = (matched && matched.title) ? matched.title : def;
+  const desc = (matched && matched.desc != null) ? matched.desc : "";
+  // URL canónica de esta página (sin barra final salvo la home).
+  let path = route || "/";
+  if (path.length > 1 && path.charAt(path.length - 1) === "/") path = path.slice(0, -1);
+  const url = SITE_ORIGIN + (path === "/" ? "/" : path);
+
+  document.title = title;
+  setHeadTag('meta[name="description"]',
+    { tag: "meta", attrs: { name: "description" } }, "content", desc);
+  // Canónica dinámica: cada ruta apunta a sí misma, no a la home.
+  setHeadTag('link[rel="canonical"]',
+    { tag: "link", attrs: { rel: "canonical" } }, "href", url);
+  // Open Graph (WhatsApp, Facebook…) por página.
+  setHeadTag('meta[property="og:title"]',
+    { tag: "meta", attrs: { property: "og:title" } }, "content", title);
+  setHeadTag('meta[property="og:description"]',
+    { tag: "meta", attrs: { property: "og:description" } }, "content", desc);
+  setHeadTag('meta[property="og:url"]',
+    { tag: "meta", attrs: { property: "og:url" } }, "content", url);
+  // Twitter Card por página.
+  setHeadTag('meta[name="twitter:title"]',
+    { tag: "meta", attrs: { name: "twitter:title" } }, "content", title);
+  setHeadTag('meta[name="twitter:description"]',
+    { tag: "meta", attrs: { name: "twitter:description" } }, "content", desc);
 }
 
 function matchRoute(route) {
@@ -76,7 +107,7 @@ function App() {
   // Scroll arriba + actualizar título/descripción SEO al cambiar de ruta
   React.useEffect(() => {
     window.scrollTo(0, 0);
-    applyHeadMeta(matchRoute(route));
+    applyHeadMeta(matchRoute(route), route);
   }, [route]);
 
   const matched = matchRoute(route);
