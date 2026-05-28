@@ -255,16 +255,14 @@ img { display: block; max-width: 100%; }
 .reserve-modal .alerg-scroll{ padding-left:28px; padding-right:28px; }
 .reserve-modal .alerg-scroll > *{ max-width:none; }
 
-/* MÁRGENES LATERALES: el widget (select) mide 372px y ocupa el ancho completo
-   del contenedor. La línea y el texto deben medir lo mismo, así que SIN margen
-   lateral (antes 28px los dejaba en 346px, más estrechos que el widget). */
-.reserve-modal .alerg-title,
-.reserve-modal .alerg-intro,
-.reserve-modal .alerg-sep{ margin-left:0; margin-right:0; }
+/* MÁRGENES LATERALES: el widget (botón y select) mide 372px; el contenedor da
+   402px. Forzamos línea, título e intro a 372px centrados para que coincidan. */
+.reserve-modal .alerg-scroll > .alerg-title,
+.reserve-modal .alerg-scroll > .alerg-intro,
+.reserve-modal .alerg-scroll > .alerg-sep{ width:372px !important; max-width:100% !important; margin-left:auto !important; margin-right:auto !important; box-sizing:border-box; }
 
-/* AIRES VERTICALES. El iframe DISH tiene aire propio dentro (arriba poco, abajo
-   algo más bajo el botón). Compensamos con margen negativo moderado. OJO: si se
-   pasa, la línea se solapa con el botón y desaparece; mantener valores suaves. */
+/* AIRES VERTICALES. El iframe DISH mete espacio vacío bajo el botón; lo
+   compensamos con margen negativo. Valor controlado por --dish-air-bottom. */
 .reserve-modal{ --dish-air-top: 14px; --dish-air-bottom: 45px; }
 .reserve-modal .alerg-intro{ margin-top:10px; margin-bottom:0; }
 .reserve-modal .alerg-sep{ margin-top:var(--alerg-gap); margin-bottom:var(--alerg-gap); }
@@ -273,16 +271,6 @@ img { display: block; max-width: 100%; }
 .reserve-modal .alerg-sep + .alerg-title{ margin-top:0; }
 
 .reserve-modal strong{ font-weight:700; }
-.reserve-modal .alerg-intro::after,
-.reserve-modal .alerg-title::before,
-.reserve-modal .alerg-title::after{ display:none; }
-.dish-widget-host{ width:100%; }
-@media (max-width:520px){
-  .reserve-modal{ border-radius:20px; }
-}
-.reserve-modal strong{ font-weight:700; }
-/* Anular los recortes de hueco fantasma (::before/::after) que usan título e
-   intro en alérgenos: aquí el aire lo controlamos solo con los márgenes. */
 .reserve-modal .alerg-intro::after,
 .reserve-modal .alerg-title::before,
 .reserve-modal .alerg-title::after{ display:none; }
