@@ -314,6 +314,14 @@ function TopBar({ route }) {
     window.addEventListener("dumdum:open-reserve", handler);
     return () => window.removeEventListener("dumdum:open-reserve", handler);
   }, []);
+  // Cerrar modales (reservas y pide ya) con la tecla ESC.
+  React.useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") { setReserveOpen(false); setPideOpen(false); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
   // En la página de menú (a la que se llega por el QR de las mesas) ocultamos
   // "Pide ya" SOLO en móvil, para no inducir a pedir online estando en mesa.
   // Detecta la página de menú de forma tolerante (con o sin barra final).
@@ -445,14 +453,21 @@ function TopBar({ route }) {
     }
 
     {reserveOpen &&
-    <div className="reserve-overlay" onClick={() => setReserveOpen(false)}>
-      <div className="reserve-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="reserve-closebar">
-          <button className="reserve-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)}>×</button>
+    <div className="alerg-overlay" onClick={() => setReserveOpen(false)}>
+      <div className="alerg-modal reserve-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="alerg-closebar">
+          <button className="alerg-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)}>×</button>
         </div>
-        <h3 className="reserve-title">{t("Reservar mesa", "Book a table")}</h3>
-        <div className="reserve-widget-wrap">
-          <DishWidget />
+        <div className="alerg-scroll">
+          <h3 className="alerg-title">{t("¡Pues a reservar mesita!", "Let's book you a table!")}</h3>
+          <p className="alerg-intro">{t("Solo por si: recuerda que solo hacemos reservas en el local de Bernabéu, en Infanta Mercedes, 17.", "Just so you know: we only take reservations at our Bernabéu spot, Infanta Mercedes, 17.")}</p>
+          <hr className="alerg-sep" />
+          <div className="reserve-widget-wrap">
+            <DishWidget />
+          </div>
+          <hr className="alerg-sep" />
+          <h3 className="alerg-title">{t("*¡Un temita!", "*One thing!")}</h3>
+          <p className="alerg-intro">{t("Si reservas a las 15:30 o 22:30, no apures mucho con la hora, que a y 39 cerramos la cocina y os queremos dar de comer ;)", "If you book at 3:30pm or 10:30pm, don't cut it too close: the kitchen closes at :39 and we really want to feed you ;)")}</p>
         </div>
       </div>
     </div>

@@ -498,6 +498,13 @@ function Menu() {
       window.removeEventListener("resize", check);
     };
   }, [alergView, selAlerg, lang, data]);
+  // Cerrar el modal de alérgenos con ESC.
+  React.useEffect(() => {
+    if (!alergView) return;
+    const onKey = (e) => { if (e.key === "Escape") setAlergView(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [alergView]);
 
 
 
