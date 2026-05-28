@@ -1105,7 +1105,7 @@ function BotonLlamarBernabeu() {
     : (revealed ? TEL_HUMAN : t("Llamar a Bernabéu", "Call Bernabéu"));
   return (
     <a className="btn btn-call-green" href={"tel:" + TEL} onClick={handleClick}>
-      {telIcon}{label}
+      {telIcon}{label} →
     </a>
   );
 }
