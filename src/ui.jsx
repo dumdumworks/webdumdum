@@ -459,15 +459,19 @@ function TopBar({ route }) {
           <button className="alerg-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)}>×</button>
         </div>
         <div className="alerg-scroll">
-          <h3 className="alerg-title">{t("¡Pues a reservar mesita!", "Let's book you a table!")}</h3>
-          <p className="alerg-intro">{t("Solo por si: recuerda que solo hacemos reservas en el local de Bernabéu, en Infanta Mercedes, 17.", "Just so you know: we only take reservations at our Bernabéu spot, Infanta Mercedes, 17.")}</p>
+          <h3 className="alerg-title">{t("Pues a reservar mesita!", "Let's book you a table!")}</h3>
+          <p className="alerg-intro">{lang === "es"
+            ? <React.Fragment>Solo por si: recuerda que <strong>solo hacemos reservas en el local de Bernabéu</strong>, en Infanta Mercedes, 17.</React.Fragment>
+            : <React.Fragment>Just so you know: <strong>we only take reservations at our Bernabéu spot</strong>, Infanta Mercedes, 17.</React.Fragment>}</p>
           <hr className="alerg-sep" />
           <div className="reserve-widget-wrap">
             <DishWidget />
           </div>
           <hr className="alerg-sep" />
-          <h3 className="alerg-title">{t("*¡Un temita!", "*One thing!")}</h3>
-          <p className="alerg-intro">{t("Si reservas a las 15:30 o 22:30, no apures mucho con la hora, que a y 39 cerramos la cocina y os queremos dar de comer ;)", "If you book at 3:30pm or 10:30pm, don't cut it too close: the kitchen closes at :39 and we really want to feed you ;)")}</p>
+          <h3 className="alerg-title">{t("*Un tema!", "*One thing!")}</h3>
+          <p className="alerg-intro">{lang === "es"
+            ? <React.Fragment>Si reservas a las <strong>15:30 o 22:30</strong>, no apures mucho con la hora, que <strong>a y 39 cerramos la cocina</strong> y os queremos dar de comer 😉</React.Fragment>
+            : <React.Fragment>If you book at <strong>3:30pm or 10:30pm</strong>, don't cut it too close: <strong>the kitchen closes at :39</strong> and we really want to feed you 😉</React.Fragment>}</p>
         </div>
       </div>
     </div>

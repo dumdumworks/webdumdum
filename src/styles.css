@@ -251,13 +251,24 @@ img { display: block; max-width: 100%; }
 }
 
 /* ── Modal de RESERVAS (widget DISH) ──────────────────────── */
-/* Usa la maquinaria del modal de alérgenos (alerg-overlay/modal/scroll/sep/
-   title/intro) para que aires y tipografías sean idénticos. Solo ajustamos
-   el ancho y los aires simétricos alrededor del widget embebido. */
-.reserve-modal{ max-width:640px; }
-/* Aire simétrico alrededor del widget, igual que --alerg-gap en el resto */
-.alerg-sep + .reserve-widget-wrap{ margin-top:var(--alerg-gap); }
-.reserve-widget-wrap{ margin-bottom:var(--alerg-gap); }
+/* Usa la maquinaria del modal de alérgenos. Ancho más contenido (proporción
+   vertical como la maqueta) y aire IDÉNTICO arriba/abajo de cada línea. */
+.alerg-modal.reserve-modal{ max-width:560px; }
+/* Las líneas de este modal llevan ellas mismas el aire simétrico (mismo valor
+   arriba y abajo), y reseteamos los márgenes de los vecinos para que el aire
+   visible sea exactamente ese y no se sume el del intro/título/widget. */
+.reserve-modal .alerg-intro{ margin:10px 0 0; }
+.reserve-modal .alerg-sep{ margin:var(--alerg-gap) 0; }
+.reserve-modal .alerg-sep + .reserve-widget-wrap{ margin-top:0; }
+.reserve-modal .reserve-widget-wrap{ margin:0; }
+.reserve-modal .alerg-sep + .alerg-title{ margin-top:0; }
+.reserve-modal strong{ font-weight:700; }
+/* Anular los recortes de hueco fantasma (::before/::after) que usan título e
+   intro en alérgenos: aquí queremos que el aire visible arriba y abajo de cada
+   línea sea EXACTAMENTE --alerg-gap, sin las micro-compensaciones. */
+.reserve-modal .alerg-intro::after,
+.reserve-modal .alerg-title::before,
+.reserve-modal .alerg-title::after{ display:none; }
 .dish-widget-host{ width:100%; }
 @media (max-width:520px){
   .reserve-modal{ border-radius:20px; }
