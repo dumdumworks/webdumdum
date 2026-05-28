@@ -287,11 +287,9 @@ img { display: block; max-width: 100%; }
   .reserve-modal .alerg-scroll > .alerg-title,
   .reserve-modal .alerg-scroll > .alerg-intro,
   .reserve-modal .alerg-scroll > .alerg-sep{ width:281px !important; }
-  .reserve-modal{ --dish-air-top: 14px; --dish-air-bottom: 320px; }
-  /* Estructura de abajo en móvil: botón → 32px → 2ª línea → 32px → disclaimer.
-     La 2ª línea (la que precede al título "*Un tema!") lleva 32px a cada lado.
-     El margin-top efectivo se combina con la compensación del widget (320px). */
-  .reserve-modal .reserve-widget-wrap + .alerg-sep{ margin-top:32px; margin-bottom:32px; position:relative; z-index:2; }
+  .reserve-modal{ --dish-air-top: 14px; --dish-air-bottom: 223px; }
+  /* Estructura de abajo: botón → 32px → 2ª línea → 32px → disclaimer. */
+  .reserve-modal .reserve-widget-wrap + .alerg-sep{ margin-top:32px; margin-bottom:32px; }
 }
 .topbar .brand {
   font-family: var(--font-display); font-weight: 600; font-size: 14px;
