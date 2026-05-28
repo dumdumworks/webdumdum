@@ -245,8 +245,8 @@
   max-width: 200px;
   aspect-ratio: 129.6 / 130.32;
   background-color: var(--ink);
-  -webkit-mask: url("../img/dumdum-sello.svg") no-repeat center / contain;
-  mask: url("../img/dumdum-sello.svg") no-repeat center / contain;
+  -webkit-mask: url("../img/logos/dumdum-sello.svg") no-repeat center / contain;
+  mask: url("../img/logos/dumdum-sello.svg") no-repeat center / contain;
   transition: background-color .25s ease;
 }
 /* Al pinchar/hover: fondo rojo y sello en crema (colores invertidos) */

@@ -230,7 +230,7 @@ function Home() {
 
             {/* Logo central con claim incluido */}
             <div className="hero-logo">
-              <img src="img/dumdum-claim.svg" alt="DUM DUM™ · Dumplings &amp; Desobediencia" />
+              <img src="img/logos/dumdum-claim.svg" alt="DUM DUM™ · Dumplings &amp; Desobediencia" />
             </div>
 
             {/* Bloque direcciones, pegado a la dcha del logo */}
@@ -1884,7 +1884,7 @@ function EventosForm() {
             ? <span className="btn-label">{t("Enviando…", "Sending…")}</span>
             : <React.Fragment><span className="btn-label">{t("Enviar solicitud", "Send request")}</span><span className="btn-arrow">→</span></React.Fragment>}
         </button>
-        <a className="btn" href="/img/DUMDUM_DOSSIER_EVENTOS.pdf" target="_blank" rel="noreferrer">
+        <a className="btn" href="/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf" target="_blank" rel="noreferrer">
           <span className="btn-label">{t("Descargar dossier", "Download dossier")}</span><span className="btn-arrow">↓</span>
         </a>
       </div>
