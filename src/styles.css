@@ -255,12 +255,12 @@ img { display: block; max-width: 100%; }
 .reserve-modal .alerg-scroll{ padding-left:28px; padding-right:28px; }
 .reserve-modal .alerg-scroll > *{ max-width:none; }
 
-/* MÁRGENES LATERALES: alineados al borde del botón "Reservar ahora" (el
-   elemento de referencia que pidió el cliente). Medido sobre captura: el botón
-   queda a ~28px del borde del padding del scroll; igualamos todo a eso. */
+/* MÁRGENES LATERALES: el widget (select) mide 372px y ocupa el ancho completo
+   del contenedor. La línea y el texto deben medir lo mismo, así que SIN margen
+   lateral (antes 28px los dejaba en 346px, más estrechos que el widget). */
 .reserve-modal .alerg-title,
 .reserve-modal .alerg-intro,
-.reserve-modal .alerg-sep{ margin-left:28px; margin-right:28px; }
+.reserve-modal .alerg-sep{ margin-left:0; margin-right:0; }
 
 /* AIRES VERTICALES. El iframe DISH tiene aire propio dentro (arriba poco, abajo
    algo más bajo el botón). Compensamos con margen negativo moderado. OJO: si se
