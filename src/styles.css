@@ -282,13 +282,18 @@ img { display: block; max-width: 100%; }
 .reserve-widget-wrap > div{ width:100% !important; max-width:100% !important; }
 @media (max-width:520px){
   .reserve-modal{ border-radius:20px; }
-  /* Ancho del widget en móvil medido por el usuario: 281px. Líneas y textos a
-     ese ancho exacto, centrados. */
+  /* Ancho del widget en móvil: 281px (medido). Líneas y textos a ese ancho. */
   .reserve-modal .alerg-scroll > .alerg-title,
   .reserve-modal .alerg-scroll > .alerg-intro,
   .reserve-modal .alerg-scroll > .alerg-sep{ width:281px !important; }
-  .reserve-modal{ --dish-air-top: 14px; --dish-air-bottom: 223px; }
-  /* Estructura de abajo: botón → 32px → 2ª línea → 32px → disclaimer. */
+  /* ENFOQUE NUEVO: en vez de margen negativo (que solapaba la línea), recortamos
+     el contenedor del widget justo después del botón "Reserve now" con max-height
+     + overflow:hidden, eliminando el espacio vacío que reserva el iframe. Así la
+     línea y el disclaimer caen de forma natural debajo, sin solapes.
+     --dish-h = altura a la que se recorta (hasta justo bajo el botón). */
+  .reserve-modal{ --dish-air-top: 14px; --dish-h: 230px; }
+  .reserve-modal .reserve-widget-wrap{ margin-bottom:0; max-height:var(--dish-h); overflow:hidden; }
+  /* Estructura: botón → 32px → línea → 32px → disclaimer. */
   .reserve-modal .reserve-widget-wrap + .alerg-sep{ margin-top:32px; margin-bottom:32px; }
 }
 .topbar .brand {
