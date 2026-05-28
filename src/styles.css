@@ -251,21 +251,29 @@ img { display: block; max-width: 100%; }
 }
 
 /* ── Modal de RESERVAS (widget DISH) ──────────────────────── */
-/* Todo el contenido (título, intro, líneas, widget, disclaimer) comparte un
-   mismo ancho estrecho y centrado, de modo que sus márgenes laterales coincidan
-   exactamente con los del widget. */
-.alerg-modal.reserve-modal{ max-width:480px; }
-.reserve-modal .alerg-scroll > *{
-  max-width:400px; margin-left:auto; margin-right:auto;
-}
-/* Aires simétricos por nuestra parte (lo que controlamos). El widget DISH
-   añade su propio margen interno arriba, que no podemos medir aquí; si al
-   verlo en real ese lado se ve mayor, se ajusta con un valor concreto. */
-.reserve-modal .alerg-intro{ margin:10px auto 0; }
-.reserve-modal .alerg-sep{ margin:var(--alerg-gap) auto; }
-.reserve-modal .alerg-sep + .reserve-widget-wrap{ margin-top:0; }
-.reserve-modal .reserve-widget-wrap{ margin:0 auto; }
+/* Todo el contenido comparte el MISMO ancho y márgenes laterales: en vez de
+   dar max-width a cada hijo, ponemos un padding lateral fijo al scroll y los
+   hijos ocupan el 100% de ese ancho. El widget manda el ancho de referencia. */
+.alerg-modal.reserve-modal{ max-width:460px; }
+.reserve-modal .alerg-scroll{ padding-left:28px; padding-right:28px; }
+.reserve-modal .alerg-scroll > *{ max-width:none; margin-left:0; margin-right:0; }
+/* Aires alrededor de las líneas. El widget DISH añade ~22px de aire interno
+   propio (medido sobre captura real), así que del lado del widget restamos esa
+   cantidad para que el aire VISIBLE iguale al del otro lado de la línea. */
+.reserve-modal{ --dish-air: 22px; }
+.reserve-modal .alerg-intro{ margin:10px 0 0; }
+.reserve-modal .alerg-sep{ margin:var(--alerg-gap) 0; }
+.reserve-modal .alerg-sep + .reserve-widget-wrap{ margin-top:calc(-1 * var(--dish-air)); }
+.reserve-modal .reserve-widget-wrap{ margin:calc(-1 * var(--dish-air)) 0 0; }
 .reserve-modal .alerg-sep + .alerg-title{ margin-top:0; }
+.reserve-modal strong{ font-weight:700; }
+.reserve-modal .alerg-intro::after,
+.reserve-modal .alerg-title::before,
+.reserve-modal .alerg-title::after{ display:none; }
+.dish-widget-host{ width:100%; }
+@media (max-width:520px){
+  .reserve-modal{ border-radius:20px; }
+}
 .reserve-modal strong{ font-weight:700; }
 /* Anular los recortes de hueco fantasma (::before/::after) que usan título e
    intro en alérgenos: aquí el aire lo controlamos solo con los márgenes. */
