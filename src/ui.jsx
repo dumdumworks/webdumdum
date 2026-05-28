@@ -461,7 +461,7 @@ function TopBar({ route }) {
         <div className="alerg-scroll">
           <h3 className="alerg-title">{t("A reservar mesa", "Let's book you a table!")}</h3>
           <p className="alerg-intro">{lang === "es"
-            ? <React.Fragment>Solo por si: <strong>sólo hacemos reservas en el local de Bernabéu</strong>, en Infanta Mercedes, 17 🙃</React.Fragment>
+            ? <React.Fragment>Solo por si: <strong>sólo hacemos reservas en el local de Bernabéu</strong> [Infanta Mercedes, 17] 🙃</React.Fragment>
             : <React.Fragment>Just so you know: <strong>we only take reservations at our Bernabéu spot</strong>, Infanta Mercedes, 17.</React.Fragment>}</p>
           <hr className="alerg-sep" />
           <div className="reserve-widget-wrap">
