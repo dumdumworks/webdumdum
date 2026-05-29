@@ -27,9 +27,10 @@ function getRoutesTable() {
       desc: "Un espacio con identidad para tu evento en Madrid. 55 m², cocina abierta, hasta 35 personas." },
     { prefix: "/contacto", exact: false, component: "Contacto",
       title: "DUM DUM™ — Contacto",
-      desc: "Contacta con DUM DUM. Reservas, eventos y consultas." },
-    { prefix: "/admin",    exact: false, component: "Admin",
-      title: "DUM DUM™ — Admin", desc: "" }
+      desc: "Contacta con DUM DUM. Reservas, eventos y consultas." }
+    // Nota: /admin/ se sirve como carpeta estática (Sveltia CMS), no como ruta
+    // de esta SPA. El _redirects de la raíz tiene una regla "/admin/* 200" antes
+    // del catch-all para que Cloudflare Pages sirva los archivos de /admin/.
     // Futuras páginas: añade aquí { prefix, exact, component, title, desc }.
   ];
 }
@@ -111,19 +112,20 @@ function App() {
   }, [route]);
 
   const matched = matchRoute(route);
-  const isAdmin = !!matched && matched.component === "Admin";
+  // matched se mantiene declarado aquí por si en el futuro se necesita
+  // para condicionar layout, pero ahora mismo no se consulta.
 
   return (
     <React.Fragment>
       {!loaded && <Loader onDone={() => setLoaded(true)} />}
 
-      {!isAdmin && <TopBar route={route} />}
+      <TopBar route={route} />
 
       <main>
         {renderRoute(route)}
       </main>
 
-      {!isAdmin && <Footer />}
+      <Footer />
     </React.Fragment>
   );
 }

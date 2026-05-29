@@ -6,6 +6,13 @@
 # una sola URL en vez de dos con el mismo contenido).
 /menu_eng    /menu    301
 
+# ── CMS Sveltia: servir /admin/ como archivos estáticos ───────
+# Sveltia CMS vive en la carpeta /admin/ del repo. Sin esta regla,
+# el catch-all de abajo desviaría /admin/ al index.html de la SPA y
+# se cargaría React en vez del CMS. Esta regla tiene que ir ANTES
+# del catch-all para que se aplique primero.
+/admin/*    /admin/:splat    200
+
 # ── Router SPA ────────────────────────────────────────────────
 # Cualquier ruta que no sea un archivo real ni una redirección de
 # arriba sirve index.html (200, no redirección) para que el router
