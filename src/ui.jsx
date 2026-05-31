@@ -308,9 +308,11 @@ function TopBar({ route }) {
   // disparando el evento global "dumdum:open-reserve". Se cierra al pinchar
   // fuera, al pulsar la X, o al cambiar de página.
   const [reserveOpen, setReserveOpen] = React.useState(false);
+  // Paso del modal de reservas: "aviso" (recordatorio de Bernabéu) o "widget".
+  const [reserveStep, setReserveStep] = React.useState("aviso");
   React.useEffect(() => { setReserveOpen(false); }, [route]);
   React.useEffect(() => {
-    const handler = () => setReserveOpen(true);
+    const handler = () => { setReserveStep("aviso"); setReserveOpen(true); };
     window.addEventListener("dumdum:open-reserve", handler);
     return () => window.removeEventListener("dumdum:open-reserve", handler);
   }, []);
@@ -460,13 +462,31 @@ function TopBar({ route }) {
         </div>
         <div className="alerg-scroll">
           <h3 className="alerg-title">{t("A reservar mesa", "Let's book you a table!")}</h3>
-          <p className="alerg-intro">{lang === "es"
-            ? <React.Fragment>Solo por si: <strong>sólo hacemos reservas en el local de Bernabéu</strong> [Infanta Mercedes, 17] 🙃</React.Fragment>
-            : <React.Fragment>Just so you know: <strong>we only take reservations at our Bernabéu spot</strong>, Infanta Mercedes, 17.</React.Fragment>}</p>
-          <hr className="alerg-sep" />
-          <div className="reserve-widget-wrap">
-            <DishWidget />
-          </div>
+
+          {reserveStep === "aviso" ?
+          <React.Fragment>
+            <div style={{ background: 'var(--red)', color: '#fffaf3', borderRadius: 14, padding: '28px 22px', textAlign: 'center', margin: '4px 0 6px' }}>
+              <div style={{ fontSize: 44, lineHeight: 1, marginBottom: 12 }} aria-hidden="true">📍</div>
+              <div style={{ fontWeight: 800, fontSize: 19, letterSpacing: '0.01em', lineHeight: 1.25 }}>
+                {t("RECUERDA. TU RESERVA SERÁ EN EL LOCAL DE BERNABÉU", "REMEMBER. YOUR BOOKING WILL BE AT OUR BERNABÉU SPOT")}
+              </div>
+              <div style={{ marginTop: 10, fontSize: 15, opacity: 0.92 }}>[Infanta Mercedes, 17]</div>
+              <button
+                type="button"
+                onClick={() => setReserveStep("widget")}
+                style={{ marginTop: 20, background: '#fffaf3', color: 'var(--red)', border: 'none', borderRadius: 999, padding: '13px 34px', fontSize: 16, fontWeight: 700, cursor: 'pointer' }}>
+                {t("Continuar", "Continue")} →
+              </button>
+            </div>
+          </React.Fragment>
+          :
+          <React.Fragment>
+            <div className="reserve-widget-wrap">
+              <DishWidget />
+            </div>
+          </React.Fragment>
+          }
+
           <hr className="alerg-sep" />
           <h3 className="alerg-title">{t("*Un tema!", "*One thing!")}</h3>
           <p className="alerg-intro">{lang === "es"
