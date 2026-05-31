@@ -456,21 +456,22 @@ function TopBar({ route }) {
 
     {reserveOpen &&
     <div className="alerg-overlay" onClick={() => setReserveOpen(false)}>
-      <div className="alerg-modal reserve-modal" onClick={(e) => e.stopPropagation()}>
+      <style>{".reserve-modal--aviso::after{ display:none !important; }"}</style>
+      <div className={"alerg-modal reserve-modal" + (reserveStep === "aviso" ? " reserve-modal--aviso" : "")} onClick={(e) => e.stopPropagation()} style={reserveStep === "aviso" ? { background: 'var(--red)' } : undefined}>
         <div className="alerg-closebar">
-          <button className="alerg-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)}>×</button>
+          <button className="alerg-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)} style={reserveStep === "aviso" ? { color: '#fffaf3' } : undefined}>×</button>
         </div>
         <div className="alerg-scroll">
           {reserveStep === "aviso" ?
           <React.Fragment>
-            <div className="reserve-aviso" style={{ width: '372px', maxWidth: '100%', marginLeft: 'auto', marginRight: 'auto', marginTop: '20px', marginBottom: '-28px', boxSizing: 'border-box', background: 'var(--red)', color: '#fffaf3', borderRadius: 18, padding: '44px 26px', textAlign: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', minHeight: '320px', color: '#fffaf3', padding: '20px 10px' }}>
               <div style={{ marginBottom: 18 }} aria-hidden="true">
                 <svg width="52" height="52" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', margin: '0 auto' }}>
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#fffaf3"/>
                   <circle cx="12" cy="9" r="2.6" fill="var(--red)"/>
                 </svg>
               </div>
-              <div style={{ fontWeight: 800, fontSize: 20, letterSpacing: '0.01em', lineHeight: 1.25 }}>
+              <div style={{ fontWeight: 800, fontSize: 20, letterSpacing: '0.01em', lineHeight: 1.25, maxWidth: '340px' }}>
                 {t("RECUERDA. TU RESERVA SERÁ EN EL LOCAL DE BERNABÉU", "REMEMBER. YOUR BOOKING WILL BE AT OUR BERNABÉU SPOT")}
               </div>
               <div style={{ marginTop: 12, fontSize: 15, opacity: 0.92 }}>[Infanta Mercedes, 17]</div>
