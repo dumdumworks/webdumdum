@@ -461,37 +461,40 @@ function TopBar({ route }) {
           <button className="alerg-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)}>×</button>
         </div>
         <div className="alerg-scroll">
-          <h3 className="alerg-title">{t("A reservar mesa", "Let's book you a table!")}</h3>
-
           {reserveStep === "aviso" ?
           <React.Fragment>
-            <div style={{ background: 'var(--red)', color: '#fffaf3', borderRadius: 14, padding: '28px 22px', textAlign: 'center', margin: '4px 0 6px' }}>
-              <div style={{ fontSize: 44, lineHeight: 1, marginBottom: 12 }} aria-hidden="true">📍</div>
-              <div style={{ fontWeight: 800, fontSize: 19, letterSpacing: '0.01em', lineHeight: 1.25 }}>
+            <div className="reserve-aviso" style={{ width: '372px', maxWidth: '100%', marginLeft: 'auto', marginRight: 'auto', marginTop: '20px', marginBottom: '-28px', boxSizing: 'border-box', background: 'var(--red)', color: '#fffaf3', borderRadius: 18, padding: '44px 26px', textAlign: 'center' }}>
+              <div style={{ marginBottom: 18 }} aria-hidden="true">
+                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', margin: '0 auto' }}>
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#fffaf3"/>
+                  <circle cx="12" cy="9" r="2.6" fill="var(--red)"/>
+                </svg>
+              </div>
+              <div style={{ fontWeight: 800, fontSize: 20, letterSpacing: '0.01em', lineHeight: 1.25 }}>
                 {t("RECUERDA. TU RESERVA SERÁ EN EL LOCAL DE BERNABÉU", "REMEMBER. YOUR BOOKING WILL BE AT OUR BERNABÉU SPOT")}
               </div>
-              <div style={{ marginTop: 10, fontSize: 15, opacity: 0.92 }}>[Infanta Mercedes, 17]</div>
+              <div style={{ marginTop: 12, fontSize: 15, opacity: 0.92 }}>[Infanta Mercedes, 17]</div>
               <button
                 type="button"
                 onClick={() => setReserveStep("widget")}
-                style={{ marginTop: 20, background: '#fffaf3', color: 'var(--red)', border: 'none', borderRadius: 999, padding: '13px 34px', fontSize: 16, fontWeight: 700, cursor: 'pointer' }}>
+                style={{ marginTop: 26, background: '#fffaf3', color: 'var(--red)', border: 'none', borderRadius: 999, padding: '13px 34px', fontSize: 16, fontWeight: 700, cursor: 'pointer' }}>
                 {t("Continuar", "Continue")} →
               </button>
             </div>
           </React.Fragment>
           :
           <React.Fragment>
+            <h3 className="alerg-title">{t("A reservar mesa", "Let's book you a table!")}</h3>
             <div className="reserve-widget-wrap">
               <DishWidget />
             </div>
+            <hr className="alerg-sep" />
+            <h3 className="alerg-title">{t("*Un tema!", "*One thing!")}</h3>
+            <p className="alerg-intro">{lang === "es"
+              ? <React.Fragment>Si reservas a las <strong>15:30 o 22:30</strong>, no apures mucho con la hora, que <strong>a y 39 cerramos la cocina</strong> y os queremos dar de comer 😉</React.Fragment>
+              : <React.Fragment>If you book at <strong>3:30pm or 10:30pm</strong>, don't cut it too close: <strong>the kitchen closes at :39</strong> and we really want to feed you 😉</React.Fragment>}</p>
           </React.Fragment>
           }
-
-          <hr className="alerg-sep" />
-          <h3 className="alerg-title">{t("*Un tema!", "*One thing!")}</h3>
-          <p className="alerg-intro">{lang === "es"
-            ? <React.Fragment>Si reservas a las <strong>15:30 o 22:30</strong>, no apures mucho con la hora, que <strong>a y 39 cerramos la cocina</strong> y os queremos dar de comer 😉</React.Fragment>
-            : <React.Fragment>If you book at <strong>3:30pm or 10:30pm</strong>, don't cut it too close: <strong>the kitchen closes at :39</strong> and we really want to feed you 😉</React.Fragment>}</p>
         </div>
       </div>
     </div>
