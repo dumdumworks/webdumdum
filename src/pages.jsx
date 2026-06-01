@@ -214,8 +214,8 @@ function Home() {
   React.useEffect(() => () => { if (toastTimer.current) clearTimeout(toastTimer.current); }, []);
 
   const UBER_URL = "https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY";
-  // Take Away ahora apunta al mismo destino que Uber Eats.
-  const TAKEAWAY_URL = UBER_URL;
+  // Take Away apunta a la tienda online de Square.
+  const TAKEAWAY_URL = "https://dum-dumplings.square.site/";
 
   return (
     <div data-screen-label="home">

@@ -264,8 +264,8 @@ function LangToggle() {
 function TopBar({ route }) {
   const lang = useLang();
   const UBER_URL = "https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY";
-  // Take Away ahora apunta al mismo destino que Uber Eats.
-  const TAKEAWAY_URL = UBER_URL;
+  // Take Away apunta a la tienda online de Square.
+  const TAKEAWAY_URL = "https://dum-dumplings.square.site/";
   const SPOTIFY_URL = "https://open.spotify.com/playlist/75oqGRFz3CXErzrfBQTuVd?si=62f669c4e6674ff1";
 
   // Menú móvil (hamburguesa): los 9 destinos de la rejilla de la home.
