@@ -36,7 +36,7 @@ collections:
                 label_singular: "Plato"
                 summary: "{{fields.name}} - {{fields.price}} EUR"
                 fields:
-                  - { name: "id", label: "ID interno", widget: "string", hint: "Sin espacios ni acentos. Ej: muaythai" }
+                  - { name: "id", label: "ID interno (se genera solo)", widget: "uuid" }
                   - { name: "n", label: "Numero", widget: "number", value_type: "int", default: 0 }
                   - { name: "name", label: "Nombre del plato", widget: "string" }
                   - { name: "name_en", label: "Nombre del plato (EN)", widget: "string", required: false, hint: "Version en ingles. Si lo dejas vacio, se muestra el espanol." }
@@ -80,7 +80,6 @@ collections:
                   - { name: "available", label: "Plato disponible (desmarca para ocultarlo de la web)", widget: "boolean", required: false, default: true }
                   - { name: "featured", label: "Plato destacado", widget: "boolean", required: false, default: false }
                   - { name: "image", label: "Foto del plato", widget: "image", required: false }
-                  - { name: "logo", label: "Logo (avanzado, dejar vacio)", widget: "string", required: false }
 
       - name: "textos-eventos"
         label: "Eventos · Textos"
