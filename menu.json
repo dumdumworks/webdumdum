@@ -63,6 +63,29 @@
           "logo": ""
         },
         {
+          "id": "cochinita",
+          "n": 2,
+          "name": "Cochinita Pibil",
+          "name_en": "Cochinita Pibil",
+          "tagline": "VIVA MÉXICO SIEMPRE, CABR**NES!",
+          "tagline_en": "Viva Mexico, motherf**kers!",
+          "ingredients": "Dumpling de Pierna de cerdo guisada · Achiote · Naranja · Guacamole · Cebolla roja encurtida · Cilantro · Tajín",
+          "ingredients_en": "Braised pork leg dumplings · Achiote · Orange · Guacamole · Pickled red onion · Cilantro · Tajín",
+          "price": "9,95",
+          "tags": [
+            "PICANTE",
+            "NEW",
+            "POR TIEMPO LIMITADO"
+          ],
+          "alergenos": [
+            "sulfitos"
+          ],
+          "available": true,
+          "featured": true,
+          "image": "/img/dumplings/pibil.jpg",
+          "logo": ""
+        },
+        {
           "id": "pepito",
           "n": 2,
           "name": "Pepito de Ternera",
@@ -203,6 +226,7 @@
             "moluscos"
           ],
           "available": true,
+          "featured": true,
           "image": "img/dumplings/gamba.jpg",
           "logo": ""
         },
@@ -249,29 +273,6 @@
           ],
           "available": true,
           "image": "img/dumplings/honey.jpg",
-          "logo": ""
-        },
-        {
-          "id": "cochinita",
-          "n": 2,
-          "name": "Cochinita Pibil",
-          "name_en": "Cochinita Pibil",
-          "tagline": "VIVA MÉXICO SIEMPRE, CABR**NES!",
-          "tagline_en": "Viva Mexico, motherf**kers!",
-          "ingredients": "Dumpling de Pierna de cerdo guisada · Achiote · Naranja · Guacamole · Cebolla roja encurtida · Cilantro · Tajín",
-          "ingredients_en": "Braised pork leg dumplings · Achiote · Orange · Guacamole · Pickled red onion · Cilantro · Tajín",
-          "price": "9,95",
-          "tags": [
-            "PICANTE",
-            "NEW",
-            "POR TIEMPO LIMITADO"
-          ],
-          "alergenos": [
-            "sulfitos"
-          ],
-          "available": true,
-          "featured": true,
-          "image": "/img/dumplings/pibil.jpg",
           "logo": ""
         }
       ]
