@@ -80,7 +80,7 @@
           "alergenos": [
             "sulfitos"
           ],
-          "available": false,
+          "available": true,
           "featured": true,
           "image": "/img/dumplings/pibil.jpg",
           "logo": ""
