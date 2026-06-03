@@ -13,6 +13,8 @@ public_folder: "img/dumplings"
 collections:
   - name: "galeria-imagenes"
     label: "Contenido de la web"
+    editor:
+      preview: false
     files:
       - name: "carta"
         label: "Carta"
@@ -24,6 +26,7 @@ collections:
             widget: "list"
             label_singular: "Seccion"
             summary: "{{fields.title}}"
+            collapsed: true
             fields:
               - { name: "id", label: "ID interno", widget: "string", hint: "No usar espacios ni acentos. Ej: dumplings" }
               - { name: "title", label: "Titulo de la seccion", widget: "string" }
@@ -35,6 +38,7 @@ collections:
                 widget: "list"
                 label_singular: "Plato"
                 summary: "{{fields.name}} - {{fields.price}} EUR"
+                collapsed: true
                 fields:
                   - { name: "id", label: "ID interno (se genera solo)", widget: "uuid" }
                   - { name: "n", label: "Numero", widget: "number", value_type: "int", default: 0 }
