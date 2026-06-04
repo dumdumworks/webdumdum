@@ -3,6 +3,28 @@
 <head>
   <meta charset="UTF-8" />
 
+  <!-- Google Consent Mode v2: estado por defecto DENEGADO. Debe ir el PRIMERO,
+       antes de Cookiebot y de Analytics. Cookiebot actualiza el permiso al aceptar. -->
+  <script data-cookieconsent="ignore">
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag("consent", "default", {
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+      analytics_storage: "denied",
+      functionality_storage: "denied",
+      personalization_storage: "denied",
+      security_storage: "granted",
+      wait_for_update: 500
+    });
+    gtag("set", "ads_data_redaction", true);
+    gtag("set", "url_passthrough", true);
+  </script>
+
+  <!-- Cookiebot (consentimiento de cookies) · DEBE ir antes de Google Analytics -->
+  <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="fff625a8-8755-4ff9-a968-09ead09cd1b9" data-blockingmode="auto" type="text/javascript"></script>
+
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VRELRN5VGC"></script>
   <script>
