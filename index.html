@@ -32,6 +32,12 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-VRELRN5VGC');
+
+    // Cada vez que se abre el widget de reserva (cualquier boton o el enlace del anuncio),
+    // se manda un evento a GA. Este evento es el que se marca como conversion en Ads.
+    window.addEventListener('dumdum:open-reserve', function () {
+      gtag('event', 'reserva_iniciada');
+    });
   </script>
 
   <!-- El index NUNCA se cachea: así siempre lee la versión actual de CSS/JS
@@ -188,6 +194,32 @@
           .catch(function () {});
       })
       .then(function () { window.__bootDumDum(); });
+  </script>
+
+  <!-- Disparador por URL: si alguien entra con ?reservar (p.ej. desde el anuncio),
+       se abre la ventana de reserva sola, como si hubiera pulsado el boton.
+       No toca el sistema de reservas: solo lanza la misma senal que los botones. -->
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (!params.has("reservar")) return;
+        var tries = 0;
+        var iv = setInterval(function () {
+          tries++;
+          var root = document.getElementById("root");
+          if (root && root.children.length > 0) {
+            clearInterval(iv);
+            // La web ya ha cargado; esperamos un instante y abrimos la reserva.
+            setTimeout(function () {
+              window.dispatchEvent(new Event("dumdum:open-reserve"));
+            }, 600);
+          } else if (tries > 100) {
+            clearInterval(iv); // seguridad: ~20s y paramos
+          }
+        }, 200);
+      } catch (e) {}
+    })();
   </script>
 </body>
 </html>
