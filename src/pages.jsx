@@ -1885,7 +1885,7 @@ function EventosForm() {
             : <React.Fragment><span className="btn-label">{t("Enviar solicitud", "Send request")}</span><span className="btn-arrow">→</span></React.Fragment>}
         </button>
         <a className="btn" href="/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf" target="_blank" rel="noreferrer">
-          <span className="btn-label">{t("Descargar dossier", "Download dossier")}</span><span className="btn-arrow">↓</span>
+          <span className="btn-label">{t("Descargar dossier con tarifas", "Download dossier with rates")}</span><span className="btn-arrow">↓</span>
         </a>
       </div>
     </form>);
