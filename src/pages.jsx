@@ -1883,9 +1883,6 @@ function EventosForm() {
             ? <span className="btn-label">{t("Enviando…", "Sending…")}</span>
             : <React.Fragment><span className="btn-label">{t("Enviar solicitud", "Send request")}</span><span className="btn-arrow">→</span></React.Fragment>}
         </button>
-        <a className="btn" href="/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf" target="_blank" rel="noreferrer">
-          <span className="btn-label">{t("Descargar dossier con tarifas", "Download dossier with rates")}</span><span className="btn-arrow">↓</span>
-        </a>
       </div>
     </form>);
 
@@ -1938,6 +1935,11 @@ function Eventos() {
               <React.Fragment>A 7-minute walk from Santiago Bernabéu, designed by <strong>Nota Estudio</strong>. 55 m² open-plan, open kitchen, up to 35 people, a powerful sound system and considered lighting. A place worthy of your event.</React.Fragment>
             ))}
           </p>
+        </div>
+        <div style={{ marginTop: 40, display: "flex", justifyContent: "center" }}>
+          <a className="btn" href="/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf" target="_blank" rel="noreferrer">
+            <span className="btn-label">{t("Descargar dossier con tarifas", "Download dossier with rates")}</span><span className="btn-arrow">↓</span>
+          </a>
         </div>
       </section>
 
