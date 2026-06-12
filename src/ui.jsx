@@ -263,7 +263,11 @@ function LangToggle() {
 
 function TopBar({ route }) {
   const lang = useLang();
-  const UBER_URL = "https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY";
+  // Dos tiendas en Uber Eats, una por local.
+  const UBER_CHAMBERI = "https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY&ps=1&sc=SEARCH_SUGGESTION";
+  const UBER_BERNABEU = "https://www.ubereats.com/es/store/dum-dum-%7C-bernabeu/y9O2ciM5WRm9gGfszt8UDA?diningMode=DELIVERY&ps=1&sc=SEARCH_SUGGESTION";
+  // El enlace del menú móvil sigue apuntando a Chamberí.
+  const UBER_URL = UBER_CHAMBERI;
   // Take Away apunta a la tienda online de Square.
   const TAKEAWAY_URL = "https://dum-dumplings.square.site/";
   const SPOTIFY_URL = "https://open.spotify.com/playlist/75oqGRFz3CXErzrfBQTuVd?si=62f669c4e6674ff1";
@@ -300,9 +304,20 @@ function TopBar({ route }) {
   // Al cambiar de página, cerramos el menú
   React.useEffect(() => { setMenuOpen(false); }, [route]);
 
-  // Modal "Pide ya" (Take Away | Uber Eats)
+  // Modal "Pide ya" (Recoger | Domicilio). Paso "inicio" = elegir método;
+  // paso "domicilio" = elegir local para Uber Eats.
   const [pideOpen, setPideOpen] = React.useState(false);
+  const [pideStep, setPideStep] = React.useState("inicio");
   React.useEffect(() => { setPideOpen(false); }, [route]);
+  // Abrir el modal siempre empieza en el paso "inicio".
+  const openPide = () => { setPideStep("inicio"); setPideOpen(true); };
+  // Lo abren TODOS los botones "Pide ya" de la web (incluido el de la home)
+  // disparando el evento global "dumdum:open-pide".
+  React.useEffect(() => {
+    const handler = () => openPide();
+    window.addEventListener("dumdum:open-pide", handler);
+    return () => window.removeEventListener("dumdum:open-pide", handler);
+  }, []);
 
   // Modal de RESERVAS (DISH). Lo abren TODOS los botones "Reservar" de la web
   // disparando el evento global "dumdum:open-reserve". Se cierra al pinchar
@@ -353,7 +368,7 @@ function TopBar({ route }) {
   const onFabUp = (e) => {
     const d = fabDrag.current; d.active = false;
     const el = fabRef.current; if (el) el.releasePointerCapture(e.pointerId);
-    if (!d.moved) setPideOpen(true); // fue un tap, no un arrastre → abrir modal
+    if (!d.moved) openPide(); // fue un tap, no un arrastre → abrir modal
   };
   // El FAB pierde opacidad mientras se hace scroll y la recupera al parar.
   const [fabScrolling, setFabScrolling] = React.useState(false);
@@ -392,7 +407,7 @@ function TopBar({ route }) {
           <React.Fragment><span className="dot dot-closed" /> {t("Cerrado. Nos vemos a las", "Closed. See you at")} {est.hora}h</React.Fragment>}
         </span>
         <button type="button" className="topbar-reservar" onClick={() => setReserveOpen(true)}>{t("Reservar", "Book")} →</button>
-        <button type="button" className="topbar-pide" onClick={() => setPideOpen(true)}>{t("Pide ya!", "Order now!")} →</button>
+        <button type="button" className="topbar-pide" onClick={openPide}>{t("Pide ya!", "Order now!")} →</button>
         <LangToggle />
       </div>
 
@@ -439,17 +454,40 @@ function TopBar({ route }) {
         <div className="pide-closebar">
           <button className="pide-close" aria-label="Cerrar" onClick={() => setPideOpen(false)}>×</button>
         </div>
-        <h3 className="pide-title">{t("¿Cómo quieres pedir?", "How would you like to order?")}</h3>
-        <div className="pide-options">
-          <a className="pide-card" href={TAKEAWAY_URL} target="_blank" rel="noreferrer">
-            <span className="pide-card-label">Take Away</span>
-            <span className="pide-card-sub">{t("Recoge en el local", "Pick up at the spot")}</span>
-          </a>
-          <a className="pide-card" href={UBER_URL} target="_blank" rel="noreferrer">
-            <span className="pide-card-label">Uber Eats</span>
-            <span className="pide-card-sub">{t("A domicilio", "Delivery")}</span>
-          </a>
-        </div>
+        {pideStep === "inicio" ?
+        <React.Fragment>
+          <h3 className="pide-title">{t("¿Cómo quieres pedir?", "How would you like to order?")}</h3>
+          <div className="pide-options">
+            <a className="pide-card" href={TAKEAWAY_URL} target="_blank" rel="noreferrer">
+              <span className="pide-card-label">{t("Recoger", "Pickup")}</span>
+              <span className="pide-card-sub">{t("te ahorras el envío", "skip the delivery fee")}</span>
+            </a>
+            <button type="button" className="pide-card" style={{ cursor: "pointer" }} onClick={() => setPideStep("domicilio")}>
+              <span className="pide-card-label">{t("Domicilio", "Delivery")}</span>
+              <span className="pide-card-sub">{t("lo mandamos por Uber Eats", "we send it via Uber Eats")}</span>
+            </button>
+          </div>
+        </React.Fragment> :
+        <React.Fragment>
+          <h3 className="pide-title">{t("¿Desde qué local?", "From which spot?")}</h3>
+          <div className="pide-options">
+            <a className="pide-card" href={UBER_CHAMBERI} target="_blank" rel="noreferrer">
+              <span className="pide-card-label">Chamberí</span>
+              <span className="pide-card-sub">c/ Blasco de Garay, 10</span>
+            </a>
+            <a className="pide-card" href={UBER_BERNABEU} target="_blank" rel="noreferrer">
+              <span className="pide-card-label">Bernabéu</span>
+              <span className="pide-card-sub">c/ Infanta Mercedes, 17</span>
+            </a>
+          </div>
+          <button
+            type="button"
+            onClick={() => setPideStep("inicio")}
+            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--red)", fontFamily: "\"JetBrains Mono\", ui-monospace, monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.04em", opacity: 0.7, marginTop: 16, alignSelf: "center", padding: 6 }}>
+            ← {t("Volver", "Back")}
+          </button>
+        </React.Fragment>
+        }
       </div>
     </div>
     }

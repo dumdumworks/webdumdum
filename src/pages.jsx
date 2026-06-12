@@ -245,12 +245,11 @@ function Home() {
             <a className="btn" href="/locales">{t("Llegar", "Directions")} →</a>
             <a
               className="btn"
-              href={TAKEAWAY_URL}
-              target="_blank"
-              rel="noreferrer">
-              Take Away →
+              href="#"
+              onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("dumdum:open-pide")); }}>
+              {t("Pide ya!", "Order now!")} →
             </a>
-            <a className="btn" href={UBER_URL} target="_blank" rel="noreferrer">Uber Eats →</a>
+            <a className="btn" href="/eventos">{t("Eventos", "Events")} →</a>
           </div>
           <button
             type="button"
