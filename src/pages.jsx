@@ -1936,7 +1936,7 @@ function Eventos() {
             ))}
           </p>
         </div>
-        <div style={{ marginTop: 40, display: "flex", justifyContent: "center" }}>
+        <div style={{ marginTop: 40, display: "flex", justifyContent: "flex-start" }}>
           <a className="btn" href="/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf" target="_blank" rel="noreferrer">
             <span className="btn-label">{t("Descargar dossier con tarifas", "Download dossier with rates")}</span><span className="btn-arrow">↓</span>
           </a>
