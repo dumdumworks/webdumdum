@@ -327,7 +327,11 @@ function TopBar({ route }) {
   const [reserveLocal, setReserveLocal] = React.useState(null);
   React.useEffect(() => { setReserveOpen(false); }, [route]);
   React.useEffect(() => {
-    const handler = () => { setReserveLocal(null); setReserveOpen(true); };
+    const handler = (e) => {
+      const local = e && e.detail && e.detail.local ? e.detail.local : null;
+      setReserveLocal(local);
+      setReserveOpen(true);
+    };
     window.addEventListener("dumdum:open-reserve", handler);
     return () => window.removeEventListener("dumdum:open-reserve", handler);
   }, []);
@@ -492,53 +496,49 @@ function TopBar({ route }) {
     </div>
     }
 
-    {reserveOpen &&
+    {reserveOpen && !reserveLocal &&
+    <div className="pide-overlay" onClick={() => setReserveOpen(false)}>
+      <div className="pide-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="pide-closebar">
+          <button className="pide-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)}>×</button>
+        </div>
+        <h3 className="pide-title">{t("¿En qué local?", "Which location?")}</h3>
+        <div className="pide-options">
+          <button type="button" className="pide-card" style={{ cursor: "pointer" }} onClick={() => setReserveLocal(window.DUMDUM_LOCALES.chamberi)}>
+            <span className="pide-card-label">Chamberí</span>
+            <span className="pide-card-sub">c/ Blasco de Garay, 10</span>
+          </button>
+          <button type="button" className="pide-card" style={{ cursor: "pointer" }} onClick={() => setReserveLocal(window.DUMDUM_LOCALES.bernabeu)}>
+            <span className="pide-card-label">Bernabéu</span>
+            <span className="pide-card-sub">c/ Infanta Mercedes, 17</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+
+    {reserveOpen && reserveLocal &&
     <div className="alerg-overlay" onClick={() => setReserveOpen(false)}>
-      <style>{`
-        .reserve-locales{ display:flex; gap:14px; margin:14px 0 8px; flex-wrap:wrap; }
-        .reserve-local-card{ flex:1; min-width:140px; background:var(--bg,#fffaf3); border:1.5px solid var(--red,#ff001e); border-radius:16px; padding:28px 18px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px; transition:background .15s, transform .1s; font-family:inherit; }
-        .reserve-local-card:hover{ background:#fff0ec; transform:translateY(-2px); }
-        .reserve-local-nombre{ color:var(--red,#ff001e); font-weight:800; font-size:19px; letter-spacing:.02em; }
-        .reserve-local-dir{ color:var(--red,#ff001e); opacity:.7; font-size:13px; font-family:"JetBrains Mono",monospace; text-align:center; }
-      `}</style>
       <div className="alerg-modal reserve-modal" onClick={(e) => e.stopPropagation()}>
         <div className="alerg-closebar">
           <button className="alerg-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)}>×</button>
         </div>
         <div className="alerg-scroll">
-          {!reserveLocal ?
-          <React.Fragment>
-            <h3 className="alerg-title" style={{ textAlign: 'center' }}>{t("¿En qué local?", "Which location?")}</h3>
-            <div className="reserve-locales">
-              <button type="button" className="reserve-local-card" onClick={() => setReserveLocal({ nombre: "Chamberí", dir: "C/ Blasco de Garay, 10", eid: "hydra-fcb7897f-acf9-48ce-a45b-4214fb3e8fc0" })}>
-                <span className="reserve-local-nombre">CHAMBERÍ</span>
-                <span className="reserve-local-dir">C/ Blasco de Garay, 10</span>
-              </button>
-              <button type="button" className="reserve-local-card" onClick={() => setReserveLocal({ nombre: "Bernabéu", dir: "C/ Infanta Mercedes, 17", eid: "hydra-27342526-f07a-4354-bec7-c7b0ce5d7615" })}>
-                <span className="reserve-local-nombre">BERNABÉU</span>
-                <span className="reserve-local-dir">C/ Infanta Mercedes, 17</span>
-              </button>
-            </div>
-          </React.Fragment>
-          :
-          <React.Fragment>
-            <h3 className="alerg-title">{t("A reservar mesa", "Let's book you a table!")} · {reserveLocal.nombre}</h3>
-            <button
-              type="button"
-              onClick={() => setReserveLocal(null)}
-              style={{ background: 'none', border: 'none', color: 'var(--red)', cursor: 'pointer', fontSize: 15, fontWeight: 600, padding: '4px 0', marginBottom: 8 }}>
-              ← {t("Cambiar de local", "Change location")}
-            </button>
-            <div className="reserve-widget-wrap">
-              <DishWidget eid={reserveLocal.eid} />
-            </div>
-            <hr className="alerg-sep" />
-            <h3 className="alerg-title">{t("*Un tema!", "*One thing!")}</h3>
-            <p className="alerg-intro">{lang === "es"
-              ? <React.Fragment>Si reservas a las <strong>15:30 o 22:30</strong>, no apures mucho con la hora, que <strong>a y 39 cerramos la cocina</strong> y os queremos dar de comer 😉</React.Fragment>
-              : <React.Fragment>If you book at <strong>3:30pm or 10:30pm</strong>, don't cut it too close: <strong>the kitchen closes at :39</strong> and we really want to feed you 😉</React.Fragment>}</p>
-          </React.Fragment>
-          }
+          <h3 className="alerg-title">{t("A reservar mesa", "Let's book you a table!")} · {reserveLocal.nombre}</h3>
+          <button
+            type="button"
+            onClick={() => setReserveLocal(null)}
+            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--red)", fontFamily: "\"JetBrains Mono\", ui-monospace, monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.04em", opacity: 0.7, marginBottom: 12, padding: 6, display: "block" }}>
+            ← {t("Cambiar de local", "Change location")}
+          </button>
+          <div className="reserve-widget-wrap">
+            <DishWidget eid={reserveLocal.eid} />
+          </div>
+          <hr className="alerg-sep" />
+          <h3 className="alerg-title">{t("*Un tema!", "*One thing!")}</h3>
+          <p className="alerg-intro">{lang === "es"
+            ? <React.Fragment>Si reservas a las <strong>15:30 o 22:30</strong>, no apures mucho con la hora, que <strong>a y 39 cerramos la cocina</strong> y os queremos dar de comer 😉</React.Fragment>
+            : <React.Fragment>If you book at <strong>3:30pm or 10:30pm</strong>, don't cut it too close: <strong>the kitchen closes at :39</strong> and we really want to feed you 😉</React.Fragment>}</p>
         </div>
       </div>
     </div>
@@ -684,5 +684,12 @@ function DishLogo({ logo }) {
   }
   return null;
 }
+
+// Datos de los dos locales para reservas (DISH). Fuente única de verdad:
+// la usan el selector de reservas y los botones directos de la página Locales.
+window.DUMDUM_LOCALES = {
+  chamberi: { nombre: "Chamberí", dir: "c/ Blasco de Garay, 10", eid: "hydra-fcb7897f-acf9-48ce-a45b-4214fb3e8fc0" },
+  bernabeu: { nombre: "Bernabéu", dir: "c/ Infanta Mercedes, 17", eid: "hydra-27342526-f07a-4354-bec7-c7b0ce5d7615" }
+};
 
 Object.assign(window, { useRoute, nav, TopBar, Footer, Loader, Reveal, DishLogo });

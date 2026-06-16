@@ -1075,10 +1075,10 @@ function EstadoLocal({ tramos }) {
     </div>);
 }
 
-function BotonLlamarBernabeu() {
+function BotonLlamar({ tel, telHuman, nombre }) {
   const lang = useLang();
-  const TEL = "+34614746065";
-  const TEL_HUMAN = "+34 614 74 60 65";
+  const TEL = tel;
+  const TEL_HUMAN = telHuman;
   const [isMobile, setIsMobile] = React.useState(
     typeof window !== "undefined" && window.matchMedia("(max-width: 879px)").matches
   );
@@ -1100,8 +1100,8 @@ function BotonLlamarBernabeu() {
     window.location.href = "tel:" + TEL;
   };
   const label = isMobile
-    ? t("Llamar a Bernabéu", "Call Bernabéu")
-    : (revealed ? TEL_HUMAN : t("Llamar a Bernabéu", "Call Bernabéu"));
+    ? t("Llamar a " + nombre, "Call " + nombre)
+    : (revealed ? TEL_HUMAN : t("Llamar a " + nombre, "Call " + nombre));
   return (
     <a className="btn btn-call-green" href={"tel:" + TEL} onClick={handleClick}>
       {telIcon}{label} →
@@ -1136,10 +1136,10 @@ function Locales() {
               <a
                 className="btn red"
                 href="#"
-                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("dumdum:open-reserve")); }}>
+                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>
                 {t("Reservar en Bernabéu", "Book at Bernabéu")} →
               </a>
-              <BotonLlamarBernabeu />
+              <BotonLlamar tel="+34614167317" telHuman="+34 614 16 73 17" nombre="Bernabéu" />
             </div>
           </div>
 
@@ -1166,10 +1166,14 @@ function Locales() {
               <b>{t("Aforo", "Capacity")}</b><div>{t("~32 comensales", "~32 seats")}</div>
             </div>
 
-            <div className="locale-btns locale-btns--single" style={{ marginTop: 24 }}>
-              <span className="btn btn-disabled-dark" aria-disabled="true">
-                {t("Sin reservas · por turnos", "No booking · walk-in")}
-              </span>
+            <div className="locale-btns" style={{ marginTop: 24 }}>
+              <a
+                className="btn red"
+                href="#"
+                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.chamberi } })); }}>
+                {t("Reservar en Chamberí", "Book at Chamberí")} →
+              </a>
+              <BotonLlamar tel="+34624560181" telHuman="+34 624 56 01 81" nombre="Chamberí" />
             </div>
           </div>
 
