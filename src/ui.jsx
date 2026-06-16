@@ -325,11 +325,16 @@ function TopBar({ route }) {
   const [reserveOpen, setReserveOpen] = React.useState(false);
   // Local elegido para reservar: null = mostrar selector; si no, el objeto del local.
   const [reserveLocal, setReserveLocal] = React.useState(null);
-  React.useEffect(() => { setReserveOpen(false); }, [route]);
+  // Cambia en cada apertura para forzar que el widget de DISH se reconstruya de cero.
+  const [reserveKey, setReserveKey] = React.useState(0);
+  // Cierra el modal y limpia el estado, para que la próxima apertura empiece de cero.
+  const closeReserve = React.useCallback(() => { setReserveOpen(false); setReserveLocal(null); }, []);
+  React.useEffect(() => { closeReserve(); }, [route]);
   React.useEffect(() => {
     const handler = (e) => {
       const local = e && e.detail && e.detail.local ? e.detail.local : null;
       setReserveLocal(local);
+      setReserveKey((k) => k + 1);
       setReserveOpen(true);
     };
     window.addEventListener("dumdum:open-reserve", handler);
@@ -338,7 +343,7 @@ function TopBar({ route }) {
   // Cerrar modales (reservas y pide ya) con la tecla ESC.
   React.useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape") { setReserveOpen(false); setPideOpen(false); }
+      if (e.key === "Escape") { closeReserve(); setPideOpen(false); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -497,10 +502,10 @@ function TopBar({ route }) {
     }
 
     {reserveOpen && !reserveLocal &&
-    <div className="pide-overlay" onClick={() => setReserveOpen(false)}>
+    <div className="pide-overlay" onClick={() => closeReserve()}>
       <div className="pide-modal" onClick={(e) => e.stopPropagation()}>
         <div className="pide-closebar">
-          <button className="pide-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)}>×</button>
+          <button className="pide-close" aria-label="Cerrar" onClick={() => closeReserve()}>×</button>
         </div>
         <h3 className="pide-title">{t("¿En qué local?", "Which location?")}</h3>
         <div className="pide-options">
@@ -518,10 +523,10 @@ function TopBar({ route }) {
     }
 
     {reserveOpen && reserveLocal &&
-    <div className="alerg-overlay" onClick={() => setReserveOpen(false)}>
+    <div className="alerg-overlay" onClick={() => closeReserve()}>
       <div className="alerg-modal reserve-modal" onClick={(e) => e.stopPropagation()}>
         <div className="alerg-closebar">
-          <button className="alerg-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)}>×</button>
+          <button className="alerg-close" aria-label="Cerrar" onClick={() => closeReserve()}>×</button>
         </div>
         <div className="alerg-scroll">
           <h3 className="alerg-title">{t("A reservar mesa", "Let's book you a table!")} · {reserveLocal.nombre}</h3>
@@ -532,7 +537,7 @@ function TopBar({ route }) {
             ← {t("Cambiar de local", "Change location")}
           </button>
           <div className="reserve-widget-wrap">
-            <DishWidget eid={reserveLocal.eid} />
+            <DishWidget key={reserveKey} eid={reserveLocal.eid} />
           </div>
           <hr className="alerg-sep" />
           <h3 className="alerg-title">{t("*Un tema!", "*One thing!")}</h3>
