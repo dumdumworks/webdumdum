@@ -208,18 +208,18 @@ function calcAperturaTopbar(tramos) {
 // Componente DishWidget: monta el widget de reservas de DISH dentro de un
 // contenedor. DISH carga su widget.js, lee la configuración global _hors y
 // rellena el div con el iframe del widget. Cada apertura se monta limpia.
-function DishWidget({ eid }) {
+function DishWidget() {
   const ref = React.useRef(null);
   React.useEffect(() => {
     if (!ref.current) return;
-    const tagid = "hors-" + eid;
+    const tagid = "hors-hydra-27342526-f07a-4354-bec7-c7b0ce5d7615";
     // Crear el div contenedor con el ID que DISH espera
     const div = document.createElement("div");
     div.id = tagid;
     ref.current.appendChild(div);
     // Configuración global del widget: ID + colores DUM DUM
     window._hors = [
-      ["eid", eid],
+      ["eid", "hydra-27342526-f07a-4354-bec7-c7b0ce5d7615"],
       ["tagid", tagid],
       ["width", "100%"],
       ["height", ""],
@@ -242,7 +242,7 @@ function DishWidget({ eid }) {
       try { document.body.removeChild(s); } catch (e) {}
       if (ref.current) ref.current.innerHTML = "";
     };
-  }, [eid]);
+  }, []);
   return <div ref={ref} className="dish-widget-host" />;
 }
 
@@ -309,12 +309,13 @@ function TopBar({ route }) {
   const [pideOpen, setPideOpen] = React.useState(false);
   const [pideStep, setPideStep] = React.useState("inicio");
   React.useEffect(() => { setPideOpen(false); }, [route]);
-  // Abrir el modal siempre empieza en el paso "inicio".
-  const openPide = () => { setPideStep("inicio"); setPideOpen(true); };
+  // Abrir el modal: por defecto empieza en "inicio"; se puede pedir otro paso.
+  const openPide = (step) => { setPideStep(step || "inicio"); setPideOpen(true); };
   // Lo abren TODOS los botones "Pide ya" de la web (incluido el de la home)
-  // disparando el evento global "dumdum:open-pide".
+  // disparando el evento global "dumdum:open-pide". Si el evento trae
+  // detail.step = "domicilio", abre directo en el selector de local.
   React.useEffect(() => {
-    const handler = () => openPide();
+    const handler = (e) => openPide(e && e.detail && e.detail.step ? e.detail.step : "inicio");
     window.addEventListener("dumdum:open-pide", handler);
     return () => window.removeEventListener("dumdum:open-pide", handler);
   }, []);
@@ -323,27 +324,18 @@ function TopBar({ route }) {
   // disparando el evento global "dumdum:open-reserve". Se cierra al pinchar
   // fuera, al pulsar la X, o al cambiar de página.
   const [reserveOpen, setReserveOpen] = React.useState(false);
-  // Local elegido para reservar: null = mostrar selector; si no, el objeto del local.
-  const [reserveLocal, setReserveLocal] = React.useState(null);
-  // Cambia en cada apertura para forzar que el widget de DISH se reconstruya de cero.
-  const [reserveKey, setReserveKey] = React.useState(0);
-  // Cierra el modal y limpia el estado, para que la próxima apertura empiece de cero.
-  const closeReserve = React.useCallback(() => { setReserveOpen(false); setReserveLocal(null); }, []);
-  React.useEffect(() => { closeReserve(); }, [route]);
+  // Paso del modal de reservas: "aviso" (recordatorio de Bernabéu) o "widget".
+  const [reserveStep, setReserveStep] = React.useState("aviso");
+  React.useEffect(() => { setReserveOpen(false); }, [route]);
   React.useEffect(() => {
-    const handler = (e) => {
-      const local = e && e.detail && e.detail.local ? e.detail.local : null;
-      setReserveLocal(local);
-      setReserveKey((k) => k + 1);
-      setReserveOpen(true);
-    };
+    const handler = () => { setReserveStep("aviso"); setReserveOpen(true); };
     window.addEventListener("dumdum:open-reserve", handler);
     return () => window.removeEventListener("dumdum:open-reserve", handler);
   }, []);
   // Cerrar modales (reservas y pide ya) con la tecla ESC.
   React.useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape") { closeReserve(); setPideOpen(false); }
+      if (e.key === "Escape") { setReserveOpen(false); setPideOpen(false); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -501,49 +493,48 @@ function TopBar({ route }) {
     </div>
     }
 
-    {reserveOpen && !reserveLocal &&
-    <div className="pide-overlay" onClick={() => closeReserve()}>
-      <div className="pide-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="pide-closebar">
-          <button className="pide-close" aria-label="Cerrar" onClick={() => closeReserve()}>×</button>
-        </div>
-        <h3 className="pide-title">{t("¿En qué local?", "Which location?")}</h3>
-        <div className="pide-options">
-          <button type="button" className="pide-card" style={{ cursor: "pointer" }} onClick={() => setReserveLocal(window.DUMDUM_LOCALES.chamberi)}>
-            <span className="pide-card-label">Chamberí</span>
-            <span className="pide-card-sub">c/ Blasco de Garay, 10</span>
-          </button>
-          <button type="button" className="pide-card" style={{ cursor: "pointer" }} onClick={() => setReserveLocal(window.DUMDUM_LOCALES.bernabeu)}>
-            <span className="pide-card-label">Bernabéu</span>
-            <span className="pide-card-sub">c/ Infanta Mercedes, 17</span>
-          </button>
-        </div>
-      </div>
-    </div>
-    }
-
-    {reserveOpen && reserveLocal &&
-    <div className="alerg-overlay" onClick={() => closeReserve()}>
-      <div className="alerg-modal reserve-modal" onClick={(e) => e.stopPropagation()}>
+    {reserveOpen &&
+    <div className="alerg-overlay" onClick={() => setReserveOpen(false)}>
+      <style>{".reserve-modal--aviso::after{ display:none !important; }"}</style>
+      <div className={"alerg-modal reserve-modal" + (reserveStep === "aviso" ? " reserve-modal--aviso" : "")} onClick={(e) => e.stopPropagation()} style={reserveStep === "aviso" ? { background: 'var(--red)' } : undefined}>
         <div className="alerg-closebar">
-          <button className="alerg-close" aria-label="Cerrar" onClick={() => closeReserve()}>×</button>
+          <button className="alerg-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)} style={reserveStep === "aviso" ? { color: '#fffaf3' } : undefined}>×</button>
         </div>
         <div className="alerg-scroll">
-          <h3 className="alerg-title">{t("A reservar mesa", "Let's book you a table!")} · {reserveLocal.nombre}</h3>
-          <button
-            type="button"
-            onClick={() => setReserveLocal(null)}
-            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--red)", fontFamily: "\"JetBrains Mono\", ui-monospace, monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.04em", opacity: 0.7, marginBottom: 12, padding: 6, display: "block" }}>
-            ← {t("Cambiar de local", "Change location")}
-          </button>
-          <div className="reserve-widget-wrap">
-            <DishWidget key={reserveKey} eid={reserveLocal.eid} />
-          </div>
-          <hr className="alerg-sep" />
-          <h3 className="alerg-title">{t("*Un tema!", "*One thing!")}</h3>
-          <p className="alerg-intro">{lang === "es"
-            ? <React.Fragment>Si reservas a las <strong>15:30 o 22:30</strong>, no apures mucho con la hora, que <strong>a y 39 cerramos la cocina</strong> y os queremos dar de comer 😉</React.Fragment>
-            : <React.Fragment>If you book at <strong>3:30pm or 10:30pm</strong>, don't cut it too close: <strong>the kitchen closes at :39</strong> and we really want to feed you 😉</React.Fragment>}</p>
+          {reserveStep === "aviso" ?
+          <React.Fragment>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', minHeight: '320px', color: '#fffaf3', padding: '20px 10px' }}>
+              <div style={{ marginBottom: 18 }} aria-hidden="true">
+                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', margin: '0 auto' }}>
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#fffaf3"/>
+                  <circle cx="12" cy="9" r="2.6" fill="var(--red)"/>
+                </svg>
+              </div>
+              <div style={{ fontWeight: 800, fontSize: 20, letterSpacing: '0.01em', lineHeight: 1.25, maxWidth: '340px' }}>
+                {t("RECUERDA. TU RESERVA SERÁ EN EL LOCAL DE BERNABÉU", "REMEMBER. YOUR BOOKING WILL BE AT OUR BERNABÉU SPOT")}
+              </div>
+              <div style={{ marginTop: 12, fontSize: 15, opacity: 0.92 }}>[Infanta Mercedes, 17]</div>
+              <button
+                type="button"
+                onClick={() => setReserveStep("widget")}
+                style={{ marginTop: 26, background: '#fffaf3', color: 'var(--red)', border: 'none', borderRadius: 999, padding: '13px 34px', fontSize: 16, fontWeight: 700, cursor: 'pointer' }}>
+                {t("Continuar", "Continue")} →
+              </button>
+            </div>
+          </React.Fragment>
+          :
+          <React.Fragment>
+            <h3 className="alerg-title">{t("A reservar mesa", "Let's book you a table!")}</h3>
+            <div className="reserve-widget-wrap">
+              <DishWidget />
+            </div>
+            <hr className="alerg-sep" />
+            <h3 className="alerg-title">{t("*Un tema!", "*One thing!")}</h3>
+            <p className="alerg-intro">{lang === "es"
+              ? <React.Fragment>Si reservas a las <strong>15:30 o 22:30</strong>, no apures mucho con la hora, que <strong>a y 39 cerramos la cocina</strong> y os queremos dar de comer 😉</React.Fragment>
+              : <React.Fragment>If you book at <strong>3:30pm or 10:30pm</strong>, don't cut it too close: <strong>the kitchen closes at :39</strong> and we really want to feed you 😉</React.Fragment>}</p>
+          </React.Fragment>
+          }
         </div>
       </div>
     </div>
@@ -689,12 +680,5 @@ function DishLogo({ logo }) {
   }
   return null;
 }
-
-// Datos de los dos locales para reservas (DISH). Fuente única de verdad:
-// la usan el selector de reservas y los botones directos de la página Locales.
-window.DUMDUM_LOCALES = {
-  chamberi: { nombre: "Chamberí", dir: "c/ Blasco de Garay, 10", eid: "hydra-fcb7897f-acf9-48ce-a45b-4214fb3e8fc0" },
-  bernabeu: { nombre: "Bernabéu", dir: "c/ Infanta Mercedes, 17", eid: "hydra-27342526-f07a-4354-bec7-c7b0ce5d7615" }
-};
 
 Object.assign(window, { useRoute, nav, TopBar, Footer, Loader, Reveal, DishLogo });

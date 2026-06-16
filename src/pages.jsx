@@ -303,14 +303,14 @@ function Home() {
         </div>
         <div>
           <div className="tiny muted" style={{ marginBottom: 16 }}>/ {t("SISTEMA", "SYSTEM")}</div>
-          <h2>{t("Una casa en Chamberí.", "One home in Chamberí.")}<br /><em style={{ color: 'var(--red)', fontStyle: 'normal', fontWeight: 'inherit' }}>{t("Otra casa en Bernabéu.", "Another in Bernabéu.")}</em></h2>
+          <h2>{t("Una casa en Chamberí.", "One home in Chamberí.")}<br /><em style={{ color: 'var(--red)', fontStyle: 'normal', fontWeight: 'inherit' }}>{t("Otra en Bernabéu.", "Another in Bernabéu.")}</em></h2>
           <p className="body" style={{ marginTop: 24 }}>
             {t(
               "Dos garitos distintos, pero igual de rico, igual de majos e igual de desobedientes.",
               "Two different spots, but equally tasty, equally lovely, and equally disobedient."
             )}
           </p>
-          <div className="row gap-m" style={{ marginTop: 32 }}>
+          <div className="row gap-m sistema-ctas" style={{ marginTop: 32 }}>
             <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.chamberi } })); }}>{t("Reservar en Chamberí", "Book at Chamberí")} →</a>
             <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>{t("Reservar en Bernabéu", "Book at Bernabéu")} →</a>
           </div>
@@ -324,7 +324,7 @@ function Home() {
           <div className="t">{t("La carta", "Menu")} →</div>
           <div className="d">{t("ECHA UN VISTAZO", "TAKE A LOOK")}</div>
         </a>
-        <a className="map-cell" href="https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY" target="_blank" rel="noreferrer">
+        <a className="map-cell" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-pide", { detail: { step: "domicilio" } })); }}>
           <div className="n">[02]</div>
           <div className="t">Uber Eats →</div>
           <div className="d">{t("NI TE MUEVAS", "DON'T EVEN MOVE")}</div>

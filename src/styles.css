@@ -367,6 +367,10 @@ img { display: block; max-width: 100%; }
    carga DESPUÉS (styles.css @importa styles-2.css al inicio), y
    así estas reglas ganan en el orden de cascada. */
 @media (max-width: 880px) {
+  /* Botones de reserva del bloque SISTEMA (home): en columna, ancho completo,
+     y con el contenido (texto + flecha) centrado dentro del botón. */
+  .sistema-ctas { flex-direction: column; align-items: stretch; }
+  .sistema-ctas > .btn { width: 100%; justify-content: center; text-align: center; }
   /* En móvil ocultamos el nav de escritorio y el bloque derecho */
   .topbar .nav-desktop { display: none !important; }
   .topbar .right { display: none !important; }
