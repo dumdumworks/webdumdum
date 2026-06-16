@@ -1122,40 +1122,6 @@ function Locales() {
         <div className="locale-card">
           <div>
             <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
-            <h2>Bernabéu.</h2>
-            <div className="tiny muted" style={{ marginTop: 8 }}>{t("SEGUNDO LOCAL · DESDE DOSMIL26", "SECOND SPOT · SINCE TWENTY26")}</div>
-
-            <div className="info">
-              <b>{t("Dirección", "Address")}</b><div>Infanta Mercedes, 17 · 28020 Madrid</div>
-              <b>{t("Metro", "Metro")}</b><div>Tetuán · Estrecho</div>
-              <b>{t("Horario", "Hours")}</b><div>13.00–15.39 / 20.00–22.39</div>
-              <b>{t("Aforo", "Capacity")}</b><div>{t("~40 comensales", "~40 seats")}</div>
-            </div>
-
-            <div className="locale-btns" style={{ marginTop: 24 }}>
-              <a
-                className="btn red"
-                href="#"
-                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>
-                {t("Reservar en Bernabéu", "Book at Bernabéu")} →
-              </a>
-              <BotonLlamar tel="+34614167317" telHuman="+34 614 16 73 17" nombre="Bernabéu" />
-            </div>
-          </div>
-
-          <div className="locale-map">
-            <iframe
-              title="Mapa Bernabéu"
-              src="https://www.google.com/maps?q=DUM+DUM+Infanta+Mercedes+17+Madrid&output=embed"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              style={{ width: "100%", height: "100%", border: 0 }} />
-          </div>
-        </div>
-
-        <div className="locale-card">
-          <div>
-            <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
             <h2>Chamberí.</h2>
             <div className="tiny muted" style={{ marginTop: 8 }}>{t("Local original · desde DOSMIL24", "Original spot · since TWENTY24")}</div>
 
@@ -1181,6 +1147,40 @@ function Locales() {
             <iframe
               title="Mapa Chamberí"
               src="https://www.google.com/maps?q=DUM+DUM+Blasco+de+Garay+10+Madrid&output=embed"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              style={{ width: "100%", height: "100%", border: 0 }} />
+          </div>
+        </div>
+
+        <div className="locale-card">
+          <div>
+            <EstadoLocal tramos={[[780, 939], [1200, 1359]]} />
+            <h2>Bernabéu.</h2>
+            <div className="tiny muted" style={{ marginTop: 8 }}>{t("SEGUNDO LOCAL · DESDE DOSMIL26", "SECOND SPOT · SINCE TWENTY26")}</div>
+
+            <div className="info">
+              <b>{t("Dirección", "Address")}</b><div>Infanta Mercedes, 17 · 28020 Madrid</div>
+              <b>{t("Metro", "Metro")}</b><div>Tetuán · Estrecho</div>
+              <b>{t("Horario", "Hours")}</b><div>13.00–15.39 / 20.00–22.39</div>
+              <b>{t("Aforo", "Capacity")}</b><div>{t("~40 comensales", "~40 seats")}</div>
+            </div>
+
+            <div className="locale-btns" style={{ marginTop: 24 }}>
+              <a
+                className="btn red"
+                href="#"
+                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>
+                {t("Reservar en Bernabéu", "Book at Bernabéu")} →
+              </a>
+              <BotonLlamar tel="+34614167317" telHuman="+34 614 16 73 17" nombre="Bernabéu" />
+            </div>
+          </div>
+
+          <div className="locale-map">
+            <iframe
+              title="Mapa Bernabéu"
+              src="https://www.google.com/maps?q=DUM+DUM+Infanta+Mercedes+17+Madrid&output=embed"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               style={{ width: "100%", height: "100%", border: 0 }} />
