@@ -310,9 +310,9 @@ function Home() {
               "Two different spots, but equally tasty, equally lovely, and equally disobedient."
             )}
           </p>
-          <div className="row gap-m sistema-ctas" style={{ marginTop: 32 }}>
-            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.chamberi } })); }}>{t("Reservar en Chamberí", "Book at Chamberí")} →</a>
-            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>{t("Reservar en Bernabéu", "Book at Bernabéu")} →</a>
+          <div className="row gap-m sistema-ctas" style={{ marginTop: 32, flexWrap: "wrap" }}>
+            <a className="btn" href="#" style={{ flex: "1 1 240px", display: "block", textAlign: "center" }} onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.chamberi } })); }}>{t("Reservar en Chamberí", "Book at Chamberí")} →</a>
+            <a className="btn" href="#" style={{ flex: "1 1 240px", display: "block", textAlign: "center" }} onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>{t("Reservar en Bernabéu", "Book at Bernabéu")} →</a>
           </div>
         </div>
       </section>
