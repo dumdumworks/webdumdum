@@ -299,7 +299,9 @@ function Home() {
               <React.Fragment>Nine dumplings. A new one every month. Of the nine, at least 2 vegetarian. Of the nine, <strong style={{ fontWeight: 700 }}>not one conventional</strong>.</React.Fragment>
             )}
           </p>
-          <a className="btn" href="/menu" style={{ marginTop: 32 }}>{t("Leer carta de mayo", "Read May's menu")} →</a>
+          <div className="sistema-ctas" style={{ marginTop: 32 }}>
+            <a className="btn" href="/menu" style={{ display: "block", textAlign: "center" }}>{t("Leer carta de mayo", "Read May's menu")} →</a>
+          </div>
         </div>
         <div>
           <div className="tiny muted" style={{ marginBottom: 16 }}>/ {t("SISTEMA", "SYSTEM")}</div>
@@ -311,8 +313,8 @@ function Home() {
             )}
           </p>
           <div className="row gap-m sistema-ctas" style={{ marginTop: 32 }}>
-            <a className="btn" href="#" style={{ display: "block", textAlign: "center" }} onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.chamberi } })); }}>{t("Reservar en Chamberí", "Book at Chamberí")} →</a>
-            <a className="btn" href="#" style={{ display: "block", textAlign: "center" }} onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>{t("Reservar en Bernabéu", "Book at Bernabéu")} →</a>
+            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.chamberi } })); }}>{t("Reservar en Chamberí", "Book at Chamberí")} →</a>
+            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>{t("Reservar en Bernabéu", "Book at Bernabéu")} →</a>
           </div>
         </div>
       </section>
