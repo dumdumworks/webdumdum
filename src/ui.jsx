@@ -208,18 +208,18 @@ function calcAperturaTopbar(tramos) {
 // Componente DishWidget: monta el widget de reservas de DISH dentro de un
 // contenedor. DISH carga su widget.js, lee la configuración global _hors y
 // rellena el div con el iframe del widget. Cada apertura se monta limpia.
-function DishWidget() {
+function DishWidget({ eid }) {
   const ref = React.useRef(null);
   React.useEffect(() => {
     if (!ref.current) return;
-    const tagid = "hors-hydra-27342526-f07a-4354-bec7-c7b0ce5d7615";
+    const tagid = "hors-" + eid;
     // Crear el div contenedor con el ID que DISH espera
     const div = document.createElement("div");
     div.id = tagid;
     ref.current.appendChild(div);
     // Configuración global del widget: ID + colores DUM DUM
     window._hors = [
-      ["eid", "hydra-27342526-f07a-4354-bec7-c7b0ce5d7615"],
+      ["eid", eid],
       ["tagid", tagid],
       ["width", "100%"],
       ["height", ""],
@@ -242,7 +242,7 @@ function DishWidget() {
       try { document.body.removeChild(s); } catch (e) {}
       if (ref.current) ref.current.innerHTML = "";
     };
-  }, []);
+  }, [eid]);
   return <div ref={ref} className="dish-widget-host" />;
 }
 
@@ -323,11 +323,11 @@ function TopBar({ route }) {
   // disparando el evento global "dumdum:open-reserve". Se cierra al pinchar
   // fuera, al pulsar la X, o al cambiar de página.
   const [reserveOpen, setReserveOpen] = React.useState(false);
-  // Paso del modal de reservas: "aviso" (recordatorio de Bernabéu) o "widget".
-  const [reserveStep, setReserveStep] = React.useState("aviso");
+  // Local elegido para reservar: null = mostrar selector; si no, el objeto del local.
+  const [reserveLocal, setReserveLocal] = React.useState(null);
   React.useEffect(() => { setReserveOpen(false); }, [route]);
   React.useEffect(() => {
-    const handler = () => { setReserveStep("aviso"); setReserveOpen(true); };
+    const handler = () => { setReserveLocal(null); setReserveOpen(true); };
     window.addEventListener("dumdum:open-reserve", handler);
     return () => window.removeEventListener("dumdum:open-reserve", handler);
   }, []);
@@ -494,38 +494,43 @@ function TopBar({ route }) {
 
     {reserveOpen &&
     <div className="alerg-overlay" onClick={() => setReserveOpen(false)}>
-      <style>{".reserve-modal--aviso::after{ display:none !important; }"}</style>
-      <div className={"alerg-modal reserve-modal" + (reserveStep === "aviso" ? " reserve-modal--aviso" : "")} onClick={(e) => e.stopPropagation()} style={reserveStep === "aviso" ? { background: 'var(--red)' } : undefined}>
+      <style>{`
+        .reserve-locales{ display:flex; gap:14px; margin:14px 0 8px; flex-wrap:wrap; }
+        .reserve-local-card{ flex:1; min-width:140px; background:var(--bg,#fffaf3); border:1.5px solid var(--red,#ff001e); border-radius:16px; padding:28px 18px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px; transition:background .15s, transform .1s; font-family:inherit; }
+        .reserve-local-card:hover{ background:#fff0ec; transform:translateY(-2px); }
+        .reserve-local-nombre{ color:var(--red,#ff001e); font-weight:800; font-size:19px; letter-spacing:.02em; }
+        .reserve-local-dir{ color:var(--red,#ff001e); opacity:.7; font-size:13px; font-family:"JetBrains Mono",monospace; text-align:center; }
+      `}</style>
+      <div className="alerg-modal reserve-modal" onClick={(e) => e.stopPropagation()}>
         <div className="alerg-closebar">
-          <button className="alerg-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)} style={reserveStep === "aviso" ? { color: '#fffaf3' } : undefined}>×</button>
+          <button className="alerg-close" aria-label="Cerrar" onClick={() => setReserveOpen(false)}>×</button>
         </div>
         <div className="alerg-scroll">
-          {reserveStep === "aviso" ?
+          {!reserveLocal ?
           <React.Fragment>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', minHeight: '320px', color: '#fffaf3', padding: '20px 10px' }}>
-              <div style={{ marginBottom: 18 }} aria-hidden="true">
-                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', margin: '0 auto' }}>
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#fffaf3"/>
-                  <circle cx="12" cy="9" r="2.6" fill="var(--red)"/>
-                </svg>
-              </div>
-              <div style={{ fontWeight: 800, fontSize: 20, letterSpacing: '0.01em', lineHeight: 1.25, maxWidth: '340px' }}>
-                {t("RECUERDA. TU RESERVA SERÁ EN EL LOCAL DE BERNABÉU", "REMEMBER. YOUR BOOKING WILL BE AT OUR BERNABÉU SPOT")}
-              </div>
-              <div style={{ marginTop: 12, fontSize: 15, opacity: 0.92 }}>[Infanta Mercedes, 17]</div>
-              <button
-                type="button"
-                onClick={() => setReserveStep("widget")}
-                style={{ marginTop: 26, background: '#fffaf3', color: 'var(--red)', border: 'none', borderRadius: 999, padding: '13px 34px', fontSize: 16, fontWeight: 700, cursor: 'pointer' }}>
-                {t("Continuar", "Continue")} →
+            <h3 className="alerg-title" style={{ textAlign: 'center' }}>{t("¿En qué local?", "Which location?")}</h3>
+            <div className="reserve-locales">
+              <button type="button" className="reserve-local-card" onClick={() => setReserveLocal({ nombre: "Chamberí", dir: "C/ Blasco de Garay, 10", eid: "hydra-fcb7897f-acf9-48ce-a45b-4214fb3e8fc0" })}>
+                <span className="reserve-local-nombre">CHAMBERÍ</span>
+                <span className="reserve-local-dir">C/ Blasco de Garay, 10</span>
+              </button>
+              <button type="button" className="reserve-local-card" onClick={() => setReserveLocal({ nombre: "Bernabéu", dir: "C/ Infanta Mercedes, 17", eid: "hydra-27342526-f07a-4354-bec7-c7b0ce5d7615" })}>
+                <span className="reserve-local-nombre">BERNABÉU</span>
+                <span className="reserve-local-dir">C/ Infanta Mercedes, 17</span>
               </button>
             </div>
           </React.Fragment>
           :
           <React.Fragment>
-            <h3 className="alerg-title">{t("A reservar mesa", "Let's book you a table!")}</h3>
+            <h3 className="alerg-title">{t("A reservar mesa", "Let's book you a table!")} · {reserveLocal.nombre}</h3>
+            <button
+              type="button"
+              onClick={() => setReserveLocal(null)}
+              style={{ background: 'none', border: 'none', color: 'var(--red)', cursor: 'pointer', fontSize: 15, fontWeight: 600, padding: '4px 0', marginBottom: 8 }}>
+              ← {t("Cambiar de local", "Change location")}
+            </button>
             <div className="reserve-widget-wrap">
-              <DishWidget />
+              <DishWidget eid={reserveLocal.eid} />
             </div>
             <hr className="alerg-sep" />
             <h3 className="alerg-title">{t("*Un tema!", "*One thing!")}</h3>
