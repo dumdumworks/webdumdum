@@ -370,7 +370,14 @@ img { display: block; max-width: 100%; }
   /* Botones de reserva del bloque SISTEMA (home): en columna, ancho completo,
      y con el contenido (texto + flecha) centrado dentro del botón. */
   .sistema-ctas { flex-direction: column; align-items: stretch; }
-  .sistema-ctas > .btn { width: 100%; justify-content: center; text-align: center; }
+  .sistema-ctas > .btn {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    box-sizing: border-box;
+  }
   /* En móvil ocultamos el nav de escritorio y el bloque derecho */
   .topbar .nav-desktop { display: none !important; }
   .topbar .right { display: none !important; }

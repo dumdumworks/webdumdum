@@ -555,13 +555,13 @@ function Footer() {
           <b>Chamberí</b>
           <div>Blasco de Garay, 10</div>
           <div>28015 Madrid</div>
-          <div style={{ marginTop: 8, color: 'var(--red)' }}>{t("Sin reserva", "No booking")}</div>
+          <div style={{ marginTop: 8 }}><a href="#" className="link-hover" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.chamberi } })); }}>{t("Reservar", "Book")} →</a></div>
         </div>
         <div>
           <b>Bernabéu</b>
           <div>Infanta Mercedes, 17</div>
           <div>28020 Madrid</div>
-          <div style={{ marginTop: 8 }}><a href="#" className="link-hover" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("dumdum:open-reserve")); }}>{t("Reservar", "Book")} →</a></div>
+          <div style={{ marginTop: 8 }}><a href="#" className="link-hover" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>{t("Reservar", "Book")} →</a></div>
         </div>
         <div>
           <b>{t("Horarios", "Hours")}</b>
