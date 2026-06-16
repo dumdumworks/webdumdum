@@ -533,7 +533,7 @@ function TopBar({ route }) {
           <button
             type="button"
             onClick={() => setReserveLocal(null)}
-            style={{ background: 'none', border: 'none', color: 'var(--red)', cursor: 'pointer', fontSize: 15, fontWeight: 600, padding: '4px 0', marginBottom: 8 }}>
+            style={{ background: 'none', border: 'none', color: 'var(--red)', cursor: 'pointer', fontFamily: "\"JetBrains Mono\", ui-monospace, monospace", fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600, padding: '4px 0', marginBottom: 8 }}>
             ← {t("Cambiar de local", "Change location")}
           </button>
           <div className="reserve-widget-wrap">
