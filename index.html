@@ -52,6 +52,51 @@
   <meta name="description" content="Dumplings & Desobediencia en Madrid. Chamberí y Bernabéu. Todos los días 13.00–15.39 y 20.00–22.39." />
   <link rel="canonical" href="https://dum-dum.es/" />
 
+  <!-- SEO inmediato por página: fija title/description/canonical según la URL
+       AL INSTANTE, sin esperar a React ni a las descargas de los .json. Así un
+       rastreador que capture la página en el primer momento ya ve el título
+       correcto de cada sección (no el genérico de la home). app.jsx vuelve a
+       aplicar esto mismo al arrancar; aquí solo lo adelantamos. -->
+  <script>
+    (function () {
+      try {
+        var ORIGIN = "https://dum-dum.es";
+        var ROUTES = [
+          { p: "/menu",     t: "DUM DUM\u2122 — La carta",
+            d: "La carta de DUM DUM: dumplings que rompen las normas. Cheese Burger, Carbonara, Gamba K-Pop y más." },
+          { p: "/locales",  t: "DUM DUM\u2122 — Locales",
+            d: "Nuestros dos locales en Madrid: Chamberí (Blasco de Garay, 10) y Bernabéu (Infanta Mercedes, 17)." },
+          { p: "/eventos",  t: "DUM DUM\u2122 — Eventos",
+            d: "Un espacio con identidad para tu evento en Madrid. 55 m², cocina abierta, hasta 35 personas." },
+          { p: "/contacto", t: "DUM DUM\u2122 — Contacto",
+            d: "Contacta con DUM DUM. Reservas, eventos y consultas." }
+        ];
+        var path = window.location.pathname || "/";
+        if (path.length > 1 && path.charAt(path.length - 1) === "/") path = path.slice(0, -1);
+        var match = null;
+        for (var i = 0; i < ROUTES.length; i++) {
+          var r = ROUTES[i];
+          if (path === r.p || path.indexOf(r.p + "/") === 0 || path.indexOf(r.p + "_") === 0) { match = r; break; }
+        }
+        if (match) {
+          document.title = match.t;
+          var canon = ORIGIN + match.p;
+          var setMeta = function (sel, attr, val) {
+            var el = document.querySelector(sel);
+            if (el) el.setAttribute(attr, val);
+          };
+          setMeta('meta[name="description"]', "content", match.d);
+          setMeta('link[rel="canonical"]', "href", canon);
+          setMeta('meta[property="og:title"]', "content", match.t);
+          setMeta('meta[property="og:description"]', "content", match.d);
+          setMeta('meta[property="og:url"]', "content", canon);
+          setMeta('meta[name="twitter:title"]', "content", match.t);
+          setMeta('meta[name="twitter:description"]', "content", match.d);
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <!-- Favicon (dumpling DUM DUM, circular) -->
   <link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico?v=20260601" />
   <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png?v=20260601" />
@@ -145,7 +190,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://use.typekit.net/avd6wfq.css">
-  <link rel="stylesheet" href="src/styles.css?v=20260616f" />
+  <link rel="stylesheet" href="src/styles.css?v=20260616g" />
   <script src="image-slot.js"></script>
 </head>
 <body>
@@ -160,7 +205,7 @@
   <script>
     window.__bootDumDum = function () {
       var files = ["src/data.jsx", "src/ui.jsx", "src/pages.jsx", "src/admin.jsx", "src/app.jsx"];
-      var ASSET_VER = "20260616f";
+      var ASSET_VER = "20260616g";
       files.forEach(function (src) {
         var s = document.createElement("script");
         s.type = "text/babel";
