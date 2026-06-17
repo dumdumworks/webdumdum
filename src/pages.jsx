@@ -300,7 +300,7 @@ function Home() {
             )}
           </p>
           <div className="sistema-ctas" style={{ marginTop: 32 }}>
-            <a className="btn" href="/menu" style={{ display: "block", textAlign: "center" }}>{t("Leer carta de mayo", "Read May's menu")} →</a>
+            <a className="btn" href="/menu">{t("Leer carta de mayo", "Read May's menu")} →</a>
           </div>
         </div>
         <div>
