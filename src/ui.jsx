@@ -378,7 +378,7 @@ function TopBar({ route }) {
   const onFabUp = (e) => {
     const d = fabDrag.current; d.active = false;
     const el = fabRef.current; if (el) el.releasePointerCapture(e.pointerId);
-    if (!d.moved) openPide(); // fue un tap, no un arrastre → abrir modal
+    if (!d.moved) openPide("inicio"); // fue un tap, no un arrastre → abrir modal
   };
   // El FAB pierde opacidad mientras se hace scroll y la recupera al parar.
   const [fabScrolling, setFabScrolling] = React.useState(false);
@@ -417,7 +417,7 @@ function TopBar({ route }) {
           <React.Fragment><span className="dot dot-closed" /> {t("Cerrado. Nos vemos a las", "Closed. See you at")} {est.hora}h</React.Fragment>}
         </span>
         <button type="button" className="topbar-reservar" onClick={() => setReserveOpen(true)}>{t("Reservar", "Book")} →</button>
-        <button type="button" className="topbar-pide" onClick={openPide}>{t("Pide ya!", "Order now!")} →</button>
+        <button type="button" className="topbar-pide" onClick={() => openPide("inicio")}>{t("Pide ya!", "Order now!")} →</button>
         <LangToggle />
       </div>
 
