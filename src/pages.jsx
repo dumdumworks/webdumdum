@@ -304,7 +304,7 @@ function Home() {
           </div>
         </div>
         <div>
-          <div className="tiny muted" style={{ marginBottom: 16 }}>/ {t("SISTEMA", "SYSTEM")}</div>
+          <div className="tiny muted" style={{ marginBottom: 16 }}>/ {t("LOCALES", "LOCATIONS")}</div>
           <h2>{t("Una casa en Chamberí.", "One home in Chamberí.")}<br /><em style={{ color: 'var(--red)', fontStyle: 'normal', fontWeight: 'inherit' }}>{t("Otra en Bernabéu.", "Another in Bernabéu.")}</em></h2>
           <p className="body" style={{ marginTop: 24 }}>
             {t(
@@ -386,9 +386,9 @@ function Home() {
           </a>
         </div>
         <div>
-          <b>{t("Sistema", "System")}</b>
+          <b>{t("Horario", "Hours")}</b>
           <a className="spec-link" href="/locales">
-            {t("Chamberí: turnos | Bernabéu: reservas", "Chamberí: walk-in | Bernabéu: booking")}
+            {t("Todos los días de 13.00 a 15.39 y de 20.00 a 22.39", "Every day, 13.00–15.39 & 20.00–22.39")}
           </a>
         </div>
         <div>
