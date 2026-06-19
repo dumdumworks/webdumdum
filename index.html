@@ -38,6 +38,26 @@
     window.addEventListener('dumdum:open-reserve', function () {
       gtag('event', 'reserva_iniciada');
     });
+
+    // Mide en GA los clics en: Llamar (tel:), Take Away (Square) y Uber Eats.
+    // Escucha global: no toca los botones; detecta el enlace pulsado y manda el evento.
+    document.addEventListener('click', function (e) {
+      var a = (e.target && e.target.closest) ? e.target.closest('a[href]') : null;
+      if (!a) return;
+      var href = (a.getAttribute('href') || '').toLowerCase();
+      if (href.indexOf('tel:') === 0) {
+        var num = href.replace(/[^0-9]/g, '');
+        var local = num.indexOf('624560181') !== -1 ? 'chamberi'
+                  : num.indexOf('614167317') !== -1 ? 'bernabeu' : 'desconocido';
+        gtag('event', 'llamar', { local: local });
+      } else if (href.indexOf('square.site') !== -1) {
+        gtag('event', 'take_away', { destino: 'square' });
+      } else if (href.indexOf('ubereats.com') !== -1) {
+        var loc = href.indexOf('bernabeu') !== -1 ? 'bernabeu'
+                : href.indexOf('chamberi') !== -1 ? 'chamberi' : 'general';
+        gtag('event', 'uber_eats', { local: loc });
+      }
+    }, true);
   </script>
 
   <!-- El index NUNCA se cachea: así siempre lee la versión actual de CSS/JS
