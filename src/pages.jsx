@@ -388,7 +388,7 @@ function Home() {
         <div>
           <b>{t("Horario", "Hours")}</b>
           <a className="spec-link" href="/locales">
-            {t("Todos los días de 13.00 a 15.39 y de 20.00 a 22.39", "Every day, 13.00–15.39 & 20.00–22.39")}
+            {t("L-D / 13.00 - 15.39 / 20.00 - 22.39", "Mon-Sun / 13.00 - 15.39 / 20.00 - 22.39")}
           </a>
         </div>
         <div>
