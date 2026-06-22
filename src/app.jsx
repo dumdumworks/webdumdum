@@ -15,19 +15,19 @@ function getRoutesTable() {
   return [
     { prefix: "/",         exact: true,  component: "Home",
       title: "DUM DUM™ — Dumplings & Desobediencia",
-      desc: "Dumplings & Desobediencia en Madrid. Chamberí y Bernabéu. Todos los días 13.00–15.39 y 20.00–22.39." },
+      desc: "Desobedecer es un derecho y una obligación. Los dumplings más diferentes y mejor valorados de España. Abiertos todos los días. Para tomar, para recoger y a domicilio." },
     { prefix: "/menu",     exact: false, component: "Menu",
       title: "DUM DUM™ — La carta",
-      desc: "La carta de DUM DUM: dumplings que rompen las normas. Cheese Burger, Carbonara, Gamba K-Pop y más." },
+      desc: "Nueve dumplings, uno nuevo cada mes y ni uno convencional." },
     { prefix: "/locales",  exact: false, component: "Locales",
-      title: "DUM DUM™ — Locales",
-      desc: "Nuestros dos locales en Madrid: Chamberí (Blasco de Garay, 10) y Bernabéu (Infanta Mercedes, 17)." },
+      title: "DUM DUM™ — Locales y reservas",
+      desc: "Puedes reservar en Chamberí o en Bernabéu. O en ambos :)." },
     { prefix: "/eventos",  exact: false, component: "Eventos",
       title: "DUM DUM™ — Eventos",
-      desc: "Un espacio con identidad para tu evento en Madrid. 55 m², cocina abierta, hasta 35 personas." },
+      desc: "Espacios cool para eventos en Madrid." },
     { prefix: "/contacto", exact: false, component: "Contacto",
       title: "DUM DUM™ — Contacto",
-      desc: "Contacta con DUM DUM. Reservas, eventos y consultas." }
+      desc: "dumdum@dum-dum.es / +34 614 746 065" }
     // Nota: /admin/ se sirve como carpeta estática (Sveltia CMS), no como ruta
     // de esta SPA. El _redirects de la raíz tiene una regla "/admin/* 200" antes
     // del catch-all para que Cloudflare Pages sirva los archivos de /admin/.
