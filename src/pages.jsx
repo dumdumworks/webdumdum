@@ -200,6 +200,18 @@ function DraggableClaim() {
 
 }
 
+// Nombre del mes en curso (SIEMPRE hora de Madrid, como el resto del sitio).
+// Se usa en textos que deben seguir al mes actual sin tocar el código cada 30
+// días. En español el mes va en minúscula ("mayo"); en inglés capitalizado
+// ("May"), que es justo lo que devuelve Intl para cada locale.
+function mesEnCurso(locale) {
+  try {
+    return new Intl.DateTimeFormat(locale, { timeZone: "Europe/Madrid", month: "long" }).format(new Date());
+  } catch (e) {
+    return new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date());
+  }
+}
+
 // ── HOME ──────────────────────────────────────────────────────
 function Home() {
   const lang = useLang();
@@ -300,7 +312,7 @@ function Home() {
             )}
           </p>
           <div className="sistema-ctas" style={{ marginTop: 32 }}>
-            <a className="btn" href="/menu">{t("Leer carta de mayo", "Read May's menu")} →</a>
+            <a className="btn" href="/menu">{t("Leer carta de " + mesEnCurso("es-ES"), "Read " + mesEnCurso("en-US") + "'s menu")} →</a>
           </div>
         </div>
         <div>
