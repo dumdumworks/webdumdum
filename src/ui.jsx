@@ -581,8 +581,8 @@ function Footer() {
         <div>
           <b>{t("Redes", "Social")}</b>
           <div><a href="https://www.instagram.com/dumdum.plings" target="_blank" rel="noreferrer" className="link-hover">Instagram</a></div>
-          <div><a href="#" className="link-hover"></a></div>
-          <div><a href="#" className="link-hover">Uber Eats</a></div>
+          <div><a href="https://open.spotify.com/playlist/75oqGRFz3CXErzrfBQTuVd?si=62f669c4e6674ff1" target="_blank" rel="noreferrer" className="link-hover">DD*Radio</a></div>
+          <div><a href="#" className="link-hover" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-pide", { detail: { step: "domicilio" } })); }}>Uber Eats</a></div>
         </div>
       </div>
 
