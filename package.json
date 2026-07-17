@@ -1,0 +1,13 @@
+{
+  "name": "webdumdum",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Web DUM DUM — build sin Babel en el navegador (esbuild + prerender ligero)",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}
