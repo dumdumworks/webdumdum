@@ -22,24 +22,26 @@
     gtag("set", "url_passthrough", true);
   </script>
 
-  <!-- Cookiebot + Google Analytics (GA4) · SOLO en el dominio de producción.
-       En previews de Cloudflare (*.pages.dev) y en local NO se cargan, para no
-       contaminar la analítica con tráfico de pruebas. El Consent Mode (arriba)
-       se define SIEMPRE; aquí solo se inyectan los scripts de terceros, en el
-       mismo orden de antes: Cookiebot primero (bloquea GA hasta el consentimiento),
-       Google Analytics después. -->
+  <!-- Cookiebot (CMP) · SÍNCRONO y el PRIMERO tras el Consent Mode, tal como
+       EXIGE data-blockingmode="auto" (el auto-blocking necesita cargar de forma
+       síncrona en el <head>; inyectarlo por JS lo vuelve asíncrono y arranca tarde
+       sobre la SPA ya pintada, saturando el hilo principal → jank general).
+       Carga en TODOS los hosts, como antes del refactor: solo muestra el banner
+       de cookies (inofensivo fuera de producción). Es la única forma de que
+       Cookiebot recupere EXACTAMENTE su comportamiento de carga previo; por eso NO
+       se condiciona por hostname (eso obligaría a inyectarlo por JS = el bug).
+       Solo Google Analytics (abajo) queda condicionado a producción. -->
+  <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="fff625a8-8755-4ff9-a968-09ead09cd1b9" data-blockingmode="auto" type="text/javascript"></script>
+
+  <!-- Google Analytics (GA4) · SOLO en el dominio de producción. En previews de
+       Cloudflare (*.pages.dev) y en local NO se carga, para no contaminar la
+       analítica con tráfico de pruebas. El Consent Mode (arriba) se define SIEMPRE.
+       Orden preservado: Consent Mode → Cookiebot → GA. -->
   <script>
     (function () {
       var host = location.hostname;
       var isProd = (host === 'dum-dum.es' || host === 'www.dum-dum.es');
       if (!isProd) return;
-      var cb = document.createElement('script');
-      cb.id = 'Cookiebot';
-      cb.src = 'https://consent.cookiebot.com/uc.js';
-      cb.setAttribute('data-cbid', 'fff625a8-8755-4ff9-a968-09ead09cd1b9');
-      cb.setAttribute('data-blockingmode', 'auto');
-      cb.type = 'text/javascript';
-      document.head.appendChild(cb);
       var ga = document.createElement('script');
       ga.async = true;
       ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-VRELRN5VGC';
