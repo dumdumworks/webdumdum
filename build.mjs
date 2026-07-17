@@ -253,32 +253,40 @@ for (const d of ["img", "admin"]) {
   console.log("  verificados " + refs.size + " recursos del HTML (sin faltas)");
 })();
 
-// ── 8) _redirects (per-route HTML + 404 real) ────────────────
+// ── 8) _redirects ────────────────────────────────────────────
+// IMPORTANTE — NO añadir rewrites "/ruta -> /ruta.html 200" ni un catch-all
+// "/* -> /404.html 404":
+//  · Cloudflare Pages YA sirve las URLs limpias desde los .html de dist/
+//    (/menu ← menu.html) y redirige /menu.html -> /menu por su cuenta.
+//    Un rewrite "/menu -> /menu.html 200" creaba un BUCLE INFINITO
+//    (ERR_TOO_MANY_REDIRECTS): Cloudflare redirigía /menu.html -> /menu y el
+//    rewrite lo devolvía a /menu.html, sin fin. (La home se salvaba porque la
+//    URL limpia de index.html es "/", que no se redirige a sí misma.)
+//  · Para lo inexistente, Cloudflare Pages sirve 404.html AUTOMÁTICAMENTE con
+//    estado 404 (existe en dist/), así que el catch-all sobra y solo podía
+//    interferir. Los estáticos existentes se sirven antes que cualquier splat.
+// Solo dejamos redirecciones REALES (no rewrites a .html):
 fs.writeFileSync(path.join(DIST, "_redirects"), `# Generado por build.mjs — NO editar a mano (edita build.mjs).
+# Solo redirecciones reales. Las 5 rutas (/, /menu, /locales, /eventos,
+# /contacto) las sirve Cloudflare Pages por URLs limpias desde sus .html; lo
+# inexistente cae a 404.html (automático). NO poner "/ruta -> /ruta.html 200"
+# (bucle infinito con la redirección .html->limpia de Cloudflare) ni "/* 404".
 /menu_eng    /menu    301
 
-# URL fantasma /embed (soft-404): a la home.
+# URL fantasma /embed (soft-404 histórico): a la home.
 /embed       /    301
 /embed/*     /    301
 
-# Normalización de barra final.
+# Normalización de barra final → URL canónica sin barra (protege el QR si
+# apunta a /menu/). Redirige HACIA la limpia, que Cloudflare sirve (no vuelve
+# a redirigir), así que no hay bucle.
 /menu/       /menu       301
 /locales/    /locales    301
 /eventos/    /eventos    301
 /contacto/   /contacto   301
 
-# CMS Sveltia.
+# CMS Sveltia (carpeta estática).
 /admin/*     /admin/:splat    200
-
-# Rutas de la SPA → su HTML prerenderizado (OG estático correcto).
-/            /index.html      200
-/menu        /menu.html       200
-/locales     /locales.html    200
-/eventos     /eventos.html    200
-/contacto    /contacto.html   200
-
-# Cualquier otra ruta: 404 REAL (no soft-404).
-/*           /404.html        404
 `);
 
 // ── 9) _headers (caché real; sustituye a los <meta http-equiv>) ─
