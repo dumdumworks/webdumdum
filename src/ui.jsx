@@ -223,6 +223,49 @@ function sanitizeInlineHTML(html) {
 // Exponer global para que pages.jsx / app.jsx lo usen.
 window.i18n = { getLang, setLang, useLang, t, autoLocalize, ev, mdToJsx, mdParas, sanitizeInlineHTML };
 
+// ─── Focus trap para modales/lightbox (accesibilidad) ────────
+// Devuelve un ref para el contenedor del diálogo. Cuando `active` es true:
+//  · mueve el foco al primer elemento enfocable al abrir,
+//  · atrapa Tab/Shift+Tab dentro del diálogo,
+//  · restaura el foco al elemento que lo tenía al cerrar.
+// El cierre por Esc y por clic en el overlay se mantiene en cada componente.
+function useFocusTrap(active) {
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (!active) return;
+    const container = ref.current;
+    if (!container) return;
+    const prevFocused = document.activeElement;
+    const SEL = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusables = () =>
+      Array.prototype.slice.call(container.querySelectorAll(SEL))
+        .filter((el) => el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement);
+    const first = focusables()[0];
+    if (first) { try { first.focus(); } catch (e) {} }
+    const onKey = (e) => {
+      if (e.key !== "Tab") return;
+      const items = focusables();
+      if (items.length === 0) { e.preventDefault(); return; }
+      const firstEl = items[0], lastEl = items[items.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === firstEl || !container.contains(document.activeElement)) {
+          e.preventDefault(); lastEl.focus();
+        }
+      } else {
+        if (document.activeElement === lastEl || !container.contains(document.activeElement)) {
+          e.preventDefault(); firstEl.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", onKey, true);
+    return () => {
+      document.removeEventListener("keydown", onKey, true);
+      if (prevFocused && prevFocused.focus) { try { prevFocused.focus(); } catch (e) {} }
+    };
+  }, [active]);
+  return ref;
+}
+
 // ─── Top bar ──────────────────────────────────────────────────
 // Cálculo de apertura propio (autosuficiente, no depende de pages.jsx),
 // usando SIEMPRE la hora de Madrid.
@@ -403,6 +446,11 @@ function TopBar({ route }) {
   // Detecta la página de menú de forma tolerante (con o sin barra final).
   const enMenu = /^\/menu\/?$/.test(route);
 
+  // Focus trap (accesibilidad) para los tres modales de la topbar.
+  const pideTrapRef = useFocusTrap(pideOpen);
+  const reserveSelTrapRef = useFocusTrap(reserveOpen && !reserveLocal);
+  const reserveDishTrapRef = useFocusTrap(reserveOpen && !!reserveLocal);
+
   // FAB "Pide ya" (solo móvil): arrastrable. Posición null = esquina inferior
   // derecha por defecto; al arrastrar se guarda {x,y}. Distingue tap de drag.
   const [fabPos, setFabPos] = React.useState(null);
@@ -509,7 +557,9 @@ function TopBar({ route }) {
 
     {pideOpen &&
     <div className="pide-overlay" onClick={() => setPideOpen(false)}>
-      <div className="pide-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="pide-modal" onClick={(e) => e.stopPropagation()}
+           ref={pideTrapRef} role="dialog" aria-modal="true"
+           aria-label={t("Cómo quieres pedir", "How would you like to order")}>
         <div className="pide-closebar">
           <button className="pide-close" aria-label="Cerrar" onClick={() => setPideOpen(false)}>×</button>
         </div>
@@ -553,7 +603,9 @@ function TopBar({ route }) {
 
     {reserveOpen && !reserveLocal &&
     <div className="pide-overlay" onClick={() => closeReserve()}>
-      <div className="pide-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="pide-modal" onClick={(e) => e.stopPropagation()}
+           ref={reserveSelTrapRef} role="dialog" aria-modal="true"
+           aria-label={t("En qué local reservar", "Which location to book")}>
         <div className="pide-closebar">
           <button className="pide-close" aria-label="Cerrar" onClick={() => closeReserve()}>×</button>
         </div>
@@ -573,7 +625,9 @@ function TopBar({ route }) {
     }
     {reserveOpen && reserveLocal &&
     <div className="alerg-overlay" onClick={() => closeReserve()}>
-      <div className="alerg-modal reserve-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="alerg-modal reserve-modal" onClick={(e) => e.stopPropagation()}
+           ref={reserveDishTrapRef} role="dialog" aria-modal="true"
+           aria-label={t("Reservar mesa", "Book a table")}>
         <div className="alerg-closebar">
           <button className="alerg-close" aria-label="Cerrar" onClick={() => closeReserve()}>×</button>
         </div>

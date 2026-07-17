@@ -305,6 +305,8 @@ function Menu() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [alergView]);
+  // Focus trap (accesibilidad) del modal de alérgenos.
+  const alergTrapRef = useFocusTrap(!!alergView);
 
 
 
@@ -574,7 +576,9 @@ function Menu() {
       {/* ───────── Ventana de Alérgenos ───────── */}
       {alergView &&
       <div className="alerg-overlay" onClick={() => setAlergView(null)}>
-        <div className={"alerg-modal" + (alergAtBottom ? " at-bottom" : "")} onClick={(e) => e.stopPropagation()}>
+        <div className={"alerg-modal" + (alergAtBottom ? " at-bottom" : "")} onClick={(e) => e.stopPropagation()}
+             ref={alergTrapRef} role="dialog" aria-modal="true"
+             aria-label={t("Alérgenos", "Allergens")}>
           <div className="alerg-closebar">
             <button className="alerg-close" type="button" aria-label={t("Cerrar", "Close")} onClick={() => setAlergView(null)}>×</button>
           </div>
@@ -706,6 +710,7 @@ function DishLightbox({ items, index, onPrev, onNext, onClose }) {
   const locked = React.useRef(null); // "x" o "y" según la dirección del gesto
 
   const item = items[index];
+  const trapRef = useFocusTrap(true); // el lightbox solo existe montado = abierto
 
   const onTouchStart = (e) => {
     const tch = e.touches[0];
@@ -740,7 +745,7 @@ function DishLightbox({ items, index, onPrev, onNext, onClose }) {
   };
 
   return (
-    <div className="dish-lightbox" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="dish-lightbox" onClick={onClose} role="dialog" aria-modal="true" aria-label={item ? item.name : "Foto"} ref={trapRef}>
       <button type="button" className="dish-lightbox-close" aria-label="Cerrar" onClick={onClose}>✕</button>
 
       <button type="button" className="dish-lightbox-nav prev" aria-label="Anterior"
@@ -1433,6 +1438,7 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
 // diseño del sitio (rojo, mono, transiciones suaves).
 function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
   const open = index !== null && index !== undefined;
+  const trapRef = useFocusTrap(open); // accesibilidad (llamado antes de cualquier return)
 
   // Swipe táctil (móvil): deslizar izquierda/derecha para navegar,
   // igual que el carrusel de la carta.
@@ -1501,7 +1507,7 @@ function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
   if (!item.src) return null;
 
   return (
-    <div className="lb-overlay" onClick={onClose}>
+    <div className="lb-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label={label} ref={trapRef}>
       <div className="lb-head" onClick={(e) => e.stopPropagation()}>
         <span className="tiny">{label} · {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
         <button className="lb-close" onClick={onClose} aria-label="Cerrar">✕</button>
