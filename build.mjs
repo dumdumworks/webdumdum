@@ -291,10 +291,24 @@ fs.writeFileSync(path.join(DIST, "_redirects"), `# Generado por build.mjs — NO
 
 // ── 9) _headers (caché real; sustituye a los <meta http-equiv>) ─
 fs.writeFileSync(path.join(DIST, "_headers"), `# Generado por build.mjs.
-# HTML siempre fresco (contiene los ?v y las URLs con hash).
+# HTML siempre fresco (contiene los ?v y las URLs con hash). Cloudflare Pages
+# sirve las rutas como URLs LIMPIAS (/menu, no /menu.html), que no matchean
+# "/*.html"; por eso hay que listar cada ruta limpia explícitamente, o su HTML
+# quedaría con la caché por defecto y podría pedir un asset con hash ya
+# inexistente tras un redeploy (pantalla en blanco).
 /*.html
   Cache-Control: no-cache
 /
+  Cache-Control: no-cache
+/menu
+  Cache-Control: no-cache
+/locales
+  Cache-Control: no-cache
+/eventos
+  Cache-Control: no-cache
+/contacto
+  Cache-Control: no-cache
+/admin/
   Cache-Control: no-cache
 
 # Assets con hash en el nombre: inmutables y cacheables un año.

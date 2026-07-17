@@ -482,7 +482,7 @@ function Menu() {
                   {/* ─── Layout DESKTOP (visible ≥880px) ──────────────── */}
                   <div className="dish-img">
                     {it.image ?
-                <img src={it.image} alt={tf(it, "name")} /> :
+                <img src={it.image} alt={tf(it, "name")} loading="lazy" decoding="async" /> :
                 <div className="dish-img-ph">
                           <span className="ph-label">[{tf(it, "name")}]</span>
                           <span className="ph-sub">product shot · 4:5</span>
