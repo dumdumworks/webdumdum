@@ -10,7 +10,14 @@
 <body>
   <!-- Sveltia CMS: gestor de contenido (carta + galerías + textos de eventos).
        Lee la configuración del config.yml que está al lado de este archivo.
-       Se conecta a GitHub para guardar los cambios (rama main del repo). -->
-  <script type="module" src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+       Se conecta a GitHub para guardar los cambios (rama main del repo).
+       Versión FIJADA (+SRI): el panel tiene permisos de escritura al repo, así
+       que no queremos que una release nueva de unpkg cambie el comportamiento o
+       rompa sin avisar. Para actualizar: sube la versión y recalcula el integrity. -->
+  <!-- Sin type="module": el dist de Sveltia es un script clásico (lo recomienda
+       la propia Sveltia). SRI + crossorigin siguen aplicando. -->
+  <script src="https://unpkg.com/@sveltia/cms@0.171.1/dist/sveltia-cms.js"
+          integrity="sha384-OcanSYlkTCDj/0NRpw8XrVyiFufw/rvu/bCSYoBo50mn79ymnTckE0DaJDUf9PxD"
+          crossorigin="anonymous"></script>
 </body>
 </html>

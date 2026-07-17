@@ -1,15 +1,15 @@
 // ─────────────────────────────────────────────────────────────
-// CARTA DUM DUM™ — datos
-// Esta estructura es la "fuente de la verdad" cuando aún no se ha
-// editado nada en /admin. En cuanto entras en el panel y guardas,
-// se persiste en localStorage y la web lee desde allí.
+// CARTA DUM DUM™ — datos de RESPALDO
+// La fuente de la verdad en producción es menu.json (editado en el CMS
+// Sveltia y precargado en index.html como window.PUBLISHED_MENU). loadMenu()
+// SOLO usa esta estructura si menu.json no cargó. Las `sections` de aquí son
+// un placeholder mínimo a propósito: si falla menu.json NO queremos mostrar
+// una carta antigua que parezca real. El resto (gallery, disclaimer, updated)
+// sí se usa como base cuando el CMS no lo aporta.
 // ─────────────────────────────────────────────────────────────
 
-const STORAGE_KEY = "dumdum.menu.v1";
-const AUTH_KEY = "dumdum.admin.v1";
-
 const INITIAL_MENU = {
-  updated: "Mayo dosmil26 · IVA incluido",
+  updated: "",
   header: {
     title: "Carta",
     subtitle: "DUM DUM™ · Actualizada",
@@ -63,177 +63,10 @@ const INITIAL_MENU = {
   footer: [],
   sections: [
     {
-      id: "entrantes",
-      title: "Para empezar",
-      note: "Único entrante. De momento.",
-      items: [
-        {
-          id: "beicondilla",
-          n: 0,
-          name: "Latindilla",
-          tagline: "¡PUFF!!",
-          ingredients: "Ensaladilla de bacon, salsa secreta, toppings umami.",
-          price: "7,50",
-          tags: [],
-          logo: null,
-          image: "img/dumplings/latindilla.jpg"
-        }
-      ]
-    },
-    {
-      id: "dumplings",
-      title: "Dumplings",
-      note: "100% caseros. 0% convencionales.",
-      items: [
-        {
-          id: "muaythai",
-          n: 1,
-          name: "Muay Thai",
-          tagline: "PATADA VOLADORA!",
-          ingredients: "Dumpling de pollo, salsa de cacahuete, cebolla roja, cilantro, maní crujiente.",
-          price: "9,00",
-          tags: ["PICANTE"],
-          logo: null,
-          image: "img/dumplings/muay.jpg"
-        },
-        {
-          id: "pumpkin",
-          n: 2,
-          name: "Honey Pumpkin",
-          tagline: "SE TE VA A OLVIDAR QUE ES VEGETARIANO",
-          ingredients: "Dumpling de calabaza asada, gorgonzola, cheddar curado, miel, cúrcuma, pipas de calabaza.",
-          price: "8,50",
-          tags: ["VEG"],
-          logo: null,
-          image: "img/dumplings/honey.jpg"
-        },
-        {
-          id: "cheeseburger",
-          n: 3,
-          name: "Cheese Burger",
-          tagline: "JUSTO ESE BOCADO DEL CENTRO DE LA BURGER",
-          ingredients: "Dumpling de ternera, cebolla pochada, cheddar, pepinillo, kétchup, mostaza.",
-          price: "9,00",
-          tags: [],
-          logo: null,
-          image: "img/dumplings/burger.jpg"
-        },
-        {
-          id: "carbonara",
-          n: 4,
-          name: "Carbonara",
-          tagline: "PURA CREMA!",
-          ingredients: "Dumpling de bacon, salsa de yema, parmesano.",
-          price: "9,00",
-          tags: [],
-          logo: null,
-          image: "img/dumplings/carbonara.jpg"
-        },
-        {
-          id: "pepito",
-          n: 5,
-          name: "Pepito de Ternera",
-          tagline: "EL SABOR DEL BAR DE SIEMPRE",
-          ingredients: "Dumpling de ternera, cebolla caramelizada, pimiento verde, mantequilla noisette, panko frito.",
-          price: "9,50",
-          tags: [],
-          logo: null,
-          image: "img/dumplings/pepito.jpg"
-        },
-        {
-          id: "castiza",
-          n: 6,
-          name: "Castizo",
-          tagline: "MADRID ME MATA",
-          ingredients: "Dumpling de lomo adobado, salsa brava, torrezno.",
-          price: "9,50",
-          tags: ["POR TIEMPO LIMITADO"],
-          featured: true,
-          logo: null,
-          image: "img/dumplings/castizo.jpg"
-        },
-        {
-          id: "moussaka",
-          n: 7,
-          name: "Moussaka",
-          tagline: "AKRÓPOLIS!",
-          ingredients: "Dumpling de champiñón, shiitake, berenjena, gruyère, almendra frita.",
-          price: "8,50",
-          tags: ["VEG"],
-          logo: null,
-          image: "img/dumplings/moussaka.jpg"
-        },
-        {
-          id: "sweetchili",
-          n: 8,
-          name: "Sweet Chilli Pork",
-          tagline: "UN POCO DULCE · OTRO POCO HOT",
-          ingredients: "Dumpling de cerdo, pimiento, salsa sweet chilli, sésamo, guindilla encurtida.",
-          price: "9,00",
-          tags: ["NEW", "PICANTE"],
-          logo: null,
-          image: "img/dumplings/sweet.jpg"
-        },
-        {
-          id: "teriyaki",
-          n: 9,
-          name: "Chicken Teriyaki",
-          tagline: "LA ROSALÍA!",
-          ingredients: "Dumpling de pollo, puerro, salsa teriyaki, sésamo, cebolleta.",
-          price: "9,00",
-          tags: [],
-          logo: null,
-          image: "img/dumplings/teriyaki.jpg"
-        },
-        {
-          id: "kpop",
-          n: 10,
-          name: "Gamba K-Pop",
-          tagline: "NAMBER GUAN",
-          ingredients: "Dumpling de gamba, col, mayo kimchi.",
-          price: "9,50",
-          tags: [],
-          logo: null,
-          image: "img/dumplings/gamba.jpg"
-        }
-      ]
-    },
-    {
-      id: "postres",
-      title: "Postres",
-      note: "Mochis que también desobedecen.",
-      items: [
-        {
-          id: "mochi-cheese",
-          n: 11,
-          name: "Mochi Tarta de Queso",
-          tagline: "CREMOSO AL CUBO",
-          ingredients: "Helado de tarta de queso envuelto en mochi.",
-          price: "3,50",
-          tags: [],
-          logo: null
-        },
-        {
-          id: "mochi-petit",
-          n: 12,
-          name: "Mochi Petit Suisse",
-          tagline: "INFANCIA EN BOLA",
-          ingredients: "Helado de petit suisse envuelto en mochi.",
-          price: "3,50",
-          tags: [],
-          logo: null
-        },
-        {
-          id: "mochi-turron",
-          n: 13,
-          name: "Mochi Turrón",
-          tagline: "FUERA DE TEMPORADA",
-          ingredients: "Helado de turrón envuelto en mochi.",
-          price: "3,50",
-          tags: ["NEW"],
-          logo: null
-        }
-      ]
+      id: "no-disponible",
+      title: "Carta no disponible",
+      note: "Estamos actualizando la carta. Vuelve en un momento.",
+      items: []
     }
   ]
 };
@@ -261,32 +94,10 @@ function loadMenu() {
   // Respaldo (solo si menu.json no carga): el menu del codigo.
   return INITIAL_MENU;
 }
-function saveMenu(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-function resetMenu() {
-  localStorage.removeItem(STORAGE_KEY);
-}
-
-// ─── Auth (demo, no producción) ───────────────────────────────
-const ADMIN_PASSWORD = "desobediencia";
-function isLoggedIn() {
-  return sessionStorage.getItem(AUTH_KEY) === "1";
-}
-function login(pw) {
-  if (pw === ADMIN_PASSWORD) {
-    sessionStorage.setItem(AUTH_KEY, "1");
-    return true;
-  }
-  return false;
-}
-function logout() {
-  sessionStorage.removeItem(AUTH_KEY);
-}
 
 // ─── Logos "incrustados" como SVG inline ──────────────────────
-// Marcadores visuales que se pueden subir a un plato. Si el admin sube
-// una imagen propia, se sustituye por <img>. Estos son los placeholders.
+// Marcadores visuales asociables a un plato (campo "logo"). Estos son los
+// placeholders inline; si un plato trae una imagen propia, DishLogo usa <img>.
 const PRESET_LOGOS = {
   kpop: `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="60" fill="#FF001E"/><text x="30" y="38" font-family="JetBrains Mono,monospace" font-weight="600" font-size="16" fill="#fff" text-anchor="middle" letter-spacing="-0.5">K-POP</text></svg>`,
   cheese: `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="60" fill="#FFC700"/><text x="30" y="26" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="11" fill="#ff001e" text-anchor="middle">CHEESE</text><text x="30" y="40" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="11" fill="#ff001e" text-anchor="middle">BURGER</text><circle cx="14" cy="50" r="3" fill="#ff001e"/><circle cx="46" cy="14" r="3" fill="#ff001e"/></svg>`,
@@ -295,10 +106,11 @@ const PRESET_LOGOS = {
 };
 
 // ─── Export global ────────────────────────────────────────────
+// Solo lo que consume la web pública: el respaldo, el lector del menú y los
+// logos preset. La auth y la persistencia en localStorage se retiraron junto
+// con el panel admin.jsx (la edición real vive en el CMS Sveltia, /admin/).
 window.DumDumData = {
-  STORAGE_KEY, AUTH_KEY,
   INITIAL_MENU,
-  loadMenu, saveMenu, resetMenu,
-  isLoggedIn, login, logout,
+  loadMenu,
   PRESET_LOGOS
 };
