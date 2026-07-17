@@ -14,6 +14,16 @@ function mesEnCurso(locale) {
   }
 }
 
+// Dos últimos dígitos del año en curso (SIEMPRE hora de Madrid), para el formato
+// de marca "DOSMIL26" (= "DOSMIL" + estos dígitos). Complementa a mesEnCurso.
+function anioEnCursoYY() {
+  try {
+    return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Madrid", year: "numeric" }).format(new Date()).slice(-2);
+  } catch (e) {
+    return String(new Date().getFullYear()).slice(-2);
+  }
+}
+
 // ── HOME ──────────────────────────────────────────────────────
 function Home() {
   const lang = useLang();
@@ -427,7 +437,13 @@ function Menu() {
           <div className="row between">
             <div>
               <h1 className="menu-h">{t("Carta", "Menu")}</h1>
-              <div className="menu-sub">{t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated")} {window.i18n.autoLocalize(data.updated)}</div>
+              {/* MES y AÑO son SIEMPRE automáticos (hora de Madrid): mes vía
+                  mesEnCurso() y año como "DOSMIL"+2 dígitos (autoLocalize lo pasa
+                  a "TWENTY26" en EN). El campo `updated` de menu.json YA NO
+                  controla la fecha del subtítulo — si un editor lo cambia en
+                  Sveltia, aquí no tiene efecto (es intencional). El resto del
+                  texto ("· Actualizada", "· IVA incluido") es fijo. */}
+              <div className="menu-sub">{t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated")} {mesEnCurso(lang === "en" ? "en-US" : "es-ES")} {window.i18n.autoLocalize("dosmil" + anioEnCursoYY())} · {t("IVA incluido", "VAT included")}</div>
             </div>
           </div>
         </div>
