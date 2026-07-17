@@ -284,22 +284,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Marquee */}
-      <div className="marquee">
-        <div className="marquee-track">
-          <span>
-
-
-
-          </span>
-          <span>
-
-
-
-          </span>
-        </div>
-      </div>
-
       {/* Feature strip */}
       <section className="feature-strip">
         <div>
@@ -325,8 +309,8 @@ function Home() {
             )}
           </p>
           <div className="row gap-m sistema-ctas" style={{ marginTop: 32 }}>
-            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.chamberi } })); }}>{t("Reservar en Chamberí", "Book at Chamberí")} →</a>
-            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>{t("Reservar en Bernabéu", "Book at Bernabéu")} →</a>
+            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES?.chamberi } })); }}>{t("Reservar en Chamberí", "Book at Chamberí")} →</a>
+            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES?.bernabeu } })); }}>{t("Reservar en Bernabéu", "Book at Bernabéu")} →</a>
           </div>
         </div>
       </section>
@@ -650,7 +634,7 @@ function Menu() {
             <div className="menu-disclaimer-bubble">
               {lang === "en" ?
                 <p>Each portion is 6 dumplings. For 2 people, <strong>4 portions</strong> is the magic number. <strong>5</strong> means you came hungry. <strong>6… 112</strong> 💀<br/>Give it a think, <strong>it's a one-time order</strong> 😉</p> :
-                <p dangerouslySetInnerHTML={{ __html: data.disclaimer }} />}
+                <p dangerouslySetInnerHTML={{ __html: window.i18n.sanitizeInlineHTML(data.disclaimer) }} />}
             </div>
           </aside>
         }
@@ -1151,7 +1135,7 @@ function Locales() {
               <a
                 className="btn red"
                 href="#"
-                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.chamberi } })); }}>
+                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES?.chamberi } })); }}>
                 {t("Reservar en Chamberí", "Book at Chamberí")} →
               </a>
               <BotonLlamar tel="+34624560181" telHuman="+34 624 56 01 81" nombre="Chamberí" />
@@ -1185,7 +1169,7 @@ function Locales() {
               <a
                 className="btn red"
                 href="#"
-                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>
+                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES?.bernabeu } })); }}>
                 {t("Reservar en Bernabéu", "Book at Bernabéu")} →
               </a>
               <BotonLlamar tel="+34614167317" telHuman="+34 614 16 73 17" nombre="Bernabéu" />
@@ -1244,7 +1228,8 @@ function EspacioSlider() {
     };
   }, []);
 
-  const photos = data.gallery && data.gallery.espacio || ESPACIO_PHOTOS_FALLBACK;
+  const photos = (data.gallery && data.gallery.espacio && data.gallery.espacio.length)
+    ? data.gallery.espacio : ESPACIO_PHOTOS_FALLBACK;
   return (
     <GallerySlider photos={photos} visible={2} label="Espacio" ratio="3 / 4" />);
 
@@ -1324,17 +1309,19 @@ function YouTubeEmbed({ url, placeholderN }) {
 function getYouTubeId(url) {
   if (!url) return null;
   var s = String(url).trim();
+  // Los IDs de YouTube tienen SIEMPRE 11 caracteres [A-Za-z0-9_-]. Exigirlo
+  // evita fabricar embeds a partir de cadenas basura (y URLs fantasma).
   // youtu.be/ID
-  var m = s.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/);
+  var m = s.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
   if (m) return m[1];
   // youtube.com/watch?v=ID
-  m = s.match(/[?&]v=([A-Za-z0-9_-]{6,})/);
+  m = s.match(/[?&]v=([A-Za-z0-9_-]{11})/);
   if (m) return m[1];
   // youtube.com/shorts/ID  o  /embed/ID
-  m = s.match(/\/(?:shorts|embed)\/([A-Za-z0-9_-]{6,})/);
+  m = s.match(/\/(?:shorts|embed)\/([A-Za-z0-9_-]{11})/);
   if (m) return m[1];
-  // Si pegan solo el ID
-  if (/^[A-Za-z0-9_-]{6,}$/.test(s)) return s;
+  // Si pegan solo el ID (exactamente 11 chars)
+  if (/^[A-Za-z0-9_-]{11}$/.test(s)) return s;
   return null;
 }
 
@@ -1352,7 +1339,10 @@ function RedesSlider() {
   }, []);
 
   const fallback = Array.from({ length: 6 }, () => ({ url: "" }));
-  const items = data.gallery && data.gallery.redes || fallback;
+  // Un array vacío es "truthy": sin la comprobación de longitud, `redes: []`
+  // dejaría total=0 y `% total` daría NaN → items[NaN].url → TypeError.
+  const items = (data.gallery && data.gallery.redes && data.gallery.redes.length)
+    ? data.gallery.redes : fallback;
   const total = items.length;
   const [idx, setIdx] = React.useState(0);
 
@@ -1385,18 +1375,34 @@ function RedesSlider() {
 
 }
 
+// Devuelve la URL /embed/ ABSOLUTA de un post/reel de Instagram, o null si el
+// valor no es una URL válida de instagram.com. Blinda contra dos fallos:
+//  · URL vacía/relativa → antes producía "/embed/" (ruta del propio dominio),
+//    que Googlebot rastreaba como soft-404 (p. ej. https://dum-dum.es/embed/).
+//  · URL de un tercero → antes se incrustaba cualquier iframe en nuestro dominio.
+function instagramEmbedSrc(url) {
+  if (!url) return null;
+  const s = String(url).trim();
+  if (!s) return null;
+  let u;
+  try { u = new URL(s); } catch (e) { return null; } // exige URL absoluta
+  if (u.protocol !== "https:" && u.protocol !== "http:") return null;
+  if (!/(^|\.)instagram\.com$/i.test(u.hostname)) return null;
+  const path = u.pathname.replace(/\/+$/, "");
+  if (!path) return null;
+  const base = "https://www.instagram.com" + path;
+  return /\/embed$/i.test(path) ? base + "/" : base + "/embed/";
+}
+
 // ── ReelEmbed · convierte URL de Instagram en iframe embed ────
 function ReelEmbed({ url, placeholderN }) {
-  if (!url) {
+  const embed = instagramEmbedSrc(url);
+  if (!embed) {
     return (
       <div className="ev-slider-ph">
         <span>[ Reel · {String(placeholderN).padStart(2, "0")} ]</span>
       </div>);
 
-  }
-  let embed = url.trim();
-  if (!embed.endsWith("/embed") && !embed.endsWith("/embed/")) {
-    embed = embed.replace(/\?.*$/, "").replace(/\/?$/, "/embed/");
   }
   return (
     <iframe
@@ -1424,7 +1430,8 @@ function ProductoSlider() {
   }, []);
 
   const fallback = Array.from({ length: 9 }, () => ({ src: null, pos: "50% 50%" }));
-  const photos = data.gallery && data.gallery.producto || fallback;
+  const photos = (data.gallery && data.gallery.producto && data.gallery.producto.length)
+    ? data.gallery.producto : fallback;
 
   // Las fotos de Producto son las mismas de los platos. Para que el visor
   // sea idéntico al de la carta (con nombre incluido), derivamos el nombre
@@ -1462,7 +1469,8 @@ function PrensaSlider() {
   }, []);
 
   const fallback = Array.from({ length: 6 }, () => ({ src: null, pos: "50% 50%", url: "" }));
-  const photos = data.gallery && data.gallery.prensa || fallback;
+  const photos = (data.gallery && data.gallery.prensa && data.gallery.prensa.length)
+    ? data.gallery.prensa : fallback;
   return (
     <GallerySlider photos={photos} visible={2} label="Prensa" placeholderLabel="Noticia" cta="Ver noticia →" ratio="3 / 4" />);
 
@@ -1550,7 +1558,7 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
           {photos.map((item, i) =>
         <div className="ev-slider-slot" key={i} style={{ aspectRatio: ratio }}>
               {item.src ?
-          <img src={item.src} alt="" loading="lazy" decoding="async" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
+          <img src={item.src} alt={item.name || ""} loading="lazy" decoding="async" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
             onClick={() => setLightbox(i)} /> :
 
           <div className="ev-slider-ph">
@@ -1575,7 +1583,7 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
           {slice.map(({ item, n }, i) =>
         <div className="ev-slider-slot" key={`${idx}-${i}`} style={{ aspectRatio: ratio }}>
               {item.src ?
-          <img src={item.src} alt="" loading="lazy" decoding="async" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
+          <img src={item.src} alt={item.name || ""} loading="lazy" decoding="async" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
             onClick={() => setLightbox((idx + i) % total)} /> :
 
           <div className="ev-slider-ph">
@@ -1717,36 +1725,40 @@ function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
     </div>);
 
 }
-// Formulario de contacto para Eventos. Envía un POST a un endpoint
-// de Formspree (https://formspree.io/) — gratis hasta 50 emails/mes.
-// Si el endpoint no está configurado, abre la app de mail del usuario
-// con todos los datos prerrellenados (mailto fallback).
+// Formulario de contacto para Eventos. Envía un POST JSON a Web3Forms
+// (https://web3forms.com/) — gratis hasta 250 envíos/mes. La access_key es
+// pública por diseño. Lleva honeypot ("botcheck") anti-spam. Si el envío falla,
+// se muestra un mensaje de error con la dirección de correo para escribir a mano.
 const WEB3FORMS_KEY = "7b16c2a8-ccbd-4c0a-8d29-0562bd8646a0";
 const EVENTOS_EMAIL = "dumdum@dum-dum.es";
 
+// Fecha de hoy (Europe/Madrid) en formato YYYY-MM-DD, para el `min` del <input
+// type="date"> (no se pueden pedir eventos en el pasado).
+function hoyISOMadrid() {
+  try {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/Madrid", year: "numeric", month: "2-digit", day: "2-digit"
+    }).format(new Date());
+  } catch (e) {
+    return new Date().toISOString().slice(0, 10);
+  }
+}
+
 function EventosForm() {
   const lang = useLang();
-  const [form, setForm] = React.useState({ nombre: "", empresa: "", email: "", telefono: "", fecha: "", asistentes: "", mensaje: "" });
+  const [form, setForm] = React.useState({ nombre: "", empresa: "", email: "", telefono: "", fecha: "", asistentes: "", mensaje: "", botcheck: false });
   const [state, setState] = React.useState("idle"); // idle · sending · ok · error
   const [errMsg, setErrMsg] = React.useState("");
+  const minFecha = hoyISOMadrid();
 
-  const set = (k, v) => setForm({ ...form, [k]: v });
-
-  const mailtoFallback = () => {
-    const subject = `Solicitud de información — ${form.nombre || "(sin nombre)"}`;
-    const body =
-    `Nombre y apellido: ${form.nombre}\n` +
-    `Empresa: ${form.empresa}\n` +
-    `Email: ${form.email}\n` +
-    `Teléfono: ${form.telefono}\n` +
-    `Fecha: ${form.fecha}\n` +
-    `Número de asistentes: ${form.asistentes}\n\n` +
-    `Mensaje:\n${form.mensaje}`;
-    window.location.href = `mailto:${EVENTOS_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  };
+  // Updater funcional: dos onChange en el mismo tick (autofill, pegado) no se
+  // pisan al partir ambos del mismo `form` capturado.
+  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   const submit = async (e) => {
     e.preventDefault();
+    // Guarda de reentrada: si ya se está enviando, ignorar (doble Enter/tap).
+    if (state === "sending") return;
     if (!form.nombre || !form.email || !form.telefono || !form.fecha) {
       setState("error");
       setErrMsg(t("Rellena los campos obligatorios: nombre, email, teléfono y fecha del evento.", "Please fill in the required fields: name, email, phone and event date."));
@@ -1775,6 +1787,7 @@ function EventosForm() {
           access_key: WEB3FORMS_KEY,
           subject: `Nueva solicitud de evento · ${ref}`,
           from_name: "Web DUM DUM · Eventos",
+          botcheck: form.botcheck, // honeypot: si un bot lo marca, Web3Forms lo descarta
           "Referencia": ref,
           "Nombre y apellido": form.nombre,
           "Empresa": form.empresa,
@@ -1789,7 +1802,7 @@ function EventosForm() {
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.success) {
         setState("ok");
-        setForm({ nombre: "", empresa: "", email: "", telefono: "", fecha: "", asistentes: "", mensaje: "" });
+        setForm({ nombre: "", empresa: "", email: "", telefono: "", fecha: "", asistentes: "", mensaje: "", botcheck: false });
       } else {
         setState("error");
         setErrMsg(data.message || t("No se pudo enviar. Inténtalo de nuevo o escríbenos directamente.", "Couldn't send. Try again or email us directly."));
@@ -1817,6 +1830,17 @@ function EventosForm() {
 
   return (
     <form className="ev-form" onSubmit={submit}>
+      {/* Honeypot anti-spam: invisible para humanos; un bot que lo rellene se
+          descarta en Web3Forms. aria-hidden + tabIndex -1 para lectores/teclado. */}
+      <input
+        type="checkbox"
+        name="botcheck"
+        checked={form.botcheck}
+        onChange={(e) => set("botcheck", e.target.checked)}
+        style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true" />
       <div className="ev-form-row ev-form-row-3">
         <label className="ev-field">
           <span>{t("Nombre y apellido *", "Full name *")}</span>
@@ -1861,6 +1885,7 @@ function EventosForm() {
           <input
             type="date"
             value={form.fecha}
+            min={minFecha}
             onChange={(e) => set("fecha", e.target.value)}
             required />
         </label>

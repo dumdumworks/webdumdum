@@ -101,13 +101,56 @@ function matchRoute(route) {
   return null;
 }
 
+// ─── Restauración de scroll ───────────────────────────────────
+// Navegación NUEVA (pushState / clic en un enlace) → scroll arriba.
+// Atrás/adelante del navegador (popstate) → restaurar la posición previa.
+// Sin esto, volver atrás desde una página siempre aterrizaba al principio.
+if (typeof history !== "undefined" && "scrollRestoration" in history) {
+  // Desactivamos la nativa: la gestionamos nosotros de forma coherente con la SPA.
+  history.scrollRestoration = "manual";
+}
+const _scrollByPath = {};
+let _navKind = "push"; // "push" (nav nueva) | "pop" (atrás/adelante)
+let _restoringScroll = false; // mientras restauramos, no sobrescribir lo guardado
+if (typeof window !== "undefined") {
+  // Guardar de forma continua la posición de scroll de la ruta actual (salvo
+  // mientras estamos restaurando, para que el propio scrollTo no la pise).
+  window.addEventListener("scroll", () => {
+    if (_restoringScroll) return;
+    _scrollByPath[window.location.pathname || "/"] = window.scrollY;
+  }, { passive: true });
+  window.addEventListener("popstate", () => { _navKind = "pop"; });
+  window.addEventListener("dumdum:navigate", () => { _navKind = "push"; });
+}
+
 function App() {
   const route = useRoute();
   const [loaded, setLoaded] = React.useState(false);
 
-  // Scroll arriba + actualizar título/descripción SEO al cambiar de ruta
+  // Al cambiar de ruta: restaurar/subir scroll + actualizar SEO del <head>.
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    if (_navKind === "pop") {
+      // Atrás/adelante: restaurar la posición guardada. El contenido de la
+      // nueva ruta puede tardar uno o varios frames en tener altura suficiente,
+      // así que reintentamos hasta clavarla (o agotar unos pocos frames).
+      const y = _scrollByPath[route] || 0;
+      _restoringScroll = true;
+      let tries = 0;
+      const tryScroll = () => {
+        window.scrollTo(0, y);
+        tries += 1;
+        // setTimeout (no rAF): sigue corriendo aunque la pestaña esté en 2º plano.
+        if (tries < 8 && Math.abs(window.scrollY - y) > 2) {
+          setTimeout(tryScroll, 40);
+        } else {
+          _restoringScroll = false;
+        }
+      };
+      tryScroll(); // primer intento síncrono; reintenta si el contenido aún no tiene altura
+    } else {
+      window.scrollTo(0, 0);
+    }
+    _navKind = "push"; // por defecto la siguiente navegación es "nueva"
     applyHeadMeta(matchRoute(route), route);
   }, [route]);
 
@@ -140,6 +183,7 @@ function renderRoute(route) {
 }
 
 function NotFound() {
+  window.i18n.useLang(); // re-renderiza al cambiar ES/EN (usa t() más abajo)
   return (
     <section style={{padding:'18vh var(--gutter)', textAlign:'left'}}>
       <div className="tiny muted">[404]</div>
