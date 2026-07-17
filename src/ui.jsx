@@ -240,7 +240,7 @@ function useFocusTrap(active) {
     const container = ref.current;
     if (!container) return;
     const prevFocused = document.activeElement;
-    const SEL = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const SEL = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])';
     const focusables = () =>
       Array.prototype.slice.call(container.querySelectorAll(SEL))
         .filter((el) => el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement);
