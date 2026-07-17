@@ -1,204 +1,6 @@
 // ─────────────────────────────────────────────────────────────
-// Páginas públicas: Home, Carta (mobile), Locales, Quiénes, Contacto
+// Páginas públicas: Home, Carta (mobile), Locales, Contacto
 // ─────────────────────────────────────────────────────────────
-
-// ── HomeLogoSlot ──────────────────────────────────────────────
-// Slot drag-and-drop dedicado para el logo de la home.
-// A diferencia de <image-slot>, este SÍ acepta SVG (inline) además
-// de PNG/JPG/WebP. Persiste en localStorage.
-const HOME_LOGO_KEY = "dumdum.home.logo.v1";
-const HOME_LOGO_SIZE_KEY = "dumdum.home.logo.size.v1";
-
-function HomeLogoSlot() {
-  const [value, setValue] = React.useState(() => {
-    try {return localStorage.getItem(HOME_LOGO_KEY) || null;} catch {return null;}
-  });
-  const [size, setSize] = React.useState(() => {
-    try {return parseInt(localStorage.getItem(HOME_LOGO_SIZE_KEY)) || 55;} catch {return 55;}
-  });
-  const [drag, setDrag] = React.useState(false);
-  const inputRef = React.useRef(null);
-
-  const updateSize = (n) => {
-    setSize(n);
-    try {localStorage.setItem(HOME_LOGO_SIZE_KEY, String(n));} catch {}
-  };
-
-  const ingest = (file) => {
-    if (!file) return;
-    const reader = new FileReader();
-    const isSvg = file.type === "image/svg+xml" || /\.svg$/i.test(file.name);
-    reader.onload = () => {
-      let payload;
-      if (isSvg) {
-        payload = "svg::" + reader.result;
-      } else {
-        payload = reader.result; // data URL
-      }
-      try {localStorage.setItem(HOME_LOGO_KEY, payload);} catch {}
-      setValue(payload);
-    };
-    if (isSvg) reader.readAsText(file);else
-    reader.readAsDataURL(file);
-  };
-
-  const clear = (e) => {
-    e.stopPropagation();
-    try {localStorage.removeItem(HOME_LOGO_KEY);} catch {}
-    setValue(null);
-  };
-
-  const replace = (e) => {
-    e.stopPropagation();
-    inputRef.current?.click();
-  };
-
-  const onDrop = (e) => {
-    e.preventDefault();
-    setDrag(false);
-    const file = e.dataTransfer.files?.[0];
-    ingest(file);
-  };
-
-  const renderLogo = () => {
-    if (!value) return null;
-    const inner = value.startsWith("svg::") ?
-    <div className="home-logo-img" dangerouslySetInnerHTML={{ __html: value.slice(5) }} /> :
-    <img className="home-logo-img" src={value} alt="DUM DUM" />;
-    return (
-      <div className="home-logo-sized" style={{ width: size + "%" }}>
-        {inner}
-      </div>);
-
-  };
-
-  return (
-    <div
-      className={`home-logo-slot ${value ? "filled" : ""} ${drag ? "drag" : ""}`}
-      onClick={() => !value && inputRef.current?.click()}
-      onDragOver={(e) => {e.preventDefault();setDrag(true);}}
-      onDragLeave={() => setDrag(false)}
-      onDrop={onDrop}>
-      
-      {value ? renderLogo() :
-      <div className="home-logo-empty">
-          <div className="tiny" style={{ opacity: .55 }}>[Logo · home]</div>
-          <div className="home-logo-caption">Arrastra aquí el logo<br />DUM DUM™</div>
-          <div className="tiny" style={{ opacity: .45 }}>SVG · PNG · JPG · WebP</div>
-        </div>
-      }
-
-      {value &&
-      <div className="home-logo-controls">
-          <div className="home-logo-size">
-            <span>Tamaño · {size}%</span>
-            <input
-            type="range"
-            min="15"
-            max="100"
-            value={size}
-            onChange={(e) => updateSize(parseInt(e.target.value))} />
-          
-          </div>
-          <button onClick={replace}>Reemplazar</button>
-          <button onClick={clear}>Quitar</button>
-        </div>
-      }
-
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/svg+xml,image/png,image/jpeg,image/webp"
-        style={{ display: "none" }}
-        onChange={(e) => ingest(e.target.files?.[0])} />
-      
-    </div>);
-
-}
-
-// ── DraggableClaim ────────────────────────────────────────────
-// Subtítulo "Dumplings & Desobediencia" arrastrable libremente.
-// La posición se guarda en localStorage como {x, y} en píxeles
-// relativos a su posición original (translate).
-const CLAIM_POS_KEY = "dumdum.claim.pos.v1";
-
-function DraggableClaim() {
-  const [pos, setPos] = React.useState(() => {
-    try {
-      const raw = localStorage.getItem(CLAIM_POS_KEY);
-      return raw ? JSON.parse(raw) : { x: 0, y: 0 };
-    } catch {return { x: 0, y: 0 };}
-  });
-  const [dragging, setDragging] = React.useState(false);
-
-  const begin = (clientX, clientY) => {
-    const start = { x: clientX, y: clientY };
-    let latest = { ...pos };
-    setDragging(true);
-
-    const move = (cx, cy) => {
-      latest = {
-        x: pos.x + (cx - start.x),
-        y: pos.y + (cy - start.y)
-      };
-      setPos(latest);
-    };
-    const onMouseMove = (e) => {e.preventDefault();move(e.clientX, e.clientY);};
-    const onTouchMove = (e) => {
-      if (!e.touches[0]) return;
-      move(e.touches[0].clientX, e.touches[0].clientY);
-    };
-    const end = () => {
-      setDragging(false);
-      try {localStorage.setItem(CLAIM_POS_KEY, JSON.stringify(latest));} catch {}
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", end);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("touchend", end);
-    };
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", end);
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
-    window.addEventListener("touchend", end);
-  };
-
-  const onMouseDown = (e) => {
-    if (e.target.closest(".claim-reset")) return;
-    e.preventDefault();
-    begin(e.clientX, e.clientY);
-  };
-  const onTouchStart = (e) => {
-    if (e.target.closest(".claim-reset")) return;
-    if (!e.touches[0]) return;
-    begin(e.touches[0].clientX, e.touches[0].clientY);
-  };
-
-  const reset = (e) => {
-    e.stopPropagation();
-    setPos({ x: 0, y: 0 });
-    try {localStorage.removeItem(CLAIM_POS_KEY);} catch {}
-  };
-
-  const moved = pos.x !== 0 || pos.y !== 0;
-
-  return (
-    <p
-      className={`hero-claim draggable-claim ${dragging ? "dragging" : ""}`}
-      style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}
-      onMouseDown={onMouseDown}
-      onTouchStart={onTouchStart}
-      title="Arrástrame donde quieras">
-      
-      <span className="claim-drag-hint">↕ Mover</span>
-      DUMPLINGS <em>&amp;</em> DESOBEDIENCIA
-      {moved &&
-      <button className="claim-reset" onClick={reset} onMouseDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()}>
-          ↺ reset
-        </button>
-      }
-    </p>);
-
-}
 
 // Nombre del mes en curso (SIEMPRE hora de Madrid, como el resto del sitio).
 // Se usa en textos que deben seguir al mes actual sin tocar el código cada 30
@@ -284,22 +86,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Marquee */}
-      <div className="marquee">
-        <div className="marquee-track">
-          <span>
-
-
-
-          </span>
-          <span>
-
-
-
-          </span>
-        </div>
-      </div>
-
       {/* Feature strip */}
       <section className="feature-strip">
         <div>
@@ -325,8 +111,8 @@ function Home() {
             )}
           </p>
           <div className="row gap-m sistema-ctas" style={{ marginTop: 32 }}>
-            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.chamberi } })); }}>{t("Reservar en Chamberí", "Book at Chamberí")} →</a>
-            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>{t("Reservar en Bernabéu", "Book at Bernabéu")} →</a>
+            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES?.chamberi } })); }}>{t("Reservar en Chamberí", "Book at Chamberí")} →</a>
+            <a className="btn" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES?.bernabeu } })); }}>{t("Reservar en Bernabéu", "Book at Bernabéu")} →</a>
           </div>
         </div>
       </section>
@@ -519,6 +305,8 @@ function Menu() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [alergView]);
+  // Focus trap (accesibilidad) del modal de alérgenos.
+  const alergTrapRef = useFocusTrap(!!alergView);
 
 
 
@@ -650,7 +438,7 @@ function Menu() {
             <div className="menu-disclaimer-bubble">
               {lang === "en" ?
                 <p>Each portion is 6 dumplings. For 2 people, <strong>4 portions</strong> is the magic number. <strong>5</strong> means you came hungry. <strong>6… 112</strong> 💀<br/>Give it a think, <strong>it's a one-time order</strong> 😉</p> :
-                <p dangerouslySetInnerHTML={{ __html: data.disclaimer }} />}
+                <p dangerouslySetInnerHTML={{ __html: window.i18n.sanitizeInlineHTML(data.disclaimer) }} />}
             </div>
           </aside>
         }
@@ -788,7 +576,9 @@ function Menu() {
       {/* ───────── Ventana de Alérgenos ───────── */}
       {alergView &&
       <div className="alerg-overlay" onClick={() => setAlergView(null)}>
-        <div className={"alerg-modal" + (alergAtBottom ? " at-bottom" : "")} onClick={(e) => e.stopPropagation()}>
+        <div className={"alerg-modal" + (alergAtBottom ? " at-bottom" : "")} onClick={(e) => e.stopPropagation()}
+             ref={alergTrapRef} role="dialog" aria-modal="true"
+             aria-label={t("Alérgenos", "Allergens")}>
           <div className="alerg-closebar">
             <button className="alerg-close" type="button" aria-label={t("Cerrar", "Close")} onClick={() => setAlergView(null)}>×</button>
           </div>
@@ -920,6 +710,7 @@ function DishLightbox({ items, index, onPrev, onNext, onClose }) {
   const locked = React.useRef(null); // "x" o "y" según la dirección del gesto
 
   const item = items[index];
+  const trapRef = useFocusTrap(true); // el lightbox solo existe montado = abierto
 
   const onTouchStart = (e) => {
     const tch = e.touches[0];
@@ -954,7 +745,7 @@ function DishLightbox({ items, index, onPrev, onNext, onClose }) {
   };
 
   return (
-    <div className="dish-lightbox" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="dish-lightbox" onClick={onClose} role="dialog" aria-modal="true" aria-label={item ? item.name : "Foto"} ref={trapRef}>
       <button type="button" className="dish-lightbox-close" aria-label="Cerrar" onClick={onClose}>✕</button>
 
       <button type="button" className="dish-lightbox-nav prev" aria-label="Anterior"
@@ -1151,7 +942,7 @@ function Locales() {
               <a
                 className="btn red"
                 href="#"
-                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.chamberi } })); }}>
+                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES?.chamberi } })); }}>
                 {t("Reservar en Chamberí", "Book at Chamberí")} →
               </a>
               <BotonLlamar tel="+34624560181" telHuman="+34 624 56 01 81" nombre="Chamberí" />
@@ -1185,7 +976,7 @@ function Locales() {
               <a
                 className="btn red"
                 href="#"
-                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>
+                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES?.bernabeu } })); }}>
                 {t("Reservar en Bernabéu", "Book at Bernabéu")} →
               </a>
               <BotonLlamar tel="+34614167317" telHuman="+34 614 16 73 17" nombre="Bernabéu" />
@@ -1244,7 +1035,8 @@ function EspacioSlider() {
     };
   }, []);
 
-  const photos = data.gallery && data.gallery.espacio || ESPACIO_PHOTOS_FALLBACK;
+  const photos = (data.gallery && data.gallery.espacio && data.gallery.espacio.length)
+    ? data.gallery.espacio : ESPACIO_PHOTOS_FALLBACK;
   return (
     <GallerySlider photos={photos} visible={2} label="Espacio" ratio="3 / 4" />);
 
@@ -1324,17 +1116,19 @@ function YouTubeEmbed({ url, placeholderN }) {
 function getYouTubeId(url) {
   if (!url) return null;
   var s = String(url).trim();
+  // Los IDs de YouTube tienen SIEMPRE 11 caracteres [A-Za-z0-9_-]. Exigirlo
+  // evita fabricar embeds a partir de cadenas basura (y URLs fantasma).
   // youtu.be/ID
-  var m = s.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/);
+  var m = s.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
   if (m) return m[1];
   // youtube.com/watch?v=ID
-  m = s.match(/[?&]v=([A-Za-z0-9_-]{6,})/);
+  m = s.match(/[?&]v=([A-Za-z0-9_-]{11})/);
   if (m) return m[1];
   // youtube.com/shorts/ID  o  /embed/ID
-  m = s.match(/\/(?:shorts|embed)\/([A-Za-z0-9_-]{6,})/);
+  m = s.match(/\/(?:shorts|embed)\/([A-Za-z0-9_-]{11})/);
   if (m) return m[1];
-  // Si pegan solo el ID
-  if (/^[A-Za-z0-9_-]{6,}$/.test(s)) return s;
+  // Si pegan solo el ID (exactamente 11 chars)
+  if (/^[A-Za-z0-9_-]{11}$/.test(s)) return s;
   return null;
 }
 
@@ -1352,7 +1146,10 @@ function RedesSlider() {
   }, []);
 
   const fallback = Array.from({ length: 6 }, () => ({ url: "" }));
-  const items = data.gallery && data.gallery.redes || fallback;
+  // Un array vacío es "truthy": sin la comprobación de longitud, `redes: []`
+  // dejaría total=0 y `% total` daría NaN → items[NaN].url → TypeError.
+  const items = (data.gallery && data.gallery.redes && data.gallery.redes.length)
+    ? data.gallery.redes : fallback;
   const total = items.length;
   const [idx, setIdx] = React.useState(0);
 
@@ -1385,18 +1182,34 @@ function RedesSlider() {
 
 }
 
+// Devuelve la URL /embed/ ABSOLUTA de un post/reel de Instagram, o null si el
+// valor no es una URL válida de instagram.com. Blinda contra dos fallos:
+//  · URL vacía/relativa → antes producía "/embed/" (ruta del propio dominio),
+//    que Googlebot rastreaba como soft-404 (p. ej. https://dum-dum.es/embed/).
+//  · URL de un tercero → antes se incrustaba cualquier iframe en nuestro dominio.
+function instagramEmbedSrc(url) {
+  if (!url) return null;
+  const s = String(url).trim();
+  if (!s) return null;
+  let u;
+  try { u = new URL(s); } catch (e) { return null; } // exige URL absoluta
+  if (u.protocol !== "https:" && u.protocol !== "http:") return null;
+  if (!/(^|\.)instagram\.com$/i.test(u.hostname)) return null;
+  const path = u.pathname.replace(/\/+$/, "");
+  if (!path) return null;
+  const base = "https://www.instagram.com" + path;
+  return /\/embed$/i.test(path) ? base + "/" : base + "/embed/";
+}
+
 // ── ReelEmbed · convierte URL de Instagram en iframe embed ────
 function ReelEmbed({ url, placeholderN }) {
-  if (!url) {
+  const embed = instagramEmbedSrc(url);
+  if (!embed) {
     return (
       <div className="ev-slider-ph">
         <span>[ Reel · {String(placeholderN).padStart(2, "0")} ]</span>
       </div>);
 
-  }
-  let embed = url.trim();
-  if (!embed.endsWith("/embed") && !embed.endsWith("/embed/")) {
-    embed = embed.replace(/\?.*$/, "").replace(/\/?$/, "/embed/");
   }
   return (
     <iframe
@@ -1424,7 +1237,8 @@ function ProductoSlider() {
   }, []);
 
   const fallback = Array.from({ length: 9 }, () => ({ src: null, pos: "50% 50%" }));
-  const photos = data.gallery && data.gallery.producto || fallback;
+  const photos = (data.gallery && data.gallery.producto && data.gallery.producto.length)
+    ? data.gallery.producto : fallback;
 
   // Las fotos de Producto son las mismas de los platos. Para que el visor
   // sea idéntico al de la carta (con nombre incluido), derivamos el nombre
@@ -1462,7 +1276,8 @@ function PrensaSlider() {
   }, []);
 
   const fallback = Array.from({ length: 6 }, () => ({ src: null, pos: "50% 50%", url: "" }));
-  const photos = data.gallery && data.gallery.prensa || fallback;
+  const photos = (data.gallery && data.gallery.prensa && data.gallery.prensa.length)
+    ? data.gallery.prensa : fallback;
   return (
     <GallerySlider photos={photos} visible={2} label="Prensa" placeholderLabel="Noticia" cta="Ver noticia →" ratio="3 / 4" />);
 
@@ -1550,7 +1365,7 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
           {photos.map((item, i) =>
         <div className="ev-slider-slot" key={i} style={{ aspectRatio: ratio }}>
               {item.src ?
-          <img src={item.src} alt="" loading="lazy" decoding="async" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
+          <img src={item.src} alt={item.name || ""} loading="lazy" decoding="async" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
             onClick={() => setLightbox(i)} /> :
 
           <div className="ev-slider-ph">
@@ -1575,7 +1390,7 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
           {slice.map(({ item, n }, i) =>
         <div className="ev-slider-slot" key={`${idx}-${i}`} style={{ aspectRatio: ratio }}>
               {item.src ?
-          <img src={item.src} alt="" loading="lazy" decoding="async" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
+          <img src={item.src} alt={item.name || ""} loading="lazy" decoding="async" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
             onClick={() => setLightbox((idx + i) % total)} /> :
 
           <div className="ev-slider-ph">
@@ -1623,6 +1438,7 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
 // diseño del sitio (rojo, mono, transiciones suaves).
 function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
   const open = index !== null && index !== undefined;
+  const trapRef = useFocusTrap(open); // accesibilidad (llamado antes de cualquier return)
 
   // Swipe táctil (móvil): deslizar izquierda/derecha para navegar,
   // igual que el carrusel de la carta.
@@ -1691,7 +1507,7 @@ function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
   if (!item.src) return null;
 
   return (
-    <div className="lb-overlay" onClick={onClose}>
+    <div className="lb-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label={label} ref={trapRef}>
       <div className="lb-head" onClick={(e) => e.stopPropagation()}>
         <span className="tiny">{label} · {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
         <button className="lb-close" onClick={onClose} aria-label="Cerrar">✕</button>
@@ -1717,36 +1533,40 @@ function Lightbox({ photos, index, label = "Galería", onClose, onNav }) {
     </div>);
 
 }
-// Formulario de contacto para Eventos. Envía un POST a un endpoint
-// de Formspree (https://formspree.io/) — gratis hasta 50 emails/mes.
-// Si el endpoint no está configurado, abre la app de mail del usuario
-// con todos los datos prerrellenados (mailto fallback).
+// Formulario de contacto para Eventos. Envía un POST JSON a Web3Forms
+// (https://web3forms.com/) — gratis hasta 250 envíos/mes. La access_key es
+// pública por diseño. Lleva honeypot ("botcheck") anti-spam. Si el envío falla,
+// se muestra un mensaje de error con la dirección de correo para escribir a mano.
 const WEB3FORMS_KEY = "7b16c2a8-ccbd-4c0a-8d29-0562bd8646a0";
 const EVENTOS_EMAIL = "dumdum@dum-dum.es";
 
+// Fecha de hoy (Europe/Madrid) en formato YYYY-MM-DD, para el `min` del <input
+// type="date"> (no se pueden pedir eventos en el pasado).
+function hoyISOMadrid() {
+  try {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/Madrid", year: "numeric", month: "2-digit", day: "2-digit"
+    }).format(new Date());
+  } catch (e) {
+    return new Date().toISOString().slice(0, 10);
+  }
+}
+
 function EventosForm() {
   const lang = useLang();
-  const [form, setForm] = React.useState({ nombre: "", empresa: "", email: "", telefono: "", fecha: "", asistentes: "", mensaje: "" });
+  const [form, setForm] = React.useState({ nombre: "", empresa: "", email: "", telefono: "", fecha: "", asistentes: "", mensaje: "", botcheck: false });
   const [state, setState] = React.useState("idle"); // idle · sending · ok · error
   const [errMsg, setErrMsg] = React.useState("");
+  const minFecha = hoyISOMadrid();
 
-  const set = (k, v) => setForm({ ...form, [k]: v });
-
-  const mailtoFallback = () => {
-    const subject = `Solicitud de información — ${form.nombre || "(sin nombre)"}`;
-    const body =
-    `Nombre y apellido: ${form.nombre}\n` +
-    `Empresa: ${form.empresa}\n` +
-    `Email: ${form.email}\n` +
-    `Teléfono: ${form.telefono}\n` +
-    `Fecha: ${form.fecha}\n` +
-    `Número de asistentes: ${form.asistentes}\n\n` +
-    `Mensaje:\n${form.mensaje}`;
-    window.location.href = `mailto:${EVENTOS_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  };
+  // Updater funcional: dos onChange en el mismo tick (autofill, pegado) no se
+  // pisan al partir ambos del mismo `form` capturado.
+  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   const submit = async (e) => {
     e.preventDefault();
+    // Guarda de reentrada: si ya se está enviando, ignorar (doble Enter/tap).
+    if (state === "sending") return;
     if (!form.nombre || !form.email || !form.telefono || !form.fecha) {
       setState("error");
       setErrMsg(t("Rellena los campos obligatorios: nombre, email, teléfono y fecha del evento.", "Please fill in the required fields: name, email, phone and event date."));
@@ -1775,6 +1595,7 @@ function EventosForm() {
           access_key: WEB3FORMS_KEY,
           subject: `Nueva solicitud de evento · ${ref}`,
           from_name: "Web DUM DUM · Eventos",
+          botcheck: form.botcheck, // honeypot: si un bot lo marca, Web3Forms lo descarta
           "Referencia": ref,
           "Nombre y apellido": form.nombre,
           "Empresa": form.empresa,
@@ -1789,7 +1610,7 @@ function EventosForm() {
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.success) {
         setState("ok");
-        setForm({ nombre: "", empresa: "", email: "", telefono: "", fecha: "", asistentes: "", mensaje: "" });
+        setForm({ nombre: "", empresa: "", email: "", telefono: "", fecha: "", asistentes: "", mensaje: "", botcheck: false });
       } else {
         setState("error");
         setErrMsg(data.message || t("No se pudo enviar. Inténtalo de nuevo o escríbenos directamente.", "Couldn't send. Try again or email us directly."));
@@ -1817,6 +1638,17 @@ function EventosForm() {
 
   return (
     <form className="ev-form" onSubmit={submit}>
+      {/* Honeypot anti-spam: invisible para humanos; un bot que lo rellene se
+          descarta en Web3Forms. aria-hidden + tabIndex -1 para lectores/teclado. */}
+      <input
+        type="checkbox"
+        name="botcheck"
+        checked={form.botcheck}
+        onChange={(e) => set("botcheck", e.target.checked)}
+        style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true" />
       <div className="ev-form-row ev-form-row-3">
         <label className="ev-field">
           <span>{t("Nombre y apellido *", "Full name *")}</span>
@@ -1861,6 +1693,7 @@ function EventosForm() {
           <input
             type="date"
             value={form.fecha}
+            min={minFecha}
             onChange={(e) => set("fecha", e.target.value)}
             required />
         </label>
@@ -2187,76 +2020,6 @@ function Eventos() {
     </div>);
 }
 
-// ── QUIÉNES SOMOS ─────────────────────────────────────────────
-function Quienes() {
-  return (
-    <div data-screen-label="quienes-somos">
-      <section className="about-hero">
-        <div className="tiny muted">[03] Filosofía</div>
-        <h1 className="h-display" style={{ marginTop: 16 }}>
-          Desobedecer<br />
-          <em style={{ fontStyle: 'italic', color: 'var(--red)', fontWeight: 400 }}>también</em> es&nbsp;cocinar.
-        </h1>
-        <p className="body" style={{ marginTop: 32, fontSize: 18 }}>
-          Proyecto de Kéril y Yerai Gómez, hermanos de Elche en Madrid. Uno cocinero
-          (Basque Culinary Center). El otro publicista. Empezaron en DOSMIL24.
-        </p>
-      </section>
-
-      <div className="about-body">
-        <div>
-          <div className="tiny muted" style={{ marginBottom: 16 }}>Manifiesto</div>
-          <p>
-            Renunciamos a casi todo lo que define a un dumpling para poder
-            jugar con su formato. La masa es nuestro lienzo. Dentro: lo que
-            os apetezca reconocer.
-          </p>
-          <p>
-            Carbonara, pepito, hamburguesa con queso. Coreano, tailandés,
-            castizo. Todo cabe si el bocado funciona.
-          </p>
-          <p>
-            La comunicación es parte del plato. Si no os hace gracia el copy,
-            tampoco os va a hacer gracia la salsa.
-          </p>
-        </div>
-
-        <div>
-          <div className="tiny muted" style={{ marginBottom: 16 }}>FAQ</div>
-
-          <div className="qa">
-            <div className="q">¿Reservas?</div>
-            <div>No. Sin reserva, todos los días. Esperar es parte de la fiesta.</div>
-          </div>
-          <div className="qa">
-            <div className="q">¿Cantidad?</div>
-            <div>Recomendamos 2 raciones por comensal hambriento, 1,5 si es ligero.</div>
-          </div>
-          <div className="qa">
-            <div className="q">¿Vegetarianos?</div>
-            <div>Siempre hay al menos dos dumplings veggies en carta.</div>
-          </div>
-          <div className="qa">
-            <div className="q">¿Domicilio?</div>
-            <div>Sí, a través de Uber Eats. Llega caliente.</div>
-          </div>
-          <div className="qa">
-            <div className="q">¿Eventos privados?</div>
-            <div>Escríbenos a dumdum@dum-dum.es.</div>
-          </div>
-        </div>
-      </div>
-
-      <section className="spec-foot">
-        <div><b>Año fundación</b>DOSMIL24</div>
-        <div><b>Origen</b>Elche → Madrid</div>
-        <div><b>Locales</b>02 / Madrid</div>
-        <div><b>Ticket medio</b>≈ 25 €</div>
-      </section>
-    </div>);
-
-}
-
 // ── CONTACTO ──────────────────────────────────────────────────
 function Contacto() {
   const lang = useLang();
@@ -2302,4 +2065,4 @@ function Contacto() {
 
 }
 
-Object.assign(window, { Home, Menu, Locales, Quienes, Contacto, Eventos });
+Object.assign(window, { Home, Menu, Locales, Contacto, Eventos });

@@ -6,6 +6,25 @@
 # una sola URL en vez de dos con el mismo contenido).
 /menu_eng    /menu    301
 
+# ── URL fantasma /embed (soft-404 indexado) ───────────────────
+# Un reel sin URL válida generaba <iframe src="/embed/">, que el
+# navegador resolvía como https://dum-dum.es/embed/ y el catch-all
+# servía con 200. Google la indexó como soft-404. El origen ya está
+# corregido en ReelEmbed; aquí redirigimos a la home para que Google
+# vea el cambio de estado y la retire. (Debe ir ANTES del catch-all.)
+/embed       /    301
+/embed/*     /    301
+
+# ── Normalización de barra final (consolidar analítica y SEO) ──
+# La carta se reparte en /menu y /menu/ (dos "páginas" distintas en
+# GA y para Google). La canónica es SIN barra: forzamos 301 de la
+# variante con barra a la sin barra. Incluye los QR ya impresos que
+# apunten a /menu/. Igual para el resto de rutas de contenido.
+/menu/       /menu       301
+/locales/    /locales    301
+/eventos/    /eventos    301
+/contacto/   /contacto   301
+
 # ── CMS Sveltia: servir /admin/ como archivos estáticos ───────
 # Sveltia CMS vive en la carpeta /admin/ del repo. Sin esta regla,
 # el catch-all de abajo desviaría /admin/ al index.html de la SPA y

@@ -24,6 +24,19 @@ function useRoute() {
 function nav(path) {
   // Navegación sin recargar (URLs limpias, sin #).
   if (window.location.pathname !== path) {
+    // Fijar el título ANTES de pushState: la "medición mejorada" de GA4 registra
+    // la vista al cambiar el historial, y así toma el título de la página NUEVA
+    // (no el de la anterior). applyHeadMeta lo vuelve a aplicar después (idempotente).
+    try {
+      const seo = window.__ROUTES_SEO || [];
+      let clean = String(path).split("?")[0].split("#")[0];
+      if (clean.length > 1 && clean.charAt(clean.length - 1) === "/") clean = clean.slice(0, -1);
+      for (let i = 0; i < seo.length; i++) {
+        const r = seo[i];
+        const hit = r.p === "/" ? (clean === "/") : (clean === r.p || clean.indexOf(r.p + "/") === 0);
+        if (hit) { document.title = r.t; break; }
+      }
+    } catch (e) {}
     window.history.pushState({}, "", path);
     window.dispatchEvent(new Event("dumdum:navigate"));
   }
@@ -126,7 +139,9 @@ function ev(key) {
 //  · " / "       → salto de línea <br/>     (saltos fijos dentro de un título)
 function mdInline(text, keyPrefix) {
   const kp = keyPrefix == null ? "" : keyPrefix + "-";
-  const lines = String(text).split(/\s*\/\s*/);
+  // Salto de línea SOLO en " / " (barra con espacio a ambos lados). Así una
+  // URL ("https://…"), "c/ Blasco de Garay" o "y/o" NO se parten por accidente.
+  const lines = String(text).split(/\s+\/\s+/);
   const out = [];
   lines.forEach((line, li) => {
     const parts = line.split(/(\*\*[^*]+\*\*)/g);
@@ -171,8 +186,89 @@ function mdParas(text, pProps, gap) {
     return React.createElement("p", base, mdInline(block, "b" + bi));
   });
 }
+// Sanea HTML "inline" de confianza limitada (p. ej. el disclaimer editable):
+// deja SOLO un puñado de etiquetas de formato sin atributos y descarta todo lo
+// demás (scripts, <img onerror>, on*, etc.). Usa el parser del navegador —no
+// regex— para no dejar huecos. Devuelve una cadena HTML segura.
+// NOTA: hoy el disclaimer NO es editable en Sveltia (viene del código), por eso
+// este saneador con allowlist es suficiente. Si en el futuro el disclaimer pasa
+// a ser un campo editable en el CMS (entrada no confiable de verdad), conviene
+// migrar a DOMPurify en lugar de mantener esta allowlist a mano.
+const _ALLOWED_INLINE_TAGS = { STRONG: 1, B: 1, EM: 1, I: 1, BR: 1, SPAN: 1 };
+function sanitizeInlineHTML(html) {
+  if (html == null) return "";
+  try {
+    const tpl = document.createElement("template");
+    tpl.innerHTML = String(html);
+    const walk = (node) => {
+      Array.from(node.childNodes).forEach((child) => {
+        if (child.nodeType === 1) { // Element
+          if (!_ALLOWED_INLINE_TAGS[child.tagName]) {
+            // Etiqueta no permitida → la sustituimos por su texto (inerte).
+            child.replaceWith(document.createTextNode(child.textContent || ""));
+            return;
+          }
+          // Quitar TODOS los atributos (href, style, on*, etc.).
+          Array.from(child.attributes).forEach((a) => child.removeAttribute(a.name));
+          walk(child);
+        } else if (child.nodeType !== 3) {
+          // Comentarios y demás nodos: fuera.
+          child.remove();
+        }
+      });
+    };
+    walk(tpl.content);
+    return tpl.innerHTML;
+  } catch (e) {
+    // Ante cualquier fallo, degradar a texto plano (nunca HTML crudo).
+    return String(html).replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]));
+  }
+}
 // Exponer global para que pages.jsx / app.jsx lo usen.
-window.i18n = { getLang, setLang, useLang, t, autoLocalize, ev, mdToJsx, mdParas };
+window.i18n = { getLang, setLang, useLang, t, autoLocalize, ev, mdToJsx, mdParas, sanitizeInlineHTML };
+
+// ─── Focus trap para modales/lightbox (accesibilidad) ────────
+// Devuelve un ref para el contenedor del diálogo. Cuando `active` es true:
+//  · mueve el foco al primer elemento enfocable al abrir,
+//  · atrapa Tab/Shift+Tab dentro del diálogo,
+//  · restaura el foco al elemento que lo tenía al cerrar.
+// El cierre por Esc y por clic en el overlay se mantiene en cada componente.
+function useFocusTrap(active) {
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (!active) return;
+    const container = ref.current;
+    if (!container) return;
+    const prevFocused = document.activeElement;
+    const SEL = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusables = () =>
+      Array.prototype.slice.call(container.querySelectorAll(SEL))
+        .filter((el) => el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement);
+    const first = focusables()[0];
+    if (first) { try { first.focus(); } catch (e) {} }
+    const onKey = (e) => {
+      if (e.key !== "Tab") return;
+      const items = focusables();
+      if (items.length === 0) { e.preventDefault(); return; }
+      const firstEl = items[0], lastEl = items[items.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === firstEl || !container.contains(document.activeElement)) {
+          e.preventDefault(); lastEl.focus();
+        }
+      } else {
+        if (document.activeElement === lastEl || !container.contains(document.activeElement)) {
+          e.preventDefault(); firstEl.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", onKey, true);
+    return () => {
+      document.removeEventListener("keydown", onKey, true);
+      if (prevFocused && prevFocused.focus) { try { prevFocused.focus(); } catch (e) {} }
+    };
+  }, [active]);
+  return ref;
+}
 
 // ─── Top bar ──────────────────────────────────────────────────
 // Cálculo de apertura propio (autosuficiente, no depende de pages.jsx),
@@ -354,6 +450,11 @@ function TopBar({ route }) {
   // Detecta la página de menú de forma tolerante (con o sin barra final).
   const enMenu = /^\/menu\/?$/.test(route);
 
+  // Focus trap (accesibilidad) para los tres modales de la topbar.
+  const pideTrapRef = useFocusTrap(pideOpen);
+  const reserveSelTrapRef = useFocusTrap(reserveOpen && !reserveLocal);
+  const reserveDishTrapRef = useFocusTrap(reserveOpen && !!reserveLocal);
+
   // FAB "Pide ya" (solo móvil): arrastrable. Posición null = esquina inferior
   // derecha por defecto; al arrastrar se guarda {x,y}. Distingue tap de drag.
   const [fabPos, setFabPos] = React.useState(null);
@@ -460,7 +561,9 @@ function TopBar({ route }) {
 
     {pideOpen &&
     <div className="pide-overlay" onClick={() => setPideOpen(false)}>
-      <div className="pide-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="pide-modal" onClick={(e) => e.stopPropagation()}
+           ref={pideTrapRef} role="dialog" aria-modal="true"
+           aria-label={t("Cómo quieres pedir", "How would you like to order")}>
         <div className="pide-closebar">
           <button className="pide-close" aria-label="Cerrar" onClick={() => setPideOpen(false)}>×</button>
         </div>
@@ -504,17 +607,19 @@ function TopBar({ route }) {
 
     {reserveOpen && !reserveLocal &&
     <div className="pide-overlay" onClick={() => closeReserve()}>
-      <div className="pide-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="pide-modal" onClick={(e) => e.stopPropagation()}
+           ref={reserveSelTrapRef} role="dialog" aria-modal="true"
+           aria-label={t("En qué local reservar", "Which location to book")}>
         <div className="pide-closebar">
           <button className="pide-close" aria-label="Cerrar" onClick={() => closeReserve()}>×</button>
         </div>
         <h3 className="pide-title">{t("¿En qué local?", "Which location?")}</h3>
         <div className="pide-options">
-          <button type="button" className="pide-card" style={{ cursor: "pointer" }} onClick={() => setReserveLocal(window.DUMDUM_LOCALES.chamberi)}>
+          <button type="button" className="pide-card" style={{ cursor: "pointer" }} onClick={() => setReserveLocal(window.DUMDUM_LOCALES?.chamberi)}>
             <span className="pide-card-label">Chamberí</span>
             <span className="pide-card-sub">c/ Blasco de Garay, 10</span>
           </button>
-          <button type="button" className="pide-card" style={{ cursor: "pointer" }} onClick={() => setReserveLocal(window.DUMDUM_LOCALES.bernabeu)}>
+          <button type="button" className="pide-card" style={{ cursor: "pointer" }} onClick={() => setReserveLocal(window.DUMDUM_LOCALES?.bernabeu)}>
             <span className="pide-card-label">Bernabéu</span>
             <span className="pide-card-sub">c/ Infanta Mercedes, 17</span>
           </button>
@@ -524,7 +629,9 @@ function TopBar({ route }) {
     }
     {reserveOpen && reserveLocal &&
     <div className="alerg-overlay" onClick={() => closeReserve()}>
-      <div className="alerg-modal reserve-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="alerg-modal reserve-modal" onClick={(e) => e.stopPropagation()}
+           ref={reserveDishTrapRef} role="dialog" aria-modal="true"
+           aria-label={t("Reservar mesa", "Book a table")}>
         <div className="alerg-closebar">
           <button className="alerg-close" aria-label="Cerrar" onClick={() => closeReserve()}>×</button>
         </div>
@@ -564,13 +671,13 @@ function Footer() {
           <b>Chamberí</b>
           <div>Blasco de Garay, 10</div>
           <div>28015 Madrid</div>
-          <div style={{ marginTop: 8 }}><a href="#" className="link-hover" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.chamberi } })); }}>{t("Reservar", "Book")} →</a></div>
+          <div style={{ marginTop: 8 }}><a href="#" className="link-hover" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES?.chamberi } })); }}>{t("Reservar", "Book")} →</a></div>
         </div>
         <div>
           <b>Bernabéu</b>
           <div>Infanta Mercedes, 17</div>
           <div>28020 Madrid</div>
-          <div style={{ marginTop: 8 }}><a href="#" className="link-hover" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES.bernabeu } })); }}>{t("Reservar", "Book")} →</a></div>
+          <div style={{ marginTop: 8 }}><a href="#" className="link-hover" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-reserve", { detail: { local: window.DUMDUM_LOCALES?.bernabeu } })); }}>{t("Reservar", "Book")} →</a></div>
         </div>
         <div>
           <b>{t("Horarios", "Hours")}</b>
@@ -606,22 +713,25 @@ function Loader({ onDone }) {
       return () => clearTimeout(t);
     }
     let n = 0;
+    // Guardamos los timeouts anidados para poder cancelarlos si el Loader se
+    // desmonta antes de que disparen (evita setState sobre componente muerto).
+    let toOut = null, toDone = null;
     const id = setInterval(() => {
       n += Math.max(1, Math.round((100 - n) / 12));
       if (n >= 100) {
         n = 100;
         clearInterval(id);
         setCount(100);
-        setTimeout(() => {
+        toOut = setTimeout(() => {
           setOut(true);
           sessionStorage.setItem("dumdum.loaded", "1");
-          setTimeout(onDone, 650);
+          toDone = setTimeout(onDone, 650);
         }, 360);
       } else {
         setCount(n);
       }
     }, 60);
-    return () => clearInterval(id);
+    return () => { clearInterval(id); if (toOut) clearTimeout(toOut); if (toDone) clearTimeout(toDone); };
   }, []);
 
   const pct = count;
@@ -681,7 +791,8 @@ function DishLogo({ logo }) {
       </div>);
 
   }
-  const preset = window.DumDumData.PRESET_LOGOS[logo];
+  const preset = window.DumDumData && window.DumDumData.PRESET_LOGOS
+    ? window.DumDumData.PRESET_LOGOS[logo] : null;
   if (preset) {
     return (
       <div className="logo-slot" dangerouslySetInnerHTML={{ __html: preset }} />);
