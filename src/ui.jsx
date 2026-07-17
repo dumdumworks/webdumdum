@@ -190,6 +190,10 @@ function mdParas(text, pProps, gap) {
 // deja SOLO un puñado de etiquetas de formato sin atributos y descarta todo lo
 // demás (scripts, <img onerror>, on*, etc.). Usa el parser del navegador —no
 // regex— para no dejar huecos. Devuelve una cadena HTML segura.
+// NOTA: hoy el disclaimer NO es editable en Sveltia (viene del código), por eso
+// este saneador con allowlist es suficiente. Si en el futuro el disclaimer pasa
+// a ser un campo editable en el CMS (entrada no confiable de verdad), conviene
+// migrar a DOMPurify en lugar de mantener esta allowlist a mano.
 const _ALLOWED_INLINE_TAGS = { STRONG: 1, B: 1, EM: 1, I: 1, BR: 1, SPAN: 1 };
 function sanitizeInlineHTML(html) {
   if (html == null) return "";
