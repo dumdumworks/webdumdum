@@ -22,16 +22,35 @@
     gtag("set", "url_passthrough", true);
   </script>
 
-  <!-- Cookiebot (consentimiento de cookies) · DEBE ir antes de Google Analytics -->
-  <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="fff625a8-8755-4ff9-a968-09ead09cd1b9" data-blockingmode="auto" type="text/javascript"></script>
-
-  <!-- Google Analytics (GA4) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VRELRN5VGC"></script>
+  <!-- Cookiebot + Google Analytics (GA4) · SOLO en el dominio de producción.
+       En previews de Cloudflare (*.pages.dev) y en local NO se cargan, para no
+       contaminar la analítica con tráfico de pruebas. El Consent Mode (arriba)
+       se define SIEMPRE; aquí solo se inyectan los scripts de terceros, en el
+       mismo orden de antes: Cookiebot primero (bloquea GA hasta el consentimiento),
+       Google Analytics después. -->
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-VRELRN5VGC');
+    (function () {
+      var host = location.hostname;
+      var isProd = (host === 'dum-dum.es' || host === 'www.dum-dum.es');
+      if (!isProd) return;
+      var cb = document.createElement('script');
+      cb.id = 'Cookiebot';
+      cb.src = 'https://consent.cookiebot.com/uc.js';
+      cb.setAttribute('data-cbid', 'fff625a8-8755-4ff9-a968-09ead09cd1b9');
+      cb.setAttribute('data-blockingmode', 'auto');
+      cb.type = 'text/javascript';
+      document.head.appendChild(cb);
+      var ga = document.createElement('script');
+      ga.async = true;
+      ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-VRELRN5VGC';
+      document.head.appendChild(ga);
+      gtag('js', new Date());
+      gtag('config', 'G-VRELRN5VGC');
+    })();
+
+    // Eventos de conversión: se registran SIEMPRE. gtag ya está definido arriba
+    // por el Consent Mode; sin GA cargado (local/preview) solo acumula en
+    // dataLayer y no se envía nada.
 
     // Cada vez que se abre el widget de reserva (cualquier boton o el enlace del anuncio),
     // se manda un evento a GA. Este evento es el que se marca como conversion en Ads.
@@ -48,7 +67,8 @@
       if (href.indexOf('tel:') === 0) {
         var num = href.replace(/[^0-9]/g, '');
         var local = num.indexOf('624560181') !== -1 ? 'chamberi'
-                  : num.indexOf('614167317') !== -1 ? 'bernabeu' : 'desconocido';
+                  : num.indexOf('614167317') !== -1 ? 'bernabeu'
+                  : num.indexOf('614746065') !== -1 ? 'general' : 'desconocido';
         gtag('event', 'llamar', { local: local });
       } else if (href.indexOf('square.site') !== -1) {
         gtag('event', 'take_away', { destino: 'square' });
@@ -72,6 +92,24 @@
   <meta name="description" content="Desobedecer es un derecho y una obligación. Los dumplings más diferentes y mejor valorados de España. Abiertos todos los días. Para tomar, para recoger y a domicilio." />
   <link rel="canonical" href="https://dum-dum.es/" />
 
+  <!-- Fuente UNICA de titulos/descripciones por ruta (SEO). La consumen tanto
+       el "pre-SEO" de abajo (primer pintado, sin esperar a React) como app.jsx
+       (applyHeadMeta / getRoutesTable). EDITAR SOLO AQUI para no desincronizar. -->
+  <script>
+    window.__ROUTES_SEO = [
+      { p: "/",         t: "DUM DUM\u2122 \u2014 Dumplings & Desobediencia",
+        d: "Desobedecer es un derecho y una obligaci\u00f3n. Los dumplings m\u00e1s diferentes y mejor valorados de Espa\u00f1a. Abiertos todos los d\u00edas. Para tomar, para recoger y a domicilio." },
+      { p: "/menu",     t: "DUM DUM\u2122 \u2014 La carta",
+        d: "Nueve dumplings, uno nuevo cada mes y ni uno convencional." },
+      { p: "/locales",  t: "DUM DUM\u2122 \u2014 Locales y reservas",
+        d: "Puedes reservar en Chamber\u00ed o en Bernab\u00e9u. O en ambos :)." },
+      { p: "/eventos",  t: "DUM DUM\u2122 \u2014 Eventos",
+        d: "Espacios cool para eventos en Madrid." },
+      { p: "/contacto", t: "DUM DUM\u2122 \u2014 Contacto",
+        d: "dumdum@dum-dum.es / +34 614 746 065" }
+    ];
+  </script>
+
   <!-- SEO inmediato por página: fija title/description/canonical según la URL
        AL INSTANTE, sin esperar a React ni a las descargas de los .json. Así un
        rastreador que capture la página en el primer momento ya ve el título
@@ -81,26 +119,18 @@
     (function () {
       try {
         var ORIGIN = "https://dum-dum.es";
-        var ROUTES = [
-          { p: "/menu",     t: "DUM DUM\u2122 — La carta",
-            d: "Nueve dumplings, uno nuevo cada mes y ni uno convencional." },
-          { p: "/locales",  t: "DUM DUM\u2122 — Locales y reservas",
-            d: "Puedes reservar en Chamberí o en Bernabéu. O en ambos :)." },
-          { p: "/eventos",  t: "DUM DUM\u2122 — Eventos",
-            d: "Espacios cool para eventos en Madrid." },
-          { p: "/contacto", t: "DUM DUM\u2122 — Contacto",
-            d: "dumdum@dum-dum.es / +34 614 746 065" }
-        ];
+        var ROUTES = window.__ROUTES_SEO || [];
         var path = window.location.pathname || "/";
         if (path.length > 1 && path.charAt(path.length - 1) === "/") path = path.slice(0, -1);
         var match = null;
         for (var i = 0; i < ROUTES.length; i++) {
           var r = ROUTES[i];
+          if (r.p === "/") { if (path === "/") { match = r; break; } continue; }
           if (path === r.p || path.indexOf(r.p + "/") === 0 || path.indexOf(r.p + "_") === 0) { match = r; break; }
         }
         if (match) {
           document.title = match.t;
-          var canon = ORIGIN + match.p;
+          var canon = ORIGIN + (match.p === "/" ? "/" : match.p);
           var setMeta = function (sel, attr, val) {
             var el = document.querySelector(sel);
             if (el) el.setAttribute(attr, val);
@@ -156,6 +186,8 @@
     "url": "https://dum-dum.es/",
     "image": "https://dum-dum.es/img/varios/og-image.jpg",
     "telephone": "+34614746065",
+    "acceptsReservations": true,
+    "hasMenu": "https://dum-dum.es/menu",
     "sameAs": [
       "https://www.instagram.com/dumdum.plings"
     ],
@@ -171,6 +203,7 @@
           "addressCountry": "ES"
         },
         "servesCuisine": ["Dumplings", "Asiática", "Fusión"],
+        "telephone": "+34624560181",
         "openingHoursSpecification": [{
           "@type": "OpeningHoursSpecification",
           "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
@@ -192,7 +225,7 @@
           "addressCountry": "ES"
         },
         "servesCuisine": ["Dumplings", "Asiática", "Fusión"],
-        "telephone": "+34614746065",
+        "telephone": "+34614167317",
         "openingHoursSpecification": [{
           "@type": "OpeningHoursSpecification",
           "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
@@ -225,7 +258,7 @@
   <script>
     window.__bootDumDum = function () {
       var files = ["src/data.jsx", "src/ui.jsx", "src/pages.jsx", "src/admin.jsx", "src/app.jsx"];
-      var ASSET_VER = "20260717a";
+      var ASSET_VER = "20260717b";
       files.forEach(function (src) {
         var s = document.createElement("script");
         s.type = "text/babel";

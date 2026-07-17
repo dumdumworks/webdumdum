@@ -11,27 +11,38 @@
 //   exact:  true si debe coincidir exactamente (solo la home "/")
 // El orden importa: se evalúa de arriba a abajo, primero el que encaje.
 // ─────────────────────────────────────────────────────────────
+// Títulos/descripciones por ruta: FUENTE ÚNICA en window.__ROUTES_SEO (definida
+// en index.html, para que también las use el "pre-SEO" del primer pintado). Aquí
+// solo mapeamos prefijo → componente y tomamos title/desc de esa fuente; los
+// textos hardcodeados son solo respaldo por si __ROUTES_SEO no cargara.
 function getRoutesTable() {
+  const seo = (typeof window !== "undefined" && window.__ROUTES_SEO) || [];
+  const seoFor = (p) => { for (let i = 0; i < seo.length; i++) if (seo[i].p === p) return seo[i]; return null; };
+  const mk = (prefix, exact, component, fbTitle, fbDesc) => {
+    const s = seoFor(prefix);
+    return { prefix, exact, component, title: s ? s.t : fbTitle, desc: s ? s.d : fbDesc };
+  };
   return [
-    { prefix: "/",         exact: true,  component: "Home",
-      title: "DUM DUM™ — Dumplings & Desobediencia",
-      desc: "Desobedecer es un derecho y una obligación. Los dumplings más diferentes y mejor valorados de España. Abiertos todos los días. Para tomar, para recoger y a domicilio." },
-    { prefix: "/menu",     exact: false, component: "Menu",
-      title: "DUM DUM™ — La carta",
-      desc: "Nueve dumplings, uno nuevo cada mes y ni uno convencional." },
-    { prefix: "/locales",  exact: false, component: "Locales",
-      title: "DUM DUM™ — Locales y reservas",
-      desc: "Puedes reservar en Chamberí o en Bernabéu. O en ambos :)." },
-    { prefix: "/eventos",  exact: false, component: "Eventos",
-      title: "DUM DUM™ — Eventos",
-      desc: "Espacios cool para eventos en Madrid." },
-    { prefix: "/contacto", exact: false, component: "Contacto",
-      title: "DUM DUM™ — Contacto",
-      desc: "dumdum@dum-dum.es / +34 614 746 065" }
+    mk("/",         true,  "Home",
+      "DUM DUM™ — Dumplings & Desobediencia",
+      "Desobedecer es un derecho y una obligación. Los dumplings más diferentes y mejor valorados de España. Abiertos todos los días. Para tomar, para recoger y a domicilio."),
+    mk("/menu",     false, "Menu",
+      "DUM DUM™ — La carta",
+      "Nueve dumplings, uno nuevo cada mes y ni uno convencional."),
+    mk("/locales",  false, "Locales",
+      "DUM DUM™ — Locales y reservas",
+      "Puedes reservar en Chamberí o en Bernabéu. O en ambos :)."),
+    mk("/eventos",  false, "Eventos",
+      "DUM DUM™ — Eventos",
+      "Espacios cool para eventos en Madrid."),
+    mk("/contacto", false, "Contacto",
+      "DUM DUM™ — Contacto",
+      "dumdum@dum-dum.es / +34 614 746 065")
     // Nota: /admin/ se sirve como carpeta estática (Sveltia CMS), no como ruta
     // de esta SPA. El _redirects de la raíz tiene una regla "/admin/* 200" antes
     // del catch-all para que Cloudflare Pages sirva los archivos de /admin/.
-    // Futuras páginas: añade aquí { prefix, exact, component, title, desc }.
+    // Futuras páginas: añade su title/desc en window.__ROUTES_SEO (index.html)
+    // y una línea mk(...) aquí.
   ];
 }
 

@@ -24,6 +24,19 @@ function useRoute() {
 function nav(path) {
   // Navegación sin recargar (URLs limpias, sin #).
   if (window.location.pathname !== path) {
+    // Fijar el título ANTES de pushState: la "medición mejorada" de GA4 registra
+    // la vista al cambiar el historial, y así toma el título de la página NUEVA
+    // (no el de la anterior). applyHeadMeta lo vuelve a aplicar después (idempotente).
+    try {
+      const seo = window.__ROUTES_SEO || [];
+      let clean = String(path).split("?")[0].split("#")[0];
+      if (clean.length > 1 && clean.charAt(clean.length - 1) === "/") clean = clean.slice(0, -1);
+      for (let i = 0; i < seo.length; i++) {
+        const r = seo[i];
+        const hit = r.p === "/" ? (clean === "/") : (clean === r.p || clean.indexOf(r.p + "/") === 0);
+        if (hit) { document.title = r.t; break; }
+      }
+    } catch (e) {}
     window.history.pushState({}, "", path);
     window.dispatchEvent(new Event("dumdum:navigate"));
   }
