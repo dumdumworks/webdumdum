@@ -356,6 +356,60 @@ fs.writeFileSync(path.join(DIST, "_headers"), `# Generado por build.mjs.
   Cache-Control: public, max-age=300
 /eventos.json
   Cache-Control: public, max-age=300
+
+# ── Seguridad ────────────────────────────────────────────────
+# Se aplican a TODO (incluido /admin/): una sola regla evita cabeceras
+# duplicadas y contradictorias, que Cloudflare resolvería de forma ambigua.
+#
+# NO se declaran aquí X-Content-Type-Options ni Referrer-Policy: Cloudflare ya
+# los envía (nosniff y strict-origin-when-cross-origin). Duplicarlos no aporta.
+#
+# HSTS sin includeSubDomains ni preload A PROPÓSITO: ambos son compromisos
+# difíciles de revertir (un subdominio que algún día sirva HTTP dejaría de
+# cargar, y preload exige darse de baja de una lista externa). max-age de un año
+# ya cubre el dominio donde vive la web. Para endurecerlo: confirmar que TODOS
+# los subdominios van por HTTPS y añadir "; includeSubDomains".
+#
+# Anti-clickjacking por partida doble (X-Frame-Options para navegadores viejos,
+# frame-ancestors para los modernos). SAMEORIGIN/'self', no DENY/'none': bloquea
+# igual el ataque real (que un tercero nos incruste) pero deja margen si Sveltia
+# usara un iframe propio en /admin/. Ojo: esto NO afecta a los iframes que la web
+# INCRUSTA (DISH, Instagram, YouTube, Cookiebot) — eso sería frame-src.
+#
+# La CSP contiene SOLO frame-ancestors. Una CSP completa exigiría 'unsafe-inline'
+# o hashes para los 7 scripts inline (Consent Mode, boot, SEO, GA…) y una lista
+# de orígenes que es un blanco móvil: Google Analytics resuelve a endpoints
+# regionalizados (region1.google-analytics.com y equivalentes según el país) y
+# Cookiebot, en blockingmode auto, reescribe e inyecta scripts en caliente.
+# Romper el consentimiento o las reservas no compensa para una web sin logins ni
+# pagos. frame-ancestors es inmune a todo eso: no restringe scripts.
+#
+# Estas tres van a TODO, /admin/ incluido: no afectan a ventanas emergentes ni a
+# los iframes que incrustamos.
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy: frame-ancestors 'self'
+
+# COOP: solo en las rutas PÚBLICAS, deliberadamente NO en /admin/.
+# same-origin-allow-popups es, por especificación, el valor que conserva la
+# relación con las ventanas emergentes que abre la página (justo lo que necesita
+# el OAuth de GitHub de Sveltia, que responde por postMessage al opener). Aun
+# así, no fue posible verificarlo: el navegador de pruebas bloquea las emergentes
+# incluso con clic real, y probar el login exigiría credenciales del repo. Ante la
+# duda, /admin/ se queda sin COOP: su beneficio aquí es marginal y romper el CMS
+# significaría no poder actualizar la carta.
+# Si algún día se quiere COOP también en /admin/, probar ANTES el login real.
+/
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+/menu
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+/locales
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+/eventos
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+/contacto
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
 `);
 
 // ── Resumen ──────────────────────────────────────────────────
