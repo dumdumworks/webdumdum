@@ -924,8 +924,15 @@ function BotonLlamar({ tel, telHuman, nombre }) {
   const label = isMobile
     ? t("Llamar a " + nombre, "Call " + nombre)
     : (revealed ? TEL_HUMAN : t("Llamar a " + nombre, "Call " + nombre));
+  // data-reveal="pending" marca el clic de DESKTOP que SOLO revela el número (aún
+  // no llama). El listener global de GA (index.html) lo usa para NO contar ese
+  // clic como conversión "llamar". Se lee en fase de captura, antes de que React
+  // actualice el estado, así que describe el clic en curso. En móvil no hay paso
+  // de revelar → sin atributo → el evento sí cuenta (1 clic = 1 llamada).
+  const revelaPendiente = !isMobile && !revealed;
   return (
-    <a className="btn btn-call-green" href={"tel:" + TEL} onClick={handleClick}>
+    <a className="btn btn-call-green" href={"tel:" + TEL} onClick={handleClick}
+      data-reveal={revelaPendiente ? "pending" : undefined}>
       {telIcon}{label} →
     </a>
   );
