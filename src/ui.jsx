@@ -706,8 +706,20 @@ function Loader({ onDone }) {
   const [count, setCount] = React.useState(0);
   const [out, setOut] = React.useState(false);
 
+  // sessionStorage puede LANZAR (no solo devolver null) si el navegador bloquea
+  // el almacenamiento ("Block all cookies", ciertos webviews). Sin try/catch la
+  // excepción tumbaba el árbol de React entero → pantalla en blanco. Degradamos:
+  // si no se puede leer/escribir, el Loader funciona igual, solo que no recuerda
+  // que ya se mostró (se verá en cada carga). Mismo patrón que getLang().
+  const yaCargado = () => {
+    try { return !!sessionStorage.getItem("dumdum.loaded"); } catch (e) { return false; }
+  };
+  const marcarCargado = () => {
+    try { sessionStorage.setItem("dumdum.loaded", "1"); } catch (e) {}
+  };
+
   React.useEffect(() => {
-    if (sessionStorage.getItem("dumdum.loaded")) {
+    if (yaCargado()) {
       setOut(true);
       const t = setTimeout(onDone, 50);
       return () => clearTimeout(t);
@@ -724,7 +736,7 @@ function Loader({ onDone }) {
         setCount(100);
         toOut = setTimeout(() => {
           setOut(true);
-          sessionStorage.setItem("dumdum.loaded", "1");
+          marcarCargado();
           toDone = setTimeout(onDone, 650);
         }, 360);
       } else {

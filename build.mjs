@@ -85,9 +85,15 @@ tpl = tpl.replace(/\s*<meta http-equiv="Pragma"[^>]*>\s*/i, "");
 tpl = tpl.replace(/\s*<meta http-equiv="Expires"[^>]*>\s*/i, "");
 
 // 5b) CSS: reemplazar el <link> a src/styles.css por el CSS unido con hash.
-tpl = tpl.replace(
+// Con replaceOrThrow (hoisted, definido más abajo) para que FALLE RUIDOSAMENTE si
+// el formato del <link> cambia: si no casara en silencio, el HTML publicado
+// apuntaría a src/styles.css —inexistente en dist/— y verifyAssets no lo cazaría
+// (solo revisa rutas que empiezan por "/"), publicando la web SIN ESTILOS.
+tpl = replaceOrThrow(
+  tpl,
   /<link rel="stylesheet" href="src\/styles\.css\?v=[^"]*" \/>/,
-  `<link rel="stylesheet" href="/${cssName}" />`
+  () => `<link rel="stylesheet" href="/${cssName}" />`,
+  "link del CSS"
 );
 
 // 5c) Reemplazar los 3 <script> de unpkg (React/ReactDOM/Babel) + el bloque
@@ -187,7 +193,7 @@ const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replac
 // formato de los <meta> en index.html): así el OG por ruta nunca se queda con el
 // de la home en silencio. Usa función de reemplazo para no interpretar "$" del texto.
 function replaceOrThrow(str, re, fn, label) {
-  if (!re.test(str)) throw new Error("OG/SEO por ruta NO aplicado: '" + label + "'. ¿Cambió el formato de index.html?");
+  if (!re.test(str)) throw new Error("Reemplazo NO aplicado en index.html: '" + label + "'. ¿Cambió el formato?");
   return str.replace(re, fn);
 }
 function renderRouteHtml(base, route) {

@@ -67,6 +67,12 @@
       if (!a) return;
       var href = (a.getAttribute('href') || '').toLowerCase();
       if (href.indexOf('tel:') === 0) {
+        // En desktop, el botón "Llamar a X" hace 2 clics: el 1º solo REVELA el
+        // número (no llama) y el 2º sí llama. BotonLlamar marca ese 1er clic con
+        // data-reveal="pending"; lo ignoramos para no inflar la conversión
+        // (antes se contaban hasta 2 eventos por llamada real, y 1 por curiosear).
+        // En móvil no hay revelado: el tel: llama directo y el evento sí cuenta.
+        if (a.getAttribute('data-reveal') === 'pending') return;
         var num = href.replace(/[^0-9]/g, '');
         var local = num.indexOf('624560181') !== -1 ? 'chamberi'
                   : num.indexOf('614167317') !== -1 ? 'bernabeu'
