@@ -1,11 +1,11 @@
 # Cómo añadir una página nueva (sin romper nada)
 
-La web usa **URLs limpias** (`/menu`, no `/#/menu`) y un router central.
-Para añadir una página nueva en el futuro, sigue estos 3 pasos. Si los
-respetas, la navegación, el botón atrás, el SEO y mobile/desktop funcionan solos.
+La web usa **URLs limpias** (`/menu`, no `/#/menu`) y un router central, y se
+compila con esbuild a `dist/` (ver `BUILD.md`). Añadir una página son **4 pasos**.
+Si te saltas el paso 4, la página funcionará al navegar por dentro pero dará
+**404 al entrar directamente por la URL** — que es justo como llega la gente.
 
 ## Paso 1 — Crear el componente (en `src/pages.jsx`)
-Escribe tu componente como los demás, por ejemplo:
 
     function Merch() {
       const lang = useLang();
@@ -18,43 +18,66 @@ Escribe tu componente como los demás, por ejemplo:
 
 Y al final de `pages.jsx`, añádelo al `Object.assign(window, { ... })`:
 
-    Object.assign(window, { Home, Menu, Locales, Quienes, Contacto, Eventos, Merch });
+    Object.assign(window, { Home, Menu, Locales, Contacto, Eventos, Merch });
 
-## Paso 2 — Registrar la ruta (en `src/app.jsx`)
-En la función `getRoutesTable()`, añade UNA línea con su URL, título y descripción SEO:
+## Paso 2 — Título y descripción SEO (en `index.html`)
 
-    { prefix: "/merch", exact: false, component: "Merch",
-      title: "DUM DUM™ — Merch",
-      desc: "Camisetas y merch de DUM DUM." },
+`window.__ROUTES_SEO` es la **fuente única** de títulos/descripciones: la consumen
+el "pre-SEO" del primer pintado, `app.jsx` en runtime y `build.mjs` para el OG
+estático de cada HTML. Añade una entrada:
 
-Eso es todo: el router, el scroll al cambiar de página, el `<title>` y la
-`meta-description` se actualizan solos.
+    { p: "/merch", t: "DUM DUM™ — Merch",
+      d: "Camisetas y merch de DUM DUM." },
 
-## Paso 3 — Enlazar a la página
+## Paso 3 — Registrar la ruta (en `src/app.jsx`)
+
+En `getRoutesTable()`, una línea `mk(...)` (los textos son solo respaldo por si
+`__ROUTES_SEO` no cargara):
+
+    mk("/merch", false, "Merch",
+      "DUM DUM™ — Merch",
+      "Camisetas y merch de DUM DUM."),
+
+## Paso 4 — Generar su HTML (en `build.mjs`) ← NO TE LO SALTES
+
+Cloudflare sirve cada ruta desde su `.html` prerenderizado. Añade la ruta al mapa
+`FILE_FOR`:
+
+    const FILE_FOR = { …, "/merch": "merch.html" };
+
+Sin esto no existe `dist/merch.html`, y `dum-dum.es/merch` devuelve el 404 real.
+El build **aborta** si la ruta está en `FILE_FOR` pero falta en `__ROUTES_SEO`, así
+que un despiste entre los pasos 2 y 4 se caza solo.
+
+## Paso 5 — Enlazar a la página
+
 Usa siempre rutas que empiezan por `/` (sin `#`):
 
     <a href="/merch">Merch →</a>
 
-El interceptor de clics la hará navegar sin recargar automáticamente.
-Para enlaces EXTERNOS (Instagram, Uber, etc.) usa la URL completa y
-`target="_blank"` — el interceptor los respeta y abre en pestaña nueva.
+El interceptor de clics la hará navegar sin recargar. Para enlaces EXTERNOS
+(Instagram, Uber, etc.) usa la URL completa y `target="_blank"` — el interceptor
+los respeta y abre en pestaña nueva.
 
 ## Reglas de oro (para no romper nada)
 - **Enlaces internos**: `href="/loquesea"` (empieza por `/`). NUNCA `href="#/loquesea"`.
-- **Enlaces externos**: URL completa `https://...` + `target="_blank"`.
+- **Enlaces externos**: URL completa `https://...` + `target="_blank" rel="noreferrer"`.
 - **Botones que no navegan** (abren un toast, etc.): `href="#"` + `onClick` con `e.preventDefault()`.
 - No uses `window.location.hash` para navegar: usa `nav("/ruta")` o un `<a href="/ruta">`.
 - Las imágenes van como `img/...` (el `<base href="/">` del index las resuelve desde la raíz).
+- **No toques el `_redirects` generado** para dar de alta rutas: no hace falta, y
+  añadir `/ruta → /ruta.html 200` provoca un bucle infinito (ver `BUILD.md`).
 
-## Cosas que ya están listas para el futuro
-- URLs limpias + History API (atrás/adelante del navegador funciona).
-- `_redirects` en la raíz: Cloudflare sirve cualquier ruta sin dar 404 al recargar.
-- `<base href="/">`: las rutas relativas funcionan entren por donde entren.
-- Título y descripción SEO por página (en la tabla de rutas).
+## Cosas que ya están resueltas
+- URLs limpias + History API (atrás/adelante funciona, con restauración de scroll).
+- Cada ruta se sirve desde su HTML prerenderizado; lo inexistente da **404 real**.
+- Título, descripción, canónica y Open Graph por página, estáticos (las previews
+  de WhatsApp/Facebook, que no ejecutan JS, ven el título correcto).
 - Match de rutas estricto: páginas con nombres parecidos no colisionan.
+- Sin Babel en el navegador: se compila en el build.
 
 ## Pendiente / mejora futura conocida
-- La web compila en el navegador (sin build). Para SEO máximo, algún día
-  convendría migrar a una web con pre-renderizado. No es urgente, pero queda anotado.
-- El componente `Quienes` existe en pages.jsx pero no está en el router.
-  Si lo quieres accesible, añádelo en getRoutesTable() (Paso 2) y tradúcelo.
+- El `<body>` no se prerenderiza (sí el `<head>` y un `<noscript>`). Hacerlo
+  exigiría migrar a hidratación: la app monta con `createRoot().render()`, que
+  borra el contenido de `#root`, así que meter HTML estático ahí solo produciría
+  un parpadeo. Ver `BUILD.md`.

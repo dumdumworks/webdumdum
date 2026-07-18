@@ -16,7 +16,10 @@ const INITIAL_MENU = {
     sideLine1: "",
     sideLine2: ""
   },
+  // Respaldo por si menu.json no cargara. La fuente real son los campos
+  // `disclaimer` / `disclaimer_en` de menu.json (editables en Sveltia).
   disclaimer: "<strong>Cada ración son 6 dumplings. Para 2</strong> personas, <strong>4 raciones</strong> es la <strong>cantidad mágica. 5</strong> es que <strong>venís con hambre. 6… 112</strong> 💀<br/>Dadle una pensada, <strong>que es pedido único</strong> 😉",
+  disclaimer_en: "Each portion is 6 dumplings. For 2 people, <strong>4 portions</strong> is the magic number. <strong>5</strong> means you came hungry. <strong>6… 112</strong> 💀<br/>Give it a think, <strong>it's a one-time order</strong> 😉",
   gallery: {
     espacio: [
       { src: "img/espacio/01-fachada.jpg", pos: "50% 50%" },
