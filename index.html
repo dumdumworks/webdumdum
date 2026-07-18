@@ -248,16 +248,22 @@
   }
   </script>
 
-  <!-- Preconnect ANTES de pedir las fuentes: ambos CSS de fuentes son
-       render-blocking, así el navegador ya tiene la conexión (DNS+TCP+TLS) hecha
-       cuando le tocan. fonts.googleapis.com sirve el CSS y fonts.gstatic.com los
-       ficheros de fuente (necesita crossorigin: las fuentes se piden en modo CORS
-       y sin él se abriría una conexión aparte, perdiendo el preconnect). -->
+  <!-- ÚNICA webfont del sitio: JetBrains Mono (Google Fonts). El resto de la
+       tipografía es de sistema (--font-display / --font-mono = Helvetica Neue).
+       Preconnect ANTES de pedirla: el CSS de fuentes es render-blocking, así el
+       navegador ya tiene la conexión (DNS+TCP+TLS) hecha cuando le toca.
+       fonts.googleapis.com sirve el CSS y fonts.gstatic.com los ficheros de fuente
+       (necesita crossorigin: las fuentes se piden en modo CORS y sin él se abriría
+       una conexión aparte, perdiendo el preconnect).
+       NOTA: aquí había un kit de Adobe Typekit (avd6wfq) que definía
+       neue-haas-grotesk-display/text. Se retiró porque NINGUNA regla del sitio
+       usaba esas familias (el navegador las registraba y nunca las descargaba),
+       y a cambio costaba dos orígenes render-blocking en la ruta crítica:
+       use.typekit.net + la cadena a p.typekit.net. No reintroducir sin comprobar
+       que alguna familia del kit se usa de verdad. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://use.typekit.net">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/avd6wfq.css">
   <link rel="stylesheet" href="src/styles.css?v=20260616g" />
 </head>
 <body>
