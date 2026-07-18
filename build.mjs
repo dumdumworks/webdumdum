@@ -101,6 +101,29 @@ tpl = replaceOrThrow(
   "link del CSS"
 );
 
+// 5b-bis) PRELOAD del bundle y de menu.json — rompe la cola en serie.
+// Sin esto la cadena era: react.js → react-dom.js (descarga Y ejecuta) → recién
+// entonces corre el boot → fetch menu.json (1 RTT) → recién entonces se inyecta el
+// bundle (otro RTT). Con los preload, ambos se descargan EN PARALELO desde el
+// primer momento y el boot los encuentra ya en caché. El código no cambia.
+// Los hashes salen de aquí, así que nunca pueden desincronizarse.
+//
+// OJO con crossorigin — debe COINCIDIR con cómo se pide cada recurso, o el
+// navegador descarga dos veces y avisa de "preload no usado":
+//   · bundle  → se inyecta con <script src> SIN crossorigin (modo no-CORS)
+//               ⇒ el preload va SIN crossorigin.
+//   · menu.json → se pide con fetch() (modo cors, credentials same-origin)
+//               ⇒ el preload SÍ lleva crossorigin (anonymous = same-origin creds).
+const PRELOADS = `<link rel="preload" as="script" href="/${appName}">
+  <link rel="preload" as="fetch" href="/menu.json?v=${dataVer.menu}" crossorigin>
+  `;
+tpl = replaceOrThrow(
+  tpl,
+  /(<link rel="preconnect" href="https:\/\/fonts\.googleapis\.com">)/,
+  (m, p1) => PRELOADS + p1,
+  "preloads antes del preconnect de fuentes"
+);
+
 // 5c) Reemplazar los 3 <script> de unpkg (React/ReactDOM/Babel) + el bloque
 //     de arranque con Babel por: vendor React/ReactDOM (SRI) + boot paralelo.
 const startMarker = '<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"';
