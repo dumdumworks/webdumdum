@@ -52,10 +52,15 @@ const appBuf = Buffer.from(min.code, "utf8");
 const appName = `assets/dumdum.${hash8(appBuf)}.js`;
 fs.writeFileSync(path.join(DIST, appName), appBuf);
 
-// ── 2) CSS unido (styles.css sin el @import + styles-2.css) ──
+// ── 2) CSS unido y MINIFICADO (styles.css sin el @import + styles-2.css) ──
+// Orden IMPORTANTE: styles-2 primero, replicando la cascada del @import original.
+// Se minifica con esbuild antes de hashear, para que el hash refleje el contenido
+// realmente publicado. Solo minifica (espacios/colores/sintaxis): no reescribe las
+// url(...) relativas, que siguen resolviendo desde /assets/ igual que antes.
 const css2 = rd("src/styles-2.css");
 const css1 = rd("src/styles.css").replace(/@import\s+url\(["']styles-2\.css["']\);\s*/i, "");
-const cssBuf = Buffer.from(css2 + "\n" + css1, "utf8");
+const cssMin = await esbuild.transform(css2 + "\n" + css1, { loader: "css", minify: true });
+const cssBuf = Buffer.from(cssMin.code, "utf8");
 const cssName = `assets/dumdum.${hash8(cssBuf)}.css`;
 fs.writeFileSync(path.join(DIST, cssName), cssBuf);
 

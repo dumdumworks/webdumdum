@@ -248,7 +248,14 @@
   }
   </script>
 
+  <!-- Preconnect ANTES de pedir las fuentes: ambos CSS de fuentes son
+       render-blocking, así el navegador ya tiene la conexión (DNS+TCP+TLS) hecha
+       cuando le tocan. fonts.googleapis.com sirve el CSS y fonts.gstatic.com los
+       ficheros de fuente (necesita crossorigin: las fuentes se piden en modo CORS
+       y sin él se abriría una conexión aparte, perdiendo el preconnect). -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://use.typekit.net">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://use.typekit.net/avd6wfq.css">
   <link rel="stylesheet" href="src/styles.css?v=20260616g" />
