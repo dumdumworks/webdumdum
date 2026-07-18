@@ -21,6 +21,8 @@ collections:
         file: "menu.json"
         fields:
           - { name: "updated", label: "Texto 'ultima actualizacion'", widget: "string", required: false }
+          - { name: "disclaimer", label: "Aviso de la carta (bocadillo)", widget: "text", required: false, hint: "Admite <strong> y <br/>. Si lo dejas vacio, el bocadillo no se muestra." }
+          - { name: "disclaimer_en", label: "Aviso de la carta (EN)", widget: "text", required: false, hint: "Version en ingles. Si lo dejas vacio, se muestra el espanol." }
           - name: "sections"
             label: "Secciones"
             widget: "list"

@@ -390,22 +390,9 @@ function Menu() {
   const prevPhoto = () => setPhotoIdx((i) => (i > 0 ? i - 1 : gallery.length - 1));
   const nextPhoto = () => setPhotoIdx((i) => (i < gallery.length - 1 ? i + 1 : 0));
 
-  React.useEffect(() => {
-    if (photoIdx !== null) {
-      const prev = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      const onKey = (e) => {
-        if (e.key === "Escape") closePhoto();
-        else if (e.key === "ArrowLeft") prevPhoto();
-        else if (e.key === "ArrowRight") nextPhoto();
-      };
-      window.addEventListener("keydown", onKey);
-      return () => {
-        document.body.style.overflow = prev;
-        window.removeEventListener("keydown", onKey);
-      };
-    }
-  }, [photoIdx, gallery.length]);
+  // (El teclado Esc/flechas y el bloqueo de scroll del visor de fotos ya NO se
+  //  gestionan aquí: viven dentro de DishLightbox, para que funcionen igual desde
+  //  cualquier sitio que lo monte —la carta y Eventos→Producto—.)
 
   // Detectar móvil (≤879px) para renderizar el botón "Volver arriba"
   // SOLO en móvil. Se actualiza al redimensionar / girar el dispositivo.
@@ -448,13 +435,16 @@ function Menu() {
           </div>
         </div>
 
-        {data.disclaimer &&
+        {/* Disclaimer editable en Sveltia en AMBOS idiomas: tf() usa disclaimer_en
+            si tiene contenido y cae al español si no (mismo patrón que el resto de
+            campos). Los dos pasan por el saneador, porque los dos vienen del CMS.
+            Antes el inglés estaba fijo en el código: si el editor cambiaba el
+            español, el inglés seguía diciendo lo antiguo. */}
+        {tf(data, "disclaimer") &&
         <aside className="menu-disclaimer">
             <span className="menu-disclaimer-arrow" aria-hidden="true">→</span>
             <div className="menu-disclaimer-bubble">
-              {lang === "en" ?
-                <p>Each portion is 6 dumplings. For 2 people, <strong>4 portions</strong> is the magic number. <strong>5</strong> means you came hungry. <strong>6… 112</strong> 💀<br/>Give it a think, <strong>it's a one-time order</strong> 😉</p> :
-                <p dangerouslySetInnerHTML={{ __html: window.i18n.sanitizeInlineHTML(data.disclaimer) }} />}
+              <p dangerouslySetInnerHTML={{ __html: window.i18n.sanitizeInlineHTML(tf(data, "disclaimer")) }} />
             </div>
           </aside>
         }
@@ -727,6 +717,30 @@ function DishLightbox({ items, index, onPrev, onNext, onClose }) {
 
   const item = items[index];
   const trapRef = useFocusTrap(true); // el lightbox solo existe montado = abierto
+
+  // Teclado (Esc/flechas) y bloqueo del scroll de fondo VIVEN AQUÍ, no en quien
+  // lo abre: antes se los prestaba Menu, así que el visor de Eventos→Producto
+  // (que lo monta GallerySlider) se abría sin Escape, sin flechas y con el fondo
+  // scrolleable. Al bloquear el scroll compensamos el ancho de la barra con
+  // padding-right para que la página no dé un salto lateral.
+  React.useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowLeft") onPrev();
+      else if (e.key === "ArrowRight") onNext();
+    };
+    document.addEventListener("keydown", onKey);
+    const scrollbarW = window.innerWidth - document.documentElement.clientWidth;
+    const prevOverflow = document.body.style.overflow;
+    const prevPadding = document.body.style.paddingRight;
+    document.body.style.overflow = "hidden";
+    if (scrollbarW > 0) document.body.style.paddingRight = scrollbarW + "px";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+      document.body.style.paddingRight = prevPadding;
+    };
+  }, [onClose, onPrev, onNext]);
 
   const onTouchStart = (e) => {
     const tch = e.touches[0];
@@ -1582,6 +1596,16 @@ function EventosForm() {
   const [errMsg, setErrMsg] = React.useState("");
   const minFecha = hoyISOMadrid();
 
+  // Al enviar con éxito, el formulario se sustituye por el "Gracias.". Sin mover
+  // el foco, un lector de pantalla se queda donde estaba (el botón, que ya no
+  // existe) y el usuario no percibe la confirmación. Lo llevamos al encabezado.
+  const okHeadingRef = React.useRef(null);
+  React.useEffect(() => {
+    if (state === "ok" && okHeadingRef.current) {
+      try { okHeadingRef.current.focus(); } catch (e) {}
+    }
+  }, [state]);
+
   // Updater funcional: dos onChange en el mismo tick (autofill, pegado) no se
   // pisan al partir ambos del mismo `form` capturado.
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
@@ -1648,7 +1672,7 @@ function EventosForm() {
     return (
       <div className="ev-form ev-form-ok">
         <div className="tiny muted">{t("Mensaje enviado", "Message sent")}</div>
-        <h3 className="h-2" style={{ marginTop: 12 }}>
+        <h3 className="h-2" style={{ marginTop: 12 }} ref={okHeadingRef} tabIndex={-1}>
           {t("Gracias.", "Thank you.")} <em style={{ fontStyle: 'normal', color: 'var(--red)', fontWeight: 'inherit' }}>{t("Te contestamos cuanto antes.", "We'll get back to you asap.")}</em>
         </h3>
         <button type="button" className="btn" style={{ marginTop: 24 }}
@@ -1748,8 +1772,11 @@ function EventosForm() {
           placeholder={t("Tipo de evento, comentarios…", "Type of event, comments…")} />
       </label>
 
+      {/* role="alert" (aria-live assertive implícito): sin esto, un lector de
+          pantalla no anunciaba nada al fallar el envío y el usuario se quedaba
+          sin saber por qué no pasaba nada. */}
       {state === "error" &&
-      <div className="ev-form-err">{errMsg}</div>
+      <div className="ev-form-err" role="alert">{errMsg}</div>
       }
 
       <div className="ev-form-actions">
@@ -1766,6 +1793,22 @@ function EventosForm() {
 // ── EVENTOS ───────────────────────────────────────────────────
 function Eventos() {
   const lang = useLang();
+  // eventos.json se carga en 2º plano (ver el boot): puede llegar DESPUÉS de que
+  // esta página ya esté montada. Los sliders hijos se recargan solos porque
+  // escuchan "focus", pero los textos de aquí se leen de window.PUBLISHED_EVENTOS
+  // en el render, así que sin esto se quedaban con los fallbacks del código hasta
+  // cambiar de idioma o navegar (fotos nuevas con textos viejos). Mismo patrón
+  // que los sliders: al llegar el dato (o al volver el foco), re-renderizamos.
+  const [, setTick] = React.useState(0);
+  React.useEffect(() => {
+    const onFocus = () => setTick((n) => n + 1);
+    window.addEventListener("focus", onFocus);
+    window.addEventListener("storage", onFocus);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("storage", onFocus);
+    };
+  }, []);
   // Helpers de contenido editable (eventos.json vía Sveltia) con FALLBACK
   // total al texto escrito aquí: si el editor no aporta nada, se ve igual
   // que siempre. `eb` = bloque de texto/párrafo. `eh` = título (un campo).
