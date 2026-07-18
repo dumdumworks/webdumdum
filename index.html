@@ -22,6 +22,14 @@
     gtag("set", "url_passthrough", true);
   </script>
 
+  <!-- Preconnect al CMP: Cookiebot es el mayor bloqueador de render (~1,4 s) y
+       buena parte es abrir la conexión (DNS+TCP+TLS). Adelantarla no cambia NADA
+       del orden: un <link> no es un script, así que Consent Mode → Cookiebot → GA
+       se mantiene, y Cookiebot sigue siendo síncrono. Además Cloudflare promociona
+       los preconnect a Early Hints (HTTP 103), que viajan ANTES que el HTML.
+       Sin crossorigin: el script de Cookiebot se pide en modo no-CORS. -->
+  <link rel="preconnect" href="https://consent.cookiebot.com">
+
   <!-- Cookiebot (CMP) · SÍNCRONO y el PRIMERO tras el Consent Mode, tal como
        EXIGE data-blockingmode="auto" (el auto-blocking necesita cargar de forma
        síncrona en el <head>; inyectarlo por JS lo vuelve asíncrono y arranca tarde
