@@ -1836,6 +1836,18 @@ function Eventos() {
     }
     return fbNegro;
   };
+  // Dossier de tarifas: se sube desde Sveltia (campo `dossier` de eventos.json).
+  // Si el CMS no aporta nada, se mantiene el PDF actual, así el botón nunca queda
+  // roto. Sveltia guarda la ruta unas veces con "/" inicial y otras sin él (ambas
+  // funcionan por el <base href="/">), así que la normalizamos; una URL absoluta
+  // (http…) se respeta tal cual por si algún día se aloja fuera.
+  const DOSSIER_POR_DEFECTO = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
+  const dossierRaw = String(window.i18n.ev("dossier") || "").trim();
+  const dossierUrl = !dossierRaw
+    ? DOSSIER_POR_DEFECTO
+    : (/^(https?:)?\/\//i.test(dossierRaw) || dossierRaw.startsWith("/"))
+      ? dossierRaw
+      : "/" + dossierRaw.replace(/^\.?\//, "");
   return (
     <div data-screen-label="eventos">
       {/* HERO */}
@@ -1855,7 +1867,7 @@ function Eventos() {
           </p>
         </div>
         <div style={{ marginTop: 40, display: "flex", justifyContent: "flex-start" }}>
-          <a className="btn" href="/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf" target="_blank" rel="noreferrer">
+          <a className="btn" href={dossierUrl} target="_blank" rel="noreferrer">
             <span className="btn-label">{t("Descargar dossier con tarifas", "Download dossier with rates")}</span><span className="btn-arrow">↓</span>
           </a>
         </div>

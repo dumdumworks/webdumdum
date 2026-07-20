@@ -103,6 +103,9 @@ collections:
           - { name: "hero_title_en", label: "Hero · título (EN)", widget: "string", required: false }
           - { name: "hero_body", label: "Hero · párrafo", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
           - { name: "hero_body_en", label: "Hero · párrafo (EN)", widget: "markdown", required: false, buttons: ["bold"], editor_components: [], minimal: true }
+          # Dossier de tarifas (PDF) del boton del hero. Sube uno nuevo para
+          # reemplazarlo: se publica al guardar y el boton apunta solo.
+          - { name: "dossier", label: "Dossier de eventos (PDF)", widget: "file", required: false, media_folder: "/img/dossier", public_folder: "/img/dossier", hint: "PDF que se descarga con el boton 'Descargar dossier con tarifas'. Si lo dejas vacio, se usa el dossier actual." }
 
           # ── Espacio ──
           - { name: "espacio_title", label: "Espacio · título", widget: "string", required: false, hint: "Usa ' / ' para separar en varias líneas." }
