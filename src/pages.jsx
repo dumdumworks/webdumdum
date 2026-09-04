@@ -351,7 +351,7 @@ function Menu() {
     data.sections.forEach((sec) => {
       if (sec.id === "postres" || sec.id === "bebidas") return;
       sec.items.forEach((it) => {
-        if (it.available !== false && it.image) {
+        if (it.available !== false && !it.archived && it.image) {
           out.push({ id: it.id, src: it.image, name: tf(it, "name") });
         }
       });
@@ -365,7 +365,7 @@ function Menu() {
     const out = [];
     data.sections.forEach((sec) => {
       sec.items.forEach((it) => {
-        if (it.available !== false) {
+        if (it.available !== false && !it.archived) {
           out.push({ id: it.id, name: tf(it, "name"), seccion: tf(sec, "title"), alergenos: it.alergenos || [] });
         }
       });
@@ -457,7 +457,7 @@ function Menu() {
             </div>
 
             <div className={`dish-grid ${sec.id === "postres" ? "dish-grid-2col-m" : ""} ${sec.id === "bebidas" ? "dish-grid-2col-m drinks-grid" : ""}`}>
-              {sec.items.filter((it) => it.available !== false).map((it) =>
+              {sec.items.filter((it) => it.available !== false && !it.archived).map((it) =>
             <article key={it.id} className={`dish ${it.logo ? "with-logo" : ""} ${it.featured ? "is-featured" : ""}`}>
                   {/* ─── Layout MOBILE (visible <880px) ──────────────── */}
                   <div className="num m-only">[nº{String(it.n).padStart(2, "0")}]</div>
@@ -1285,7 +1285,7 @@ function ProductoSlider() {
     const porImagen = {};
     (data.sections || []).forEach((sec) => {
       (sec.items || []).forEach((it) => {
-        if (it.image) {
+        if (it.image && !it.archived) {
           const en = it.name_en && String(it.name_en).trim() !== "" ? it.name_en : it.name;
           porImagen[it.image] = lang === "en" ? (en || it.name || "") : (it.name || "");
         }
