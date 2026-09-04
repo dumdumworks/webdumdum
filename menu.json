@@ -76,7 +76,6 @@
           "price": "9,95",
           "tags": [
             "PICANTE",
-            "NEW",
             "POR TIEMPO LIMITADO"
           ],
           "alergenos": [
@@ -99,7 +98,8 @@
           "price": "9,25",
           "tags": [
             "VEG",
-            "NEW"
+            "NEW",
+            "POR TIEMPO LIMITADO"
           ],
           "alergenos": [
             "gluten",
