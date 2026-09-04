@@ -148,7 +148,7 @@
           "alergenos": [
             "gluten"
           ],
-          "available": true,
+          "available": false,
           "image": "img/dumplings/sweet.jpg",
           "logo": ""
         },
