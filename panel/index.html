@@ -618,7 +618,7 @@
     r.onclick=()=>{selId=d.id;renderList();renderEditor();};
     // ── arrastrar para reordenar dentro de la MISMA sección ──
     r.draggable=true;
-    r.addEventListener("dragstart",e=>{dragId=d.id;e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",d.id);}catch(_){}r.classList.add("dragging");});
+    r.addEventListener("dragstart",e=>{dragId=d.id;if(e.dataTransfer){e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",d.id);}catch(_){}}r.classList.add("dragging");});
     r.addEventListener("dragend",()=>{dragId=null;document.querySelectorAll(".dishrow").forEach(x=>x.classList.remove("dragging","drop-before","drop-after"));});
     r.addEventListener("dragover",e=>{const dr=dishes.find(x=>x.id===dragId);if(!dr||dr.sec!==d.sec||dr.id===d.id)return;e.preventDefault();const rc=r.getBoundingClientRect();const before=(e.clientY-rc.top)<rc.height/2;r.classList.toggle("drop-before",before);r.classList.toggle("drop-after",!before);});
     r.addEventListener("dragleave",()=>{r.classList.remove("drop-before","drop-after");});
