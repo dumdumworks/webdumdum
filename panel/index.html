@@ -7,25 +7,27 @@
 <title>Editor de Carta · DUM DUM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
   :root{
+    /* Paleta neutra "app de trabajo": fondo blanco, grises neutros, rojo de marca como acento. */
     --red:#FF001E;
-    --red-ink:#FF001E;
-    --cream:#FFFAF3;
+    --red-ink:#E1001B;
+    --cream:#FFFFFF;        /* fondo (blanco) */
     --panel:#FFFFFF;
-    --panel-2:#FFF6EC;
-    --ink:#1C1512;
-    --muted:#8B7E71;
-    --line:#E9DCCC;
-    --line-soft:#F1E7DA;
-    --green:#1F8A5B;
-    --amber:#B8791C;
-    --shadow:0 1px 2px rgba(28,21,18,.04),0 8px 24px rgba(28,21,18,.06);
+    --panel-2:#F4F5F7;      /* gris muy claro: insets, hover, inputs alternos */
+    --ink:#1B1E23;
+    --muted:#6B7280;
+    --line:#E3E6EA;
+    --line-soft:#EEF0F3;
+    --green:#12925A;
+    --amber:#B26B00;
+    --shadow:0 1px 2px rgba(20,23,28,.05),0 8px 24px rgba(20,23,28,.07);
     --radius:12px;
-    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-    --sans:"Archivo","Helvetica Neue",system-ui,sans-serif;
-    color-scheme: light;   /* El panel va SIEMPRE en crema, como la web: ignora el modo oscuro del dispositivo. */
+    /* Tipografía UNIFICADA: una sola fuente (Inter) para todo. */
+    --mono:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+    color-scheme: light;   /* El panel va SIEMPRE claro: ignora el modo oscuro del dispositivo. */
   }
 
   *{box-sizing:border-box}
@@ -111,7 +113,12 @@
   }
   .dishrow:hover{background:var(--panel-2)}
   .dishrow[aria-current="true"]{background:var(--panel-2);border-color:var(--red)}
-  .grip{color:var(--line);font-size:15px;cursor:grab;flex-shrink:0}
+  .grip{color:var(--muted);opacity:.45;font-size:15px;cursor:grab;flex-shrink:0}
+  .dishrow:hover .grip{opacity:.8}
+  .dishrow.dragging{opacity:.4}
+  .dishrow.drop-before{box-shadow:inset 0 3px 0 -1px var(--red)}
+  .dishrow.drop-after{box-shadow:inset 0 -3px 0 -1px var(--red)}
+  .num-hint{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
   .thumb{width:36px;height:36px;border-radius:7px;flex-shrink:0;background-size:cover;background-position:center;
     border:1px solid var(--line);position:relative;overflow:hidden}
   .thumb.empty{display:grid;place-items:center;color:var(--muted);background:var(--panel-2)}
@@ -129,8 +136,7 @@
 
   /* ── Editor ──────────────────────────────── */
   .editor{overflow-y:auto;min-height:0;padding:22px 26px 60px;scrollbar-width:thin}
-  .editor-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:30px;max-width:1080px;margin:0 auto}
-  @media (max-width:1180px){.editor-grid{grid-template-columns:1fr;gap:24px}}
+  .editor-grid{display:block;max-width:760px;margin:0 auto}
 
   .ehead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
   .ehead .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--red-ink);font-weight:500}
@@ -215,6 +221,27 @@
   .chip .sw{width:8px;height:8px;border-radius:2px;background:currentColor;opacity:.5}
   .chip .ae{font-size:13px;line-height:1;filter:saturate(1)}
   .aler-chips{gap:7px}
+  /* Alérgenos colapsables: resumen + botón "Editar" que despliega las 14 */
+  .aler-head{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 14px;transition:.14s;cursor:pointer}
+  .aler-head:hover{border-color:var(--muted)}
+  .aler-head[aria-expanded="true"]{border-color:var(--red);border-bottom-left-radius:0;border-bottom-right-radius:0}
+  .aler-summary{font-size:13px;font-weight:600;color:var(--ink);line-height:1.45}
+  .aler-summary.empty{color:var(--muted);font-weight:400}
+  .aler-caret{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--red-ink);flex-shrink:0;white-space:nowrap}
+  .aler-chips:not([hidden]){margin-top:0;padding:12px;border:1px solid var(--red);border-top:none;border-radius:0 0 10px 10px;background:var(--panel-2)}
+  /* Multi-select tipo Sveltia (alérgenos) */
+  .msel{position:relative}
+  .msel-box{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:44px;padding:7px 9px;border:1px solid var(--line);border-radius:10px;background:var(--panel);cursor:text;transition:.14s}
+  .msel-box:focus-within{border-color:var(--red);box-shadow:0 0 0 3px color-mix(in srgb,var(--red) 14%,transparent)}
+  .msel-pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;padding:4px 5px 4px 10px;border-radius:8px;background:color-mix(in srgb,var(--red) 8%,var(--panel));border:1px solid color-mix(in srgb,var(--red) 28%,var(--line));color:var(--ink)}
+  .msel-pill .ae{font-size:12px}
+  .msel-x{border:none;background:transparent;color:var(--muted);font-size:16px;line-height:.8;cursor:pointer;padding:0 3px;border-radius:5px}
+  .msel-x:hover{color:var(--red);background:color-mix(in srgb,var(--red) 12%,transparent)}
+  .msel-input{flex:1;min-width:130px;border:none;outline:none;background:transparent;font-size:13.5px;color:var(--ink);padding:5px 3px;font-family:var(--sans)}
+  .msel-drop{position:absolute;top:calc(100% + 5px);left:0;right:0;z-index:30;max-height:250px;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow);padding:5px}
+  .msel-opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;border:none;border-radius:8px;padding:9px 11px;font-size:13.5px;color:var(--ink);cursor:pointer}
+  .msel-opt:hover{background:var(--panel-2)}
+  .msel-opt .ae{font-size:15px}
   .chip.aler[aria-pressed="true"]{background:color-mix(in srgb,var(--red) 8%,var(--panel));border-color:var(--red);color:var(--ink)}
   .aler-hint{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:8px;letter-spacing:.02em}
   .aler-hint code{color:var(--red-ink);font-family:var(--mono)}
@@ -381,6 +408,14 @@
             <div class="cat-row" id="catRow"></div>
           </div>
 
+          <div class="grp" id="numGrp" hidden style="margin-bottom:18px">
+            <div class="grp-label">Número del dumpling</div>
+            <div class="field" style="margin:0">
+              <input type="text" id="f_num" inputmode="numeric" style="max-width:130px" placeholder="p. ej. 5">
+              <div class="num-hint">El número que ve el cliente (solo los dumplings lo llevan).</div>
+            </div>
+          </div>
+
           <!-- PHOTO — centerpiece -->
           <div class="grp-label">Foto del plato</div>
           <div class="photo-zone" id="photoZone" tabindex="0" role="button" aria-label="Subir o cambiar la foto del plato">
@@ -423,10 +458,13 @@
                 <label>Etiquetas</label>
                 <div class="chips" id="chips"></div>
               </div>
-              <div class="field" style="margin-top:16px">
-                <label>Alérgenos <span class="flag">clica los que apliquen</span></label>
-                <div class="chips aler-chips" id="alerChips"></div>
-                <div class="aler-hint" id="alerHint"></div>
+            </div>
+
+            <div class="grp">
+              <div class="grp-label">Alérgenos</div>
+              <div class="msel">
+                <div class="msel-box" id="alerBox"></div>
+                <div class="msel-drop" id="alerDrop" hidden></div>
               </div>
             </div>
 
@@ -450,13 +488,6 @@
             </div>
           </fieldset>
         </section>
-
-        <!-- Live preview -->
-        <aside class="preview-rail">
-          <div class="pv-label"><span class="live"></span> Vista previa en la web</div>
-          <div id="cardMount"></div>
-          <div class="pv-note">Lo que ves aquí es <b>exactamente</b> cómo aparece la ficha en dum-dum.es. Editas a la izquierda, se actualiza aquí y en la web.</div>
-        </aside>
       </div>
     </main>
   </div>
@@ -484,7 +515,7 @@
   let SECTION_META = {};    // título de sección -> {id, title_en, note, note_en}
   let dishes = [];          // modelo plano del editor
   let SECTIONS = [];        // títulos de sección, en orden
-  let selId = null, filter = "Todas", addingTag = false, addingSec = false, dirty = false;
+  let selId = null, filter = "Todas", addingTag = false, addingSec = false, dirty = false, alerOpen = false, dragId = null;
 
   const slug = (s) => (s||"").toString().toLowerCase().normalize("NFD")
     .replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || "seccion";
@@ -525,9 +556,11 @@
     const out = Object.assign({}, MENU);
     out.sections = SECTIONS.map(title=>{
       const meta = SECTION_META[title] || { id: slug(title), title_en:"", note:"", note_en:"" };
-      const items = dishes.filter(d=>d.sec===title).sort((a,b)=>a.n-b.n).map((d,i)=>{
+      // OJO: se conserva el ORDEN del array (la web pinta en ese orden) y el
+      // NÚMERO 'n' tal cual (es la etiqueta de nº del plato, no la posición).
+      const items = dishes.filter(d=>d.sec===title).map((d)=>{
         return Object.assign({}, d._orig || {}, {
-          id: d.id, n: i,
+          id: d.id, n: d.n,
           name: d.name, name_en: d.name_en,
           tagline: d.tag, tagline_en: d.tag_en,
           ingredients: d.ingr, ingredients_en: d.ingr_en,
@@ -579,7 +612,24 @@
     if(d.archived){const t=el("span","row-arch");t.textContent="📦";r.appendChild(t);}
     else{const dot=el("span","avail-dot"+(d.avail?"":" off"));r.appendChild(dot);}
     r.onclick=()=>{selId=d.id;renderList();renderEditor();};
+    // ── arrastrar para reordenar dentro de la MISMA sección ──
+    r.draggable=true;
+    r.addEventListener("dragstart",e=>{dragId=d.id;e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",d.id);}catch(_){}r.classList.add("dragging");});
+    r.addEventListener("dragend",()=>{dragId=null;document.querySelectorAll(".dishrow").forEach(x=>x.classList.remove("dragging","drop-before","drop-after"));});
+    r.addEventListener("dragover",e=>{const dr=dishes.find(x=>x.id===dragId);if(!dr||dr.sec!==d.sec||dr.id===d.id)return;e.preventDefault();const rc=r.getBoundingClientRect();const before=(e.clientY-rc.top)<rc.height/2;r.classList.toggle("drop-before",before);r.classList.toggle("drop-after",!before);});
+    r.addEventListener("dragleave",()=>{r.classList.remove("drop-before","drop-after");});
+    r.addEventListener("drop",e=>{const dr=dishes.find(x=>x.id===dragId);if(!dr||dr.sec!==d.sec){return;}e.preventDefault();const rc=r.getBoundingClientRect();const before=(e.clientY-rc.top)<rc.height/2;r.classList.remove("drop-before","drop-after");moveDish(dragId,d.id,before);});
     return r;
+  }
+  // reordena en el array plano (que es el ORDEN que pinta la web), no toca 'n'
+  function moveDish(draggedId,targetId,before){
+    if(draggedId===targetId)return;
+    const dr=dishes.find(x=>x.id===draggedId),tg=dishes.find(x=>x.id===targetId);
+    if(!dr||!tg||dr.sec!==tg.sec)return;
+    dishes.splice(dishes.indexOf(dr),1);
+    const ti=dishes.indexOf(tg);
+    dishes.splice(before?ti:ti+1,0,dr);
+    markDirty();renderList();
   }
   function renderList(){
     const list=$("#dishList");list.innerHTML="";
@@ -592,7 +642,7 @@
     }
     SECTIONS.forEach(sec=>{
       if(filter!=="Todas"&&filter!==sec)return;
-      const inSec=dishes.filter(d=>d.sec===sec&&!d.archived).sort((a,b)=>a.n-b.n);
+      const inSec=dishes.filter(d=>d.sec===sec&&!d.archived);
       if(!inSec.length)return;
       const lab=el("div","sec-label");lab.textContent=sec;list.appendChild(lab);
       inSec.forEach(d=>list.appendChild(makeRow(d)));
@@ -662,19 +712,48 @@
   }
 
   // ── alérgenos (seleccionables)
-  function renderAler(){
-    const wrap=$("#alerChips");wrap.innerHTML="";const d=cur();
-    ALLERGENS.forEach(a=>{
-      const b=el("button","chip aler");b.type="button";
-      b.setAttribute("aria-pressed",String(d.alerSel.includes(a.id)));
-      b.innerHTML=`<span class="ae">${a.e}</span>${a.k}`;
-      b.onclick=()=>{const i=d.alerSel.indexOf(a.id);if(i>=0)d.alerSel.splice(i,1);else d.alerSel.push(a.id);renderAler();};
-      wrap.appendChild(b);
+  // Multi-select de alérgenos estilo Sveltia: pastillas con × + desplegable con filtro.
+  function alerAvail(f){const d=cur();f=(f||"").toLowerCase();return ALLERGENS.filter(a=>!d.alerSel.includes(a.id) && a.k.toLowerCase().includes(f));}
+  function alerAdd(id){const d=cur();if(!d.alerSel.includes(id))d.alerSel.push(id);markDirty();alerOpen=true;renderAler();const i=$("#alerInput");if(i){i.value="";i.focus();}}
+  function alerRenderDrop(){
+    const drop=$("#alerDrop");if(!drop)return;
+    const inp=$("#alerInput");const f=inp?inp.value:"";
+    const opts=alerAvail(f);
+    drop.innerHTML="";
+    if(!alerOpen || !opts.length){drop.hidden=true;return;}
+    drop.hidden=false;
+    opts.forEach(a=>{
+      const o=el("button","msel-opt");o.type="button";
+      o.innerHTML=`<span class="ae">${a.e}</span>${a.k}`;
+      o.onmousedown=(e)=>{e.preventDefault();alerAdd(a.id);};   // mousedown: se adelanta al blur del input
+      drop.appendChild(o);
     });
-    const ids=d.alerSel;
-    $("#alerHint").innerHTML = ids.length
-      ? `Se guarda en la web como: <code>${ids.join(" · ")}</code>`
-      : "Ninguno seleccionado — alimenta el filtro de alérgenos de la web";
+  }
+  function renderAler(){
+    const box=$("#alerBox");if(!box)return;const d=cur();if(!d)return;
+    box.innerHTML="";
+    d.alerSel.forEach(id=>{
+      const a=ALLERGENS.find(x=>x.id===id);const label=a?a.k:id;
+      const pill=el("span","msel-pill");
+      pill.innerHTML=`<span class="ae">${a?a.e:""}</span>${label}`;
+      const x=el("button","msel-x");x.type="button";x.textContent="×";x.setAttribute("aria-label","Quitar "+label);
+      x.onmousedown=(e)=>{e.preventDefault();e.stopPropagation();const i=d.alerSel.indexOf(id);if(i>=0)d.alerSel.splice(i,1);markDirty();renderAler();const inp=$("#alerInput");if(inp)inp.focus();};
+      pill.appendChild(x);
+      box.appendChild(pill);
+    });
+    const inp=el("input","msel-input");inp.type="text";inp.id="alerInput";inp.autocomplete="off";
+    inp.placeholder=d.alerSel.length?"Añadir…":"Añade alérgenos…";
+    inp.oninput=alerRenderDrop;
+    inp.onfocus=()=>{alerOpen=true;alerRenderDrop();};
+    inp.onblur=()=>{setTimeout(()=>{alerOpen=false;alerRenderDrop();},130);};
+    inp.onkeydown=(e)=>{
+      if(e.key==="Enter"){e.preventDefault();const o=alerAvail(inp.value);if(o.length)alerAdd(o[0].id);}
+      else if(e.key==="Backspace"&&inp.value===""&&d.alerSel.length){d.alerSel.pop();markDirty();renderAler();const i2=$("#alerInput");if(i2)i2.focus();}
+      else if(e.key==="Escape"){inp.blur();}
+    };
+    box.appendChild(inp);
+    box.onclick=(e)=>{ if(e.target===box){const i=$("#alerInput");if(i)i.focus();} };
+    alerRenderDrop();
   }
 
   // ── editor
@@ -689,6 +768,9 @@
     $("#f_tag").value=d.tag;$("#f_tag_en").value=d.tag_en;
     $("#f_ingr").value=d.ingr;$("#f_ingr_en").value=d.ingr_en||d.ingr;
     $("#f_price").value=d.price;
+    const isDumpling=(SECTION_META[d.sec]&&SECTION_META[d.sec].id)==="dumplings";
+    $("#numGrp").hidden=!isDumpling;
+    $("#f_num").value=(d.n!=null?d.n:"");
     $("#sw_feat").setAttribute("aria-pressed",String(d.feat));
     $("#sw_avail").setAttribute("aria-pressed",String(d.avail));
     const arch=$("#archiveBtn");
@@ -717,7 +799,7 @@
 
   // ── live card
   function renderCard(){
-    const d=cur();const mount=$("#cardMount");mount.innerHTML="";
+    const mount=$("#cardMount");if(!mount)return;const d=cur();if(!d)return;mount.innerHTML="";
     const card=el("div","dishcard"+(d.feat?" feat":"")+(d.avail?"":" sold"));
     const _src=d._preview||d.image;
     const ph=el("div","dc-photo"+(_src?"":" empty"));
@@ -747,6 +829,7 @@
     renderCard();});}
   bind("#f_name","name");bind("#f_name_en","name_en");bind("#f_tag","tag");bind("#f_tag_en","tag_en");
   bind("#f_ingr","ingr");bind("#f_ingr_en","ingr_en");bind("#f_price","price");
+  $("#f_num").addEventListener("input",e=>{const v=e.target.value.trim();const d=cur();if(d)d.n=v===""?0:(parseInt(v,10)||0);});
 
   $("#sw_feat").onclick=function(){const d=cur();d.feat=!d.feat;this.setAttribute("aria-pressed",String(d.feat));renderCard();};
   $("#sw_avail").onclick=function(){const d=cur();d.avail=!d.avail;this.setAttribute("aria-pressed",String(d.avail));renderCard();renderList();};
@@ -761,7 +844,7 @@
   // lista de la izquierda (elegir plato, cambiar de pestaña) NO cuenta como cambio.
   (function(){
     const ed=document.querySelector(".editor");
-    ed.addEventListener("input",markDirty,true);
+    ed.addEventListener("input",e=>{ if(e.target.id==="alerInput")return; markDirty(); },true);
     ed.addEventListener("click",e=>{ if(e.target.closest("button,.switch,.chip,.tf-dot,.cat-select")) markDirty(); },true);
   })();
 
