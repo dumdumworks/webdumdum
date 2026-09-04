@@ -687,6 +687,14 @@
     color: var(--red);
     border-color: var(--bg);
   }
+  /* VEG en destacado: pill crema con su VERDE de marca. Sin esto heredaba el
+     crema del texto de la tarjeta (.dish.is-featured * / .dish-card *) y "VEG"
+     quedaba crema sobre crema = invisible (solo se veia el emoji). */
+  .dish.is-featured .tag.veg {
+    background: var(--bg);
+    color: #1f8a5b;
+    border-color: var(--bg);
+  }
   /* Etiquetas neutras (VEG, etc.): transparente con borde y texto crema */
   .dish.is-featured .tag {
     background: transparent;
@@ -1877,6 +1885,14 @@
   .dish.is-featured .tag.limited {
     background: var(--bg);
     color: var(--red);
+    border-color: var(--bg);
+  }
+  /* VEG en destacado: pill crema con su VERDE de marca. Sin esto heredaba el
+     crema del texto de la tarjeta (.dish.is-featured * / .dish-card *) y "VEG"
+     quedaba crema sobre crema = invisible (solo se veia el emoji). */
+  .dish.is-featured .tag.veg {
+    background: var(--bg);
+    color: #1f8a5b;
     border-color: var(--bg);
   }
 }
