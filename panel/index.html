@@ -409,10 +409,10 @@
           </div>
 
           <div class="grp" id="numGrp" hidden style="margin-bottom:18px">
-            <div class="grp-label">Número del dumpling</div>
+            <div class="grp-label">Número del plato</div>
             <div class="field" style="margin:0">
               <input type="text" id="f_num" inputmode="numeric" style="max-width:130px" placeholder="p. ej. 5">
-              <div class="num-hint">El número que ve el cliente (solo los dumplings lo llevan).</div>
+              <div class="num-hint">El número que ve el cliente. Aparece en las secciones que usan numeración (dumplings, mochis…).</div>
             </div>
           </div>
 
@@ -772,8 +772,11 @@
     $("#f_tag").value=d.tag;$("#f_tag_en").value=d.tag_en;
     $("#f_ingr").value=d.ingr;$("#f_ingr_en").value=d.ingr_en||d.ingr;
     $("#f_price").value=d.price;
-    const isDumpling=(SECTION_META[d.sec]&&SECTION_META[d.sec].id)==="dumplings";
-    $("#numGrp").hidden=!isDumpling;
+    // Muestra el número si esta sección usa numeración (algún plato con nº≥1),
+    // o si este plato ya tiene número. Así sale en dumplings y mochis, no en bebidas.
+    const secNumera=dishes.some(x=>x.sec===d.sec && !x.archived && (parseInt(x.n,10)||0)>=1);
+    const showNum=(parseInt(d.n,10)||0)>=1 || secNumera;
+    $("#numGrp").hidden=!showNum;
     $("#f_num").value=(d.n!=null?d.n:"");
     $("#sw_feat").setAttribute("aria-pressed",String(d.feat));
     $("#sw_avail").setAttribute("aria-pressed",String(d.avail));
