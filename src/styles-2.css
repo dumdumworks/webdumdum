@@ -1749,8 +1749,13 @@
     gap: 4px;
     z-index: 2;
   }
+  /* Pastilla crema sobre la foto: el texto SIEMPRE en rojo. Sin fijar el color,
+     las etiquetas con texto crema por diseño (POR TIEMPO LIMITADO, DEL MES/TOP)
+     quedaban crema sobre crema = invisibles (pastilla vacía) en platos NO
+     destacados. Los destacados ya lo forzaban a rojo; ahora es coherente. */
   .dish-tags-overlay .tag {
     background: var(--bg);
+    color: var(--red);
   }
   .dish.with-logo .dish-img > .logo-slot {
     display: none;
