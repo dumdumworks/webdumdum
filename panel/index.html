@@ -7,25 +7,27 @@
 <title>Editor de Carta · DUM DUM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
   :root{
+    /* Paleta neutra "app de trabajo": fondo blanco, grises neutros, rojo de marca como acento. */
     --red:#FF001E;
-    --red-ink:#FF001E;
-    --cream:#FFFAF3;
+    --red-ink:#E1001B;
+    --cream:#FFFFFF;        /* fondo (blanco) */
     --panel:#FFFFFF;
-    --panel-2:#FFF6EC;
-    --ink:#1C1512;
-    --muted:#8B7E71;
-    --line:#E9DCCC;
-    --line-soft:#F1E7DA;
-    --green:#1F8A5B;
-    --amber:#B8791C;
-    --shadow:0 1px 2px rgba(28,21,18,.04),0 8px 24px rgba(28,21,18,.06);
+    --panel-2:#F4F5F7;      /* gris muy claro: insets, hover, inputs alternos */
+    --ink:#1B1E23;
+    --muted:#6B7280;
+    --line:#E3E6EA;
+    --line-soft:#EEF0F3;
+    --green:#12925A;
+    --amber:#B26B00;
+    --shadow:0 1px 2px rgba(20,23,28,.05),0 8px 24px rgba(20,23,28,.07);
     --radius:12px;
-    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-    --sans:"Archivo","Helvetica Neue",system-ui,sans-serif;
-    color-scheme: light;   /* El panel va SIEMPRE en crema, como la web: ignora el modo oscuro del dispositivo. */
+    /* Tipografía UNIFICADA: una sola fuente (Inter) para todo. */
+    --mono:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+    color-scheme: light;   /* El panel va SIEMPRE claro: ignora el modo oscuro del dispositivo. */
   }
 
   *{box-sizing:border-box}
@@ -111,7 +113,12 @@
   }
   .dishrow:hover{background:var(--panel-2)}
   .dishrow[aria-current="true"]{background:var(--panel-2);border-color:var(--red)}
-  .grip{color:var(--line);font-size:15px;cursor:grab;flex-shrink:0}
+  .grip{color:var(--muted);opacity:.45;font-size:15px;cursor:grab;flex-shrink:0}
+  .dishrow:hover .grip{opacity:.8}
+  .dishrow.dragging{opacity:.4}
+  .dishrow.drop-before{box-shadow:inset 0 3px 0 -1px var(--red)}
+  .dishrow.drop-after{box-shadow:inset 0 -3px 0 -1px var(--red)}
+  .num-hint{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
   .thumb{width:36px;height:36px;border-radius:7px;flex-shrink:0;background-size:cover;background-position:center;
     border:1px solid var(--line);position:relative;overflow:hidden}
   .thumb.empty{display:grid;place-items:center;color:var(--muted);background:var(--panel-2)}
@@ -401,6 +408,14 @@
             <div class="cat-row" id="catRow"></div>
           </div>
 
+          <div class="grp" id="numGrp" hidden style="margin-bottom:18px">
+            <div class="grp-label">Número del dumpling</div>
+            <div class="field" style="margin:0">
+              <input type="text" id="f_num" inputmode="numeric" style="max-width:130px" placeholder="p. ej. 5">
+              <div class="num-hint">El número que ve el cliente (solo los dumplings lo llevan).</div>
+            </div>
+          </div>
+
           <!-- PHOTO — centerpiece -->
           <div class="grp-label">Foto del plato</div>
           <div class="photo-zone" id="photoZone" tabindex="0" role="button" aria-label="Subir o cambiar la foto del plato">
@@ -500,7 +515,7 @@
   let SECTION_META = {};    // título de sección -> {id, title_en, note, note_en}
   let dishes = [];          // modelo plano del editor
   let SECTIONS = [];        // títulos de sección, en orden
-  let selId = null, filter = "Todas", addingTag = false, addingSec = false, dirty = false, alerOpen = false;
+  let selId = null, filter = "Todas", addingTag = false, addingSec = false, dirty = false, alerOpen = false, dragId = null;
 
   const slug = (s) => (s||"").toString().toLowerCase().normalize("NFD")
     .replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || "seccion";
@@ -541,9 +556,11 @@
     const out = Object.assign({}, MENU);
     out.sections = SECTIONS.map(title=>{
       const meta = SECTION_META[title] || { id: slug(title), title_en:"", note:"", note_en:"" };
-      const items = dishes.filter(d=>d.sec===title).sort((a,b)=>a.n-b.n).map((d,i)=>{
+      // OJO: se conserva el ORDEN del array (la web pinta en ese orden) y el
+      // NÚMERO 'n' tal cual (es la etiqueta de nº del plato, no la posición).
+      const items = dishes.filter(d=>d.sec===title).map((d)=>{
         return Object.assign({}, d._orig || {}, {
-          id: d.id, n: i,
+          id: d.id, n: d.n,
           name: d.name, name_en: d.name_en,
           tagline: d.tag, tagline_en: d.tag_en,
           ingredients: d.ingr, ingredients_en: d.ingr_en,
@@ -595,7 +612,24 @@
     if(d.archived){const t=el("span","row-arch");t.textContent="📦";r.appendChild(t);}
     else{const dot=el("span","avail-dot"+(d.avail?"":" off"));r.appendChild(dot);}
     r.onclick=()=>{selId=d.id;renderList();renderEditor();};
+    // ── arrastrar para reordenar dentro de la MISMA sección ──
+    r.draggable=true;
+    r.addEventListener("dragstart",e=>{dragId=d.id;e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",d.id);}catch(_){}r.classList.add("dragging");});
+    r.addEventListener("dragend",()=>{dragId=null;document.querySelectorAll(".dishrow").forEach(x=>x.classList.remove("dragging","drop-before","drop-after"));});
+    r.addEventListener("dragover",e=>{const dr=dishes.find(x=>x.id===dragId);if(!dr||dr.sec!==d.sec||dr.id===d.id)return;e.preventDefault();const rc=r.getBoundingClientRect();const before=(e.clientY-rc.top)<rc.height/2;r.classList.toggle("drop-before",before);r.classList.toggle("drop-after",!before);});
+    r.addEventListener("dragleave",()=>{r.classList.remove("drop-before","drop-after");});
+    r.addEventListener("drop",e=>{const dr=dishes.find(x=>x.id===dragId);if(!dr||dr.sec!==d.sec){return;}e.preventDefault();const rc=r.getBoundingClientRect();const before=(e.clientY-rc.top)<rc.height/2;r.classList.remove("drop-before","drop-after");moveDish(dragId,d.id,before);});
     return r;
+  }
+  // reordena en el array plano (que es el ORDEN que pinta la web), no toca 'n'
+  function moveDish(draggedId,targetId,before){
+    if(draggedId===targetId)return;
+    const dr=dishes.find(x=>x.id===draggedId),tg=dishes.find(x=>x.id===targetId);
+    if(!dr||!tg||dr.sec!==tg.sec)return;
+    dishes.splice(dishes.indexOf(dr),1);
+    const ti=dishes.indexOf(tg);
+    dishes.splice(before?ti:ti+1,0,dr);
+    markDirty();renderList();
   }
   function renderList(){
     const list=$("#dishList");list.innerHTML="";
@@ -608,7 +642,7 @@
     }
     SECTIONS.forEach(sec=>{
       if(filter!=="Todas"&&filter!==sec)return;
-      const inSec=dishes.filter(d=>d.sec===sec&&!d.archived).sort((a,b)=>a.n-b.n);
+      const inSec=dishes.filter(d=>d.sec===sec&&!d.archived);
       if(!inSec.length)return;
       const lab=el("div","sec-label");lab.textContent=sec;list.appendChild(lab);
       inSec.forEach(d=>list.appendChild(makeRow(d)));
@@ -734,6 +768,9 @@
     $("#f_tag").value=d.tag;$("#f_tag_en").value=d.tag_en;
     $("#f_ingr").value=d.ingr;$("#f_ingr_en").value=d.ingr_en||d.ingr;
     $("#f_price").value=d.price;
+    const isDumpling=(SECTION_META[d.sec]&&SECTION_META[d.sec].id)==="dumplings";
+    $("#numGrp").hidden=!isDumpling;
+    $("#f_num").value=(d.n!=null?d.n:"");
     $("#sw_feat").setAttribute("aria-pressed",String(d.feat));
     $("#sw_avail").setAttribute("aria-pressed",String(d.avail));
     const arch=$("#archiveBtn");
@@ -792,6 +829,7 @@
     renderCard();});}
   bind("#f_name","name");bind("#f_name_en","name_en");bind("#f_tag","tag");bind("#f_tag_en","tag_en");
   bind("#f_ingr","ingr");bind("#f_ingr_en","ingr_en");bind("#f_price","price");
+  $("#f_num").addEventListener("input",e=>{const v=e.target.value.trim();const d=cur();if(d)d.n=v===""?0:(parseInt(v,10)||0);});
 
   $("#sw_feat").onclick=function(){const d=cur();d.feat=!d.feat;this.setAttribute("aria-pressed",String(d.feat));renderCard();};
   $("#sw_avail").onclick=function(){const d=cur();d.avail=!d.avail;this.setAttribute("aria-pressed",String(d.avail));renderCard();renderList();};
