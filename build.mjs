@@ -262,8 +262,16 @@ const ROOT_FILES = [
 for (const f of ROOT_FILES) {
   if (fs.existsSync(path.join(ROOT, f))) copyFile(f);
 }
-// Directorios de assets estáticos (img incluye favicons y og-image; admin = CMS).
-for (const d of ["img", "admin"]) {
+// Copia de la carta con nombre distinto: es el RESPALDO que sirve
+// functions/menu.json.js cuando la carta en vivo (Cloudflare KV) no está
+// disponible (aún sin configurar, o error). Ruta distinta de /menu.json para
+// que la función no se re-entre a sí misma al pedir el fallback.
+if (fs.existsSync(path.join(ROOT, "menu.json"))) {
+  fs.copyFileSync(path.join(ROOT, "menu.json"), path.join(DIST, "menu.base.json"));
+}
+// Directorios de assets estáticos (img incluye favicons y og-image; admin =
+// CMS Sveltia; panel = nuevo editor de carta, protegido por Cloudflare Access).
+for (const d of ["img", "admin", "panel"]) {
   if (fs.existsSync(path.join(ROOT, d))) copyDir(d);
 }
 
