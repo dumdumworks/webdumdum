@@ -1,5 +1,5 @@
 {
-  "updated": "Junio dosmil26 · IVA incluido",
+  "updated": "",
   "disclaimer": "<strong>Cada ración son 6 dumplings. Para 2</strong> personas, <strong>4 raciones</strong> es la <strong>cantidad mágica. 5</strong> es que <strong>venís con hambre. 6… 112</strong> 💀<br/>Dadle una pensada, <strong>que es pedido único</strong> 😉",
   "disclaimer_en": "Each portion is 6 dumplings. For 2 people, <strong>4 portions</strong> is the magic number. <strong>5</strong> means you came hungry. <strong>6… 112</strong> 💀<br/>Give it a think, <strong>it's a one-time order</strong> 😉",
   "sections": [
@@ -88,6 +88,31 @@
           "logo": ""
         },
         {
+          "id": "452f022d-eb1f-402f-ab69-d451d437769b",
+          "n": 3,
+          "name": "Parisien",
+          "name_en": "Parisien",
+          "tagline": "BOSQUE, MANTEQUILLA Y CLASE",
+          "tagline_en": "WOODLAND, BUTTER AND CLASS",
+          "ingredients": "Boletus · Trigueros · Salsa Café París · Mostaza encurtida · Avellanas · Brotes de guisante",
+          "ingredients_en": "Porcini · Wild Asparagus · Café de Paris Sauce · Pickled Mustard Seeds · Hazelnuts · Pea Shoots",
+          "price": "9,25",
+          "tags": [
+            "VEG",
+            "NEW"
+          ],
+          "alergenos": [
+            "gluten",
+            "mostaza",
+            "lacteos",
+            "frutos_cascara",
+            "pescado"
+          ],
+          "available": true,
+          "featured": true,
+          "image": "/img/dumplings/parisien.jpeg"
+        },
+        {
           "id": "pepito",
           "n": 2,
           "name": "Pepito de Ternera",
@@ -104,6 +129,27 @@
           ],
           "available": false,
           "image": "img/dumplings/pepito.jpg",
+          "logo": ""
+        },
+        {
+          "id": "sweetchili",
+          "n": 4,
+          "name": "Sweet Chilli Pork",
+          "name_en": "Sweet Chilli Pork",
+          "tagline": "UN POCO DULCE · OTRO POCO HOT",
+          "tagline_en": "A BIT SWEET. ANOTHER BIT HOT",
+          "ingredients": "Dumpling de cerdo · Pimiento · Salsa sweet chilli · Sésamo · Guindilla encurtida",
+          "ingredients_en": "Pork dumpling · Pepper · Sesame · Sweetchilli sauce · Pickled Chilli",
+          "price": "9,35",
+          "tags": [
+            "PICANTE",
+            "NEW"
+          ],
+          "alergenos": [
+            "gluten"
+          ],
+          "available": true,
+          "image": "img/dumplings/sweet.jpg",
           "logo": ""
         },
         {
@@ -126,27 +172,6 @@
           ],
           "available": false,
           "image": "img/dumplings/moussaka.jpg",
-          "logo": ""
-        },
-        {
-          "id": "sweetchili",
-          "n": 4,
-          "name": "Sweet Chilli Pork",
-          "name_en": "Sweet Chilli Pork",
-          "tagline": "UN POCO DULCE · OTRO POCO HOT",
-          "tagline_en": "A BIT SWEET. ANOTHER BIT HOT",
-          "ingredients": "Dumpling de cerdo · Pimiento · Salsa sweet chilli · Sésamo · Guindilla encurtida",
-          "ingredients_en": "Pork dumpling · Pepper · Sesame · Sweetchilli sauce · Pickled Chilli",
-          "price": "9,35",
-          "tags": [
-            "PICANTE",
-            "NEW"
-          ],
-          "alergenos": [
-            "gluten"
-          ],
-          "available": true,
-          "image": "img/dumplings/sweet.jpg",
           "logo": ""
         },
         {
