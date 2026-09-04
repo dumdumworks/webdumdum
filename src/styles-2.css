@@ -1758,6 +1758,12 @@
     color: var(--red);
     border-color: var(--red);
   }
+  /* Plato destacado: sus etiquetas SOBRE LA FOTO también con borde rojo. La regla
+     `.dish.is-featured .tag.limited` fuerza borde crema (pensada para la tarjeta
+     roja, no para la foto) y ganaba por especificidad; aquí la superamos. */
+  .dish.is-featured .dish-tags-overlay .tag {
+    border-color: var(--red);
+  }
   .dish.with-logo .dish-img > .logo-slot {
     display: none;
   }
