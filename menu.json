@@ -83,7 +83,7 @@
             "sulfitos"
           ],
           "available": true,
-          "featured": true,
+          "featured": false,
           "image": "/img/dumplings/pibil.jpg",
           "logo": ""
         },
