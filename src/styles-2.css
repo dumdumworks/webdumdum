@@ -687,6 +687,14 @@
     color: var(--red);
     border-color: var(--bg);
   }
+  /* VEG en destacado: pill crema con su VERDE de marca. Sin esto heredaba el
+     crema del texto de la tarjeta (.dish.is-featured * / .dish-card *) y "VEG"
+     quedaba crema sobre crema = invisible (solo se veia el emoji). */
+  .dish.is-featured .tag.veg {
+    background: var(--bg);
+    color: #1f8a5b;
+    border-color: var(--bg);
+  }
   /* Etiquetas neutras (VEG, etc.): transparente con borde y texto crema */
   .dish.is-featured .tag {
     background: transparent;
@@ -1741,8 +1749,13 @@
     gap: 4px;
     z-index: 2;
   }
+  /* Pastilla crema sobre la foto: el texto SIEMPRE en rojo. Sin fijar el color,
+     las etiquetas con texto crema por diseño (POR TIEMPO LIMITADO, DEL MES/TOP)
+     quedaban crema sobre crema = invisibles (pastilla vacía) en platos NO
+     destacados. Los destacados ya lo forzaban a rojo; ahora es coherente. */
   .dish-tags-overlay .tag {
     background: var(--bg);
+    color: var(--red);
   }
   .dish.with-logo .dish-img > .logo-slot {
     display: none;
@@ -1877,6 +1890,14 @@
   .dish.is-featured .tag.limited {
     background: var(--bg);
     color: var(--red);
+    border-color: var(--bg);
+  }
+  /* VEG en destacado: pill crema con su VERDE de marca. Sin esto heredaba el
+     crema del texto de la tarjeta (.dish.is-featured * / .dish-card *) y "VEG"
+     quedaba crema sobre crema = invisible (solo se veia el emoji). */
+  .dish.is-featured .tag.veg {
+    background: var(--bg);
+    color: #1f8a5b;
     border-color: var(--bg);
   }
 }
