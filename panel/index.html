@@ -578,6 +578,10 @@
   const $=s=>document.querySelector(s);
   const el=(t,c)=>{const e=document.createElement(t);if(c)e.className=c;return e;};
   const cur=()=>dishes.find(d=>d.id===selId);
+  // Normaliza la ruta de imagen a raíz-absoluta SOLO para mostrarla (no cambia lo
+  // que se guarda). El panel vive en /panel/, así que "img/x.jpg" (sin barra) se
+  // buscaría en /panel/img/x.jpg y daría imagen rota; con la barra apunta a la raíz.
+  const imgSrc=(p)=>!p?"":((/^(https?:)?\/\//.test(p)||p.charAt(0)==="/")?p:("/"+p));
 
   // ── sidebar tabs
   function renderTabs(){
@@ -600,7 +604,7 @@
     if(d.archived)r.classList.add("archived");
     const grip=el("span","grip");grip.textContent="⣿";
     const th=el("div","thumb");
-    const _src=d._preview||d.image;
+    const _src=d._preview||imgSrc(d.image);
     if(_src){th.style.backgroundImage=`url("${_src}")`;th.style.backgroundSize="cover";th.style.backgroundPosition="center";}
     else{th.classList.add("empty");th.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15l-5-5L5 21"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>';}
     const m=el("div","meta");
@@ -785,7 +789,7 @@
     const d=cur(),z=$("#photoZone"),acts=$("#pzActions");
     z.querySelectorAll("img").forEach(i=>i.remove());
     z.style.background="";
-    const src=d._preview||d.image;
+    const src=d._preview||imgSrc(d.image);
     if(src){
       z.classList.add("has-photo");acts.hidden=false;
       z.querySelector(".pz-inner").style.opacity="0";
@@ -801,7 +805,7 @@
   function renderCard(){
     const mount=$("#cardMount");if(!mount)return;const d=cur();if(!d)return;mount.innerHTML="";
     const card=el("div","dishcard"+(d.feat?" feat":"")+(d.avail?"":" sold"));
-    const _src=d._preview||d.image;
+    const _src=d._preview||imgSrc(d.image);
     const ph=el("div","dc-photo"+(_src?"":" empty"));
     if(_src){const im=new Image();im.src=_src;im.alt="";ph.appendChild(im);}
     else{ph.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15l-5-5L5 21"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>';}
