@@ -112,6 +112,27 @@
           "image": "/img/dumplings/parisien.jpeg"
         },
         {
+          "id": "d6211576-1ef7-47b1-8a25-9c64fc34f82f",
+          "n": 4,
+          "name": "Costilla Laqueada",
+          "name_en": "Glazed Ribs",
+          "tagline": "Suave y meloso",
+          "tagline_en": "melt-in-the-mouth",
+          "ingredients": "Costilla de cerdo a baja temperatura · Salsa laqueada · Lombarda encurtida · Col encurtida · Cebolla frita",
+          "ingredients_en": "Slow-cooked pork ribs · Lacquered sauce · Pickled red cabbage · Pickled cabbage · Fried onion",
+          "price": "10,25",
+          "tags": [],
+          "alergenos": [
+            "gluten",
+            "soja",
+            "sulfitos",
+            "sesamo"
+          ],
+          "available": true,
+          "featured": true,
+          "image": "/img/dumplings/costilla.jpg"
+        },
+        {
           "id": "pepito",
           "n": 2,
           "name": "Pepito de Ternera",
