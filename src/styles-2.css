@@ -1758,10 +1758,13 @@
     color: var(--red);
     border-color: var(--red);
   }
-  /* Plato destacado: sus etiquetas SOBRE LA FOTO también con borde rojo. La regla
-     `.dish.is-featured .tag.limited` fuerza borde crema (pensada para la tarjeta
-     roja, no para la foto) y ganaba por especificidad; aquí la superamos. */
-  .dish.is-featured .dish-tags-overlay .tag {
+  /* Plato destacado: sus etiquetas SOBRE LA FOTO también con borde rojo. Existe
+     una regla `.dish.is-featured .tag.hot/.tag.limited` (borde crema, para la
+     tarjeta roja) que va más abajo con la MISMA especificidad y ganaba por orden;
+     añadiendo `.dish-tags-overlay` subimos la especificidad y ganamos siempre,
+     sin depender del orden. Verificado en vivo por especificidad. */
+  .dish.is-featured .dish-tags-overlay .tag.hot,
+  .dish.is-featured .dish-tags-overlay .tag.limited {
     border-color: var(--red);
   }
   .dish.with-logo .dish-img > .logo-slot {
