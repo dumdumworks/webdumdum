@@ -1756,6 +1756,7 @@
   .dish-tags-overlay .tag {
     background: var(--bg);
     color: var(--red);
+    border-color: var(--red);
   }
   .dish.with-logo .dish-img > .logo-slot {
     display: none;
