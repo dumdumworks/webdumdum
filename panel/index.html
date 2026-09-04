@@ -214,6 +214,27 @@
   .chip .sw{width:8px;height:8px;border-radius:2px;background:currentColor;opacity:.5}
   .chip .ae{font-size:13px;line-height:1;filter:saturate(1)}
   .aler-chips{gap:7px}
+  /* Alérgenos colapsables: resumen + botón "Editar" que despliega las 14 */
+  .aler-head{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 14px;transition:.14s;cursor:pointer}
+  .aler-head:hover{border-color:var(--muted)}
+  .aler-head[aria-expanded="true"]{border-color:var(--red);border-bottom-left-radius:0;border-bottom-right-radius:0}
+  .aler-summary{font-size:13px;font-weight:600;color:var(--ink);line-height:1.45}
+  .aler-summary.empty{color:var(--muted);font-weight:400}
+  .aler-caret{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--red-ink);flex-shrink:0;white-space:nowrap}
+  .aler-chips:not([hidden]){margin-top:0;padding:12px;border:1px solid var(--red);border-top:none;border-radius:0 0 10px 10px;background:var(--panel-2)}
+  /* Multi-select tipo Sveltia (alérgenos) */
+  .msel{position:relative}
+  .msel-box{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:44px;padding:7px 9px;border:1px solid var(--line);border-radius:10px;background:var(--panel);cursor:text;transition:.14s}
+  .msel-box:focus-within{border-color:var(--red);box-shadow:0 0 0 3px color-mix(in srgb,var(--red) 14%,transparent)}
+  .msel-pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;padding:4px 5px 4px 10px;border-radius:8px;background:color-mix(in srgb,var(--red) 8%,var(--panel));border:1px solid color-mix(in srgb,var(--red) 28%,var(--line));color:var(--ink)}
+  .msel-pill .ae{font-size:12px}
+  .msel-x{border:none;background:transparent;color:var(--muted);font-size:16px;line-height:.8;cursor:pointer;padding:0 3px;border-radius:5px}
+  .msel-x:hover{color:var(--red);background:color-mix(in srgb,var(--red) 12%,transparent)}
+  .msel-input{flex:1;min-width:130px;border:none;outline:none;background:transparent;font-size:13.5px;color:var(--ink);padding:5px 3px;font-family:var(--sans)}
+  .msel-drop{position:absolute;top:calc(100% + 5px);left:0;right:0;z-index:30;max-height:250px;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow);padding:5px}
+  .msel-opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;border:none;border-radius:8px;padding:9px 11px;font-size:13.5px;color:var(--ink);cursor:pointer}
+  .msel-opt:hover{background:var(--panel-2)}
+  .msel-opt .ae{font-size:15px}
   .chip.aler[aria-pressed="true"]{background:color-mix(in srgb,var(--red) 8%,var(--panel));border-color:var(--red);color:var(--ink)}
   .aler-hint{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:8px;letter-spacing:.02em}
   .aler-hint code{color:var(--red-ink);font-family:var(--mono)}
@@ -422,10 +443,13 @@
                 <label>Etiquetas</label>
                 <div class="chips" id="chips"></div>
               </div>
-              <div class="field" style="margin-top:16px">
-                <label>Alérgenos <span class="flag">clica los que apliquen</span></label>
-                <div class="chips aler-chips" id="alerChips"></div>
-                <div class="aler-hint" id="alerHint"></div>
+            </div>
+
+            <div class="grp">
+              <div class="grp-label">Alérgenos</div>
+              <div class="msel">
+                <div class="msel-box" id="alerBox"></div>
+                <div class="msel-drop" id="alerDrop" hidden></div>
               </div>
             </div>
 
@@ -476,7 +500,7 @@
   let SECTION_META = {};    // título de sección -> {id, title_en, note, note_en}
   let dishes = [];          // modelo plano del editor
   let SECTIONS = [];        // títulos de sección, en orden
-  let selId = null, filter = "Todas", addingTag = false, addingSec = false, dirty = false;
+  let selId = null, filter = "Todas", addingTag = false, addingSec = false, dirty = false, alerOpen = false;
 
   const slug = (s) => (s||"").toString().toLowerCase().normalize("NFD")
     .replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || "seccion";
@@ -654,19 +678,48 @@
   }
 
   // ── alérgenos (seleccionables)
-  function renderAler(){
-    const wrap=$("#alerChips");wrap.innerHTML="";const d=cur();
-    ALLERGENS.forEach(a=>{
-      const b=el("button","chip aler");b.type="button";
-      b.setAttribute("aria-pressed",String(d.alerSel.includes(a.id)));
-      b.innerHTML=`<span class="ae">${a.e}</span>${a.k}`;
-      b.onclick=()=>{const i=d.alerSel.indexOf(a.id);if(i>=0)d.alerSel.splice(i,1);else d.alerSel.push(a.id);renderAler();};
-      wrap.appendChild(b);
+  // Multi-select de alérgenos estilo Sveltia: pastillas con × + desplegable con filtro.
+  function alerAvail(f){const d=cur();f=(f||"").toLowerCase();return ALLERGENS.filter(a=>!d.alerSel.includes(a.id) && a.k.toLowerCase().includes(f));}
+  function alerAdd(id){const d=cur();if(!d.alerSel.includes(id))d.alerSel.push(id);markDirty();alerOpen=true;renderAler();const i=$("#alerInput");if(i){i.value="";i.focus();}}
+  function alerRenderDrop(){
+    const drop=$("#alerDrop");if(!drop)return;
+    const inp=$("#alerInput");const f=inp?inp.value:"";
+    const opts=alerAvail(f);
+    drop.innerHTML="";
+    if(!alerOpen || !opts.length){drop.hidden=true;return;}
+    drop.hidden=false;
+    opts.forEach(a=>{
+      const o=el("button","msel-opt");o.type="button";
+      o.innerHTML=`<span class="ae">${a.e}</span>${a.k}`;
+      o.onmousedown=(e)=>{e.preventDefault();alerAdd(a.id);};   // mousedown: se adelanta al blur del input
+      drop.appendChild(o);
     });
-    const ids=d.alerSel;
-    $("#alerHint").innerHTML = ids.length
-      ? `Se guarda en la web como: <code>${ids.join(" · ")}</code>`
-      : "Ninguno seleccionado — alimenta el filtro de alérgenos de la web";
+  }
+  function renderAler(){
+    const box=$("#alerBox");if(!box)return;const d=cur();if(!d)return;
+    box.innerHTML="";
+    d.alerSel.forEach(id=>{
+      const a=ALLERGENS.find(x=>x.id===id);const label=a?a.k:id;
+      const pill=el("span","msel-pill");
+      pill.innerHTML=`<span class="ae">${a?a.e:""}</span>${label}`;
+      const x=el("button","msel-x");x.type="button";x.textContent="×";x.setAttribute("aria-label","Quitar "+label);
+      x.onmousedown=(e)=>{e.preventDefault();e.stopPropagation();const i=d.alerSel.indexOf(id);if(i>=0)d.alerSel.splice(i,1);markDirty();renderAler();const inp=$("#alerInput");if(inp)inp.focus();};
+      pill.appendChild(x);
+      box.appendChild(pill);
+    });
+    const inp=el("input","msel-input");inp.type="text";inp.id="alerInput";inp.autocomplete="off";
+    inp.placeholder=d.alerSel.length?"Añadir…":"Añade alérgenos…";
+    inp.oninput=alerRenderDrop;
+    inp.onfocus=()=>{alerOpen=true;alerRenderDrop();};
+    inp.onblur=()=>{setTimeout(()=>{alerOpen=false;alerRenderDrop();},130);};
+    inp.onkeydown=(e)=>{
+      if(e.key==="Enter"){e.preventDefault();const o=alerAvail(inp.value);if(o.length)alerAdd(o[0].id);}
+      else if(e.key==="Backspace"&&inp.value===""&&d.alerSel.length){d.alerSel.pop();markDirty();renderAler();const i2=$("#alerInput");if(i2)i2.focus();}
+      else if(e.key==="Escape"){inp.blur();}
+    };
+    box.appendChild(inp);
+    box.onclick=(e)=>{ if(e.target===box){const i=$("#alerInput");if(i)i.focus();} };
+    alerRenderDrop();
   }
 
   // ── editor
@@ -753,7 +806,7 @@
   // lista de la izquierda (elegir plato, cambiar de pestaña) NO cuenta como cambio.
   (function(){
     const ed=document.querySelector(".editor");
-    ed.addEventListener("input",markDirty,true);
+    ed.addEventListener("input",e=>{ if(e.target.id==="alerInput")return; markDirty(); },true);
     ed.addEventListener("click",e=>{ if(e.target.closest("button,.switch,.chip,.tf-dot,.cat-select")) markDirty(); },true);
   })();
 
