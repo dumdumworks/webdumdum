@@ -129,8 +129,7 @@
 
   /* ── Editor ──────────────────────────────── */
   .editor{overflow-y:auto;min-height:0;padding:22px 26px 60px;scrollbar-width:thin}
-  .editor-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:30px;max-width:1080px;margin:0 auto}
-  @media (max-width:1180px){.editor-grid{grid-template-columns:1fr;gap:24px}}
+  .editor-grid{display:block;max-width:760px;margin:0 auto}
 
   .ehead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
   .ehead .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--red-ink);font-weight:500}
@@ -450,13 +449,6 @@
             </div>
           </fieldset>
         </section>
-
-        <!-- Live preview -->
-        <aside class="preview-rail">
-          <div class="pv-label"><span class="live"></span> Vista previa en la web</div>
-          <div id="cardMount"></div>
-          <div class="pv-note">Lo que ves aquí es <b>exactamente</b> cómo aparece la ficha en dum-dum.es. Editas a la izquierda, se actualiza aquí y en la web.</div>
-        </aside>
       </div>
     </main>
   </div>
@@ -717,7 +709,7 @@
 
   // ── live card
   function renderCard(){
-    const d=cur();const mount=$("#cardMount");mount.innerHTML="";
+    const mount=$("#cardMount");if(!mount)return;const d=cur();if(!d)return;mount.innerHTML="";
     const card=el("div","dishcard"+(d.feat?" feat":"")+(d.avail?"":" sold"));
     const _src=d._preview||d.image;
     const ph=el("div","dc-photo"+(_src?"":" empty"));
