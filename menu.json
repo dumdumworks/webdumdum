@@ -117,11 +117,14 @@
           "name": "Costilla Laqueada",
           "name_en": "Glazed Ribs",
           "tagline": "Suave y meloso",
-          "tagline_en": "melt-in-the-mouth",
+          "tagline_en": "Melt-in-the-mouth",
           "ingredients": "Costilla de cerdo a baja temperatura · Salsa laqueada · Lombarda encurtida · Col encurtida · Cebolla frita",
           "ingredients_en": "Slow-cooked pork ribs · Lacquered sauce · Pickled red cabbage · Pickled cabbage · Fried onion",
           "price": "10,25",
-          "tags": [],
+          "tags": [
+            "NEW",
+            "POR TIEMPO LIMITADO"
+          ],
           "alergenos": [
             "gluten",
             "soja",
