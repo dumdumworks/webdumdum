@@ -1883,6 +1883,11 @@
     color: var(--bg);
     border-color: var(--bg);
   }
+  /* Borde EXTERIOR de la ficha destacada: rojo, como la foto y como los platos
+     normales. La regla general de arriba lo dejaba crema (invisible sobre la
+     página) y la ficha "flotaba" sin el trazo rojo que sí tiene la foto. Solo
+     afecta al borde de la .dish-card en sí; los separadores de fila siguen crema. */
+  .dish.is-featured .dish-card { border-color: var(--red); }
 
   /* ── EXCEPCIONES ─────────────────────────────────────────────── */
   /* Separadores de fila: borde crema (ya cubierto por la regla, se
