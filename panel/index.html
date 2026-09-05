@@ -851,7 +851,25 @@
 
   $("#sw_feat").onclick=function(){const d=cur();d.feat=!d.feat;this.setAttribute("aria-pressed",String(d.feat));renderCard();};
   $("#sw_avail").onclick=function(){const d=cur();d.avail=!d.avail;this.setAttribute("aria-pressed",String(d.avail));renderList();};
-  $("#archiveBtn").onclick=()=>{const d=cur();d.archived=!d.archived;filter=d.archived?"Archivados":"Todas";renderTabs();renderList();renderEditor();};
+  $("#archiveBtn").onclick=()=>{
+    const d=cur();if(!d)return;
+    d.archived=!d.archived;markDirty();
+    if(d.archived){
+      // Archivado: se quita de la vista, pero NOS QUEDAMOS en la carta (saltamos al plato
+      // más cercano no archivado). Así no se pierde al usuario en “Archivados”.
+      const idx=dishes.findIndex(x=>x.id===d.id);let near=null;
+      for(let i=idx+1;i<dishes.length;i++){if(!dishes[i].archived){near=dishes[i];break;}}
+      if(!near)for(let i=idx-1;i>=0;i--){if(!dishes[i].archived){near=dishes[i];break;}}
+      selId=near?near.id:d.id;
+      filter="Todas";
+      showToast("Plato archivado — lo tienes en 📦 Archivados");
+    }else{
+      // Restaurado: vuelve a su sección y lo mostramos de nuevo en la carta.
+      filter="Todas";
+      showToast("Plato restaurado a su sección");
+    }
+    renderTabs();renderList();renderEditor();
+  };
 
   // ── estado de guardado + helpers ──
   const pill=$("#savePill"),saveTxt=$("#saveTxt"),toast=$("#toast"),toastTxt=$("#toastTxt");
