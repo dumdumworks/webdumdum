@@ -257,7 +257,12 @@ const copyDir = (rel) => fs.cpSync(path.join(ROOT, rel), path.join(DIST, rel), {
 // Datos + ficheros sueltos de raíz habituales (se copian los que existan).
 const ROOT_FILES = [
   "menu.json", "galerias.json", "eventos.json", "robots.txt", "sitemap.xml",
-  "favicon.ico", "site.webmanifest", "manifest.json", "browserconfig.xml",
+  "favicon.ico",
+  "favicon-48x48.png",
+  "favicon-192x192.png",
+  "apple-touch-icon.png",
+  "og-image.png",
+  "site.webmanifest", "manifest.json", "browserconfig.xml",
 ];
 for (const f of ROOT_FILES) {
   if (fs.existsSync(path.join(ROOT, f))) copyFile(f);
