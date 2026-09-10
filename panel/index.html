@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Editor de Carta · DUM DUM</title>
+<link rel="icon" href="/favicon.ico?v=3" sizes="any" />
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=3" />
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png?v=3" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
@@ -56,6 +60,12 @@
     color:#fff;display:grid;place-items:center;font-family:var(--mono);
     font-weight:700;font-size:15px;letter-spacing:-.5px;flex-shrink:0;
   }
+  .brand .mark img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+}
   .brand .name{font-size:15px;letter-spacing:-.2px;line-height:1}
   .brand .sub{font-family:var(--mono);font-size:10px;color:var(--muted);
     text-transform:uppercase;letter-spacing:.14em;margin-top:3px}
@@ -369,7 +379,7 @@
 <div class="app">
   <header class="topbar">
     <div class="brand">
-      <div class="mark">DD</div>
+      <div class="mark"><img src="/favicon-192x192.png?v=3" alt="DUM DUM"></div>
       <div>
         <div class="name">DUM DUM</div>
         <div class="sub">Editor de carta</div>
