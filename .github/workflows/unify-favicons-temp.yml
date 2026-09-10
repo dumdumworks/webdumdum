@@ -1,0 +1,51 @@
+name: Unify favicons temporary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/unify-favicons-temp.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-favicons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update panel and admin favicons
+        shell: python
+        run: |
+          from pathlib import Path
+
+          favicons = '''<link rel="icon" href="/favicon.ico?v=3" sizes="any" />
+          <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=3" />
+          <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png?v=3" />
+          <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />'''
+
+          panel = Path('panel/index.html')
+          text = panel.read_text(encoding='utf-8')
+          marker = '<title>Editor de Carta · DUM DUM</title>'
+          if '/favicon-48x48.png?v=3' not in text:
+              if marker not in text:
+                  raise SystemExit('Panel title marker not found')
+              text = text.replace(marker, marker + '\n' + favicons, 1)
+              panel.write_text(text, encoding='utf-8')
+
+          admin = Path('admin/index.html')
+          text = admin.read_text(encoding='utf-8')
+          old = '<link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico" />'
+          if old in text:
+              text = text.replace(old, favicons, 1)
+              admin.write_text(text, encoding='utf-8')
+          elif '/favicon-48x48.png?v=3' not in text:
+              raise SystemExit('Admin favicon marker not found')
+      - name: Commit changes and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/unify-favicons-temp.yml
+          git add panel/index.html admin/index.html
+          git commit -m "fix: use site favicons in panel and admin"
+          git push
