@@ -433,6 +433,14 @@ function Menu() {
               <div className="menu-sub">{t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated")} {mesEnCurso(lang === "en" ? "en-US" : "es-ES")} {window.i18n.autoLocalize("dosmil" + anioEnCursoYY())} · {t("IVA incluido", "VAT included")}</div>
             </div>
           </div>
+           <div className="menu-foot-left" style={{ marginTop: 24 }}>
+            {/* Botón que abre la ventana de alérgenos (selector + tabla general) */}
+            <a className="btn menu-foot-btn" href="#" onClick={(e) => { e.preventDefault(); setSelAlerg([]); setAlergView("select"); }}>{t("Alérgenos", "Allergens")} →</a>
+            <div className="menu-foot-text">{t(
+              "Si tienes alguna alergia, alguna intolerancia o, simplemente, dudas, pregúntanos, que somos muy majos.",
+              "If you have any allergy, any intolerance or, simply, questions, just ask us — we're really nice."
+            )}</div>
+          </div>
         </div>
 
         {/* Disclaimer editable en Sveltia en AMBOS idiomas: tf() usa disclaimer_en
@@ -539,14 +547,7 @@ function Menu() {
         </aside>
 
         <div className="menu-foot">
-          <div className="menu-foot-left">
-            {/* Botón que abre la ventana de alérgenos (selector + tabla general) */}
-            <a className="btn menu-foot-btn" href="#" onClick={(e) => { e.preventDefault(); setSelAlerg([]); setAlergView("select"); }}>{t("Alérgenos", "Allergens")} →</a>
-            <div className="menu-foot-text">{t(
-              "Si tienes alguna alergia, alguna intolerancia o, simplemente, dudas, pregúntanos, que somos muy majos.",
-              "If you have any allergy, any intolerance or, simply, questions, just ask us — we're really nice."
-            )}</div>
-          </div>
+         
           {isMobile &&
           <button
             className="btn menu-foot-btn menu-top-btn"
