@@ -1861,8 +1861,8 @@ function Eventos() {
         <div className="ev-hero-row" style={{ marginTop: 32, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 32 }}>
           <p className="body" style={{ fontSize: 18, flex: "1 1 420px", minWidth: 0, margin: 0 }}>
             {eb("hero_body", t(
-              <React.Fragment>A 7 minutos del Santiago Bernabéu y diseñado por <strong>Nota Estudio</strong>. 55 m² diáfanos, cocina abierta, hasta 35 personas, equipo de sonido potente y luz pensada. Un sitio a la altura de tu evento.</React.Fragment>,
-              <React.Fragment>A 7-minute walk from Santiago Bernabéu, designed by <strong>Nota Estudio</strong>. 55 m² open-plan, open kitchen, up to 35 people, a powerful sound system and considered lighting. A place worthy of your event.</React.Fragment>
+              <React.Fragment>A 5 minutos del Santiago Bernabéu y diseñado por <strong>Nota Estudio</strong>. 55 m² diáfanos, cocina abierta, hasta 40 personas sentadas o 60 de pie, equipo de sonido potente y luz pensada. Un sitio a la altura de tu evento.</React.Fragment>,
+              <React.Fragment>A 5-minute walk from Santiago Bernabéu, designed by <strong>Nota Estudio</strong>. 55 m² open-plan, open kitchen, up to 40 people seated or 60 standing, a powerful sound system and considered lighting. A place worthy of your event.</React.Fragment>
             ))}
           </p>
         </div>
