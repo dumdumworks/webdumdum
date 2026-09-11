@@ -31,7 +31,7 @@ export async function onRequestGet({ env }) {
   </url>
   <url>
     <loc>https://dum-dum.es/eventos</loc>
-    <lastmod>2026-07-17</lastmod>
+    <lastmod>2026-09-11</lastmod>
   </url>
   <url>
     <loc>https://dum-dum.es/contacto</loc>
