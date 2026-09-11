@@ -46,6 +46,17 @@ export async function onRequestPost({ env, request }) {
     return json({ error: "Falta 'sections' (no parece una carta válida)." }, 400);
   }
 
+    const savedAt = new Date().toISOString();
+  data.updated = savedAt.slice(0, 10);
+
   await env.MENU.put("current", JSON.stringify(data));
-  return json({ ok: true, savedAt: new Date().toISOString(), platos: data.sections.reduce((n, s) => n + (s.items ? s.items.length : 0), 0) });
+
+  return json({
+    ok: true,
+    savedAt,
+    platos: data.sections.reduce(
+      (n, s) => n + (s.items ? s.items.length : 0),
+      0
+    ),
+  });
 }
