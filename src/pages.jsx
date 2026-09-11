@@ -421,28 +421,39 @@ function Menu() {
     <div data-screen-label="menu">
       <div className="menu-shell">
         <div className="menu-head">
-          <div className="row between">
-            <div>
-              <h1 className="menu-h">{t("Carta", "Menu")}</h1>
-              {/* MES y AÑO son SIEMPRE automáticos (hora de Madrid): mes vía
-                  mesEnCurso() y año como "DOSMIL"+2 dígitos (autoLocalize lo pasa
-                  a "TWENTY26" en EN). El campo `updated` de menu.json YA NO
-                  controla la fecha del subtítulo — si un editor lo cambia en
-                  Sveltia, aquí no tiene efecto (es intencional). El resto del
-                  texto ("· Actualizada", "· IVA incluido") es fijo. */}
-              <div className="menu-sub">{t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated")} {mesEnCurso(lang === "en" ? "en-US" : "es-ES")} {window.i18n.autoLocalize("dosmil" + anioEnCursoYY())} · {t("IVA incluido", "VAT included")}</div>
-            </div>
-          </div>
-           <div className="menu-foot-left" style={{ marginTop: 24 }}>
-            {/* Botón que abre la ventana de alérgenos (selector + tabla general) */}
-            <a className="btn menu-foot-btn" href="#" onClick={(e) => { e.preventDefault(); setSelAlerg([]); setAlergView("select"); }}>{t("Alérgenos", "Allergens")} →</a>
-            <div className="menu-foot-text">{t(
-              "Si tienes alguna alergia, alguna intolerancia o, simplemente, dudas, pregúntanos, que somos muy majos.",
-              "If you have any allergy, any intolerance or, simply, questions, just ask us — we're really nice."
-            )}</div>
-          </div>
-        </div>
+  <div className="row between menu-head-row">
+    <div>
+      <h1 className="menu-h">{t("Carta", "Menu")}</h1>
 
+      <div className="menu-sub">
+        {t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated")}{" "}
+        {mesEnCurso(lang === "en" ? "en-US" : "es-ES")}{" "}
+        {window.i18n.autoLocalize("dosmil" + anioEnCursoYY())} ·{" "}
+        {t("IVA incluido", "VAT included")}
+      </div>
+    </div>
+
+    <div className="menu-foot-left">
+      <a
+        className="btn menu-foot-btn"
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          setSelAlerg([]);
+          setAlergView("select");
+        }}>
+        {t("Alérgenos", "Allergens")} →
+      </a>
+
+      <div className="menu-foot-text">
+        {t(
+          "Si tienes alguna alergia, alguna intolerancia o, simplemente, dudas, pregúntanos, que somos muy majos.",
+          "If you have any allergy, any intolerance or, simply, questions, just ask us — we're really nice."
+        )}
+      </div>
+    </div>
+  </div>
+</div>
         {/* Disclaimer editable en Sveltia en AMBOS idiomas: tf() usa disclaimer_en
             si tiene contenido y cae al español si no (mismo patrón que el resto de
             campos). Los dos pasan por el saneador, porque los dos vienen del CMS.
