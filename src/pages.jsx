@@ -1006,7 +1006,7 @@ function Locales() {
               <b>{t("Dirección", "Address")}</b><div>Infanta Mercedes, 17 · 28020 Madrid</div>
               <b>{t("Metro", "Metro")}</b><div>Tetuán · Estrecho</div>
               <b>{t("Horario", "Hours")}</b><div>13.00–15.39 / 20.00–22.39</div>
-              <b>{t("Aforo", "Capacity")}</b><div>{t("~40 comensales", "~40 seats")}</div>
+              <b>{t("Aforo", "Capacity")}</b><div>{t("~40 sentados / 60 de pie", "~40 seated / 60 standing")}</div>
             </div>
 
             <div className="locale-btns" style={{ marginTop: 24 }}>
