@@ -88,6 +88,9 @@
         gtag('event', 'llamar', { local: local });
       } else if (href.indexOf('square.site') !== -1) {
         gtag('event', 'take_away', { destino: 'square' });
+      } else if (href.indexOf('glovoapp.com') !== -1) {
+        // Glovo tiene una sola tienda para Madrid: no hay local que distinguir.
+        gtag('event', 'glovo');
       } else if (href.indexOf('ubereats.com') !== -1) {
         var loc = href.indexOf('bernabeu') !== -1 ? 'bernabeu'
                 : href.indexOf('chamberi') !== -1 ? 'chamberi' : 'general';
