@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DUM DUM · vista móvil</title>
+<style>
+  :root { --chrome: #3a3a3c; --bisel: #0e0e10; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #6f6f74;
+    font: 500 11px/1.25 "JetBrains Mono", ui-monospace, monospace;
+    color: #fff;
+    display: flex;
+    overflow: hidden;
+  }
+  /* Los controles van en columna: la altura es el recurso escaso aquí, y en
+     horizontal se comían la que necesita el teléfono. */
+  .barra {
+    flex: 0 0 auto;
+    width: 132px;
+    padding: 12px 10px;
+    display: flex; flex-direction: column; gap: 5px;
+    background: rgba(0,0,0,0.24);
+    overflow-y: auto;
+  }
+  .barra h2 {
+    font: inherit; text-transform: uppercase; letter-spacing: 0.08em;
+    opacity: 0.5; margin: 10px 0 2px;
+  }
+  .barra h2:first-child { margin-top: 0; }
+  button {
+    font: inherit; color: #fff; cursor: pointer; text-align: left;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 6px;
+    padding: 6px 9px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  button:hover { background: rgba(255,255,255,0.22); }
+  button[aria-pressed="true"] { background: #ff001e; border-color: #ff001e; }
+  .dato { margin-top: auto; padding-top: 12px; opacity: 0.55; line-height: 1.5; }
+
+  /* Panel estrecho (la conversación ocupa la mitad de la ventana): la columna de
+     controles se llevaba un tercio del ancho justo cuando menos sobra. Pasa a
+     fila, y el teléfono se queda con todo lo demás. */
+  @media (max-width: 760px) {
+    body { flex-direction: column; }
+    .barra {
+      width: 100%;
+      flex-direction: row; flex-wrap: wrap; align-items: center;
+      gap: 4px; padding: 7px 8px;
+      overflow: visible;
+    }
+    .barra h2 { margin: 0 2px; }
+    .barra h2:first-child { margin-left: 0; }
+    button { padding: 4px 7px; }
+    .dato { margin: 0 0 0 auto; padding: 0; }
+  }
+
+  /* Escenario. En modo ajustado no hay scroll; en 1:1 se desplaza. */
+  /* Ajustado no necesita scroll, y además lo evita a propósito: al aparecer la
+     barra de scroll el hueco se estrechaba, los controles pasaban de tres filas
+     a cuatro, eso robaba 21px de alto y el teléfono ya no cabía. Un bucle. */
+  .escena { flex: 1 1 auto; display: grid; place-items: center; overflow: hidden; padding: 8px; }
+  .escena.uno { overflow: auto; }
+  /* En 1:1 el teléfono puede ser más grande que el hueco: se ancla arriba a la
+     izquierda para que el scroll llegue a todo en vez de recortar por los dos
+     lados a la vez. */
+  .escena.uno { place-items: start center; }
+  .escena.uno.desborda { place-items: start start; }
+  /* scale() no cambia el sitio que el elemento ocupa en el flujo: sin este
+     envoltorio la escena seguía contando 868px de alto, generaba scroll y al
+     centrar recortaba el teléfono por arriba. El envoltorio SÍ mide lo
+     escalado. */
+  .marco { position: relative; flex: 0 0 auto; }
+  .marco > .tel { position: absolute; top: 0; left: 0; transform-origin: top left; }
+  .tel {
+    position: relative;
+    padding: 11px;
+    background: var(--bisel);
+    border-radius: 54px;
+    box-shadow: 0 0 0 2px var(--chrome), 0 30px 70px rgba(0,0,0,0.45);
+    transform-origin: center center;
+  }
+  .escena.uno .tel { transform-origin: top center; }
+  .tel::before, .tel::after {
+    content: ""; position: absolute; width: 3px; background: var(--chrome); border-radius: 2px;
+  }
+  .tel::before { left: -3px; top: 120px; height: 62px; box-shadow: 0 78px 0 var(--chrome); }
+  .tel::after  { right: -3px; top: 150px; height: 96px; }
+
+  /* La pantalla NO es el viewport: arriba va la barra de estado y abajo la del
+     gesto de inicio, igual que en el teléfono. Si el iframe ocupara los 844
+     enteros, la isla taparía la topbar de la web y parecería un fallo nuestro
+     cuando en un iPhone real la página empieza por debajo. */
+  .pantalla {
+    position: relative; border-radius: 43px; overflow: hidden; background: #fffaf3;
+    display: flex; flex-direction: column;
+  }
+  .estado, .home { flex: 0 0 auto; position: relative; background: #fffaf3; }
+  .estado { height: 59px; }
+  .home { height: 34px; }
+  iframe { display: block; border: 0; flex: 1 1 auto; }
+  .isla {
+    position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+    width: 116px; height: 32px; background: #000; border-radius: 999px;
+  }
+  .gesto {
+    position: absolute; bottom: 9px; left: 50%; transform: translateX(-50%);
+    width: 138px; height: 5px; border-radius: 999px; background: rgba(0,0,0,0.32);
+  }
+  .hora {
+    position: absolute; top: 20px; left: 34px;
+    font: 600 15px/1 -apple-system, "Helvetica Neue", sans-serif;
+    color: #ff001e; letter-spacing: 0.01em;
+  }
+</style>
+</head>
+<body>
+
+<div class="barra">
+  <h2>Pantalla</h2>
+  <button data-w="375" data-h="812">375 · SE</button>
+  <button data-w="390" data-h="844">390 · 15</button>
+  <button data-w="430" data-h="932">430 · Max</button>
+  <h2>Escala</h2>
+  <button id="btn-ajuste">Que quepa</button>
+  <button id="btn-uno">1:1 real</button>
+  <h2>Ruta</h2>
+  <button data-r="/locales/chamberi">Chamberí</button>
+  <button data-r="/locales/bernabeu">Bernabéu</button>
+  <button data-r="/locales">Locales</button>
+  <button data-r="/menu">Carta</button>
+  <button data-r="/eventos">Eventos</button>
+  <button data-r="/">Home</button>
+  <div class="dato" id="dato"></div>
+</div>
+
+<div class="escena" id="escena">
+ <div class="marco" id="marco">
+  <div class="tel" id="tel">
+    <div class="pantalla" id="pantalla">
+      <div class="estado"><span class="hora">22.39</span><div class="isla"></div></div>
+      <iframe id="vista" title="Vista móvil"></iframe>
+      <div class="home"><div class="gesto"></div></div>
+    </div>
+  </div>
+ </div>
+</div>
+
+<script>
+  const escena = document.getElementById("escena");
+  const tel = document.getElementById("tel");
+  const marco = document.getElementById("marco");
+  const pantalla = document.getElementById("pantalla");
+  const vista = document.getElementById("vista");
+  const dato = document.getElementById("dato");
+  let W = 390, H = 844, ruta = "/locales/chamberi", uno = false;  // arranca ajustado
+
+  // El escalado es SOLO visual: el iframe sigue midiendo W px de ancho, así que
+  // la maquetación es exactamente la del teléfono. En 1:1 no se escala nada y el
+  // marco se desplaza, para poder juzgar tamaños de texto reales.
+  function ajustar() {
+    const UTIL = H - 59 - 34;   // alto real de la web, sin las dos franjas
+    pantalla.style.width = W + "px";
+    pantalla.style.height = H + "px";
+    vista.style.width = W + "px";
+    vista.style.height = UTIL + "px";
+    escena.classList.toggle("uno", uno);
+    // Se mide a escala 1: offsetWidth/Height ignoran el transform, pero el
+    // envoltorio no, y hay que darle el tamaño ya escalado.
+    tel.style.transform = "scale(1)";
+    // El envoltorio se encoge a cero ANTES de medir: si ocupa sitio, la escena
+    // tiene scroll mientras se mide y el hueco sale 21px más corto de lo real.
+    marco.style.width = marco.style.height = "0px";
+    escena.classList.toggle("desborda", uno && tel.offsetWidth > escena.clientWidth - 16);
+    let k = 1;
+    if (!uno) {
+      k = Math.min(1,
+        (escena.clientHeight - 24) / tel.offsetHeight,
+        (escena.clientWidth - 16) / tel.offsetWidth);
+    }
+    tel.style.transform = "scale(" + k + ")";
+    marco.style.width = Math.round(tel.offsetWidth * k) + "px";
+    marco.style.height = Math.round(tel.offsetHeight * k) + "px";
+    dato.textContent = W + " × " + UTIL + " de web"
+      + (k < 1 ? " · vista al " + Math.round(k * 100) + "%" : " · tamaño real")
+      + (uno && tel.offsetWidth > escena.clientWidth - 16
+          ? " · no cabe: desplázate o ensancha el panel" : "");
+  }
+  function marcar() {
+    document.querySelectorAll("button[data-w]").forEach(b =>
+      b.setAttribute("aria-pressed", String(+b.dataset.w === W)));
+    document.querySelectorAll("button[data-r]").forEach(b =>
+      b.setAttribute("aria-pressed", String(b.dataset.r === ruta)));
+    document.getElementById("btn-uno").setAttribute("aria-pressed", String(uno));
+    document.getElementById("btn-ajuste").setAttribute("aria-pressed", String(!uno));
+  }
+  document.querySelectorAll("button[data-w]").forEach(b => b.onclick = () => {
+    W = +b.dataset.w; H = +b.dataset.h; marcar(); ajustar();
+  });
+  document.querySelectorAll("button[data-r]").forEach(b => b.onclick = () => {
+    ruta = b.dataset.r; vista.src = ruta; marcar(); ajustar();
+  });
+  document.getElementById("btn-uno").onclick = () => { uno = true; marcar(); ajustar(); };
+  document.getElementById("btn-ajuste").onclick = () => { uno = false; marcar(); ajustar(); };
+  addEventListener("resize", ajustar);
+  vista.src = ruta;
+  marcar();
+  ajustar();
+</script>
+</body>
+</html>

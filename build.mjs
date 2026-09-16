@@ -542,9 +542,26 @@ fs.writeFileSync(path.join(DIST, "_headers"), `# Generado por build.mjs.
   Cross-Origin-Opener-Policy: same-origin-allow-popups
 `);
 
+// ── Herramientas de revisión (SOLO en local) ─────────────────
+// dev/ tiene el visor de móvil (marco.html). Se copia a dist/ para poder
+// abrirlo en el servidor de pruebas, pero NUNCA en el build de Cloudflare: no
+// pinta nada en producción. CF_PAGES solo existe allí.
+// Antes vivía suelto en dist/, que este mismo script borra al empezar, así que
+// desaparecía en cada compilación.
+const esLocal = !process.env.CF_PAGES;
+let devCopiados = 0;
+if (esLocal && fs.existsSync(path.join(ROOT, "dev"))) {
+  for (const f of fs.readdirSync(path.join(ROOT, "dev"))) {
+    if (!f.endsWith(".html")) continue;
+    fs.copyFileSync(path.join(ROOT, "dev", f), path.join(DIST, f));
+    devCopiados++;
+  }
+}
+
 // ── Resumen ──────────────────────────────────────────────────
 const kb = (b) => (b.length / 1024).toFixed(1) + "kB";
 console.log("BUILD OK → dist/");
+if (devCopiados) console.log(`  dev/ → ${devCopiados} herramienta(s) de revisión (no se publican)`);
 console.log("  " + appName + " (" + kb(appBuf) + ")");
 console.log("  " + cssName + " (" + kb(cssBuf) + ")");
 console.log("  vendor React+ReactDOM (SRI ok)");
