@@ -253,6 +253,29 @@ function Menu() {
   const [selAlerg, setSelAlerg] = React.useState([]);
   const toggleSelAlerg = (id) =>
     setSelAlerg((s) => s.includes(id) ? s.filter(x => x !== id) : [...s, id]);
+  // Abre la ventana en la pestaña del selector, siempre sin marcas previas.
+  // Lo usan los DOS accesos (el botón de la cabecera en desktop y el FAB).
+  const abrirAlergenos = (e) => {
+    if (e) e.preventDefault();
+    setSelAlerg([]);
+    setAlergView("select");
+  };
+
+  // Relevo del acceso a alérgenos (solo cuenta en desktop, ver styles-2.css):
+  // mientras el botón de la cabecera se ve, el flotante está oculto; en cuanto
+  // sale de pantalla, entra el flotante. Así nunca hay dos accesos iguales a la
+  // vez. En móvil el botón de cabecera va con display:none, así que nunca
+  // intersecta y el flotante queda visible durante toda la carta — que es justo
+  // lo que se busca ahí; aun así el CSS de móvil no depende de esta clase.
+  const alergDeskRef = React.useRef(null);
+  const [alergDeskVisible, setAlergDeskVisible] = React.useState(true);
+  React.useEffect(() => {
+    const el = alergDeskRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([entry]) => setAlergDeskVisible(entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   // Degradado inferior: se oculta cuando el scroll llega al final (para no
   // "mentir" indicando más contenido cuando ya no lo hay).
@@ -421,39 +444,32 @@ function Menu() {
     <div data-screen-label="menu">
       <div className="menu-shell">
         <div className="menu-head">
-  <div className="row between menu-head-row">
-    <div>
-      <h1 className="menu-h">{t("Carta", "Menu")}</h1>
+          <div className="row between menu-head-row">
+            <div>
+              <h1 className="menu-h">{t("Carta", "Menu")}</h1>
+              {/* MES y AÑO son SIEMPRE automáticos (hora de Madrid): mes vía
+                  mesEnCurso() y año como "DOSMIL"+2 dígitos (autoLocalize lo pasa
+                  a "TWENTY26" en EN). El campo `updated` de menu.json YA NO
+                  controla la fecha del subtítulo — si un editor lo cambia en el
+                  panel, aquí no tiene efecto (es intencional). El resto del
+                  texto ("· Actualizada", "· IVA incluido") es fijo. */}
+              <div className="menu-sub">
+                {t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated")}{" "}
+                {mesEnCurso(lang === "en" ? "en-US" : "es-ES")}{" "}
+                {window.i18n.autoLocalize("dosmil" + anioEnCursoYY())} ·{" "}
+                {t("IVA incluido", "VAT included")}
+              </div>
+            </div>
 
-      <div className="menu-sub">
-        {t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated")}{" "}
-        {mesEnCurso(lang === "en" ? "en-US" : "es-ES")}{" "}
-        {window.i18n.autoLocalize("dosmil" + anioEnCursoYY())} ·{" "}
-        {t("IVA incluido", "VAT included")}
-      </div>
-    </div>
-
-    <div className="menu-foot-left">
-      <a
-        className="btn menu-foot-btn"
-        href="#"
-        onClick={(e) => {
-          e.preventDefault();
-          setSelAlerg([]);
-          setAlergView("select");
-        }}>
-        {t("Alérgenos", "Allergens")} →
-      </a>
-
-      <div className="menu-foot-text">
-        {t(
-          "Si tienes alguna alergia, alguna intolerancia o, simplemente, dudas, pregúntanos, que somos muy majos.",
-          "If you have any allergy, any intolerance or, simply, questions, just ask us — we're really nice."
-        )}
-      </div>
-    </div>
-  </div>
-</div>
+            {/* Alérgenos · en DESKTOP vive aquí, junto al titular. En MÓVIL este
+                botón se oculta por CSS y su sitio lo ocupa el FAB flotante del
+                final del componente, para no empujar los platos fuera de la
+                primera pantalla (la carta se lee desde el QR de la mesa). */}
+            <a className="btn menu-foot-btn menu-alerg-desk" href="#" onClick={abrirAlergenos} ref={alergDeskRef}>
+              {t("Alérgenos", "Allergens")} →
+            </a>
+          </div>
+        </div>
         {/* Disclaimer editable en Sveltia en AMBOS idiomas: tf() usa disclaimer_en
             si tiene contenido y cae al español si no (mismo patrón que el resto de
             campos). Los dos pasan por el saneador, porque los dos vienen del CMS.
@@ -558,27 +574,48 @@ function Menu() {
         </aside>
 
         {isMobile &&
-  <div className="menu-foot">
-    <button
-      className="btn menu-foot-btn menu-top-btn"
-      type="button"
-      onClick={() => {
-        const start = window.scrollY;
-        const duration = 900;
-        const t0 = performance.now();
-        const ease = (t) => 1 - Math.pow(1 - t, 3);
-        const step = (now) => {
-          const p = Math.min((now - t0) / duration, 1);
-          window.scrollTo(0, start - start * ease(p));
-          if (p < 1) requestAnimationFrame(step);
-        };
-        requestAnimationFrame(step);
-      }}>
-      {t("Volver arriba", "Back to top")} <span className="menu-top-arrow" aria-hidden="true">↑</span>
-    </button>
-  </div>
-}
+          <div className="menu-foot">
+            <button
+              className="btn menu-foot-btn menu-top-btn"
+              type="button"
+              onClick={() => {
+                const start = window.scrollY;
+                const duration = 900;
+                const t0 = performance.now();
+                // mismo easeOutCubic que el resto de scrolls de la web
+                const ease = (t) => 1 - Math.pow(1 - t, 3);
+                const step = (now) => {
+                  const p = Math.min((now - t0) / duration, 1);
+                  window.scrollTo(0, start - start * ease(p));
+                  if (p < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+              }}>
+              {t("Volver arriba", "Back to top")} <span className="menu-top-arrow" aria-hidden="true">↑</span>
+            </button>
+          </div>
+        }
       </div>
+
+      {/* Acceso flotante a los alérgenos. En móvil está siempre (el botón de la
+          cabecera se oculta); en desktop releva a ese botón cuando sale de
+          pantalla. Ver .alerg-fab en styles-2.css.
+          Se desmonta con la ventana abierta: el overlay solo tiñe al 40%, así que
+          si no, el botón se sigue intuyendo bajo su propia ventana. */}
+      {!alergView &&
+      <button
+        type="button"
+        className={"alerg-fab" + (alergDeskVisible ? "" : " is-on")}
+        onClick={abrirAlergenos}
+        aria-label={t("Ver alérgenos", "View allergens")}>
+        <span className="alerg-fab-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="9" /><path d="M12 8h.01" /><path d="M11 12h1v4h1" />
+          </svg>
+        </span>
+        <span className="alerg-fab-txt">{t("Alérgenos", "Allergens")}</span>
+      </button>
+      }
 
       {photoIdx !== null && gallery.length > 0 &&
         <DishLightbox

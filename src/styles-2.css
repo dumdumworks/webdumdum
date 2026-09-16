@@ -858,25 +858,7 @@
   justify-content: space-between;
   gap: 24px;
 }
-.menu-foot-left {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 24px;
-  flex: 1;
-  min-width: 0;
-}
 .menu-foot-btn { flex-shrink: 0; color: var(--red); border-color: var(--red); }
-.menu-foot-text {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-weight: 500;
-  font-size: 11px;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  color: var(--red);
-  line-height: 1.5;
-}
 /* Botón "Volver arriba" · se renderiza SOLO en móvil (ver Menu en pages.jsx) */
 .menu-top-btn { flex-shrink: 0; color: var(--red); border-color: var(--red); }
 .menu-top-arrow {
@@ -887,6 +869,81 @@
 @keyframes topNudge {
   0%, 100% { transform: translateY(0); opacity: 1; }
   50% { transform: translateY(-4px); opacity: 0.6; }
+}
+
+/* ── Acceso flotante a los alérgenos ─────────────────────────
+   MÓVIL: el botón de la cabecera se oculta y este flotante ocupa su lugar
+   durante toda la carta, para no empujar los platos fuera de la primera
+   pantalla (la carta se lee desde el QR de la mesa).
+   DESKTOP: el botón sigue en la cabecera y este flotante lo RELEVA — entra
+   solo cuando aquel sale de pantalla (la clase is-on la pone Menu con un
+   IntersectionObserver), así nunca hay dos accesos iguales a la vez.
+   La esquina inferior derecha está libre en /menu: el FAB "Pide ya!" se
+   oculta a propósito en esta página (ver TopBar en ui.jsx).
+   z-index entre la topbar (50) y los overlays (9999), que deben taparlo.
+   El safe-area evita que caiga bajo la barra de gestos del iPhone. */
+.alerg-fab {
+  --fab-inset: 16px;           /* mismo aire que el FAB "Pide ya!" del resto de la web */
+  position: fixed;
+  right: var(--fab-inset);
+  bottom: calc(var(--fab-inset) + env(safe-area-inset-bottom, 0px));
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  /* Fondo crema (no rojo) a propósito: es el único que recorta limpio sobre
+     los DOS fondos de la carta, el papel y las fichas destacadas en rojo pleno.
+     El icono es lo que lo distingue a la primera de los botones FOTO, que son
+     pastillas de contorno sin icono y viven en la misma columna. */
+  background: var(--bg);
+  color: var(--red);
+  border: 1px solid var(--red);
+  border-radius: 999px;
+  padding: 11px 18px 11px 13px;
+  box-shadow: 0 3px 16px rgba(255, 0, 30, 0.16);
+  transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+.alerg-fab:hover { background: var(--red); color: var(--bg); }
+.alerg-fab:active { transform: scale(0.96); }
+.alerg-fab-ico { display: block; }
+.alerg-fab-ico svg { display: block; width: 20px; height: 20px; }
+
+/* 879.98/880: sin hueco ni solape entre los dos tramos (el resto del archivo
+   alterna 879/880/881 y a 880px exactos llega a aplicar las dos ramas). */
+@media (max-width: 879.98px) {
+  /* Se cualifica con .menu-head-row a propósito: styles.css se concatena
+     DESPUÉS que este archivo, así que .btn{display:inline-flex} ganaría por
+     orden a un .menu-alerg-desk suelto. Dos clases (0,2,0) lo resuelven sin
+     recurrir a !important. */
+  .menu-head-row .menu-alerg-desk { display: none; }
+}
+
+@media (min-width: 880px) {
+  /* Solo opacidad + visibility (nada de transform) para no pisar el
+     scale(0.96) del :active. visibility saca el botón del orden de tabulación
+     mientras está oculto; su transición se retrasa para que el fundido se vea. */
+  .alerg-fab {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .22s ease, visibility 0s linear .22s,
+                background .18s ease, color .18s ease, transform .18s ease;
+  }
+  .alerg-fab.is-on {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity .22s ease, background .18s ease, color .18s ease, transform .18s ease;
+  }
+}
+
+/* Primer prefers-reduced-motion del sitio: el relevo aparece sin fundido. */
+@media (prefers-reduced-motion: reduce) {
+  .alerg-fab,
+  .alerg-fab.is-on { transition: none; }
 }
 
 /* Sección visible SOLO en mobile (p. ej. Bebidas) · oculta en desktop */
@@ -1138,7 +1195,7 @@
 .ev-list > div {
   display: grid;
   grid-template-columns: 110px 1fr;
-  gap: 8px;
+  gap: 9px;
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-weight: 500;
   font-size: 12px;
@@ -1496,23 +1553,8 @@
   gap: 48px;
 }
 
-@media (min-width: 880px) {
-  .menu-head-row .menu-foot-text {
-    flex: 1;
-    text-align: justify;
-    text-align-last: justify;
-  }
-}
-
-/* Pie de la carta en móvil */
+/* Pie de la carta en móvil: el botón "Volver arriba", a la derecha. */
 @media (max-width: 879px) {
-  .menu-head-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 24px;
-  }
-
-  .menu-foot-left { flex: 1 1 100%; }
   .menu-top-btn { margin-left: auto; }
 }
 
