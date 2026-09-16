@@ -19,6 +19,15 @@
 
   --max: 1440px;
   --gutter: 32px;
+
+  /* Línea de los elementos FLOTANTES (FAB "Pide ya!", acceso a alérgenos y el
+     badge de Cookiebot). Se alinean por el BORDE INFERIOR, no por el centro:
+     así siguen cuadrados aunque cambie su alto (el texto en inglés, por
+     ejemplo). El safe-area evita que caigan bajo la barra de gestos del
+     iPhone — y, sobre todo, tiene que estar en LOS TRES: si unos lo respetan
+     y otros no, en iOS bailan entre sí al contraerse la barra de Safari. */
+  --fab-inset: 16px;
+  --fab-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -176,7 +185,7 @@ img { display: block; max-width: 100%; }
 .pide-fab{
   display: none;
   position: fixed;
-  right: 16px; bottom: 20px;
+  right: var(--fab-inset); bottom: var(--fab-bottom);
   z-index: 9998;
   background: #1a1a1a;
   color: #fff;
@@ -200,6 +209,19 @@ img { display: block; max-width: 100%; }
 .pide-fab:active{ cursor: grabbing; }
 @media (max-width: 880px){
   .pide-fab{ display: inline-flex; align-items: center; }
+}
+
+/* Badge de Cookiebot (el círculo de abajo a la izquierda que reabre el aviso
+   de cookies). Viene con bottom/left de 10px y SIN safe-area, así que en el
+   iPhone se mete bajo la barra de gestos y queda a distinta altura que
+   nuestros flotantes; además, al contraerse la barra de Safari cambia el
+   inset y los dos bailan entre sí. Lo traemos a la misma línea.
+   !important porque Cookiebot fija el estilo desde su propia hoja; es la única
+   forma de ganarle sin tocar su script. Si algún día cambian el id, esta regla
+   deja de aplicar sin más y el badge vuelve a su sitio de siempre: no rompe. */
+#CookiebotWidget {
+  bottom: var(--fab-bottom) !important;
+  left: var(--fab-inset) !important;
 }
 
 /* ── Modal "Pide ya" (Take Away | Uber Eats) ────────────────── */

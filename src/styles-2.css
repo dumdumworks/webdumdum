@@ -883,10 +883,9 @@
    z-index entre la topbar (50) y los overlays (9999), que deben taparlo.
    El safe-area evita que caiga bajo la barra de gestos del iPhone. */
 .alerg-fab {
-  --fab-inset: 16px;           /* mismo aire que el FAB "Pide ya!" del resto de la web */
   position: fixed;
-  right: var(--fab-inset);
-  bottom: calc(var(--fab-inset) + env(safe-area-inset-bottom, 0px));
+  right: var(--fab-inset);     /* tokens compartidos con el FAB "Pide ya!" y el */
+  bottom: var(--fab-bottom);   /* badge de Cookiebot, para que cuadren los tres */
   z-index: 60;
   display: inline-flex;
   align-items: center;
@@ -908,7 +907,15 @@
   box-shadow: 0 3px 16px rgba(255, 0, 30, 0.16);
   transition: background .18s ease, color .18s ease, transform .18s ease;
 }
-.alerg-fab:hover { background: var(--red); color: var(--bg); }
+/* El hover NO invierte el color a propósito: en desktop este botón aparece solo
+   al hacer scroll y, si nace bajo el cursor, se activaría el :hover sin que el
+   usuario haya hecho nada — se leía como un cambio de color aleatorio al
+   scrollear. Se marca solo con la sombra, que si se enciende sola no canta.
+   (hover: hover) lo limita a punteros reales: en táctil el :hover se queda
+   pegado tras el toque. */
+@media (hover: hover) {
+  .alerg-fab:hover { box-shadow: 0 5px 22px rgba(255, 0, 30, 0.32); }
+}
 .alerg-fab:active { transform: scale(0.96); }
 .alerg-fab-ico { display: block; }
 .alerg-fab-ico svg { display: block; width: 20px; height: 20px; }
