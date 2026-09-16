@@ -34,6 +34,44 @@ const INITIAL_MENU = {
       { src: "img/espacio/11-merchandising.jpg", pos: "50% 50%" },
       { src: "img/espacio/12-suelo-barra-alta.jpg", pos: "50% 50%" }
     ],
+    // Fotos del local de Bernabéu, para su ficha (/locales/bernabeu). Son las
+    // mismas de `espacio` en otro orden —la fachada abre, porque es lo que
+    // reconoces al llegar— y con el encuadre de la fachada corrido a la
+    // derecha, donde está el neón. Va aparte para no reordenar la galería que
+    // usa /eventos.
+    // Como el resto: galerias.json manda, esto es el respaldo del código. Y
+    // hace falta, porque app.jsx monta React antes de que lleguen los fetch:
+    // una galería que solo viviera en el JSON se pintaría como marcadores.
+    bernabeu: [
+      { src: "img/espacio/11-merchandising.jpg", pos: "50% 50%" },
+      { src: "img/espacio/01-fachada.jpg", pos: "80% 50%" },
+      { src: "img/espacio/02-barra-horizontal.jpg", pos: "50% 50%" },
+      { src: "img/espacio/04-general-vertical.jpg", pos: "50% 50%" },
+      { src: "img/espacio/06-horizontal-barra.jpg", pos: "50% 50%" },
+      { src: "img/espacio/05-barra-vertical.jpg", pos: "50% 50%" },
+      { src: "img/espacio/08-mesa-alta-juliette.jpg", pos: "50% 50%" },
+      { src: "img/espacio/10-detalle-mesa.jpg", pos: "50% 50%" },
+      { src: "img/espacio/12-suelo-barra-alta.jpg", pos: "50% 50%" },
+      { src: "img/espacio/07-mesa-alta-fachada.jpg", pos: "50% 50%" },
+      { src: "img/espacio/09-detalle-barra-alta.jpg", pos: "50% 50%" }
+    ],
+    // Fotos del local de Chamberí, para su ficha (/locales/chamberi). Mismo
+    // relato que la de Bernabéu: el rótulo, la calle, la gente, la comida y
+    // los detalles. Aquí no hace falta corregir ningún encuadre: las diez son
+    // verticales y entran enteras en el marco 3/4.
+    // Respaldo del código; galerias.json manda. Ver la nota en `bernabeu`.
+    chamberi: [
+      { src: "img/chamberi/chamberi_08.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_07.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_02.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_04.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_03.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_05.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_09.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_06.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_01.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_10.jpg", pos: "50% 50%" }
+    ],
     producto: [
       { src: "img/dumplings/muay.jpg", pos: "50% 50%" },
       { src: "img/dumplings/burger.jpg", pos: "50% 50%" },

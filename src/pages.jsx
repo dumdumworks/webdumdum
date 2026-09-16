@@ -973,7 +973,7 @@ function BotonLlamar({ tel, telHuman, nombre }) {
     return () => { mq.removeEventListener ? mq.removeEventListener("change", on) : mq.removeListener(on); };
   }, []);
   const telIcon = (
-    <span className="call-ico-wrap"><svg className="tel-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ display: 'inline-block', verticalAlign: '-2px', marginRight: '8px' }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg></span>
+    <span className="call-ico-wrap"><svg className="tel-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" ><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg></span>
   );
   // Móvil: llama directo. Desktop: 1er click revela número, 2º llama.
   const handleClick = (e) => {
@@ -1031,17 +1031,21 @@ function Locales() {
               </a>
               <BotonLlamar tel="+34624560181" telHuman="+34 624 56 01 81" nombre="Chamberí" />
             </div>
-            <a className="local-enlace link-hover" href="/locales/chamberi">
-              {t("Saber más de Chamberí", "More about Chamberí")} →
-            </a>
           </div>
 
-          <div className="locale-map">
-            <iframe
-              title="Mapa Chamberí"
-              src="https://www.google.com/maps?q=DUM+DUM+Blasco+de+Garay+10+Madrid&output=embed"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade" />
+          {/* El mapa y el acceso a la ficha van juntos para no romper el
+              space-between de la tarjeta, que reparte entre DOS bloques. */}
+          <div className="locale-pie">
+            <div className="locale-map">
+              <iframe
+                title="Mapa Chamberí"
+                src="https://www.google.com/maps?q=DUM+DUM+Blasco+de+Garay+10+Madrid&output=embed"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade" />
+            </div>
+            <a className="btn locale-mas" href="/locales/chamberi">
+              {t("Saber más de Chamberí", "More about Chamberí")} →
+            </a>
           </div>
         </div>
 
@@ -1067,17 +1071,21 @@ function Locales() {
               </a>
               <BotonLlamar tel="+34614167317" telHuman="+34 614 16 73 17" nombre="Bernabéu" />
             </div>
-            <a className="local-enlace link-hover" href="/locales/bernabeu">
-              {t("Saber más de Bernabéu", "More about Bernabéu")} →
-            </a>
           </div>
 
-          <div className="locale-map">
-            <iframe
-              title="Mapa Bernabéu"
-              src="https://www.google.com/maps?q=DUM+DUM+Infanta+Mercedes+17+Madrid&output=embed"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade" />
+          {/* El mapa y el acceso a la ficha van juntos para no romper el
+              space-between de la tarjeta, que reparte entre DOS bloques. */}
+          <div className="locale-pie">
+            <div className="locale-map">
+              <iframe
+                title="Mapa Bernabéu"
+                src="https://www.google.com/maps?q=DUM+DUM+Infanta+Mercedes+17+Madrid&output=embed"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade" />
+            </div>
+            <a className="btn locale-mas" href="/locales/bernabeu">
+              {t("Saber más de Bernabéu", "More about Bernabéu")} →
+            </a>
           </div>
         </div>
       </div>
