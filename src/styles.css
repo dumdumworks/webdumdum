@@ -572,10 +572,10 @@ img { display: block; max-width: 100%; }
    (.locale-btns >) para ganar al .btn base. Permite 2 líneas como el rojo. */
 .locale-btns > .btn-call-green{ background:#1f8a5b !important; color:#fff !important; border-color:#1f8a5b !important; letter-spacing:0.06em; }
 .locale-btns > .btn-call-green:hover{ background:#187049 !important; color:#fff !important; border-color:#187049 !important; }
-/* "Ver en Maps": azul de Google, como el verde de "Llamar" es el del teléfono.
-   Solo aparece en móvil, donde el mapa incrustado no se pinta. */
-.btn-maps{ background:#4285f4; color:#fff; border-color:#4285f4; }
-.btn-maps:hover{ background:#3367d6; color:#fff; border-color:#3367d6; }
+/* "Ver en Maps": el negro de la casa, el mismo de "Pide ya!". Solo aparece en
+   móvil, donde el mapa incrustado no se pinta. */
+.btn-maps{ background:var(--black); color:#fff; border-color:var(--black); }
+.btn-maps:hover{ background:#000; color:#fff; border-color:#000; }
 /* Botón de Chamberí: negro #1a1a1a, no clicable. */
 .locale-btns > .btn-disabled-dark{ background:#1a1a1a !important; color:#fff !important; border-color:#1a1a1a !important; cursor:default; }
 .locale-btns > .btn-disabled-dark:hover{ background:#1a1a1a !important; color:#fff !important; border-color:#1a1a1a !important; }
@@ -583,6 +583,14 @@ img { display: block; max-width: 100%; }
    (la mitad del ancho menos medio gap), no todo el ancho de la tarjeta. */
 .locale-btns--single{ display:flex; }
 .locale-btns--single > .btn{ flex:0 0 auto; width:calc(50% - 6px); }
+/* El icono del teléfono iba con display/vertical-align/margin en un style
+   inline. El vertical-align: -2px agrandaba la caja de línea 1,5px, y como
+   .locale-btns estira sus botones al más alto, TODOS los botones de al lado
+   heredaban esa altura y no casaban con los de fuera del grupo (el acceso a la
+   ficha, bajo el mapa). En inline-flex con line-height 0 el icono va centrado
+   con el texto y no toca la altura del botón. */
+.call-ico-wrap{ display:inline-flex; align-items:center; line-height:0; }
+.tel-ico{ margin-right:8px; }
 /* El icono de teléfono solo en desktop; en móvil se oculta para centrar texto. */
 @media (max-width:880px){
   .call-ico-wrap{ display:none; }

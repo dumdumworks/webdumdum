@@ -964,7 +964,13 @@
 .locale-card {
   padding: 56px var(--gutter);
   border-right: 1px solid var(--line);
-  min-height: 60vh;
+  /* Sin min-height: 60vh. Lo pedía cuando la tarjeta era corta, pero hoy mide
+     800px de contenido y ese mínimo solo servía para inflarla en pantallas
+     altas… metiendo el sobrante en el hueco del space-between: 41px en una
+     ventana de 1522 y 326 en una de 2000.
+     El space-between se queda: ya no tiene sobrante que repartir en igualdad de
+     contenido, y si un día un texto ocupa una línea más en un local que en el
+     otro, sigue dejando los dos mapas a la misma altura. */
   display: flex; flex-direction: column; justify-content: space-between;
 }
 .locale-card:last-child { border-right: none; }
@@ -2359,17 +2365,34 @@
   border-color: var(--red);
 }
 
-/* Enlace mono pequeño: lleva a la ficha desde /locales, y de vuelta al listado
-   desde la ficha. Mismo objeto, dos direcciones. */
-.local-enlace {
-  display: inline-block;
-  margin-top: 16px;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+/* El acceso a la ficha, bajo el mapa de cada tarjeta de /locales: mismo botón
+   de contorno rojo que la vuelta al listado, y el mismo tamaño que el de llamar
+   —la mitad de la tarjeta menos medio gap, como .locale-btns--single—, con el
+   que se alinea por la derecha. Son el mismo objeto en dos direcciones. */
+.locale-pie {
+  display: flex;
+  flex-direction: column;
+  /* El aire sobre el mapa, decidido AQUÍ y no heredado del margin del mapa.
+     Antes era el margin-top: 32 del mapa MÁS lo que el space-between repartía
+     al sobrar alto: 33px en una ventana de 1522 y casi 280 en una de 2000. Un
+     aire que cambia con el alto de la pantalla no es un aire, es un residuo.
+     24, el mismo que hay del mapa al botón de abajo: el mapa tiene que quedar
+     centrado entre sus dos vecinos, no más suelto por arriba. */
+  padding-top: 24px;
+}
+/* Lo pone el padding del pie; si no, se suman los dos. */
+.locale-pie .locale-map { margin-top: 0; }
+.locale-mas {
+  align-self: flex-end;
+  width: calc(50% - 6px);
+  /* 24 y no los 12 del gap entre botones: con 12 el botón se leía como una
+     pestaña colgando del mapa. 24 es el mismo aire que hay de la ficha de datos
+     a los botones, así que la tarjeta respira a un solo ritmo. */
+  margin-top: 24px;
   color: var(--red);
+  border-color: var(--red);
+  justify-content: center;
+  text-align: center;
 }
 
 @media (max-width: 879.98px) {
