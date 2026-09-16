@@ -365,6 +365,11 @@ function TopBar({ route }) {
   // El enlace del menú móvil sigue apuntando a Chamberí.
   const UBER_URL = UBER_CHAMBERI;
   // Take Away apunta a la tienda online de Square.
+  // Glovo tiene UNA sola tienda para todo Madrid, así que no hay enlace por
+  // local como en Uber Eats. El reparto sale igualmente del local más cercano a
+  // la dirección del cliente: por eso la tarjeta muestra el local elegido, aunque
+  // el enlace sea el mismo para los dos.
+  const GLOVO_URL = "https://glovoapp.com/es/es/madrid/stores/dum-dum-madrid";
   const TAKEAWAY_URL = "https://dum-dumplings.square.site/";
   const SPOTIFY_URL = "https://open.spotify.com/playlist/75oqGRFz3CXErzrfBQTuVd?si=62f669c4e6674ff1";
 
@@ -404,9 +409,14 @@ function TopBar({ route }) {
   // paso "domicilio" = elegir local para Uber Eats.
   const [pideOpen, setPideOpen] = React.useState(false);
   const [pideStep, setPideStep] = React.useState("inicio");
+  // Local elegido en el paso "domicilio", para saber a qué tienda de Uber Eats
+  // lleva el paso "plataforma".
+  const [pideLocal, setPideLocal] = React.useState(null);
+  const nombreLocalPide = pideLocal === "bernabeu" ? "Bernabéu" : "Chamberí";
   React.useEffect(() => { setPideOpen(false); }, [route]);
   // Abrir el modal: por defecto empieza en "inicio"; se puede pedir otro paso.
-  const openPide = (step) => { setPideStep(step || "inicio"); setPideOpen(true); };
+  // El local se limpia en cada apertura, para no arrastrar el de la vez anterior.
+  const openPide = (step) => { setPideLocal(null); setPideStep(step || "inicio"); setPideOpen(true); };
   // Lo abren TODOS los botones "Pide ya" de la web (incluido el de la home)
   // disparando el evento global "dumdum:open-pide". Si el evento trae
   // detail.step = "domicilio", abre directo en el selector de local.
@@ -590,28 +600,48 @@ function TopBar({ route }) {
               <span className="pide-card-label">{t("Recoger", "Pickup")}</span>
               <span className="pide-card-sub">{t("te ahorras el envío", "skip the delivery fee")}</span>
             </a>
-            <button type="button" className="pide-card" style={{ cursor: "pointer" }} onClick={() => setPideStep("domicilio")}>
+            <button type="button" className="pide-card" onClick={() => setPideStep("domicilio")}>
               <span className="pide-card-label">{t("Domicilio", "Delivery")}</span>
-              <span className="pide-card-sub">{t("lo mandamos por Uber Eats", "we send it via Uber Eats")}</span>
+              <span className="pide-card-sub">{t("Uber Eats o Glovo", "Uber Eats or Glovo")}</span>
             </button>
           </div>
         </React.Fragment> :
+        pideStep === "domicilio" ?
         <React.Fragment>
           <h3 className="pide-title">{t("¿Desde qué local?", "From which spot?")}</h3>
           <div className="pide-options">
-            <a className="pide-card" href={UBER_CHAMBERI} target="_blank" rel="noreferrer">
+            <button type="button" className="pide-card"
+              onClick={() => { setPideLocal("chamberi"); setPideStep("plataforma"); }}>
               <span className="pide-card-label">Chamberí</span>
               <span className="pide-card-sub">c/ Blasco de Garay, 10</span>
-            </a>
-            <a className="pide-card" href={UBER_BERNABEU} target="_blank" rel="noreferrer">
+            </button>
+            <button type="button" className="pide-card"
+              onClick={() => { setPideLocal("bernabeu"); setPideStep("plataforma"); }}>
               <span className="pide-card-label">Bernabéu</span>
               <span className="pide-card-sub">c/ Infanta Mercedes, 17</span>
+            </button>
+          </div>
+          <button type="button" className="pide-volver" onClick={() => setPideStep("inicio")}>
+            ← {t("Volver", "Back")}
+          </button>
+        </React.Fragment> :
+        <React.Fragment>
+          <h3 className="pide-title">{t("¿Con qué app?", "Which app?")}</h3>
+          <div className="pide-options">
+            {/* Las dos tarjetas confirman el local elegido. En Uber Eats lleva a
+                su tienda; en Glovo el reparto sale igualmente del local más
+                cercano al cliente, así que en la práctica coincide. */}
+            <a className="pide-card" href={pideLocal === "bernabeu" ? UBER_BERNABEU : UBER_CHAMBERI}
+              target="_blank" rel="noreferrer">
+              <span className="pide-card-label">Uber Eats</span>
+              <span className="pide-card-sub">{nombreLocalPide}</span>
+            </a>
+            <a className="pide-card" href={GLOVO_URL} target="_blank" rel="noreferrer">
+              <span className="pide-card-label">Glovo</span>
+              <span className="pide-card-sub">{nombreLocalPide}</span>
             </a>
           </div>
-          <button
-            type="button"
-            onClick={() => setPideStep("inicio")}
-            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--red)", fontFamily: "\"JetBrains Mono\", ui-monospace, monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.04em", opacity: 0.7, marginTop: 16, alignSelf: "center", padding: 6 }}>
+          <button type="button" className="pide-volver" onClick={() => setPideStep("domicilio")}>
             ← {t("Volver", "Back")}
           </button>
         </React.Fragment>
@@ -630,11 +660,11 @@ function TopBar({ route }) {
         </div>
         <h3 className="pide-title">{t("¿En qué local?", "Which location?")}</h3>
         <div className="pide-options">
-          <button type="button" className="pide-card" style={{ cursor: "pointer" }} onClick={() => setReserveLocal(window.DUMDUM_LOCALES?.chamberi)}>
+          <button type="button" className="pide-card" onClick={() => setReserveLocal(window.DUMDUM_LOCALES?.chamberi)}>
             <span className="pide-card-label">Chamberí</span>
             <span className="pide-card-sub">c/ Blasco de Garay, 10</span>
           </button>
-          <button type="button" className="pide-card" style={{ cursor: "pointer" }} onClick={() => setReserveLocal(window.DUMDUM_LOCALES?.bernabeu)}>
+          <button type="button" className="pide-card" onClick={() => setReserveLocal(window.DUMDUM_LOCALES?.bernabeu)}>
             <span className="pide-card-label">Bernabéu</span>
             <span className="pide-card-sub">c/ Infanta Mercedes, 17</span>
           </button>
@@ -704,7 +734,7 @@ function Footer() {
           <b>{t("Redes", "Social")}</b>
           <div><a href="https://www.instagram.com/dumdum.plings" target="_blank" rel="noreferrer" className="link-hover">Instagram</a></div>
           <div><a href="https://open.spotify.com/playlist/75oqGRFz3CXErzrfBQTuVd?si=62f669c4e6674ff1" target="_blank" rel="noreferrer" className="link-hover">DD*Radio</a></div>
-          <div><a href="#" className="link-hover" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-pide", { detail: { step: "domicilio" } })); }}>Uber Eats</a></div>
+          <div><a href="#" className="link-hover" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-pide", { detail: { step: "domicilio" } })); }}>{t("A domicilio", "Delivery")}</a></div>
         </div>
       </div>
 

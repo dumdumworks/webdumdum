@@ -136,7 +136,7 @@ function Home() {
         </a>
         <a className="map-cell" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-pide", { detail: { step: "domicilio" } })); }}>
           <div className="n">[02]</div>
-          <div className="t">Uber Eats →</div>
+          <div className="t">{t("A domicilio", "Delivery")} →</div>
           <div className="d">{t("NI TE MUEVAS", "DON'T EVEN MOVE")}</div>
         </a>
         <a className="map-cell" href={TAKEAWAY_URL} target="_blank" rel="noreferrer">
