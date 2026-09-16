@@ -206,13 +206,48 @@ function extractRoutesSeo(html) {
   if (!Array.isArray(arr) || arr.length === 0) throw new Error("window.__ROUTES_SEO vacío o inválido");
   return arr;
 }
+// Datos de los locales: se leen del MISMO objeto que usa la web
+// (window.DUMDUM_LOCALES en src/ui.jsx), para que el HTML prerenderizado y el
+// JSON-LD no puedan contradecir nunca a lo que se ve en pantalla.
+function extractLocales(js) {
+  const m = js.match(/window\.DUMDUM_LOCALES\s*=\s*(\{[\s\S]*?\n\};)/);
+  if (!m) throw new Error("No encuentro window.DUMDUM_LOCALES en src/ui.jsx (¿cambió el formato?)");
+  let obj;
+  try { obj = new Function("return (" + m[1].slice(0, -1) + ")")(); } // literal de nuestro propio código
+  catch (e) { throw new Error("No puedo evaluar DUMDUM_LOCALES: " + e.message); }
+  for (const k of ["chamberi", "bernabeu"]) {
+    if (!obj[k] || !obj[k].calle || !obj[k].tel) throw new Error("DUMDUM_LOCALES." + k + " incompleto");
+  }
+  return obj;
+}
+const LOCALES = extractLocales(rd("src/ui.jsx"));
+// Aviso ruidoso mientras algún local tenga texto de relleno. No aborta el build
+// (se quiere poder desplegar la ficha con los datos buenos y la historia luego),
+// pero queda en el log de cada despliegue para que no se olvide.
+{
+  const pendientes = Object.values(LOCALES).filter((L) => L.borrador).map((L) => L.nombre);
+  if (pendientes.length) {
+    console.log("  ⚠ OJO: texto de relleno sin sustituir en " + pendientes.join(", ") +
+                " (DUMDUM_LOCALES.borrador). No se publica en el HTML ni en el JSON-LD.");
+  }
+}
+
 const ROUTES_SEO = extractRoutesSeo(rd("index.html"));
-const FILE_FOR = { "/": "index.html", "/menu": "menu.html", "/locales": "locales.html", "/eventos": "eventos.html", "/contacto": "contacto.html" };
+const FILE_FOR = {
+  "/": "index.html", "/menu": "menu.html", "/locales": "locales.html",
+  "/eventos": "eventos.html", "/contacto": "contacto.html",
+  // Fichas de local. Cloudflare Pages sirve dist/locales/chamberi.html en
+  // /locales/chamberi y convive sin conflicto con locales.html → /locales
+  // (comprobado); la barra final la normaliza el _redirects de siempre.
+  "/locales/chamberi": "locales/chamberi.html",
+  "/locales/bernabeu": "locales/bernabeu.html",
+};
 const ROUTES = Object.keys(FILE_FOR).map((p) => {
   const s = ROUTES_SEO.find((r) => r.p === p);
   if (!s) throw new Error("Falta la ruta " + p + " en window.__ROUTES_SEO");
   if (!s.t || s.d == null) throw new Error("Ruta " + p + " sin título/description en window.__ROUTES_SEO");
-  return { p, file: FILE_FOR[p], t: s.t, d: s.d };
+  const slug = p.startsWith("/locales/") ? p.slice("/locales/".length) : null;
+  return { p, file: FILE_FOR[p], t: s.t, d: s.d, local: slug ? LOCALES[slug] : null };
 });
 
 const ORIGIN = "https://dum-dum.es";
@@ -239,10 +274,92 @@ function renderRouteHtml(base, route) {
   setMeta("property", "og:url", url, "og:url");
   setMeta("name", "twitter:title", route.t, "twitter:title");
   setMeta("name", "twitter:description", route.d, "twitter:description");
+  if (route.local) {
+    h = h.replace('<div id="root"></div>', '<div id="root">' + prerenderLocal(route.local, url) + '</div>');
+    h = replaceOrThrow(h, /<script type="application\/ld\+json">[\s\S]*?<\/script>/,
+      () => '<script type="application/ld+json">\n' + JSON.stringify(ldLocal(route.local, url), null, 2) + '\n  </script>',
+      "JSON-LD de la ficha de local");
+  }
   return h;
 }
+
+// Horario "13.00–15.39 / 20.00–22.39" a partir de los tramos en minutos, para
+// no escribirlo dos veces (la web lo pinta desde los mismos datos).
+const hhmm = (m) => String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+const DIAS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+// Contenido REAL dentro de #root, para quien no ejecuta JavaScript (las IAs, en
+// su mayoría, no lo ejecutan). React lo reemplaza al montar por la versión con
+// diseño; ese instante queda tapado por el Loader cuando se entra directo.
+// Es marcado semántico a propósito, no un clon del JSX: mismo contenido, otra
+// presentación. Los DATOS salen de DUMDUM_LOCALES, así que no pueden divergir.
+// La historia solo entra si NO es un borrador: nunca publicamos texto de relleno
+// donde una IA pueda leerlo como si fuera cierto.
+function prerenderLocal(L, url) {
+  const li = (k, v) => "<dt>" + esc(k) + "</dt><dd>" + esc(v) + "</dd>";
+  // Mismo mini-markdown que la web (**negrita**). Se escapa PRIMERO y se
+  // convierte después: así el texto sigue sin poder inyectar HTML, pero los
+  // asteriscos no acaban a la vista en el HTML que leen los buscadores.
+  const md = (t) => esc(t)
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/\s+\/\s+/g, "<br>");   // mismo salto que mdInline en ui.jsx
+  const historia = (!L.borrador && L.historia && L.historia.es)
+    ? L.historia.es.split("\n\n").map((par) => "<p>" + md(par) + "</p>").join("")
+    : "";
+  return [
+    '<article class="pre-ssr">',
+    '<h1>DUM DUM\u2122 ', esc(L.nombre), '</h1>',
+    '<p>', md(L.entradilla ? L.entradilla.es : ""), '</p>',
+    historia,
+    '<dl>',
+    li("Dirección", L.calle + " · " + L.cp + " Madrid"),
+    li("Metro", L.metro),
+    li("Horario", "13.00–15.39 y 20.00–22.39, todos los días"),
+    li("Aforo", L.aforo.es),
+    li("Abierto desde", L.desde),
+    li("Teléfono", L.telHuman),
+    '</dl>',
+    '<p><a href="/menu">Ver la carta</a> · <a href="/locales">Los dos locales</a> · ',
+    '<a href="tel:', esc(L.tel), '">Llamar</a></p>',
+    '</article>',
+  ].join("");
+}
+
+// JSON-LD propio de cada local (el genérico de la plantilla describe la marca
+// con sus dos departamentos; aquí interesa ESTE restaurante y esta URL).
+function ldLocal(L, url) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    name: "DUM DUM " + L.nombre,
+    url,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: L.calle,
+      addressLocality: "Madrid",
+      postalCode: L.cp,
+      addressCountry: "ES",
+    },
+    telephone: L.tel,
+    servesCuisine: ["Dumplings", "Asiática", "Fusión"],
+    priceRange: "€€",
+    acceptsReservations: true,
+    hasMenu: ORIGIN + "/menu",
+    publicTransport: L.metro,
+    openingHoursSpecification: L.tramos.map(([ini, fin]) => ({
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: DIAS,
+      opens: hhmm(ini),
+      closes: hhmm(fin),
+    })),
+    parentOrganization: { "@type": "Restaurant", name: "DUM DUM", url: ORIGIN + "/" },
+    sameAs: ["https://www.instagram.com/dumdum.plings"],
+  };
+}
 for (const route of ROUTES) {
-  fs.writeFileSync(path.join(DIST, route.file), renderRouteHtml(tpl, route));
+  const dest = path.join(DIST, route.file);
+  fs.mkdirSync(path.dirname(dest), { recursive: true });   // las fichas van en dist/locales/
+  fs.writeFileSync(dest, renderRouteHtml(tpl, route));
 }
 // 404 real: base con el título/estado de "no encontrado".
 const notFound = renderRouteHtml(tpl, {
