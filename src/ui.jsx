@@ -365,9 +365,10 @@ function TopBar({ route }) {
   // El enlace del menú móvil sigue apuntando a Chamberí.
   const UBER_URL = UBER_CHAMBERI;
   // Take Away apunta a la tienda online de Square.
-  // Glovo tiene UNA sola tienda para todo Madrid: reparte desde el local que le
-  // pilla más cerca de la dirección del cliente, así que aquí no hay enlace por
-  // local como en Uber Eats.
+  // Glovo tiene UNA sola tienda para todo Madrid, así que no hay enlace por
+  // local como en Uber Eats. El reparto sale igualmente del local más cercano a
+  // la dirección del cliente: por eso la tarjeta muestra el local elegido, aunque
+  // el enlace sea el mismo para los dos.
   const GLOVO_URL = "https://glovoapp.com/es/es/madrid/stores/dum-dum-madrid";
   const TAKEAWAY_URL = "https://dum-dumplings.square.site/";
   const SPOTIFY_URL = "https://open.spotify.com/playlist/75oqGRFz3CXErzrfBQTuVd?si=62f669c4e6674ff1";
@@ -411,6 +412,7 @@ function TopBar({ route }) {
   // Local elegido en el paso "domicilio", para saber a qué tienda de Uber Eats
   // lleva el paso "plataforma".
   const [pideLocal, setPideLocal] = React.useState(null);
+  const nombreLocalPide = pideLocal === "bernabeu" ? "Bernabéu" : "Chamberí";
   React.useEffect(() => { setPideOpen(false); }, [route]);
   // Abrir el modal: por defecto empieza en "inicio"; se puede pedir otro paso.
   // El local se limpia en cada apertura, para no arrastrar el de la vez anterior.
@@ -626,15 +628,17 @@ function TopBar({ route }) {
         <React.Fragment>
           <h3 className="pide-title">{t("¿Con qué app?", "Which app?")}</h3>
           <div className="pide-options">
+            {/* Las dos tarjetas confirman el local elegido. En Uber Eats lleva a
+                su tienda; en Glovo el reparto sale igualmente del local más
+                cercano al cliente, así que en la práctica coincide. */}
             <a className="pide-card" href={pideLocal === "bernabeu" ? UBER_BERNABEU : UBER_CHAMBERI}
               target="_blank" rel="noreferrer">
               <span className="pide-card-label">Uber Eats</span>
-              {/* Confirma el local elegido: es el único de los dos que lo respeta. */}
-              <span className="pide-card-sub">{pideLocal === "bernabeu" ? "Bernabéu" : "Chamberí"}</span>
+              <span className="pide-card-sub">{nombreLocalPide}</span>
             </a>
             <a className="pide-card" href={GLOVO_URL} target="_blank" rel="noreferrer">
               <span className="pide-card-label">Glovo</span>
-              <span className="pide-card-sub">{t("elige el local por ti", "picks the spot for you")}</span>
+              <span className="pide-card-sub">{nombreLocalPide}</span>
             </a>
           </div>
           <button type="button" className="pide-volver" onClick={() => setPideStep("domicilio")}>
