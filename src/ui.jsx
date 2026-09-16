@@ -872,7 +872,7 @@ window.DUMDUM_LOCALES = {
     // sale de eventos.json). Si no cuadra, se cambia aquí y ya.
     cerca: { es: ["Templo", "de Debod"], en: ["Templo", "de Debod"], tiempo: { es: "12 min a pie", en: "12 min walk" } },
     eid: "hydra-fcb7897f-acf9-48ce-a45b-4214fb3e8fc0",
-    galeria: null,
+    galeria: null,   // sin fotos propias todavía: el slider pinta marcadores
     titular: { es: "El primero.", en: "The first one." },
     entradilla: {
       es: "Todo empezó en **Chamberí** en el **año 24**. No había mejor momento. Tampoco mejor lugar.",
@@ -906,7 +906,7 @@ window.DUMDUM_LOCALES = {
     // llama todo el mundo. Chamberí no lo necesita: "Templo / de Debod" cabe.
     cercaCorto: { es: ["Estadio", "Bernabéu"], en: ["Bernabéu", "Stadium"] },
     eid: "hydra-27342526-f07a-4354-bec7-c7b0ce5d7615",
-    galeria: null,
+    galeria: "bernabeu",
     titular: { es: "El segundo.", en: "The second one." },
     entradilla: {
       es: "Dimos un estirón en el **año 26**. Crecimos nosotros. / **Y creció el restaurante.**",
