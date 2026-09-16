@@ -29,6 +29,14 @@ function getRoutesTable() {
     mk("/menu",     false, "Menu",
       "DUM DUM™ — La carta",
       "Nueve dumplings, uno nuevo cada mes y ni uno convencional."),
+    // Las fichas de local van ANTES que /locales: la tabla se evalúa de arriba
+    // abajo y /locales (exact:false) capturaría /locales/chamberi.
+    mk("/locales/chamberi", false, "LocalChamberi",
+      "DUM DUM™ Chamberí — Dumplings en Blasco de Garay, Madrid",
+      "El local original de DUM DUM™, en Blasco de Garay 10 (Chamberí, Madrid)."),
+    mk("/locales/bernabeu", false, "LocalBernabeu",
+      "DUM DUM™ Bernabéu — Dumplings en Infanta Mercedes, Madrid",
+      "El segundo local de DUM DUM™, en Infanta Mercedes 17 (Madrid)."),
     mk("/locales",  false, "Locales",
       "DUM DUM™ — Locales y reservas",
       "Puedes reservar en Chamberí o en Bernabéu. O en ambos :)."),

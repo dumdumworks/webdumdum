@@ -256,7 +256,7 @@
 .map-cell-seal:hover .seal-mark,
 .map-cell-seal:active .seal-mark,
 .map-cell-seal:focus .seal-mark { background-color: var(--bg); }
-.map-cell {
+.map-cell, .dato-celda {
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   padding: 28px 22px 22px;
@@ -267,9 +267,14 @@
   transition: background .25s ease, color .25s ease;
 }
 .map-cell:last-child { border-right: 1px solid var(--line); }
-.map-cell .n { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 11px; letter-spacing: 0.06em; }
-.map-cell .t { font-family: var(--font-display); font-weight: 500; font-size: clamp(28px, 3vw, 42px); letter-spacing: -0.025em; line-height: 0.95; }
-.map-cell .d { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 11px; letter-spacing: 0.04em; color: rgba(255,0,30,0.55); }
+/* Las tres voces de la celda. Las comparte .dato-celda, la ficha de local en
+   móvil: es el mismo objeto —rótulo arriba, dato grande, apostilla abajo— y no
+   tiene sentido escribirlo dos veces. El cuerpo del titular sí es propio de
+   cada sitio: aquí son una o dos palabras y allí caben datos más largos. */
+.map-cell .n, .dato-celda .n { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 11px; letter-spacing: 0.06em; }
+.map-cell .t, .dato-celda .t { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.025em; line-height: 0.95; }
+.map-cell .t { font-size: clamp(28px, 3vw, 42px); }
+.map-cell .d, .dato-celda .d { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 11px; letter-spacing: 0.04em; color: rgba(255,0,30,0.55); }
 .map-cell:hover { background: var(--ink); color: var(--bg); }
 .map-cell:hover .d { color: rgba(255,255,255,0.6); }
 .map-cell.span-6 { grid-column: span 1; }
@@ -964,9 +969,12 @@
 }
 .locale-card:last-child { border-right: none; }
 .locale-card h2 { font-family: var(--font-display); font-weight: 500; font-size: clamp(40px, 5vw, 72px); letter-spacing: -0.035em; line-height: 0.92; }
-.locale-card .info { display: grid; grid-template-columns: 110px 1fr; gap: 8px 14px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); font-family: var(--font-display); font-weight: 500; font-size: 13px; letter-spacing: 0.02em; }
+/* Ficha de datos (dirección, metro, horario…). La usan las dos tarjetas de
+   /locales y las fichas ampliadas de cada local: se define UNA vez, sin
+   colgarla de .locale-card, para que las dos páginas respiren igual. */
+.info { display: grid; grid-template-columns: 110px 1fr; gap: 8px 14px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); font-family: var(--font-display); font-weight: 500; font-size: 13px; letter-spacing: 0.02em; }
+.info b { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0; color: rgba(255,0,30,0.55); }
 .locale-card > div > .tiny.muted { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; letter-spacing: 0; }
-.locale-card .info b { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0; color: rgba(255,0,30,0.55); }
 
 /* ---------- Google Reviews badge ---------- */
 .grv {
@@ -1049,6 +1057,8 @@
   display: block;
   width: 100%;
   height: 100%;
+  border: 0;   /* los iframes traen un borde inset por defecto: se ve como un
+                  relieve dentro del mapa. Iba suelto en un style inline. */
 }
 
 /* ---------- EVENTOS ---------- */
@@ -2186,3 +2196,310 @@
   -webkit-tap-highlight-color: transparent;
 }
 .dish-lightbox-close:active { background: var(--bg); color: var(--red); }
+
+/* ---------- FICHA DE LOCAL (/locales/chamberi · /locales/bernabeu) ----------
+   Misma lógica que las tarjetas de /locales: el contenido y su ficha de datos
+   arriba, y el mapa CERRANDO el bloque, no descolgado al final de la página.
+   Comparten .info, .locale-btns y .locale-map, así que no hay dos maneras de
+   pintar lo mismo. */
+/* El aire de abajo va en px y no en vh como el resto de heros del sitio: así
+   el filete queda con 56 arriba y 56 abajo (lo abre .local-cuerpo) en
+   cualquier pantalla. Con 6vh eran 54 en una ventana de 900 y 89 en una de
+   1490, y el ritmo cambiaba de monitor a monitor. */
+/* Margen lateral en vez de padding: así el filete arranca y termina donde las
+   fotos de abajo, en lugar de cruzar la pantalla de borde a borde. */
+.local-hero { padding: 14vh 0 56px; margin: 0 var(--gutter); border-bottom: 1px solid var(--line); }
+/* 40 y no 24: el titular usa line-height .86, y a 120px la descendente de la
+   "g" se comía el espacio y casi tocaba la entradilla. */
+.local-entradilla { margin-top: 40px; font-size: 18px; max-width: 46ch; }
+.local-hero .estado-local { margin-top: 32px; margin-bottom: 0; }
+
+/* Mismo orden de lectura que las tarjetas de /locales —texto, ficha de datos y
+   botones— pero con el mapa a la derecha de la ficha, para no dejar medio
+   lienzo vacío en pantallas grandes. */
+/* El texto y los tres datos son celdas de la MISMA retícula: las verticales
+   cruzan de arriba abajo y unen la horizontal del hero con la que cierra el
+   bloque. Mismo patrón que /locales, donde .locales cierra por abajo y cada
+   .locale-card tira su vertical. El padding lateral va en las celdas, no en la
+   sección, o las verticales llegarían al borde de la pantalla. */
+.local-cuerpo {
+  margin: 0 var(--gutter);   /* el gutter va aquí y no en las celdas, para que
+                                el filete acabe donde acaban las fotos */
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr;
+  border-bottom: 1px solid var(--line);
+}
+.local-historia { padding: 32px 0; }
+.resumen-dato {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* centrado en su compartimento, en los dos ejes */
+  align-items: center;
+  text-align: center;
+  min-width: 0;
+  padding: 32px 20px;
+  border-left: 1px solid var(--line);
+}
+.resumen-dato:last-child { padding-right: 0; }
+.resumen-dato b {
+  /* Icono grande SOBRE la etiqueta. Cabe sin subir la altura de la retícula:
+     la marca la columna del texto, y estas celdas van sobradas. */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 0, 30, 0.55);
+  margin-bottom: 6px;
+}
+.resumen-ico { flex-shrink: 0; color: var(--red); }
+.resumen-ico svg { display: block; width: 38px; height: 38px; }
+.resumen-valor {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 23px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--red);
+  text-wrap: balance;
+}
+.resumen-extra {
+  margin-top: 8px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: rgba(255, 0, 30, 0.6);
+}
+.local-historia .body { max-width: 56ch; }
+.local-ficha {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* 12px, el mismo gap que las fotos de arriba: las dos columnas tienen que
+     caer sobre las mismas verticales o la línea interrumpida no continúa. */
+  gap: 12px;
+}
+/* La columna de datos se estira a la altura de la fila —que marca el mapa— para
+   que el botón de vuelta caiga a ras de su borde inferior. El mapa se queda
+   arriba con su 16:9 intacto; sin el align-self se estiraría con la fila. */
+.local-datos { display: flex; flex-direction: column; }
+/* Sin filete propio en la ficha: el .local-datos de más abajo ya lo pone, y el
+   margen que .info y .locale-map traen por defecto desalinearía 24/32px el
+   filete y el borde superior del mapa, que tienen que arrancar a la vez. */
+.local-ficha .info { margin-top: 0; padding-top: 0; border-top: none; }
+/* Presentación de móvil de la ficha: la retícula de celdas de la home (.map-nav),
+   con la etiqueta donde va el índice y el dato donde va el titular. Se releva
+   con .info en el 880: nunca están las dos. */
+.datos-rejilla { display: none; }
+.dato-celda .t { font-size: 22px; }
+/* El icono va EN LÍNEA con el rótulo, no encima como en el resumen del cuerpo:
+   aquí la celda lee de arriba abajo en tres voces y un icono suelto arriba
+   metería una cuarta. 15px contra un rótulo de 11px: pesa lo justo para
+   identificar el dato sin competir con él. */
+.dato-celda .n { display: flex; align-items: center; gap: 7px; }
+.dato-ico { flex-shrink: 0; line-height: 0; }
+.dato-ico svg { display: block; width: 15px; height: 15px; }
+/* Los datos de una ficha son más largos que "Take Away": el corte va decidido
+   en los datos y la segunda línea se reserva aunque venga vacía, o las celdas
+   de una misma fila dejan de medir igual. */
+.local-ficha .locale-map { align-self: start; margin-top: 0; }
+
+/* Las fotos van antes que los datos: primero se ve el local, luego se leen la
+   ficha y el mapa. La galería queda pegada al texto, como continuación. */
+.local-galeria {
+  padding: 28px 0 0;   /* mismo aire que deja el head debajo: las flechas
+                          quedan centradas entre el filete y las fotos */
+  margin: 0 var(--gutter);
+}
+/* El componente trae margin-top: 32px pensado para cuando va detrás de un
+   párrafo en /eventos. Aquí el aire lo pone la sección, o se suman los dos. */
+.local-galeria .ev-slider { margin-top: 0; }
+
+
+/* Sin rótulo, las flechas se quedarían a la izquierda por el space-between. */
+.local-galeria .ev-slider-ctrls { margin-left: auto; }
+/* Y sin rótulo tampoco hay nada que subrayar: el filete del head competía con
+   el que cierra la retícula justo encima, con solo dos botones entre medias.
+   Se quita, junto con la altura que la cabecera vacía seguía reservando. */
+.local-galeria .ev-slider-head {
+  padding-top: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+  margin-bottom: 28px;
+}
+
+/* Ficha y mapa, cerrando la página. */
+.local-ficha-sec { padding: 56px 0 8vh; margin: 0 var(--gutter); }
+/* El filete vive aquí, no al pie de la galería: así arranca a la altura exacta
+   del borde superior del mapa y los dos trazos se leen como una sola línea
+   cortada por el hueco entre columnas. */
+.local-datos { border-top: 1px solid var(--line); padding-top: 28px; }
+.local-ficha-sec .local-ficha { margin-top: 0; }
+
+/* El envoltorio de las acciones ocupa el resto de la columna, para que la
+   vuelta al listado siga cayendo a ras del borde inferior del mapa: el
+   margin-top: auto necesita una caja que se estire, y antes esa caja era
+   .local-datos. */
+.local-acciones { display: flex; flex-direction: column; flex: 1; }
+/* Cualificado por la misma razón que .locale-btns más abajo: styles.css va
+   DESPUÉS y su .btn{display:inline-flex} ganaría por orden a un .btn-maps
+   suelto — el botón se colaba en escritorio, donde el mapa ya está incrustado. */
+.local-acciones .btn-maps { display: none; }
+
+/* La vuelta al listado: botón del sistema, en rojo como el resto de accesos de
+   la ficha, empujado al fondo de su columna para cerrar a ras del mapa. */
+.local-volver {
+  margin-top: auto;
+  align-self: flex-start;
+  color: var(--red);
+  border-color: var(--red);
+}
+
+/* Enlace mono pequeño: lleva a la ficha desde /locales, y de vuelta al listado
+   desde la ficha. Mismo objeto, dos direcciones. */
+.local-enlace {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+@media (max-width: 879.98px) {
+  /* El arriba del hero se hereda (14vh, como el de /locales): se cambia solo el
+     aire bajo el filete, para que sea el mismo 40 que abre la historia. */
+  .local-hero { padding-bottom: 40px; }
+  /* Los 40 de desktop salvaban la descendente de un titular de 120px. A 48 ya
+     no hay nada que salvar y se leían como un hueco. */
+  .local-entradilla { margin-top: 24px; }
+  .local-hero .estado-local { margin-top: 24px; }
+
+  /* Los tres destacados no se pintan: en el teléfono caían en 2+1, ocupaban una
+     pantalla entera entre la historia y las fotos, y dirección y metro ya están
+     completos en la ficha de abajo. Se quedan en el DOM —sin media queries, un
+     rastreador los lee igual, y estas páginas existen justo para eso— pero la
+     lectura en móvil va directa del texto a las fotos.
+     El dato que NO se repetía abajo, "Al lado", se ha mudado a .info: ver
+     .info-cerca. */
+  .local-cuerpo .resumen-dato { display: none; }
+  .local-cuerpo { grid-template-columns: 1fr; }
+  .local-historia { padding: 40px 0 32px; }
+
+  .local-galeria { padding: 32px 0 40px; }
+
+  /* Ficha y mapa apilados, en el mismo orden que las tarjetas de /locales:
+     datos, botones, vuelta al listado y el mapa cerrando el bloque. A dos
+     columnas el 1fr de la ficha se lo comía el ancho mínimo de .info (215px) y
+     el mapa quedaba en un sello de 99px. */
+  /* La lista de etiqueta + valor deja el dato en una columna de 202px y casi
+     todo cae en tres líneas. Cede el sitio a la retícula de celdas. */
+  .local-ficha .info { display: none; }
+  .datos-rejilla {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--line);
+    /* A sangre, como .map-nav en la home: es lo que le da presencia al formato,
+       y el filete de la celda necesita llegar al borde para cerrar la retícula.
+       Los márgenes negativos deshacen el gutter de .local-ficha-sec. */
+    margin-left: calc(var(--gutter) * -1);
+    margin-right: calc(var(--gutter) * -1);
+  }
+  /* El filete de .local-datos lo pone ahora la propia rejilla, y a sangre. */
+  .local-datos { border-top: none; padding-top: 0; }
+  /* 160 y no los 180 de la home: allí son nueve celdas y son la página entera;
+     aquí son seis dentro de una ficha que ya viene de leer la historia. */
+  .dato-celda { min-height: 160px; }
+
+  .local-ficha { grid-template-columns: 1fr; gap: 0; }
+  .local-ficha .locale-map { margin-top: 32px; }
+  /* Sin mapa dentro de la página, las cuatro acciones pasan a una retícula de
+     2×2: reservar y llamar arriba, Maps y la vuelta al listado abajo. Mismo
+     ancho (1fr 1fr) y mismo alto, para que se lean como un bloque. */
+  .local-ficha .locale-map { display: none; }
+  .local-acciones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* minmax y no 1fr: 1fr reparte TODA la altura libre de la columna y estiraba
+       los botones de 60 a 99px. Esto fija el alto de siempre y deja crecer si un
+       texto largo pide una línea más. */
+    grid-auto-rows: minmax(60px, auto);
+    row-gap: 12px;
+    /* A sangre, igual que .datos-rejilla: así las dos columnas de botones caen
+       exactamente sobre las dos columnas de datos de arriba. Con el gutter, el
+       eje de cada botón se iba 13px respecto al de su celda. */
+    margin: 28px calc(var(--gutter) * -1) 0;
+  }
+  /* El botón no llena su celda, para quedar centrado bajo su columna. Con el
+     centrado por columna el aire del medio es SIEMPRE el doble que el de los
+     bordes, así que el reparto se elige por el medio: restando un gutter entero
+     (y no uno por lado) quedan 32px entre los dos botones —el mismo hueco que
+     separa el resto de la página— y 16 hasta el borde de la pantalla. */
+  .local-acciones .btn {
+    width: calc(100% - var(--gutter));
+    justify-self: center;
+    /* Centrado en los dos ejes y en párrafo: lo traían solo los dos hijos de
+       .locale-btns, y los otros dos quedaban en bandera. */
+    justify-content: center;
+    text-align: center;
+  }
+  /* Los dos botones de siempre entran en la retícula como dos más: se disuelve
+     el contenedor que los agrupa en escritorio, no su contenido.
+     Cualificado con .local-acciones a propósito: styles.css se concatena DESPUÉS
+     que este archivo, así que .locale-btns{display:flex} ganaría por orden a un
+     .locale-btns suelto. Dos clases (0,2,0) lo resuelven sin !important. */
+  .local-acciones .locale-btns { display: contents; }
+  .local-acciones .btn-maps { display: inline-flex; }
+  .local-volver { margin-top: 0; align-self: stretch; }
+  /* Sin padding arriba: el aire hasta la rejilla lo da entero la galería (40px).
+     Con los dos eran 80px seguidos, y antes ese hueco lo partía el filete de
+     .local-datos, que ahora vive en la propia rejilla.
+     Abajo, 28 y no 6vh: los botones tienen que respirar lo mismo por arriba que
+     por abajo (28 contra el filete de la rejilla, 28 contra el del pie) y entre
+     ellos menos, para que las cuatro piezas se lean como un bloque. Con 6vh el
+     aire de abajo eran 45px en un iPhone 15 y 40 en un SE: cambiaba de móvil a
+     móvil, como pasaba en el hero antes de pasarlo a px. */
+  .local-ficha-sec { padding: 0 0 28px; }
+}
+
+/* Tablet (600–879px). Sigue siendo "móvil" para el resto del sitio, pero aquí
+   sobra ancho: el mapa apilado ocupaba 700px de alto él solo y la galería daba
+   una foto por pantalla. */
+@media (min-width: 600px) and (max-width: 879.98px) {
+  .local-ficha { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .local-ficha .locale-map { margin-top: 0; }
+  .local-volver { margin-top: auto; }
+  /* El carrusel de móvil da una foto por pantalla. Con fotos verticales (3/4) a
+     704px eso son 939px de alto: una sola imagen y nada más. Aquí van a poco
+     más de media pantalla, y el trozo de la siguiente avisa de que se desliza.
+     El gap va en la pista porque en móvil las fotos no se tocan nunca. */
+  .local-galeria .ev-slider-track-mobile { gap: 12px; }
+  .local-galeria .ev-slider-track-mobile .ev-slider-slot {
+    flex-basis: calc(58% - 6px);
+    width: calc(58% - 6px);
+  }
+}
+
+/* Contenido prerenderizado de las fichas de local (lo genera build.mjs dentro
+   de #root para quien no ejecuta JS). React lo reemplaza al montar, pero con
+   conexión lenta se ve un instante: estos estilos hacen que ese instante se vea
+   sobrio en vez de texto crudo. No pretende imitar al diseño final — es la
+   misma información con otra presentación. */
+.pre-ssr { padding: 14vh var(--gutter) 6vh; max-width: 70ch; }
+.pre-ssr h1 { font-weight: 500; font-size: clamp(36px, 5.6vw, 80px); line-height: 0.96; letter-spacing: -0.035em; }
+.pre-ssr p { font-size: 16px; line-height: 1.45; margin-top: 24px; max-width: 56ch; }
+.pre-ssr dl { margin-top: 40px; display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; }
+.pre-ssr dt {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; opacity: 0.65;
+}
+.pre-ssr dd { font-size: 15px; }
+.pre-ssr a { text-decoration: underline; }
+
