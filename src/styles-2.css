@@ -883,10 +883,9 @@
    z-index entre la topbar (50) y los overlays (9999), que deben taparlo.
    El safe-area evita que caiga bajo la barra de gestos del iPhone. */
 .alerg-fab {
-  --fab-inset: 16px;           /* mismo aire que el FAB "Pide ya!" del resto de la web */
   position: fixed;
-  right: var(--fab-inset);
-  bottom: calc(var(--fab-inset) + env(safe-area-inset-bottom, 0px));
+  right: var(--fab-inset);     /* tokens compartidos con el FAB "Pide ya!" y el */
+  bottom: var(--fab-bottom);   /* badge de Cookiebot, para que cuadren los tres */
   z-index: 60;
   display: inline-flex;
   align-items: center;
