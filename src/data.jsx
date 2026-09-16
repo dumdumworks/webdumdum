@@ -55,6 +55,23 @@ const INITIAL_MENU = {
       { src: "img/espacio/07-mesa-alta-fachada.jpg", pos: "50% 50%" },
       { src: "img/espacio/09-detalle-barra-alta.jpg", pos: "50% 50%" }
     ],
+    // Fotos del local de Chamberí, para su ficha (/locales/chamberi). Mismo
+    // relato que la de Bernabéu: el rótulo, la calle, la gente, la comida y
+    // los detalles. Aquí no hace falta corregir ningún encuadre: las diez son
+    // verticales y entran enteras en el marco 3/4.
+    // Respaldo del código; galerias.json manda. Ver la nota en `bernabeu`.
+    chamberi: [
+      { src: "img/chamberi/chamberi_08.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_07.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_02.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_04.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_03.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_05.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_09.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_06.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_01.jpg", pos: "50% 50%" },
+      { src: "img/chamberi/chamberi_10.jpg", pos: "50% 50%" }
+    ],
     producto: [
       { src: "img/dumplings/muay.jpg", pos: "50% 50%" },
       { src: "img/dumplings/burger.jpg", pos: "50% 50%" },

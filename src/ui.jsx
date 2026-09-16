@@ -872,7 +872,7 @@ window.DUMDUM_LOCALES = {
     // sale de eventos.json). Si no cuadra, se cambia aquí y ya.
     cerca: { es: ["Templo", "de Debod"], en: ["Templo", "de Debod"], tiempo: { es: "12 min a pie", en: "12 min walk" } },
     eid: "hydra-fcb7897f-acf9-48ce-a45b-4214fb3e8fc0",
-    galeria: null,   // sin fotos propias todavía: el slider pinta marcadores
+    galeria: "chamberi",
     titular: { es: "El primero.", en: "The first one." },
     entradilla: {
       es: "Todo empezó en **Chamberí** en el **año 24**. No había mejor momento. Tampoco mejor lugar.",
