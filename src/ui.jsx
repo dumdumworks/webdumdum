@@ -545,17 +545,32 @@ function TopBar({ route }) {
       </div>
     </header>
 
-    {!enMenu &&
+    {/* Se desmonta con cualquiera de las dos ventanas abierta: los overlays solo
+        tiñen al 40%, así que si no, el botón se sigue intuyendo por debajo.
+        Mismo criterio que el flotante de alérgenos de la carta. */}
+    {!enMenu && !pideOpen && !reserveOpen &&
     <button
       ref={fabRef}
       type="button"
-      className={"pide-fab" + (fabScrolling ? " is-scrolling" : "")}
+      className={"fab pide-fab" + (fabScrolling ? " is-scrolling" : "")}
       onPointerDown={onFabDown}
       onPointerMove={onFabMove}
       onPointerUp={onFabUp}
       style={fabPos ? { left: fabPos.x + "px", top: fabPos.y + "px", right: "auto", bottom: "auto" } : undefined}
       aria-label={t("Pide ya", "Order now")}>
-      {t("Pide ya!", "Order now!")} →
+      {/* Bolsa de pedido, gemela del icono del flotante de alérgenos. Dos
+          ajustes para que sean del mismo sistema y no dos dibujos sueltos:
+          · llena la MISMA caja óptica que el círculo del otro (~15x15 dentro
+            del viewBox de 24), o el hueco hasta la palabra no se lee igual;
+          · trazo de 1.45 y no 1.6, porque aquí va claro sobre negro y por
+            irradiación se percibe más grueso que el rojo sobre crema. */}
+      <span className="fab-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3.9 7.6h16.2l-1.1 12a1.6 1.6 0 0 1-1.6 1.4H6.6a1.6 1.6 0 0 1-1.6-1.4L3.9 7.6Z" />
+          <path d="M8.7 7.6V6a3.3 3.3 0 0 1 6.6 0v1.6" />
+        </svg>
+      </span>
+      <span>{t("Pide ya!", "Order now!")}</span>
     </button>
     }
 

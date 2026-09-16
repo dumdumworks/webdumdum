@@ -605,15 +605,15 @@ function Menu() {
       {!alergView &&
       <button
         type="button"
-        className={"alerg-fab" + (alergDeskVisible ? "" : " is-on")}
+        className={"fab alerg-fab" + (alergDeskVisible ? "" : " is-on")}
         onClick={abrirAlergenos}
         aria-label={t("Ver alérgenos", "View allergens")}>
-        <span className="alerg-fab-ico" aria-hidden="true">
+        <span className="fab-ico" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="9" /><path d="M12 8h.01" /><path d="M11 12h1v4h1" />
           </svg>
         </span>
-        <span className="alerg-fab-txt">{t("Alérgenos", "Allergens")}</span>
+        <span>{t("Alérgenos", "Allergens")}</span>
       </button>
       }
 
