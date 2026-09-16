@@ -274,6 +274,10 @@
 .map-cell .n, .dato-celda .n { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 11px; letter-spacing: 0.06em; }
 .map-cell .t, .dato-celda .t { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.025em; line-height: 0.95; }
 .map-cell .t { font-size: clamp(28px, 3vw, 42px); }
+/* La flecha la pone el CSS y no el marcado: en escritorio va detrás del título
+   y en móvil baja a su propia línea (ver el media de abajo), y eso no se puede
+   decidir con la flecha escrita dentro de nueve <div>. */
+.map-cell .t::after { content: " →"; }
 .map-cell .d, .dato-celda .d { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 11px; letter-spacing: 0.04em; color: rgba(255,0,30,0.55); }
 .map-cell:hover { background: var(--ink); color: var(--bg); }
 .map-cell:hover .d { color: rgba(255,255,255,0.6); }
@@ -2029,6 +2033,19 @@
      rejilla pasa a 2 col, o queda un hueco descuadrado en la franja
      781–880px (móviles anchos / horizontal / plegables). */
   .map-cell-seal { display: flex; }
+  /* A dos columnas los títulos largos ("A domicilio", "DD*Mer®ch") parten la
+     flecha a la segunda línea y los cortos ("Locales") no, así que unos títulos
+     ocupan una línea y otros dos. Baja SIEMPRE: todos miden dos líneas y las
+     nueve celdas se leen a la misma altura. */
+  .map-cell .t::after { display: block; }
+  /* Y la segunda causa del descuadre: con space-between, un subtítulo de dos
+     líneas —"CHAMBERÍ #015 + BERNABÉU #020"— empujaba su título hacia arriba.
+     Los títulos arrancaban a tres alturas distintas (66, 72 y 79px). Ahora el
+     título cuelga a una distancia fija del índice y el subtítulo se ancla al
+     fondo, así que ninguno depende del alto del otro. */
+  .map-cell:not(.map-cell-seal) { justify-content: flex-start; }
+  .map-cell .t { margin-top: 24px; }
+  .map-cell .d { margin-top: auto; }
   .map-cell.span-6, .map-cell.span-4, .map-cell.span-3 { grid-column: span 1; }
   .map-cell.span-12 { grid-column: span 2; }
   .feature-strip, .about-body, .locales, .contact { grid-template-columns: 1fr; }

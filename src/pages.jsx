@@ -131,47 +131,47 @@ function Home() {
       <nav className="map-nav map-nav-3">
         <a className="map-cell" href="/menu">
           <div className="n">[01]</div>
-          <div className="t">{t("La carta", "Menu")} →</div>
+          <div className="t">{t("La carta", "Menu")}</div>
           <div className="d">{t("ECHA UN VISTAZO", "TAKE A LOOK")}</div>
         </a>
         <a className="map-cell" href="#" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("dumdum:open-pide", { detail: { step: "domicilio" } })); }}>
           <div className="n">[02]</div>
-          <div className="t">{t("A domicilio", "Delivery")} →</div>
+          <div className="t">{t("A domicilio", "Delivery")}</div>
           <div className="d">{t("NI TE MUEVAS", "DON'T EVEN MOVE")}</div>
         </a>
         <a className="map-cell" href={TAKEAWAY_URL} target="_blank" rel="noreferrer">
           <div className="n">[03]</div>
-          <div className="t">Take Away →</div>
+          <div className="t">Take Away</div>
           <div className="d">{t("PIDE ONLINE", "ORDER ONLINE")}</div>
         </a>
         <a className="map-cell" href="/locales">
           <div className="n">[04]</div>
-          <div className="t">{t("Locales", "Locations")} →</div>
+          <div className="t">{t("Locales", "Locations")}</div>
           <div className="d">CHAMBERÍ #015 + BERNABÉU #020</div>
         </a>
         <a className="map-cell" href="/eventos">
           <div className="n">[05]</div>
-          <div className="t">{t("Eventos", "Events")} →</div>
+          <div className="t">{t("Eventos", "Events")}</div>
           <div className="d">{t("AFTER WORKS · CUMPLES · DIVORCIOS?", "AFTER WORKS · BIRTHDAYS · DIVORCES?")}</div>
         </a>
         <a className="map-cell" href="/contacto">
           <div className="n">[06]</div>
-          <div className="t">{t("Contacto", "Contact")} →</div>
+          <div className="t">{t("Contacto", "Contact")}</div>
           <div className="d">{t("SALÚDAME SIEMPRE", "SAY HI ANYTIME")}</div>
         </a>
         <a className="map-cell" href="https://www.instagram.com/dumdum.plings" target="_blank" rel="noreferrer">
           <div className="n">[07]</div>
-          <div className="t">Instagram →</div>
+          <div className="t">Instagram</div>
           <div className="d">@DUMDUM.PLINGS</div>
         </a>
         <a className="map-cell" href="https://open.spotify.com/playlist/75oqGRFz3CXErzrfBQTuVd?si=62f669c4e6674ff1" target="_blank" rel="noreferrer">
           <div className="n">[08]</div>
-          <div className="t">DD*Radio →</div>
+          <div className="t">DD*Radio</div>
           <div className="d">SPOTIFY</div>
         </a>
         <a className="map-cell" href="#" onClick={(e) => { e.preventDefault(); showToast("soon"); }}>
           <div className="n">[09]</div>
-          <div className="t">DD*Mer®ch →</div>
+          <div className="t">DD*Mer®ch</div>
           <div className="d">{t("PRÓXIMAMENTE", "COMING SOON")}</div>
         </a>
         {/* Celda-sello · rellena el hueco de la rejilla en móvil (2 col).
