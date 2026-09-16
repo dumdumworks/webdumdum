@@ -26,6 +26,9 @@
      ejemplo). El safe-area evita que caigan bajo la barra de gestos del
      iPhone — y, sobre todo, tiene que estar en LOS TRES: si unos lo respetan
      y otros no, en iOS bailan entre sí al contraerse la barra de Safari. */
+  /* Negro de los CTA de pedido ("Pide ya!"). Iba a pelo como #1a1a1a. */
+  --black: #1a1a1a;
+
   --fab-inset: 16px;
   --fab-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
 }
@@ -162,9 +165,9 @@ img { display: block; max-width: 100%; }
 }
 .topbar-reservar:hover { background: var(--ink); }
 .topbar-reservar::after { display: none !important; }
-/* Botón "Pide ya" del header: negro 1a1a1a, mismo tamaño que Reservar */
+/* Botón "Pide ya" del header: mismo negro que el FAB, tamaño de Reservar */
 .topbar-pide {
-  background: #1a1a1a;
+  background: var(--black);
   color: #fff !important;
   padding: 8px 16px !important;
   border: none;
@@ -180,35 +183,106 @@ img { display: block; max-width: 100%; }
 }
 .topbar-pide:hover { background: #000; }
 
-/* FAB "Pide ya" · SOLO móvil. Fijo abajo-derecha por defecto; arrastrable
-   (la posición se sobreescribe por estilo en línea al arrastrar). */
-.pide-fab{
-  display: none;
+/* ── Botones FLOTANTES ────────────────────────────────────────
+   Dos botones con la MISMA forma y la MISMA tipografía; lo único que los
+   distingue es el color: "Pide ya!" en negro (pedido, en todas las páginas
+   menos la carta) y Alérgenos en rojo sobre papel (solo en la carta). No
+   coinciden nunca en pantalla, pero se leen como el mismo objeto de la misma
+   web. Los dos llevan un icono de 20px delante de la palabra.
+   Van juntos y en ESTE archivo a propósito: styles.css se concatena DESPUÉS
+   que styles-2.css, así que repartir la base y los modificadores entre los dos
+   archivos invertiría la cascada. */
+.fab{
   position: fixed;
   right: var(--fab-inset); bottom: var(--fab-bottom);
-  z-index: 9998;
-  background: #1a1a1a;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  padding: 14px 18px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.01em;
-  text-transform: none;
+  z-index: 60;                 /* > topbar (50), < menú móvil (120) y overlays */
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 18px 11px 13px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: box-shadow .18s ease, transform .18s ease;
+}
+.fab:active{ transform: scale(0.96); }
+.fab-ico{ display: block; }
+.fab-ico svg{ display: block; width: 20px; height: 20px; }
+
+/* "Pide ya!" · SOLO móvil, y arrastrable (la posición se sobreescribe por
+   estilo en línea al arrastrar; ver TopBar en ui.jsx). El texto va en el crema
+   de la marca, no en blanco puro como antes. El filete es del propio negro:
+   no se ve, pero iguala la geometría a la del botón de alérgenos. */
+.pide-fab{
+  display: none;
+  background: var(--black);
+  color: var(--bg);
+  border-color: var(--black);
+  box-shadow: 0 3px 16px rgba(0,0,0,0.22);
   cursor: grab;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.22);
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
   opacity: 1;
-  transition: opacity .25s ease;
+  transition: box-shadow .18s ease, opacity .25s ease;
 }
+/* Sin scale al pulsar: este sí se arrastra y el gesto empieza con :active. */
+.pide-fab:active{ transform: none; cursor: grabbing; }
 .pide-fab.is-scrolling{ opacity: 0.35; }
-.pide-fab:active{ cursor: grabbing; }
-@media (max-width: 880px){
-  .pide-fab{ display: inline-flex; align-items: center; }
+@media (hover: hover){
+  .pide-fab:hover{ box-shadow: 0 5px 22px rgba(0,0,0,0.30); }
+}
+@media (max-width: 879.98px){
+  .pide-fab{ display: inline-flex; }
+}
+
+/* Alérgenos · SOLO en la carta. Fondo crema y no rojo a propósito: es el único
+   que recorta limpio sobre los DOS fondos de esa página, el papel y las fichas
+   destacadas en rojo pleno. El icono es además lo que lo distingue a la primera
+   de los botones FOTO, pastillas de contorno sin icono en la misma columna. */
+.alerg-fab{
+  background: var(--bg);
+  color: var(--red);
+  border-color: var(--red);
+  box-shadow: 0 3px 16px rgba(255, 0, 30, 0.16);
+}
+/* El hover NO invierte el color a propósito: en desktop este botón aparece solo
+   al hacer scroll y, si nace bajo el cursor, se activaría el :hover sin que el
+   usuario haya hecho nada — se leía como un cambio de color aleatorio al
+   scrollear. Se marca solo con la sombra, que si se enciende sola no canta.
+   (hover: hover) lo limita a punteros reales: en táctil el :hover se queda
+   pegado tras el toque. */
+@media (hover: hover){
+  .alerg-fab:hover{ box-shadow: 0 5px 22px rgba(255, 0, 30, 0.32); }
+}
+
+/* En desktop el acceso a alérgenos vive en la cabecera de la carta y este
+   flotante lo RELEVA: entra solo cuando aquel sale de pantalla (la clase is-on
+   la pone Menu con un IntersectionObserver), así nunca hay dos accesos iguales
+   a la vez. Solo opacidad + visibility, nada de transform, para no pisar el
+   scale(0.96) de .fab:active; visibility lo saca del orden de tabulación
+   mientras está oculto y su transición se retrasa para que el fundido se vea. */
+@media (min-width: 880px){
+  .alerg-fab{
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .22s ease, visibility 0s linear .22s,
+                box-shadow .18s ease, transform .18s ease;
+  }
+  .alerg-fab.is-on{
+    opacity: 1;
+    visibility: visible;
+    transition: opacity .22s ease, box-shadow .18s ease, transform .18s ease;
+  }
+}
+
+/* Primer prefers-reduced-motion del sitio: el relevo aparece sin fundido. */
+@media (prefers-reduced-motion: reduce){
+  .fab, .alerg-fab, .alerg-fab.is-on, .pide-fab{ transition: none; }
 }
 
 /* Badge de Cookiebot (el círculo de abajo a la izquierda que reabre el aviso
