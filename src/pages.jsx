@@ -1610,7 +1610,9 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
     const el = trackRef.current;
     if (!el) return;
     const i = Math.round(el.scrollLeft / el.clientWidth);
-    setIdx(Math.max(0, Math.min(total - 1, i)));
+    const n = Math.max(0, Math.min(total - 1, i));
+    setIdx(n);
+    setHasta((h) => Math.max(h, n + 2));
   };
   const scrollToMobile = (i) => {
     const el = trackRef.current;
@@ -1636,6 +1638,17 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
       </div>);
 
   }
+
+  // En móvil la pista lleva TODAS las fotos en una fila horizontal, así que
+  // loading="lazy" no sirve de nada: el navegador las da por visibles y las pide
+  // al abrir la página (3 MB en la ficha de Bernabéu, con una sola foto a la
+  // vista). El HUECO se mantiene siempre —el ancho de la pista y el scroll-snap
+  // dependen de él—, pero la imagen se monta solo hasta dos por delante de donde
+  // has llegado; el resto entra conforme avanzas.
+  // El límite solo sube, nunca baja: desmontar las de atrás cancelaba descargas
+  // a medias, y al retroceder había que volver a pedirlas.
+  const [hasta, setHasta] = React.useState(2);
+  const enVentana = (i) => !isMobile || i <= hasta;
 
   const step = Math.min(visible, total);
   const prev = () => setIdx((i) => (i - step + total) % total);
@@ -1668,9 +1681,13 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
       <div className="ev-slider-track ev-slider-track-mobile" ref={trackRef} onScroll={onTrackScroll}>
           {photos.map((item, i) =>
         <div className="ev-slider-slot" key={i} style={{ aspectRatio: ratio }}>
-              {item.src ?
+              {item.src && enVentana(i) ?
           <img src={item.src} alt={item.name || ""} loading="lazy" decoding="async" style={{ objectPosition: item.pos || "50% 50%", cursor: "pointer" }}
             onClick={() => setLightbox(i)} /> :
+          item.src ?
+          /* Hueco liso, no el marcador de rayas: aquí SÍ hay foto, solo que
+             todavía no se ha pedido. Las rayas dirían "no hay foto". */
+          <div className="ev-slider-espera" aria-hidden="true" /> :
 
           <div className="ev-slider-ph">
                   <span>[ {placeholderLabel} · {String(i + 1).padStart(2, "0")} ]</span>

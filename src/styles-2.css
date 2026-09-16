@@ -1417,6 +1417,14 @@
   text-transform: uppercase;
   color: rgba(255,0,30,0.55);
 }
+/* Hueco de una foto que aún no se ha pedido (carrusel de móvil). Liso y del
+   color del papel: solo se ve un instante mientras la imagen llega, y no debe
+   confundirse con el marcador de rayas, que significa "aquí no hay foto". */
+.ev-slider-espera {
+  position: absolute; inset: 0;
+  background: var(--paper);
+}
+
 .ev-slider-cta {
   position: absolute;
   left: 10px;
