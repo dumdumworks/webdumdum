@@ -1379,6 +1379,21 @@
 .ev-slider-cols-3 .ev-slider-track {
   grid-template-columns: 1fr 1fr 1fr;
 }
+/* Carril deslizable de escritorio (galería de las fichas de local). Se ven dos
+   fotos, como en el slider de siempre, pero están todas en fila y se recorren
+   con la rueda del ratón. Va DESPUÉS de .ev-slider-track a propósito: misma
+   especificidad, así que el flex tiene que ganarle al grid por orden.
+   Sin scroll-snap: el movimiento lo anima el JS hacia un destino, y el snap
+   tiraría en sentido contrario a mitad de camino. */
+.ev-slider-carril {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.ev-slider-carril::-webkit-scrollbar { display: none; }
+.ev-slider-carril .ev-slider-slot { flex: 0 0 calc(50% - 6px); }
 .ev-slider-cols-1 .ev-slider-track {
   grid-template-columns: 1fr;
 }
