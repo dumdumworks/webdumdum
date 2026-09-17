@@ -1215,7 +1215,8 @@ function LocalFicha({ local }) {
           visible={2}
           label={null}
           placeholderLabel={t("Foto", "Photo")}
-          ratio="3 / 4" />
+          ratio="3 / 4"
+          rueda />
       </section>
 
       <section className="local-ficha-sec">
@@ -1586,7 +1587,7 @@ function PrensaSlider() {
 }
 
 // ── Slider genérico ───────────────────────────────────────────
-function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLabel = "Espacio", cta = null, ratio = "4 / 3", lightboxStyle = "default" }) {
+function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLabel = "Espacio", cta = null, ratio = "4 / 3", lightboxStyle = "default", rueda = false }) {
   const total = photos.length;
   const [idx, setIdx] = React.useState(0);
   const [lightbox, setLightbox] = React.useState(null); // índice de foto ampliada, o null
@@ -1606,19 +1607,81 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
   // En móvil: ref a la pista para mover el scroll con las flechas y para
   // saber qué foto está centrada (actualiza el contador "01 / NN").
   const trackRef = React.useRef(null);
+  // Lo que avanza una foto: en móvil el slot ocupa la pista entera y en el
+  // carril de escritorio media, así que se mide del propio slot en vez de dar
+  // por hecho que es el ancho del contenedor.
+  const paso = () => {
+    const el = trackRef.current;
+    if (!el || !el.firstElementChild) return 1;
+    const a = el.firstElementChild.getBoundingClientRect().width;
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    return a + gap;
+  };
   const onTrackScroll = () => {
     const el = trackRef.current;
     if (!el) return;
-    const i = Math.round(el.scrollLeft / el.clientWidth);
+    // Solo se reengancha el destino cuando NO hay animación en curso. Si no, la
+    // propia animación dispara este scroll, el destino se iguala a la posición
+    // actual y el movimiento se frena a sí mismo: 1300px de rueda avanzaban 234.
+    if (!animando.current) destino.current = el.scrollLeft;
+    const i = Math.round(el.scrollLeft / paso());
     const n = Math.max(0, Math.min(total - 1, i));
     setIdx(n);
     setHasta((h) => Math.max(h, n + 2));
   };
-  const scrollToMobile = (i) => {
+  const scrollAFoto = (i) => {
     const el = trackRef.current;
     if (!el) return;
-    el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
+    animando.current = false;   // manda la flecha, no lo que quedara rodando
+    destino.current = i * paso();
+    el.scrollTo({ left: destino.current, behavior: "smooth" });
   };
+
+  // ── Rueda sobre la galería (solo con `rueda` y en escritorio) ──
+  // Convierte el scroll vertical del ratón en desplazamiento horizontal de las
+  // fotos. Se anima hacia un destino con rAF en vez de sumar el delta directo:
+  // un ratón de rueda salta de 100 en 100 y sin esto iría a tirones, mientras
+  // que un trackpad ya va suave. Así los dos se mueven igual.
+  const destino = React.useRef(0);
+  const animando = React.useRef(false);
+  const ultimo = React.useRef(-1);   // dónde dejó el scroll el último fotograma
+  const carril = rueda && !isMobile;
+  React.useEffect(() => {
+    const el = trackRef.current;
+    if (!el || !carril) return;
+    const parar = () => { animando.current = false; ultimo.current = -1; };
+    const avanzar = () => {
+      const t = trackRef.current;
+      if (!t) { parar(); return; }
+      // Si el scroll no está donde lo dejó el fotograma anterior, lo ha movido
+      // otra cosa —las flechas, un arrastre de la barra— y manda ella: la
+      // animación se abandona en vez de pelearse y devolverlo a su destino.
+      if (ultimo.current >= 0 && Math.abs(t.scrollLeft - ultimo.current) > 2) {
+        destino.current = t.scrollLeft; parar(); return;
+      }
+      const dif = destino.current - t.scrollLeft;
+      if (Math.abs(dif) < 0.5) { t.scrollLeft = destino.current; parar(); return; }
+      t.scrollLeft += dif * 0.18;
+      ultimo.current = t.scrollLeft;
+      requestAnimationFrame(avanzar);
+    };
+    const onWheel = (e) => {
+      const max = el.scrollWidth - el.clientWidth;
+      if (max <= 0) return;
+      // El gesto horizontal del trackpad también vale.
+      const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      // En los extremos NO se captura: el scroll sigue a la página. Atrapar la
+      // rueda al final del carril convierte la galería en una trampa.
+      if ((d < 0 && el.scrollLeft <= 0) || (d > 0 && el.scrollLeft >= max - 1)) return;
+      e.preventDefault();
+      destino.current = Math.max(0, Math.min(max, destino.current + d));
+      if (!animando.current) { animando.current = true; requestAnimationFrame(avanzar); }
+    };
+    // passive: false porque hay que poder frenar el scroll de la página; React
+    // registra los wheel como pasivos y allí el preventDefault no surte efecto.
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [carril, total]);
 
   if (total === 0) {
     return (
@@ -1648,7 +1711,9 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
   // El límite solo sube, nunca baja: desmontar las de atrás cancelaba descargas
   // a medias, y al retroceder había que volver a pedirlas.
   const [hasta, setHasta] = React.useState(2);
-  const enVentana = (i) => !isMobile || i <= hasta;
+  // Vale para el carril de escritorio igual que para el carrusel de móvil: en
+  // los dos están las fotos en una fila y el navegador las pediría todas.
+  const enVentana = (i) => !(isMobile || carril) || i <= hasta;
 
   const step = Math.min(visible, total);
   const prev = () => setIdx((i) => (i - step + total) % total);
@@ -1661,8 +1726,9 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
 
   // Navegación de las flechas: en móvil mueve el scroll de la pista;
   // en desktop avanza el slice como antes.
-  const goPrev = () => { if (isMobile) scrollToMobile(Math.max(0, idx - 1)); else prev(); };
-  const goNext = () => { if (isMobile) scrollToMobile(Math.min(total - 1, idx + 1)); else next(); };
+  const desliza = isMobile || carril;
+  const goPrev = () => { if (desliza) scrollAFoto(Math.max(0, idx - 1)); else prev(); };
+  const goNext = () => { if (desliza) scrollAFoto(Math.min(total - 1, idx + 1)); else next(); };
 
   return (
     <div className={`ev-slider ev-slider-cols-${visible}`}>
@@ -1676,9 +1742,11 @@ function GallerySlider({ photos, visible = 2, label = "Galería", placeholderLab
         </div>
       </div>
 
-      {isMobile ?
-      // ── MÓVIL: carrusel deslizable (scroll horizontal con snap) ──
-      <div className="ev-slider-track ev-slider-track-mobile" ref={trackRef} onScroll={onTrackScroll}>
+      {desliza ?
+      // ── Pista deslizable: carrusel con snap en móvil, carril libre movido
+      //    con la rueda en escritorio. El marcado es el mismo. ──
+      <div className={"ev-slider-track " + (isMobile ? "ev-slider-track-mobile" : "ev-slider-carril")}
+        ref={trackRef} onScroll={onTrackScroll}>
           {photos.map((item, i) =>
         <div className="ev-slider-slot" key={i} style={{ aspectRatio: ratio }}>
               {item.src && enVentana(i) ?
