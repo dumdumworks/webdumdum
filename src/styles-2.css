@@ -309,6 +309,17 @@
 }
 .feature-strip h2 em { font-style: italic; color: var(--red); font-weight: 400; }
 
+/* Dos secciones que cierran una contra otra dejan sus filetes de 1px PEGADOS,
+   no superpuestos: se leen como una raya de 2px. El de abajo sube un píxel y se
+   montan en uno solo.
+   Va con el selector de hermano adyacente a propósito, para que actúe solo
+   donde de verdad chocan: en las fichas de local el filete de .spec-foot es la
+   única separación con lo de arriba, y allí no debe moverse. Los tres casos de
+   la web (dos en la home, uno en /locales) son estos. */
+.feature-strip + .map-nav,
+.map-nav + .spec-foot,
+.locales + .spec-foot { margin-top: -1px; }
+
 /* Spec footer */
 .spec-foot {
   display: grid;
