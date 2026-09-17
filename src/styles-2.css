@@ -290,6 +290,10 @@
 .feature-strip {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  /* Cierra por los dos lados. Solo tenía el de abajo, así que la vertical que
+     separa las dos columnas nacía de la nada: en una retícula de filetes, una
+     vertical tiene que arrancar de una horizontal. */
+  border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
 .feature-strip > div {
