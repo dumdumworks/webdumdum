@@ -682,6 +682,17 @@
     border-bottom: 0;
     border-radius: 8px;
   }
+  /* El destacado es una tarjeta suelta: no lleva filete ni arriba ni abajo.
+     El de abajo se lo quita él, pero el de ARRIBA no era suyo — es el borde
+     inferior del plato que tiene encima, y por eso quedaba una línea a un solo
+     lado.
+     Cuál es "el de encima" depende de la sección: en las de una columna es el
+     anterior, y en las de dos (.dish-grid-2col-m, mochis y bebidas) es el que
+     está DOS antes, porque el anterior es su vecino de fila.
+     Si un destacado abre sección no hay nada que quitar, y entre dos destacados
+     seguidos tampoco, que ya se lo habían quitado. */
+  .dish-grid:not(.dish-grid-2col-m) .dish:has(+ .dish.is-featured) { border-bottom: 0; }
+  .dish-grid-2col-m .dish:has(+ .dish + .dish.is-featured) { border-bottom: 0; }
   /* ── REGLA GENERAL ──────────────────────────────────────────
      Dentro de un plato destacado, TODO el contenido va en crema.
      Cualquier texto o elemento nuevo que se añada en el futuro
