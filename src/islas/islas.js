@@ -1,0 +1,23 @@
+// ─────────────────────────────────────────────────────────────
+// Islas de la web HTML: el poco JavaScript que necesita una página ya pintada.
+// esbuild las une en un único assets/islas.<hash>.js que va con `defer`, así
+// que cuando corren el DOM ya existe. Cada isla busca su elemento y, si la
+// página no lo tiene, no hace nada.
+// ─────────────────────────────────────────────────────────────
+import { estado } from "./estado.js";
+import { menuMovil } from "./menu-movil.js";
+import { modales } from "./modales.js";
+import { flotante } from "./flotante.js";
+import { $$ } from "./nucleo.js";
+
+estado();
+menuMovil();
+modales();
+flotante();
+
+// El selector de idioma guarda la preferencia ANTES de navegar (misma clave
+// que React); el script de cabecera la lee al aterrizar para llevar a cada
+// uno a su versión.
+$$("[data-idioma]").forEach((a) => a.addEventListener("click", () => {
+  try { localStorage.setItem("dumdum.lang", a.dataset.idioma); } catch (e) {}
+}));

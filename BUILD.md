@@ -24,6 +24,8 @@ verdad en runtime**, y cada publicación dispara un rebuild que recalcula los `?
 - Compila `src/*.jsx` con **esbuild** a un bundle único `assets/dumdum.<hash>.js`
   minificado. Se conservan los identificadores porque los 4 ficheros comparten
   ámbito global (referencias cruzadas `t`, `useLang`…).
+- Une las **islas** de la web HTML (`src/islas/`) en `assets/islas.<hash>.js`
+  (≈5 kB, 2,3 kB gzip), minificadas y con hash. Ver "Web HTML" más abajo.
 - **Autohospeda** React/ReactDOM 18.3.1 (`vendor/`) con **SRI** — sin unpkg.
 - Une `styles.css` + `styles-2.css` en un CSS **minificado** con hash (sin
   `@import` en serie).
@@ -74,6 +76,37 @@ La **única** webfont es **JetBrains Mono** (Google Fonts). El resto de la
 tipografía es de sistema (`--font-display` / `--font-mono` = Helvetica Neue).
 Hubo un kit de Adobe Typekit que se retiró: ninguna regla usaba sus familias y
 costaba dos orígenes render-blocking. No reintroducir sin comprobar que se usa.
+
+## Web HTML (migración por fases)
+
+La web se está pasando de la SPA a **HTML estático por página**, generado por el
+propio `build.mjs` (el plan está en el informe "Mutación a HTML"). Piezas:
+
+- `src/html/plantilla.mjs`: idioma (`idioma(lang, rutasEn)` → `t`, `ruta`), el
+  documento entero (`documento()`: canónica, `hreflang`, OG, JSON-LD) y la
+  extracción del bloque Consent Mode → Cookiebot → GA de `index.html`, para que
+  haya UNA sola copia mientras convivan las dos webs.
+- `src/html/shell.mjs`: topbar, flotante "Pide ya", modales, footer y
+  `specFoot()`, con las MISMAS clases que `ui.jsx` para que el CSS no cambie.
+  `esqueleto()` monta una página completa a partir de su `<main>`.
+- `src/html/enlaces.mjs`: URLs de Uber/Glovo/Square/Instagram/Spotify y horario.
+- `src/html/paginas/*.mjs`: una función por página → `{ titulo, desc, cuerpo, ld }`.
+- `src/islas/*.js`: el JS de las páginas ya pintadas (estado del local, menú
+  móvil, modales con foco atrapado y widget de DISH, flotante arrastrable).
+  Sin React. Entra con `defer`; cada isla busca su elemento y si no está, no hace nada.
+- ES y EN son **rutas distintas**: `/menu` y `/en/menu` (`dist/en/menu.html`).
+  El selector de idioma es un enlace de verdad; al pulsarlo se guarda la
+  preferencia en `localStorage` (`dumdum.lang`, la misma clave que React) y un
+  script al principio del `<head>` lleva a cada uno a su versión al aterrizar.
+  Sin preferencia guardada manda la URL (enlaces compartidos, rastreadores).
+  `idioma().ruta()` solo manda a `/en/` las rutas que YA existen en inglés; el
+  resto sigue en su URL de siempre mientras dure la migración.
+- Cada página migrada se registra en `PAGINAS_HTML` (ruta → plantilla) y se
+  retira de `FILE_FOR`.
+
+Hoy no hay ninguna página HTML en producción: solo la muestra `/cimientos` y
+`/en/cimientos`, que se genera únicamente en local (`esLocal`) y se revisa en
+`marco.html?r=/cimientos`.
 
 ## Prerender: alcance
 

@@ -16,9 +16,13 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { idioma, documento, archivoDe, extraerBloqueAnalitica } from "./src/html/plantilla.mjs";
+import { cimientos, RUTA as CIMIENTOS_RUTA } from "./src/html/paginas/cimientos.mjs";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(ROOT, "dist");
+// CF_PAGES solo existe en el build de Cloudflare: lo que dependa de esLocal no se publica.
+const esLocal = !process.env.CF_PAGES;
 const rd = (p) => fs.readFileSync(path.join(ROOT, p), "utf8");
 const rb = (p) => fs.readFileSync(path.join(ROOT, p));
 const hash8 = (buf) => crypto.createHash("sha256").update(buf).digest("hex").slice(0, 8);
@@ -51,6 +55,21 @@ const min = await esbuild.transform(bundle, {
 const appBuf = Buffer.from(min.code, "utf8");
 const appName = `assets/dumdum.${hash8(appBuf)}.js`;
 fs.writeFileSync(path.join(DIST, appName), appBuf);
+
+// ── 1b) Islas de la web HTML (src/islas/) ────────────────────
+// El poco JS de las páginas estáticas, unido y minificado por esbuild. Con
+// nombre por hash como el bundle, para cachearlo un año (_headers, /assets/*).
+const islasRes = await esbuild.build({
+  entryPoints: [path.join(ROOT, "src/islas/islas.js")],
+  bundle: true, minify: true, format: "iife", target: ["es2018"], write: false,
+  logLevel: "silent",
+});
+if (islasRes.warnings.length) {
+  throw new Error("Islas con avisos: " + islasRes.warnings.map((w) => w.text).join("; "));
+}
+const islasBuf = Buffer.from(islasRes.outputFiles[0].contents);
+const islasName = `assets/islas.${hash8(islasBuf)}.js`;
+fs.writeFileSync(path.join(DIST, islasName), islasBuf);
 
 // ── 2) CSS unido y MINIFICADO (styles.css sin el @import + styles-2.css) ──
 // Orden IMPORTANTE: styles-2 primero, replicando la cascada del @import original.
@@ -368,6 +387,31 @@ const notFound = renderRouteHtml(tpl, {
 });
 fs.writeFileSync(path.join(DIST, "404.html"), notFound);
 
+// ── 6b) Web HTML (migración por fases) ───────────────────────
+// Las páginas HTML salen de la capa de plantillas de src/html/, una vez por
+// idioma (/ruta y /en/ruta). Aún no hay ninguna en producción: solo la página
+// de muestra, y solo en local. Cada página que se migre se añade al registro
+// (PAGINAS_HTML) y se retira de la SPA (FILE_FOR).
+const ANALITICA = extraerBloqueAnalitica(rd("index.html"));
+const DATOS_HTML = { locales: LOCALES };
+function escribirPaginaHtml(render, ruta, lang, rutasEn) {
+  const i = idioma(lang, rutasEn);
+  const html = documento({
+    i, ruta, ...render(i, DATOS_HTML),
+    analitica: ANALITICA, css: cssName, islas: islasName,
+  });
+  const file = path.join(DIST, archivoDe(ruta, lang));
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, html);
+}
+// Páginas ya migradas: ruta → plantilla. Cada una se escribe en los dos idiomas.
+const PAGINAS_HTML = {};
+if (esLocal) PAGINAS_HTML[CIMIENTOS_RUTA] = cimientos;
+const RUTAS_HTML = Object.keys(PAGINAS_HTML);
+for (const ruta of RUTAS_HTML) {
+  for (const lang of ["es", "en"]) escribirPaginaHtml(PAGINAS_HTML[ruta], ruta, lang, RUTAS_HTML);
+}
+
 // ── 7) Copiar estáticos de la raíz ───────────────────────────
 const copyFile = (rel) => fs.copyFileSync(path.join(ROOT, rel), path.join(DIST, rel));
 const copyDir = (rel) => fs.cpSync(path.join(ROOT, rel), path.join(DIST, rel), { recursive: true });
@@ -548,7 +592,6 @@ fs.writeFileSync(path.join(DIST, "_headers"), `# Generado por build.mjs.
 // pinta nada en producción. CF_PAGES solo existe allí.
 // Antes vivía suelto en dist/, que este mismo script borra al empezar, así que
 // desaparecía en cada compilación.
-const esLocal = !process.env.CF_PAGES;
 let devCopiados = 0;
 if (esLocal && fs.existsSync(path.join(ROOT, "dev"))) {
   for (const f of fs.readdirSync(path.join(ROOT, "dev"))) {
@@ -564,6 +607,8 @@ console.log("BUILD OK → dist/");
 if (devCopiados) console.log(`  dev/ → ${devCopiados} herramienta(s) de revisión (no se publican)`);
 console.log("  " + appName + " (" + kb(appBuf) + ")");
 console.log("  " + cssName + " (" + kb(cssBuf) + ")");
+console.log("  " + islasName + " (" + kb(islasBuf) + ") · islas de la web HTML");
+if (esLocal) console.log("  web HTML: /cimientos y /en/cimientos (muestra, no se publica)");
 console.log("  vendor React+ReactDOM (SRI ok)");
 console.log("  HTML: " + ROUTES.map((r) => r.file).join(", ") + ", 404.html");
 console.log("  datos ?v: menu=" + dataVer.menu + " gal=" + dataVer.gal + " ev=" + dataVer.ev);

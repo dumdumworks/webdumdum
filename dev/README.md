@@ -9,6 +9,7 @@ La web dentro del aparato dibujado, para revisarla sin que la página se funda
 con el fondo del panel.
 
     http://127.0.0.1:8788/marco.html
+    http://127.0.0.1:8788/marco.html?r=/menu   (abre directamente esa ruta)
 
 - **Aparato:** móvil (iPhone con bisel, isla y barra de gestos) u ordenador
   (monitor con la barra del navegador y la URL). Al cambiar se entra por la
@@ -20,6 +21,8 @@ con el fondo del panel.
   deja a tamaño natural y se desplaza, que es como hay que juzgar si un texto
   se lee o un botón se toca bien.
 - **Ruta:** las dos fichas de local, Locales, Carta, Eventos y Home.
+  "Cimientos" es la página de muestra de la web HTML (`/cimientos`, solo en
+  local): el esqueleto nuevo sin contenido real.
 
 Dos cosas que hubo que resolver y conviene no deshacer:
 
