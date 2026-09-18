@@ -56,8 +56,8 @@ export function topbar(i, ruta) {
 
   <div class="right">
     <span class="row gap-s topbar-status" data-estado data-tramos="${E.TRAMOS.map((x) => x.join("-")).join(",")}"
-      data-abierto="${esc(t("Abierto hasta las", "Open until"))}"
-      data-cerrado="${esc(t("Cerrado. Nos vemos a las", "Closed. See you at"))}"></span>
+      data-abierto="${esc(t("Abierto hasta las {h}h", "Open until {h}h"))}"
+      data-cerrado="${esc(t("Cerrado. Nos vemos a las {h}h", "Closed. See you at {h}h"))}"></span>
     ${reservar()}
     <button type="button" class="topbar-pide" data-pide>${esc(t("Pide ya!", "Order now!"))} →</button>
     ${selectorIdioma(i, ruta)}

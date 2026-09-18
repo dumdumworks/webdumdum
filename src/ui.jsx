@@ -57,6 +57,13 @@ if (typeof window !== "undefined" && !window.__dumdumLinkHandler) {
     // Solo interceptar rutas internas absolutas ("/algo"), no externas ni anclas.
     if (href.charAt(0) !== "/" || href.indexOf("//") === 0) return;
     if (a.target === "_blank") return;
+    // Las rutas que ya son páginas HTML (build.mjs las lista en __RUTAS_HTML)
+    // no son de esta SPA: se cargan enteras, como cualquier página normal.
+    var limpia = href.split("?")[0].split("#")[0];
+    var estaticas = window.__RUTAS_HTML || [];
+    for (var i = 0; i < estaticas.length; i++) {
+      if (limpia === estaticas[i] || limpia.indexOf(estaticas[i] + "/") === 0) return;
+    }
     e.preventDefault();
     nav(href);
   });

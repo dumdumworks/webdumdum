@@ -17,7 +17,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { idioma, documento, archivoDe, extraerBloqueAnalitica } from "./src/html/plantilla.mjs";
-import { cimientos, RUTA as CIMIENTOS_RUTA } from "./src/html/paginas/cimientos.mjs";
+import { local, RUTA_LOCAL } from "./src/html/paginas/local.mjs";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(ROOT, "dist");
@@ -255,18 +255,13 @@ const ROUTES_SEO = extractRoutesSeo(rd("index.html"));
 const FILE_FOR = {
   "/": "index.html", "/menu": "menu.html", "/locales": "locales.html",
   "/eventos": "eventos.html", "/contacto": "contacto.html",
-  // Fichas de local. Cloudflare Pages sirve dist/locales/chamberi.html en
-  // /locales/chamberi y convive sin conflicto con locales.html → /locales
-  // (comprobado); la barra final la normaliza el _redirects de siempre.
-  "/locales/chamberi": "locales/chamberi.html",
-  "/locales/bernabeu": "locales/bernabeu.html",
+  // Las fichas de local ya no están aquí: son páginas HTML (PAGINAS_HTML, más abajo).
 };
 const ROUTES = Object.keys(FILE_FOR).map((p) => {
   const s = ROUTES_SEO.find((r) => r.p === p);
   if (!s) throw new Error("Falta la ruta " + p + " en window.__ROUTES_SEO");
   if (!s.t || s.d == null) throw new Error("Ruta " + p + " sin título/description en window.__ROUTES_SEO");
-  const slug = p.startsWith("/locales/") ? p.slice("/locales/".length) : null;
-  return { p, file: FILE_FOR[p], t: s.t, d: s.d, local: slug ? LOCALES[slug] : null };
+  return { p, file: FILE_FOR[p], t: s.t, d: s.d };
 });
 
 const ORIGIN = "https://dum-dum.es";
@@ -293,91 +288,50 @@ function renderRouteHtml(base, route) {
   setMeta("property", "og:url", url, "og:url");
   setMeta("name", "twitter:title", route.t, "twitter:title");
   setMeta("name", "twitter:description", route.d, "twitter:description");
-  if (route.local) {
-    h = h.replace('<div id="root"></div>', '<div id="root">' + prerenderLocal(route.local, url) + '</div>');
-    h = replaceOrThrow(h, /<script type="application\/ld\+json">[\s\S]*?<\/script>/,
-      () => '<script type="application/ld+json">\n' + JSON.stringify(ldLocal(route.local, url), null, 2) + '\n  </script>',
-      "JSON-LD de la ficha de local");
-  }
   return h;
 }
 
 // Horario "13.00–15.39 / 20.00–22.39" a partir de los tramos en minutos, para
 // no escribirlo dos veces (la web lo pinta desde los mismos datos).
-const hhmm = (m) => String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
-const DIAS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
-// Contenido REAL dentro de #root, para quien no ejecuta JavaScript (las IAs, en
-// su mayoría, no lo ejecutan). React lo reemplaza al montar por la versión con
-// diseño; ese instante queda tapado por el Loader cuando se entra directo.
-// Es marcado semántico a propósito, no un clon del JSX: mismo contenido, otra
-// presentación. Los DATOS salen de DUMDUM_LOCALES, así que no pueden divergir.
-// La historia solo entra si NO es un borrador: nunca publicamos texto de relleno
-// donde una IA pueda leerlo como si fuera cierto.
-function prerenderLocal(L, url) {
-  const li = (k, v) => "<dt>" + esc(k) + "</dt><dd>" + esc(v) + "</dd>";
-  // Mismo mini-markdown que la web (**negrita**). Se escapa PRIMERO y se
-  // convierte después: así el texto sigue sin poder inyectar HTML, pero los
-  // asteriscos no acaban a la vista en el HTML que leen los buscadores.
-  const md = (t) => esc(t)
-    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
-    .replace(/\s+\/\s+/g, "<br>");   // mismo salto que mdInline en ui.jsx
-  const historia = (!L.borrador && L.historia && L.historia.es)
-    ? L.historia.es.split("\n\n").map((par) => "<p>" + md(par) + "</p>").join("")
-    : "";
-  return [
-    '<article class="pre-ssr">',
-    '<h1>DUM DUM\u2122 ', esc(L.nombre), '</h1>',
-    '<p>', md(L.entradilla ? L.entradilla.es : ""), '</p>',
-    historia,
-    '<dl>',
-    li("Dirección", L.calle + " · " + L.cp + " Madrid"),
-    li("Metro", L.metro),
-    li("Horario", "13.00–15.39 y 20.00–22.39, todos los días"),
-    li("Aforo", L.aforo.es),
-    li("Abierto desde", L.desde),
-    li("Teléfono", L.telHuman),
-    '</dl>',
-    '<p><a href="/menu">Ver la carta</a> · <a href="/locales">Los dos locales</a> · ',
-    '<a href="tel:', esc(L.tel), '">Llamar</a></p>',
-    '</article>',
-  ].join("");
+// ── 6a) Web HTML (migración por fases) ───────────────────────
+// Las páginas HTML salen de la capa de plantillas de src/html/, una vez por
+// idioma (/ruta y /en/ruta). Cada página que se migre se añade al registro
+// (PAGINAS_HTML) y se retira de la SPA (FILE_FOR).
+const ANALITICA = extraerBloqueAnalitica(rd("index.html"));
+const DATOS_HTML = { locales: LOCALES, galerias: JSON.parse(rd("galerias.json")), seo: ROUTES_SEO };
+function escribirPaginaHtml(render, ruta, lang, rutasEn) {
+  const i = idioma(lang, rutasEn);
+  const html = documento({
+    i, ruta, ...render(i, DATOS_HTML),
+    analitica: ANALITICA, css: cssName, islas: islasName,
+  });
+  // Ninguna imagen de la página puede faltar (img/ se copia entero a dist/ en el paso 7).
+  const faltan = [...html.matchAll(/(?:src|data-src)="(img\/[^"?#]+)"/g)]
+    .map((m) => m[1]).filter((u) => !fs.existsSync(path.join(ROOT, u)));
+  if (faltan.length) throw new Error("Imágenes que faltan en " + ruta + ":\n  " + faltan.join("\n  "));
+  const file = path.join(DIST, archivoDe(ruta, lang));
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, html);
 }
+// Páginas ya migradas: ruta → plantilla. Cada una se escribe en los dos idiomas.
+// Cloudflare Pages sirve dist/locales/chamberi.html en /locales/chamberi y
+// dist/en/locales/chamberi.html en /en/locales/chamberi, sin conflicto con
+// locales.html → /locales (comprobado).
+const PAGINAS_HTML = {
+  [RUTA_LOCAL("chamberi")]: local("chamberi"),
+  [RUTA_LOCAL("bernabeu")]: local("bernabeu"),
+};
+const RUTAS_HTML = Object.keys(PAGINAS_HTML);
 
-// JSON-LD propio de cada local (el genérico de la plantilla describe la marca
-// con sus dos departamentos; aquí interesa ESTE restaurante y esta URL).
-function ldLocal(L, url) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Restaurant",
-    name: "DUM DUM " + L.nombre,
-    url,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: L.calle,
-      addressLocality: "Madrid",
-      postalCode: L.cp,
-      addressCountry: "ES",
-    },
-    telephone: L.tel,
-    servesCuisine: ["Dumplings", "Asiática", "Fusión"],
-    priceRange: "€€",
-    acceptsReservations: true,
-    hasMenu: ORIGIN + "/menu",
-    publicTransport: L.metro,
-    openingHoursSpecification: L.tramos.map(([ini, fin]) => ({
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: DIAS,
-      opens: hhmm(ini),
-      closes: hhmm(fin),
-    })),
-    parentOrganization: { "@type": "Restaurant", name: "DUM DUM", url: ORIGIN + "/" },
-    sameAs: ["https://www.instagram.com/dumdum.plings"],
-  };
-}
+// La SPA no debe interceptar los enlaces a las rutas que ya son HTML (ver el
+// interceptor de clics en ui.jsx): se le inyecta la lista junto a __ROUTES_SEO.
+tpl = replaceOrThrow(tpl, /(<script>\s*window\.__ROUTES_SEO)/,
+  (m, p1) => `<script>window.__RUTAS_HTML = ${JSON.stringify(RUTAS_HTML)};</script>\n  ` + p1,
+  "lista de rutas HTML para la SPA");
+
 for (const route of ROUTES) {
   const dest = path.join(DIST, route.file);
-  fs.mkdirSync(path.dirname(dest), { recursive: true });   // las fichas van en dist/locales/
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.writeFileSync(dest, renderRouteHtml(tpl, route));
 }
 // 404 real: base con el título/estado de "no encontrado".
@@ -387,27 +341,6 @@ const notFound = renderRouteHtml(tpl, {
 });
 fs.writeFileSync(path.join(DIST, "404.html"), notFound);
 
-// ── 6b) Web HTML (migración por fases) ───────────────────────
-// Las páginas HTML salen de la capa de plantillas de src/html/, una vez por
-// idioma (/ruta y /en/ruta). Aún no hay ninguna en producción: solo la página
-// de muestra, y solo en local. Cada página que se migre se añade al registro
-// (PAGINAS_HTML) y se retira de la SPA (FILE_FOR).
-const ANALITICA = extraerBloqueAnalitica(rd("index.html"));
-const DATOS_HTML = { locales: LOCALES };
-function escribirPaginaHtml(render, ruta, lang, rutasEn) {
-  const i = idioma(lang, rutasEn);
-  const html = documento({
-    i, ruta, ...render(i, DATOS_HTML),
-    analitica: ANALITICA, css: cssName, islas: islasName,
-  });
-  const file = path.join(DIST, archivoDe(ruta, lang));
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, html);
-}
-// Páginas ya migradas: ruta → plantilla. Cada una se escribe en los dos idiomas.
-const PAGINAS_HTML = {};
-if (esLocal) PAGINAS_HTML[CIMIENTOS_RUTA] = cimientos;
-const RUTAS_HTML = Object.keys(PAGINAS_HTML);
 for (const ruta of RUTAS_HTML) {
   for (const lang of ["es", "en"]) escribirPaginaHtml(PAGINAS_HTML[ruta], ruta, lang, RUTAS_HTML);
 }
@@ -461,6 +394,13 @@ for (const d of ["img", "admin", "panel"]) {
   console.log("  verificados " + refs.size + " recursos del HTML (sin faltas)");
 })();
 
+// Todas las URLs limpias que sirve la web: las de la SPA y las HTML en sus dos
+// idiomas. Las usan _redirects (barra final) y _headers (HTML sin caché).
+const RUTAS_LIMPIAS = [
+  ...ROUTES.map((r) => r.p),
+  ...RUTAS_HTML.flatMap((p) => [p, idioma("en", RUTAS_HTML).ruta(p)]),
+];
+
 // ── 8) _redirects ────────────────────────────────────────────
 // IMPORTANTE — NO añadir rewrites "/ruta -> /ruta.html 200" ni un catch-all
 // "/* -> /404.html 404":
@@ -488,10 +428,7 @@ fs.writeFileSync(path.join(DIST, "_redirects"), `# Generado por build.mjs — NO
 # Normalización de barra final → URL canónica sin barra (protege el QR si
 # apunta a /menu/). Redirige HACIA la limpia, que Cloudflare sirve (no vuelve
 # a redirigir), así que no hay bucle.
-/menu/       /menu       301
-/locales/    /locales    301
-/eventos/    /eventos    301
-/contacto/   /contacto   301
+${RUTAS_LIMPIAS.filter((p) => p !== "/").map((p) => p + "/    " + p + "    301").join("\n")}
 
 # CMS Sveltia (carpeta estática).
 /admin/*     /admin/:splat    200
@@ -506,16 +443,7 @@ fs.writeFileSync(path.join(DIST, "_headers"), `# Generado por build.mjs.
 # inexistente tras un redeploy (pantalla en blanco).
 /*.html
   Cache-Control: no-cache
-/
-  Cache-Control: no-cache
-/menu
-  Cache-Control: no-cache
-/locales
-  Cache-Control: no-cache
-/eventos
-  Cache-Control: no-cache
-/contacto
-  Cache-Control: no-cache
+${RUTAS_LIMPIAS.map((p) => p + "\n  Cache-Control: no-cache").join("\n")}
 /admin/
   Cache-Control: no-cache
 
@@ -608,7 +536,7 @@ if (devCopiados) console.log(`  dev/ → ${devCopiados} herramienta(s) de revisi
 console.log("  " + appName + " (" + kb(appBuf) + ")");
 console.log("  " + cssName + " (" + kb(cssBuf) + ")");
 console.log("  " + islasName + " (" + kb(islasBuf) + ") · islas de la web HTML");
-if (esLocal) console.log("  web HTML: /cimientos y /en/cimientos (muestra, no se publica)");
+console.log("  web HTML: " + RUTAS_HTML.map((p) => p + " (+ /en" + p + ")").join(", "));
 console.log("  vendor React+ReactDOM (SRI ok)");
 console.log("  HTML: " + ROUTES.map((r) => r.file).join(", ") + ", 404.html");
 console.log("  datos ?v: menu=" + dataVer.menu + " gal=" + dataVer.gal + " ev=" + dataVer.ev);

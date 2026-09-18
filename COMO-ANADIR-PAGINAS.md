@@ -1,5 +1,14 @@
 # Cómo añadir una página nueva (sin romper nada)
 
+> **Desde la migración a HTML (2026):** una página nueva se hace como **página
+> HTML**, no como componente React: una función en `src/html/paginas/` que
+> devuelve `{ titulo, desc, cuerpo, ld }` usando `esqueleto()` de `shell.mjs`,
+> registrada en `PAGINAS_HTML` (`build.mjs`) y con su entrada en `__ROUTES_SEO`
+> (`t`/`d` en español y `te`/`de` en inglés). Con eso salen `/ruta` y `/en/ruta`,
+> `_headers`, `_redirects` y los enlaces del resto de la web. Ver "Web HTML" en
+> `BUILD.md`. Lo que sigue describe la SPA, que se mantiene hasta que acabe la
+> migración.
+
 La web usa **URLs limpias** (`/menu`, no `/#/menu`) y un router central, y se
 compila con esbuild a `dist/` (ver `BUILD.md`). Añadir una página son **4 pasos**.
 Si te saltas el paso 4, la página funcionará al navegar por dentro pero dará

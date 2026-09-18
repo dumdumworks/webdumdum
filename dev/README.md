@@ -21,8 +21,6 @@ con el fondo del panel.
   deja a tamaño natural y se desplaza, que es como hay que juzgar si un texto
   se lee o un botón se toca bien.
 - **Ruta:** las dos fichas de local, Locales, Carta, Eventos y Home.
-  "Cimientos" es la página de muestra de la web HTML (`/cimientos`, solo en
-  local): el esqueleto nuevo sin contenido real.
 
 Dos cosas que hubo que resolver y conviene no deshacer:
 

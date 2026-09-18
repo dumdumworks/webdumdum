@@ -49,7 +49,6 @@
   white-space: nowrap;
 }
 
-
 .hero-logo {
   display: flex;
   align-items: center;
@@ -2391,7 +2390,6 @@
    párrafo en /eventos. Aquí el aire lo pone la sección, o se suman los dos. */
 .local-galeria .ev-slider { margin-top: 0; }
 
-
 /* Sin rótulo, las flechas se quedarían a la izquierda por el space-between. */
 .local-galeria .ev-slider-ctrls { margin-left: auto; }
 /* Y sin rótulo tampoco hay nada que subrayar: el filete del head competía con
@@ -2574,21 +2572,4 @@
     width: calc(58% - 6px);
   }
 }
-
-/* Contenido prerenderizado de las fichas de local (lo genera build.mjs dentro
-   de #root para quien no ejecuta JS). React lo reemplaza al montar, pero con
-   conexión lenta se ve un instante: estos estilos hacen que ese instante se vea
-   sobrio en vez de texto crudo. No pretende imitar al diseño final — es la
-   misma información con otra presentación. */
-.pre-ssr { padding: 14vh var(--gutter) 6vh; max-width: 70ch; }
-.pre-ssr h1 { font-weight: 500; font-size: clamp(36px, 5.6vw, 80px); line-height: 0.96; letter-spacing: -0.035em; }
-.pre-ssr p { font-size: 16px; line-height: 1.45; margin-top: 24px; max-width: 56ch; }
-.pre-ssr dl { margin-top: 40px; display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; }
-.pre-ssr dt {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
-  text-transform: uppercase; opacity: 0.65;
-}
-.pre-ssr dd { font-size: 15px; }
-.pre-ssr a { text-decoration: underline; }
 

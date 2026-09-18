@@ -101,17 +101,25 @@ propio `build.mjs` (el plan está en el informe "Mutación a HTML"). Piezas:
   Sin preferencia guardada manda la URL (enlaces compartidos, rastreadores).
   `idioma().ruta()` solo manda a `/en/` las rutas que YA existen en inglés; el
   resto sigue en su URL de siempre mientras dure la migración.
-- Cada página migrada se registra en `PAGINAS_HTML` (ruta → plantilla) y se
-  retira de `FILE_FOR`.
+- Cada página migrada se registra en `PAGINAS_HTML` (ruta → plantilla), se
+  retira de `FILE_FOR` y de la tabla de rutas de `app.jsx`, y su componente
+  React se borra. `build.mjs` inyecta la lista (`window.__RUTAS_HTML`) en el
+  HTML de la SPA para que el interceptor de clics de `ui.jsx` deje pasar esos
+  enlaces como navegación normal.
+- `_redirects` (barra final → limpia) y `_headers` (HTML sin caché) se generan
+  a partir de TODAS las rutas limpias, React y HTML, en los dos idiomas.
+- Título y descripción salen de `__ROUTES_SEO` (`index.html`); las páginas HTML
+  añaden `te`/`de` con la versión inglesa.
 
-Hoy no hay ninguna página HTML en producción: solo la muestra `/cimientos` y
-`/en/cimientos`, que se genera únicamente en local (`esLocal`) y se revisa en
-`marco.html?r=/cimientos`.
+Ya son HTML: **las dos fichas de local** (`/locales/chamberi`, `/locales/bernabeu`
+y sus `/en/…`), con la galería de carga progresiva, el lightbox y el botón de
+llamar como islas. Se revisan en `marco.html?r=/locales/chamberi`.
 
 ## Prerender: alcance
 
-Se prerenderiza el `<head>` (OG/SEO por ruta) y un `<noscript>` con lo esencial.
-**NO** se prerenderiza el `<body>` de la app.
+En las páginas que siguen siendo React se prerenderiza el `<head>` (OG/SEO por
+ruta) y un `<noscript>` con lo esencial. **NO** se prerenderiza el `<body>` de la
+app; las páginas que necesitan HTML completo se migran (sección anterior).
 
 Aviso para quien lo intente: la app monta con `createRoot().render()`, que **borra**
 el contenido de `#root`. Meter HTML estático ahí provocaría un parpadeo, no una
