@@ -31,7 +31,8 @@ function montar(raiz) {
       const e = s.firstElementChild;
       if (k > hasta || !e.classList.contains("ev-slider-espera")) return;
       const img = document.createElement("img");
-      img.src = e.dataset.src; img.alt = e.dataset.alt; img.loading = "lazy"; img.decoding = "async";
+      img.src = e.dataset.src; img.srcset = e.dataset.srcset; img.sizes = e.dataset.sizes;
+      img.alt = e.dataset.alt; img.loading = "lazy"; img.decoding = "async";
       img.style.objectPosition = e.dataset.pos; img.style.cursor = "pointer";
       img.dataset.foto = e.dataset.foto;
       e.replaceWith(img);

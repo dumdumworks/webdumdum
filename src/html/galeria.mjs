@@ -7,6 +7,7 @@
 // progresiva) está en src/islas/galeria.js.
 // ─────────────────────────────────────────────────────────────
 import { esc } from "./plantilla.mjs";
+import { srcset } from "./imagenes.mjs";
 
 // Las fotos van todas en fila, así que loading="lazy" no sirve: el navegador
 // las da por visibles y las pediría todas al abrir. Se montan solo las tres
@@ -15,7 +16,10 @@ import { esc } from "./plantilla.mjs";
 const MONTADAS = 3;
 const pad = (n) => String(n).padStart(2, "0");
 
-export function galeria(i, { fotos, ratio = "3 / 4", etiquetaHueco }) {
+// En móvil el hueco es la pista entera; en escritorio, la mitad (dos a la vista).
+const SIZES = "(max-width: 879px) 100vw, 50vw";
+
+export function galeria(i, { fotos, ratio = "3 / 4", etiquetaHueco, raiz }) {
   const { t } = i;
   const huecos = fotos.length ? fotos : Array.from({ length: 6 }, () => ({ src: null }));
   const slots = huecos.map((f, n) => {
@@ -23,11 +27,12 @@ export function galeria(i, { fotos, ratio = "3 / 4", etiquetaHueco }) {
     if (!f.src) {
       dentro = `<div class="ev-slider-ph"><span>[ ${esc(etiquetaHueco)} · ${pad(n + 1)} ]</span></div>`;
     } else if (n < MONTADAS) {
-      dentro = `<img src="${esc(f.src)}" alt="${esc(f.name || "")}" loading="lazy" decoding="async"`
-        + ` style="object-position:${esc(f.pos || "50% 50%")};cursor:pointer" data-foto="${n}">`;
+      dentro = `<img src="${esc(f.src)}" srcset="${esc(srcset(raiz, f.src))}" sizes="${SIZES}" alt="${esc(f.name || "")}"`
+        + ` loading="lazy" decoding="async" style="object-position:${esc(f.pos || "50% 50%")};cursor:pointer" data-foto="${n}">`;
     } else {
       // Hueco liso, no el marcador de rayas: aquí SÍ hay foto, solo que aún no se ha pedido.
       dentro = `<div class="ev-slider-espera" aria-hidden="true" data-foto="${n}" data-src="${esc(f.src)}"`
+        + ` data-srcset="${esc(srcset(raiz, f.src))}" data-sizes="${SIZES}"`
         + ` data-alt="${esc(f.name || "")}" data-pos="${esc(f.pos || "50% 50%")}"></div>`;
     }
     return `    <div class="ev-slider-slot" style="aspect-ratio:${ratio}">${dentro}</div>`;

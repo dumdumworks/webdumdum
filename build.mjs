@@ -298,7 +298,7 @@ function renderRouteHtml(base, route) {
 // idioma (/ruta y /en/ruta). Cada página que se migre se añade al registro
 // (PAGINAS_HTML) y se retira de la SPA (FILE_FOR).
 const ANALITICA = extraerBloqueAnalitica(rd("index.html"));
-const DATOS_HTML = { locales: LOCALES, galerias: JSON.parse(rd("galerias.json")), seo: ROUTES_SEO };
+const DATOS_HTML = { locales: LOCALES, galerias: JSON.parse(rd("galerias.json")), seo: ROUTES_SEO, raiz: ROOT };
 function escribirPaginaHtml(render, ruta, lang, rutasEn) {
   const i = idioma(lang, rutasEn);
   const html = documento({
@@ -306,8 +306,9 @@ function escribirPaginaHtml(render, ruta, lang, rutasEn) {
     analitica: ANALITICA, css: cssName, islas: islasName,
   });
   // Ninguna imagen de la página puede faltar (img/ se copia entero a dist/ en el paso 7).
-  const faltan = [...html.matchAll(/(?:src|data-src)="(img\/[^"?#]+)"/g)]
-    .map((m) => m[1]).filter((u) => !fs.existsSync(path.join(ROOT, u)));
+  const faltan = [...html.matchAll(/(?:src|srcset|data-src|data-srcset)="([^"]+)"/g)]
+    .flatMap((m) => m[1].split(",").map((s) => s.trim().split(" ")[0]))
+    .filter((u) => u.startsWith("img/") && !fs.existsSync(path.join(ROOT, u)));
   if (faltan.length) throw new Error("Imágenes que faltan en " + ruta + ":\n  " + faltan.join("\n  "));
   const file = path.join(DIST, archivoDe(ruta, lang));
   fs.mkdirSync(path.dirname(file), { recursive: true });

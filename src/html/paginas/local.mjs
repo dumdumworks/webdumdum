@@ -61,7 +61,7 @@ function jsonLd(L, url) {
 export const RUTA_LOCAL = (slug) => "/locales/" + slug;
 
 export function local(slug) {
-  return (i, { locales, galerias, seo }) => {
+  return (i, { locales, galerias, seo, raiz }) => {
     const { t, lang } = i;
     const L = locales[slug];
     const otro = slug === "chamberi" ? locales.bernabeu : locales.chamberi;
@@ -98,7 +98,7 @@ ${mdParas(tx(L.historia), "body")}
 </section>
 
 <section class="local-galeria">
-${galeria(i, { fotos: (L.galeria && galerias[L.galeria]) || [], ratio: "3 / 4", etiquetaHueco: t("Foto", "Photo") })}
+${galeria(i, { fotos: (L.galeria && galerias[L.galeria]) || [], ratio: "3 / 4", etiquetaHueco: t("Foto", "Photo"), raiz })}
 </section>
 
 <section class="local-ficha-sec">
