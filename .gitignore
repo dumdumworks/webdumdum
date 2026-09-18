@@ -1,3 +1,16 @@
 node_modules/
 dist/
 .DS_Store
+
+# Caché del servidor de pruebas (npx wrangler pages dev). Son las bases de
+# datos de miniflare: 7,6 MB que se regeneran solos y cambian en cada arranque.
+.wrangler/
+
+# Ajustes locales de Claude Code (permisos del modo Auto) e instrucciones del
+# proyecto. Fuera del repo porque ESTE REPO ES PÚBLICO y CLAUDE.md es un mapa
+# de la casa: dónde vive cada cosa, cómo se despliega, qué hay en KV y en R2,
+# qué rutas están detrás de Cloudflare Access. No hay secretos, pero tampoco
+# hace falta regalarlo. Si algún día se quiere versionar, basta con quitar
+# estas dos líneas.
+.claude/
+CLAUDE.md
