@@ -14,3 +14,6 @@ dist/
 # estas dos líneas.
 .claude/
 CLAUDE.md
+
+# Lo genera build.mjs (la plantilla de la carta empaquetada para el edge).
+functions/_generado/

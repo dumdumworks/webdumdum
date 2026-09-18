@@ -98,22 +98,10 @@ function loadMenu() {
   return INITIAL_MENU;
 }
 
-// ─── Logos "incrustados" como SVG inline ──────────────────────
-// Marcadores visuales asociables a un plato (campo "logo"). Estos son los
-// placeholders inline; si un plato trae una imagen propia, DishLogo usa <img>.
-const PRESET_LOGOS = {
-  kpop: `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="60" fill="#FF001E"/><text x="30" y="38" font-family="JetBrains Mono,monospace" font-weight="600" font-size="16" fill="#fff" text-anchor="middle" letter-spacing="-0.5">K-POP</text></svg>`,
-  cheese: `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="60" fill="#FFC700"/><text x="30" y="26" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="11" fill="#ff001e" text-anchor="middle">CHEESE</text><text x="30" y="40" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="11" fill="#ff001e" text-anchor="middle">BURGER</text><circle cx="14" cy="50" r="3" fill="#ff001e"/><circle cx="46" cy="14" r="3" fill="#ff001e"/></svg>`,
-  castizo: `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="60" fill="#ff001e"/><text x="30" y="28" font-family="Space Grotesk,sans-serif" font-style="italic" font-weight="500" font-size="14" fill="#fff" text-anchor="middle">Castizo</text><line x1="10" y1="34" x2="50" y2="34" stroke="#fff" stroke-width="0.5"/><text x="30" y="46" font-family="JetBrains Mono,monospace" font-size="6" fill="#fff" text-anchor="middle" letter-spacing="2">MADRID·1925</text></svg>`,
-  custom: null
-};
-
 // ─── Export global ────────────────────────────────────────────
-// Solo lo que consume la web pública: el respaldo, el lector del menú y los
-// logos preset. La auth y la persistencia en localStorage se retiraron junto
+// Solo lo que consume la web pública: el respaldo y el lector del menú. La auth y la persistencia en localStorage se retiraron junto
 // con el panel admin.jsx (la edición real vive en el CMS Sveltia, /admin/).
 window.DumDumData = {
   INITIAL_MENU,
-  loadMenu,
-  PRESET_LOGOS
+  loadMenu
 };

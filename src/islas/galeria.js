@@ -1,7 +1,7 @@
 // Galería de fotos (src/html/galeria.mjs): flechas, contador de posición,
 // carga progresiva, rueda del ratón en escritorio y lightbox. Es la lógica del
 // GallerySlider de pages.jsx sin React.
-import { $, $$, atraparFoco } from "./nucleo.js";
+import { $, $$, atraparFoco, bloquearScroll, deslizar, tecladoVisor } from "./nucleo.js";
 
 const MOVIL = "(max-width: 879px)";
 const pad = (n) => String(n).padStart(2, "0");
@@ -98,8 +98,7 @@ function montar(raiz) {
 }
 
 // ── Visor ampliado. Navega con flechas y teclado, se cierra con la X, con clic
-//    en el fondo y con Escape; en móvil se desliza con el dedo. Bloquea el
-//    scroll del fondo sin que la página salte (compensa la barra de scroll).
+//    en el fondo y con Escape; en móvil se desliza con el dedo.
 function abrirLightbox(fotos, inicio, textos) {
   const total = fotos.length;
   let n = inicio;
@@ -118,20 +117,11 @@ function abrirLightbox(fotos, inicio, textos) {
   };
   const ir = (d) => { n = (n + d + total) % total; if (!fotos[n]) return ir(d); pintar(); };
 
-  const barra = window.innerWidth - document.documentElement.clientWidth;
-  const previo = { overflow: document.body.style.overflow, padding: document.body.style.paddingRight };
-  document.body.style.overflow = "hidden";
-  if (barra > 0) document.body.style.paddingRight = barra + "px";
-  const onKey = (e) => {
-    if (e.key === "Escape") cerrar();
-    else if (e.key === "ArrowLeft") ir(-1);
-    else if (e.key === "ArrowRight") ir(1);
-  };
-  document.addEventListener("keydown", onKey);
+  const desbloquear = bloquearScroll();
+  const sinTeclado = tecladoVisor(() => cerrar(), ir);
   const cerrar = () => {
-    document.removeEventListener("keydown", onKey);
-    document.body.style.overflow = previo.overflow;
-    document.body.style.paddingRight = previo.padding;
+    sinTeclado();
+    desbloquear();
     soltar();
     ov.remove();
   };
@@ -141,30 +131,7 @@ function abrirLightbox(fotos, inicio, textos) {
   $(".lb-close", ov).addEventListener("click", cerrar);
   $(".lb-prev", ov).addEventListener("click", (e) => { e.stopPropagation(); ir(-1); });
   $(".lb-next", ov).addEventListener("click", (e) => { e.stopPropagation(); ir(1); });
-
-  // Deslizar con el dedo: se decide el eje al superar 8px y solo el horizontal
-  // arrastra la foto; al soltar, si pasó del 20% del ancho, cambia de foto.
-  let x0 = null, y0 = null, eje = null, dx = 0;
-  escenario.addEventListener("touchstart", (e) => {
-    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; eje = null; dx = 0;
-    escenario.style.transition = "none";
-  }, { passive: true });
-  escenario.addEventListener("touchmove", (e) => {
-    if (x0 === null) return;
-    dx = e.touches[0].clientX - x0;
-    const dy = e.touches[0].clientY - y0;
-    if (eje === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) eje = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
-    if (eje === "x") escenario.style.transform = `translateX(${dx}px)`;
-  }, { passive: true });
-  escenario.addEventListener("touchend", () => {
-    if (eje === "x") {
-      const umbral = window.innerWidth * 0.2;
-      if (dx <= -umbral) ir(1); else if (dx >= umbral) ir(-1);
-    }
-    escenario.style.transition = "transform 0.25s cubic-bezier(0.16,1,0.3,1)";
-    escenario.style.transform = "translateX(0)";
-    x0 = null; eje = null;
-  });
+  deslizar(escenario, ir);
 
   pintar();
   document.body.appendChild(ov);

@@ -26,11 +26,9 @@ function getRoutesTable() {
     mk("/",         true,  "Home",
       "DUM DUM™ — Dumplings & Desobediencia",
       "Desobedecer es un derecho y una obligación. Los dumplings más diferentes y mejor valorados de España. Abiertos todos los días. Para tomar, para recoger y a domicilio."),
-    mk("/menu",     false, "Menu",
-      "DUM DUM™ — La carta",
-      "Nueve dumplings, uno nuevo cada mes y ni uno convencional."),
-    // Las fichas de local (/locales/chamberi, /locales/bernabeu) ya no son de
-    // esta SPA: son páginas HTML generadas por build.mjs (src/html/paginas/).
+    // La carta (/menu) y las fichas de local (/locales/chamberi, /locales/bernabeu)
+    // ya no son de esta SPA: son páginas HTML (src/html/paginas/); la carta se
+    // pinta en el edge (functions/menu.js).
     mk("/locales",  false, "Locales",
       "DUM DUM™ — Locales y reservas",
       "Puedes reservar en Chamberí o en Bernabéu. O en ambos :)."),

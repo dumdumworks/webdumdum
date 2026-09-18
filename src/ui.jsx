@@ -193,46 +193,8 @@ function mdParas(text, pProps, gap) {
     return React.createElement("p", base, mdInline(block, "b" + bi));
   });
 }
-// Sanea HTML "inline" de confianza limitada (p. ej. el disclaimer editable):
-// deja SOLO un puñado de etiquetas de formato sin atributos y descarta todo lo
-// demás (scripts, <img onerror>, on*, etc.). Usa el parser del navegador —no
-// regex— para no dejar huecos. Devuelve una cadena HTML segura.
-// NOTA: hoy el disclaimer NO es editable en Sveltia (viene del código), por eso
-// este saneador con allowlist es suficiente. Si en el futuro el disclaimer pasa
-// a ser un campo editable en el CMS (entrada no confiable de verdad), conviene
-// migrar a DOMPurify en lugar de mantener esta allowlist a mano.
-const _ALLOWED_INLINE_TAGS = { STRONG: 1, B: 1, EM: 1, I: 1, BR: 1, SPAN: 1 };
-function sanitizeInlineHTML(html) {
-  if (html == null) return "";
-  try {
-    const tpl = document.createElement("template");
-    tpl.innerHTML = String(html);
-    const walk = (node) => {
-      Array.from(node.childNodes).forEach((child) => {
-        if (child.nodeType === 1) { // Element
-          if (!_ALLOWED_INLINE_TAGS[child.tagName]) {
-            // Etiqueta no permitida → la sustituimos por su texto (inerte).
-            child.replaceWith(document.createTextNode(child.textContent || ""));
-            return;
-          }
-          // Quitar TODOS los atributos (href, style, on*, etc.).
-          Array.from(child.attributes).forEach((a) => child.removeAttribute(a.name));
-          walk(child);
-        } else if (child.nodeType !== 3) {
-          // Comentarios y demás nodos: fuera.
-          child.remove();
-        }
-      });
-    };
-    walk(tpl.content);
-    return tpl.innerHTML;
-  } catch (e) {
-    // Ante cualquier fallo, degradar a texto plano (nunca HTML crudo).
-    return String(html).replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]));
-  }
-}
 // Exponer global para que pages.jsx / app.jsx lo usen.
-window.i18n = { getLang, setLang, useLang, t, autoLocalize, ev, mdToJsx, mdParas, sanitizeInlineHTML };
+window.i18n = { getLang, setLang, useLang, t, autoLocalize, ev, mdToJsx, mdParas };
 
 // ─── Focus trap para modales/lightbox (accesibilidad) ────────
 // Devuelve un ref para el contenedor del diálogo. Cuando `active` es true:
@@ -835,36 +797,6 @@ function Reveal({ children, delay = 0 }) {
 
 }
 
-// ─── Logo renderer (preset SVG, uploaded img, file path, or null) ─
-function DishLogo({ logo }) {
-  if (!logo) return null;
-  // uploaded image (data URL)
-  if (typeof logo === "string" && logo.startsWith("data:")) {
-    return (
-      <div className="logo-slot">
-        <img src={logo} alt="" />
-      </div>);
-
-  }
-  // file path (e.g. "img/dumplings/gamba-label.svg")
-  if (typeof logo === "string" && /^(img|assets|\/)/.test(logo)) {
-    const isSvg = /\.svg(\?|$)/i.test(logo);
-    return (
-      <div className={`logo-slot ${isSvg ? "is-wide" : ""}`}>
-        <img src={logo} alt="" />
-      </div>);
-
-  }
-  const preset = window.DumDumData && window.DumDumData.PRESET_LOGOS
-    ? window.DumDumData.PRESET_LOGOS[logo] : null;
-  if (preset) {
-    return (
-      <div className="logo-slot" dangerouslySetInnerHTML={{ __html: preset }} />);
-
-  }
-  return null;
-}
-
 // Datos de los dos locales para reservas (DISH). Fuente única de verdad:
 // la usan el selector de reservas y los botones directos (Locales, footer, home).
 // Datos de los dos locales. FUENTE ÚNICA: los usan el selector de reservas, los
@@ -956,4 +888,4 @@ window.DUMDUM_LOCALES = {
   }
 };
 
-Object.assign(window, { useRoute, nav, TopBar, Footer, Loader, Reveal, DishLogo });
+Object.assign(window, { useRoute, nav, TopBar, Footer, Loader, Reveal });

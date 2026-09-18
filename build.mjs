@@ -18,6 +18,7 @@ import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { idioma, documento, archivoDe, extraerBloqueAnalitica } from "./src/html/plantilla.mjs";
 import { local, RUTA_LOCAL } from "./src/html/paginas/local.mjs";
+import { RUTA as RUTA_MENU } from "./src/html/paginas/menu.mjs";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(ROOT, "dist");
@@ -253,9 +254,10 @@ const LOCALES = extractLocales(rd("src/ui.jsx"));
 
 const ROUTES_SEO = extractRoutesSeo(rd("index.html"));
 const FILE_FOR = {
-  "/": "index.html", "/menu": "menu.html", "/locales": "locales.html",
+  "/": "index.html", "/locales": "locales.html",
   "/eventos": "eventos.html", "/contacto": "contacto.html",
-  // Las fichas de local ya no están aquí: son páginas HTML (PAGINAS_HTML, más abajo).
+  // La carta y las fichas de local ya no están aquí: son páginas HTML
+  // (PAGINAS_HTML y RUTAS_EDGE, más abajo).
 };
 const ROUTES = Object.keys(FILE_FOR).map((p) => {
   const s = ROUTES_SEO.find((r) => r.p === p);
@@ -322,7 +324,31 @@ const PAGINAS_HTML = {
   [RUTA_LOCAL("chamberi")]: local("chamberi"),
   [RUTA_LOCAL("bernabeu")]: local("bernabeu"),
 };
-const RUTAS_HTML = Object.keys(PAGINAS_HTML);
+// Páginas que se pintan en el edge en cada petición (functions/), con la misma
+// capa de plantillas: la carta, que tiene que salir con lo que edita el panel.
+const RUTAS_EDGE = [RUTA_MENU];
+const RUTAS_HTML = [...Object.keys(PAGINAS_HTML), ...RUTAS_EDGE];
+
+// ── 6b) La carta para el edge ────────────────────────────────
+// Se empaqueta la plantilla de la carta (documento + shell + platos) con sus
+// constantes ya resueltas en functions/_generado/carta.js, que importa
+// functions/_lib/carta.js. Pages empaqueta functions/ DESPUÉS de este build,
+// así que el archivo siempre existe cuando hace falta. No se versiona.
+{
+  const define = {
+    __ANALITICA__: JSON.stringify(ANALITICA), __CSS__: JSON.stringify(cssName),
+    __ISLAS__: JSON.stringify(islasName), __LOCALES__: JSON.stringify(LOCALES),
+    __SEO__: JSON.stringify(ROUTES_SEO), __RUTAS_HTML__: JSON.stringify(RUTAS_HTML),
+  };
+  const res = await esbuild.build({
+    entryPoints: [path.join(ROOT, "src/html/carta-edge.mjs")],
+    bundle: true, format: "esm", target: ["es2022"], write: false, define, logLevel: "silent",
+  });
+  if (res.warnings.length) throw new Error("Carta edge con avisos: " + res.warnings.map((w) => w.text).join("; "));
+  fs.mkdirSync(path.join(ROOT, "functions/_generado"), { recursive: true });
+  fs.writeFileSync(path.join(ROOT, "functions/_generado/carta.js"),
+    "// GENERADO por build.mjs desde src/html/carta-edge.mjs. No editar.\n" + res.outputFiles[0].text);
+}
 
 // La SPA no debe interceptar los enlaces a las rutas que ya son HTML (ver el
 // interceptor de clics en ui.jsx): se le inyecta la lista junto a __ROUTES_SEO.
@@ -342,8 +368,8 @@ const notFound = renderRouteHtml(tpl, {
 });
 fs.writeFileSync(path.join(DIST, "404.html"), notFound);
 
-for (const ruta of RUTAS_HTML) {
-  for (const lang of ["es", "en"]) escribirPaginaHtml(PAGINAS_HTML[ruta], ruta, lang, RUTAS_HTML);
+for (const [ruta, render] of Object.entries(PAGINAS_HTML)) {
+  for (const lang of ["es", "en"]) escribirPaginaHtml(render, ruta, lang, RUTAS_HTML);
 }
 
 // ── 7) Copiar estáticos de la raíz ───────────────────────────
@@ -537,7 +563,7 @@ if (devCopiados) console.log(`  dev/ → ${devCopiados} herramienta(s) de revisi
 console.log("  " + appName + " (" + kb(appBuf) + ")");
 console.log("  " + cssName + " (" + kb(cssBuf) + ")");
 console.log("  " + islasName + " (" + kb(islasBuf) + ") · islas de la web HTML");
-console.log("  web HTML: " + RUTAS_HTML.map((p) => p + " (+ /en" + p + ")").join(", "));
+console.log("  web HTML: " + RUTAS_HTML.map((p) => p + " (+ /en" + p + ")").join(", ") + " · la carta se pinta en el edge (functions/_generado/carta.js)");
 console.log("  vendor React+ReactDOM (SRI ok)");
 console.log("  HTML: " + ROUTES.map((r) => r.file).join(", ") + ", 404.html");
 console.log("  datos ?v: menu=" + dataVer.menu + " gal=" + dataVer.gal + " ev=" + dataVer.ev);

@@ -111,9 +111,19 @@ propio `build.mjs` (el plan está en el informe "Mutación a HTML"). Piezas:
 - Título y descripción salen de `__ROUTES_SEO` (`index.html`); las páginas HTML
   añaden `te`/`de` con la versión inglesa.
 
+- **La carta se pinta en el edge.** `/menu` y `/en/menu` no son archivos:
+  `functions/menu.js` y `functions/en/menu.js` (vía `functions/_lib/carta.js`)
+  leen la carta viva de KV (o `/menu.base.json` si KV falta) y la pintan en
+  cada petición con `functions/_generado/carta.js`, que es `src/html/carta-edge.mjs`
+  empaquetado por `build.mjs` con esbuild (analítica, nombres con hash, locales y
+  SEO ya resueltos; no se versiona). Caché corta (`max-age=15`), como `menu.json`.
+  `RUTAS_EDGE` en `build.mjs` la incluye en `RUTAS_HTML` sin escribir archivo.
+
 Ya son HTML: **las dos fichas de local** (`/locales/chamberi`, `/locales/bernabeu`
 y sus `/en/…`), con la galería de carga progresiva, el lightbox y el botón de
-llamar como islas. Se revisan en `marco.html?r=/locales/chamberi`.
+llamar como islas, y **la carta** (`/menu`, `/en/menu`) con la ventana de
+alérgenos, el visor de fotos y el relevo del flotante como islas. Se revisan en
+`marco.html?r=/menu`.
 
 ## Prerender: alcance
 

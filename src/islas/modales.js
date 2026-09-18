@@ -10,8 +10,9 @@
 //   data-reservar="slug"   → reservar directamente en ese local
 import { $, $$, emitir, atraparFoco } from "./nucleo.js";
 
-// Un modal es su overlay; la caja del diálogo es su primer hijo.
-function modal(sel) {
+// Un modal es su overlay; la caja del diálogo es su primer hijo. Lo usan
+// también las ventanas de otras islas (los alérgenos de la carta).
+export function modal(sel) {
   const overlay = $(sel);
   if (!overlay) return null;
   let soltar = null;

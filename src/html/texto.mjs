@@ -26,3 +26,18 @@ export function mdParas(texto, clase, aire = 16) {
 
 // "2024" → "DOSMIL24" / "TWENTY24", como autoLocalize() en la web React.
 export const anio = (i, yyyy) => i.t("DOSMIL", "TWENTY") + String(yyyy).slice(-2);
+
+// Sanea HTML "inline" de confianza limitada (el disclaimer de la carta, que
+// viene del CMS): deja SOLO un puñado de etiquetas de formato, sin atributos, y
+// convierte en texto todo lo demás. Mismo criterio que sanitizeInlineHTML en
+// ui.jsx, pero sin DOM: esto corre en Node y en el edge.
+const INLINE = /^(strong|b|em|i|br|span)$/;
+export function sanearInline(html) {
+  if (html == null) return "";
+  return String(html)
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/<\s*(\/?)\s*([a-z][a-z0-9]*)\b[^>]*>/gi, (m, cierre, tag) =>
+      INLINE.test(tag.toLowerCase()) ? `<${cierre}${tag.toLowerCase()}>` : "")
+    // Cualquier "<" que no haya formado una etiqueta permitida se neutraliza.
+    .replace(/<(?![/]?(strong|b|em|i|br|span)>)/gi, "&lt;");
+}

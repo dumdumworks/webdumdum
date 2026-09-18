@@ -1029,9 +1029,9 @@ img { display: block; max-width: 100%; }
 /* El selector de idioma es un enlace (la otra lengua es otra URL) y no debe
    heredar el subrayado de hover de los enlaces de la topbar. */
 .topbar .lang-toggle::after { content: none; }
-/* Los pasos de "Pide ya" no son cajas: sus hijos siguen siendo los ítems del
-   flex del modal, exactamente como cuando React los pintaba sueltos. */
-[data-paso] { display: contents; }
+/* Los pasos de "Pide ya" y las vistas de alérgenos no son cajas: sus hijos
+   siguen siendo los ítems del flex del modal, como cuando React los pintaba sueltos. */
+[data-paso], [data-vista] { display: contents; }
 /* Ídem al "marginTop: 8" del footer y al botón "Cambiar de local" de React. */
 .foot-mas { margin-top: 8px; }
 .reserve-cambiar {

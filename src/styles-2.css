@@ -893,7 +893,7 @@
   gap: 24px;
 }
 .menu-foot-btn { flex-shrink: 0; color: var(--red); border-color: var(--red); }
-/* Botón "Volver arriba" · se renderiza SOLO en móvil (ver Menu en pages.jsx) */
+/* Botón "Volver arriba" · solo en móvil (en escritorio se oculta más abajo, en el 880) */
 .menu-top-btn { flex-shrink: 0; color: var(--red); border-color: var(--red); }
 .menu-top-arrow {
   display: inline-block;
@@ -1715,6 +1715,8 @@
      Doble candado: por clase y por id, para que nunca falle. */
   .section-mobile-only,
   .section--bebidas { display: none !important; }
+  /* El pie con "Volver arriba" es de móvil: la carta de escritorio no lo lleva. */
+  .menu-shell .menu-foot { display: none; }
   /* ─── Contenedor ────────────────────────────────────────── */
   .menu-shell { max-width: 1320px; padding: 24px 32px 100px; }
   .menu-h { font-size: 96px !important; }
