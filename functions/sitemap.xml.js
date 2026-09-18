@@ -37,6 +37,14 @@ export async function onRequestGet({ env }) {
     <loc>https://dum-dum.es/contacto</loc>
     <lastmod>2026-07-17</lastmod>
   </url>
+  <url>
+    <loc>https://dum-dum.es/locales/chamberi</loc>
+    <lastmod>2026-09-16</lastmod>
+  </url>
+  <url>
+    <loc>https://dum-dum.es/locales/bernabeu</loc>
+    <lastmod>2026-09-16</lastmod>
+  </url>
 </urlset>`;
 
   return new Response(xml, {
