@@ -43,7 +43,7 @@ const esInline = (tg) => /^(VEG|PICANTE)$/i.test(tg);
 
 // Campo bilingüe del CMS: en inglés usa "<campo>_en" si tiene contenido.
 // En los ingredientes, " · " pasa a coma y la letra que la sigue a minúscula.
-function tf(i, obj, campo) {
+export function tf(i, obj, campo) {
   if (!obj) return "";
   const en = obj[campo + "_en"];
   let v = i.lang === "en" && en && String(en).trim() !== "" ? en : (obj[campo] || "");
