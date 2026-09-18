@@ -3,8 +3,8 @@
 //
 // PROTEGIDO POR CLOUDFLARE ACCESS: /api/* debe estar dentro de la misma
 // aplicación de Access que protege el panel. Access inyecta la cabecera
-// "Cf-Access-Jwt-Assertion" en las peticiones que han pasado el login; aquí
-// exigimos su presencia como comprobación básica (defensa en profundidad).
+// "Cf-Access-Jwt-Assertion" en las peticiones que han pasado el login, y aquí
+// se VERIFICA ese token (firma, emisor, audiencia, caducidad): ver _lib/access.js.
 //
 //   GET  /api/menu  → devuelve la carta actual (KV, o el fallback del build).
 //   POST /api/menu  → guarda la carta en KV (body = objeto menu.json completo).
@@ -15,12 +15,11 @@ function json(obj, status = 200, extra = {}) {
     headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...extra },
   });
 }
-function requireAccess(request) {
-  return !!request.headers.get("Cf-Access-Jwt-Assertion");
-}
+import { requireAccess } from "../_lib/access.js";
 
 export async function onRequestGet({ env, request }) {
-  if (!requireAccess(request)) return json({ error: "No autorizado" }, 401);
+  const denegado = await requireAccess(request, env);
+  if (denegado) return denegado;
   try {
     if (env.MENU) {
       const v = await env.MENU.get("current");
@@ -32,7 +31,8 @@ export async function onRequestGet({ env, request }) {
 }
 
 export async function onRequestPost({ env, request }) {
-  if (!requireAccess(request)) return json({ error: "No autorizado" }, 401);
+  const denegado = await requireAccess(request, env);
+  if (denegado) return denegado;
   if (!env.MENU) return json({ error: "La base de datos (KV binding MENU) no está configurada todavía." }, 500);
 
   let data;
