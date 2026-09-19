@@ -34,8 +34,12 @@ rebuild. La carta (`menu.json` / KV) no necesita build: ver más abajo.
 4. **La carta para el edge**: `src/html/carta-edge.mjs` (documento + shell +
    platos) se empaqueta con las constantes resueltas (analítica, hashes, locales,
    SEO) en `functions/_generado/carta.js`. Pages empaqueta `functions/` después.
-5. **Estáticos**: `img/`, `admin/` (Sveltia), `panel/`, favicons, `robots.txt`,
-   `sitemap.xml` y `menu.base.json` (copia de `menu.json`, respaldo de la carta).
+   También escribe `functions/_generado/sitemap.js` (rutas y fecha del último commit
+   del contenido de cada página) para `functions/sitemap.xml.js`, que sirve el
+   sitemap en el edge: las 7 rutas en los dos idiomas con `hreflang`, y la carta
+   fechada por el panel (KV `updated`).
+5. **Estáticos**: `img/`, `admin/` (Sveltia), `panel/`, favicons, `robots.txt`
+   y `menu.base.json` (copia de `menu.json`, respaldo de la carta).
 6. **`_redirects`** y **`_headers`**, generados a partir de todas las rutas limpias
    en los dos idiomas (barra final → 301; HTML `no-cache`; `/assets/*` inmutable).
 

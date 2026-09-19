@@ -12,12 +12,13 @@
 //    _headers.
 // Salida: dist/  (directorio de publicación en Cloudflare Pages).
 // ─────────────────────────────────────────────────────────────
+import { execFileSync } from "node:child_process";
 import esbuild from "esbuild";
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { idioma, documento, archivoDe } from "./src/html/plantilla.mjs";
+import { idioma, documento, archivoDe, ORIGIN } from "./src/html/plantilla.mjs";
 import { LOCALES } from "./src/html/locales.mjs";
 import { ROUTES_SEO } from "./src/html/seo.mjs";
 import { local, RUTA_LOCAL } from "./src/html/paginas/local.mjs";
@@ -120,6 +121,32 @@ const PAGINAS_HTML = {
 const RUTAS_EDGE = [RUTA_MENU];
 const RUTAS_HTML = [...Object.keys(PAGINAS_HTML), ...RUTAS_EDGE];
 
+// ── 3b) Fechas para el sitemap ───────────────────────────────
+// El <lastmod> de cada ruta es la fecha del último commit que tocó su CONTENIDO
+// (plantilla y datos propios), no el shell ni el CSS: Google desconfía de un
+// lastmod que cambia en cada deploy. La carta la fecha el panel (KV `updated`)
+// en functions/sitemap.xml.js y aquí solo lleva el respaldo. Sin git (o sin
+// historial en el build), la ruta va sin fecha antes que con una inventada.
+const FUENTES_SITEMAP = {
+  [RUTA_HOME]: ["src/html/paginas/home.mjs"],
+  [RUTA_LOCALES]: ["src/html/paginas/locales.mjs", "src/html/locales.mjs"],
+  [RUTA_LOCAL("chamberi")]: ["src/html/paginas/local.mjs", "src/html/locales.mjs", "galerias.json"],
+  [RUTA_LOCAL("bernabeu")]: ["src/html/paginas/local.mjs", "src/html/locales.mjs", "galerias.json"],
+  [RUTA_EVENTOS]: ["src/html/paginas/eventos.mjs", "eventos.json", "galerias.json"],
+  [RUTA_CONTACTO]: ["src/html/paginas/contacto.mjs", "src/html/locales.mjs"],
+  [RUTA_MENU]: ["src/html/paginas/menu.mjs", "src/html/carta.mjs", "menu.json"],
+};
+const fechaGit = (fuentes) => {
+  try {
+    const f = execFileSync("git", ["log", "-1", "--format=%cs", "--", ...fuentes], { cwd: ROOT, stdio: ["ignore", "pipe", "ignore"] }).toString().trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(f) ? f : null;
+  } catch { return null; }
+};
+const SITEMAP = RUTAS_HTML.map((ruta) => {
+  if (!FUENTES_SITEMAP[ruta]) throw new Error("Falta la ruta en FUENTES_SITEMAP: " + ruta);
+  return { ruta, lastmod: fechaGit(FUENTES_SITEMAP[ruta]) };
+});
+
 // ── 4) La carta para el edge ─────────────────────────────────
 // Se empaqueta la plantilla de la carta (documento + shell + platos) con sus
 // constantes ya resueltas en functions/_generado/carta.js, que importa
@@ -139,6 +166,10 @@ const RUTAS_HTML = [...Object.keys(PAGINAS_HTML), ...RUTAS_EDGE];
   fs.mkdirSync(path.join(ROOT, "functions/_generado"), { recursive: true });
   fs.writeFileSync(path.join(ROOT, "functions/_generado/carta.js"),
     "// GENERADO por build.mjs desde src/html/carta-edge.mjs. No editar.\n" + res.outputFiles[0].text);
+  // Rutas y fechas para functions/sitemap.xml.js (mismo mecanismo, misma carpeta).
+  fs.writeFileSync(path.join(ROOT, "functions/_generado/sitemap.js"),
+    "// GENERADO por build.mjs. No editar.\nexport const ORIGIN = " + JSON.stringify(ORIGIN)
+    + ";\nexport const SITEMAP = " + JSON.stringify(SITEMAP) + ";\n");
 }
 
 for (const [ruta, render] of Object.entries(PAGINAS_HTML)) {
@@ -152,7 +183,7 @@ const copyFile = (rel) => fs.copyFileSync(path.join(ROOT, rel), path.join(DIST, 
 const copyDir = (rel) => fs.cpSync(path.join(ROOT, rel), path.join(DIST, rel), { recursive: true });
 // Datos + ficheros sueltos de raíz habituales (se copian los que existan).
 const ROOT_FILES = [
-  "robots.txt", "sitemap.xml",
+  "robots.txt",
   "favicon.ico",
   "favicon-48x48.png",
   "favicon-192x192.png",

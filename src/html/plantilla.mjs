@@ -45,7 +45,9 @@ const PREFERENCIA = '(function(){try{var v=localStorage.getItem("dumdum.lang");i
 // Documento completo de una página.
 //   i        → idioma()      ruta → ruta neutra ("/menu"), sin /en
 //   titulo, desc, cuerpo (HTML del <body>), ld (JSON-LD o null)
-//   analitica → extraerBloqueAnalitica()   css, islas → rutas en dist/ (con hash)
+//   analitica → src/html/analitica.html; el banner de Cookiebot sale en el
+//               idioma de la página (data-culture), no en el del navegador
+//   css, islas → rutas en dist/ (con hash)
 export function documento({ i, ruta, titulo, desc, cuerpo, ld, analitica, css, islas }) {
   const urlEs = ORIGIN + ruta;
   const urlEn = ORIGIN + "/en" + (ruta === "/" ? "/" : ruta);
@@ -58,7 +60,7 @@ export function documento({ i, ruta, titulo, desc, cuerpo, ld, analitica, css, i
   <meta charset="UTF-8">
   <script>${PREFERENCIA}</script>
 
-  ${analitica}
+  ${analitica.replace('id="Cookiebot"', `id="Cookiebot" data-culture="${i.lang.toUpperCase()}"`)}
 
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
