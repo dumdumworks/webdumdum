@@ -1,0 +1,116 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "DUM DUM",
+  "description": "Dumplings & Desobediencia en Madrid.",
+  "servesCuisine": [
+    "Dumplings",
+    "Asiática",
+    "Fusión"
+  ],
+  "priceRange": "€€",
+  "url": "https://dum-dum.es/",
+  "image": "https://dum-dum.es/og-image.png",
+  "telephone": "+34614746065",
+  "acceptsReservations": true,
+  "hasMenu": "https://dum-dum.es/menu",
+  "sameAs": [
+    "https://www.instagram.com/dumdum.plings"
+  ],
+  "department": [
+    {
+      "@type": "Restaurant",
+      "name": "DUM DUM Chamberí",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Calle Blasco de Garay, 10",
+        "addressLocality": "Madrid",
+        "postalCode": "28015",
+        "addressCountry": "ES"
+      },
+      "servesCuisine": [
+        "Dumplings",
+        "Asiática",
+        "Fusión"
+      ],
+      "telephone": "+34624560181",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "13:00",
+          "closes": "15:39"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "20:00",
+          "closes": "22:39"
+        }
+      ]
+    },
+    {
+      "@type": "Restaurant",
+      "name": "DUM DUM Bernabéu",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Calle Infanta Mercedes, 17",
+        "addressLocality": "Madrid",
+        "postalCode": "28020",
+        "addressCountry": "ES"
+      },
+      "servesCuisine": [
+        "Dumplings",
+        "Asiática",
+        "Fusión"
+      ],
+      "telephone": "+34614167317",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "13:00",
+          "closes": "15:39"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "20:00",
+          "closes": "22:39"
+        }
+      ]
+    }
+  ]
+}

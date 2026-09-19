@@ -210,7 +210,10 @@
     }
   };
 
-  let tipo = "movil", W = 390, H = 844, ruta = "/locales/chamberi", uno = false;
+  // La ruta inicial se puede pasar en la URL (marco.html?r=/menu) para enlazar
+  // directamente una página concreta.
+  let tipo = "movil", W = 390, H = 844, uno = false;
+  let ruta = new URLSearchParams(location.search).get("r") || "/locales/chamberi";
 
   function pintarAnchos() {
     const a = APARATOS[tipo];

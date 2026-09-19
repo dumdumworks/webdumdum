@@ -1,0 +1,95 @@
+<!-- Google Consent Mode v2: estado por defecto DENEGADO. Debe ir el PRIMERO,
+       antes de Cookiebot y de Analytics. Cookiebot actualiza el permiso al aceptar. -->
+  <script data-cookieconsent="ignore">
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag("consent", "default", {
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+      analytics_storage: "denied",
+      functionality_storage: "denied",
+      personalization_storage: "denied",
+      security_storage: "granted",
+      wait_for_update: 500
+    });
+    gtag("set", "ads_data_redaction", true);
+    gtag("set", "url_passthrough", true);
+  </script>
+
+  <!-- Preconnect al CMP: Cookiebot es el mayor bloqueador de render (~1,4 s) y
+       buena parte es abrir la conexión (DNS+TCP+TLS). Adelantarla no cambia NADA
+       del orden: un <link> no es un script, así que Consent Mode → Cookiebot → GA
+       se mantiene, y Cookiebot sigue siendo síncrono. Además Cloudflare promociona
+       los preconnect a Early Hints (HTTP 103), que viajan ANTES que el HTML.
+       Sin crossorigin: el script de Cookiebot se pide en modo no-CORS. -->
+  <link rel="preconnect" href="https://consent.cookiebot.com">
+
+  <!-- Cookiebot (CMP) · SÍNCRONO y el PRIMERO tras el Consent Mode, tal como
+       EXIGE data-blockingmode="auto" (el auto-blocking necesita cargar de forma
+       síncrona en el <head>; inyectarlo por JS lo vuelve asíncrono y arranca tarde
+       sobre la SPA ya pintada, saturando el hilo principal → jank general).
+       Carga en TODOS los hosts, como antes del refactor: solo muestra el banner
+       de cookies (inofensivo fuera de producción). Es la única forma de que
+       Cookiebot recupere EXACTAMENTE su comportamiento de carga previo; por eso NO
+       se condiciona por hostname (eso obligaría a inyectarlo por JS = el bug).
+       Solo Google Analytics (abajo) queda condicionado a producción. -->
+  <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="fff625a8-8755-4ff9-a968-09ead09cd1b9" data-blockingmode="auto" type="text/javascript"></script>
+
+  <!-- Google Analytics (GA4) · SOLO en el dominio de producción. En previews de
+       Cloudflare (*.pages.dev) y en local NO se carga, para no contaminar la
+       analítica con tráfico de pruebas. El Consent Mode (arriba) se define SIEMPRE.
+       Orden preservado: Consent Mode → Cookiebot → GA. -->
+  <script>
+    (function () {
+      var host = location.hostname;
+      var isProd = (host === 'dum-dum.es' || host === 'www.dum-dum.es');
+      if (!isProd) return;
+      var ga = document.createElement('script');
+      ga.async = true;
+      ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-VRELRN5VGC';
+      document.head.appendChild(ga);
+      gtag('js', new Date());
+      gtag('config', 'G-VRELRN5VGC');
+    })();
+
+    // Eventos de conversión: se registran SIEMPRE. gtag ya está definido arriba
+    // por el Consent Mode; sin GA cargado (local/preview) solo acumula en
+    // dataLayer y no se envía nada.
+
+    // Cada vez que se abre el widget de reserva (cualquier boton o el enlace del anuncio),
+    // se manda un evento a GA. Este evento es el que se marca como conversion en Ads.
+    window.addEventListener('dumdum:open-reserve', function () {
+      gtag('event', 'reserva_iniciada');
+    });
+
+    // Mide en GA los clics en: Llamar (tel:), Take Away (Square) y Uber Eats.
+    // Escucha global: no toca los botones; detecta el enlace pulsado y manda el evento.
+    document.addEventListener('click', function (e) {
+      var a = (e.target && e.target.closest) ? e.target.closest('a[href]') : null;
+      if (!a) return;
+      var href = (a.getAttribute('href') || '').toLowerCase();
+      if (href.indexOf('tel:') === 0) {
+        // En desktop, el botón "Llamar a X" hace 2 clics: el 1º solo REVELA el
+        // número (no llama) y el 2º sí llama. BotonLlamar marca ese 1er clic con
+        // data-reveal="pending"; lo ignoramos para no inflar la conversión
+        // (antes se contaban hasta 2 eventos por llamada real, y 1 por curiosear).
+        // En móvil no hay revelado: el tel: llama directo y el evento sí cuenta.
+        if (a.getAttribute('data-reveal') === 'pending') return;
+        var num = href.replace(/[^0-9]/g, '');
+        var local = num.indexOf('624560181') !== -1 ? 'chamberi'
+                  : num.indexOf('614167317') !== -1 ? 'bernabeu'
+                  : num.indexOf('614746065') !== -1 ? 'general' : 'desconocido';
+        gtag('event', 'llamar', { local: local });
+      } else if (href.indexOf('square.site') !== -1) {
+        gtag('event', 'take_away', { destino: 'square' });
+      } else if (href.indexOf('glovoapp.com') !== -1) {
+        // Glovo tiene una sola tienda para Madrid: no hay local que distinguir.
+        gtag('event', 'glovo');
+      } else if (href.indexOf('ubereats.com') !== -1) {
+        var loc = href.indexOf('bernabeu') !== -1 ? 'bernabeu'
+                : href.indexOf('chamberi') !== -1 ? 'chamberi' : 'general';
+        gtag('event', 'uber_eats', { local: loc });
+      }
+    }, true);
+  </script>

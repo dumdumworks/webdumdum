@@ -9,6 +9,7 @@ La web dentro del aparato dibujado, para revisarla sin que la página se funda
 con el fondo del panel.
 
     http://127.0.0.1:8788/marco.html
+    http://127.0.0.1:8788/marco.html?r=/menu   (abre directamente esa ruta)
 
 - **Aparato:** móvil (iPhone con bisel, isla y barra de gestos) u ordenador
   (monitor con la barra del navegador y la URL). Al cambiar se entra por la

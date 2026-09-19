@@ -49,21 +49,21 @@ body {
    email/instagram/etc.) hasta abajo, pegándolo al footer rojo sin dejar
    hueco crema. El móvil mantiene su disposición propia (no se toca). */
 @media (min-width: 881px) {
-  #root {
+  body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
   }
-  #root > main { flex: 1 0 auto; display: flex; flex-direction: column; }
+  main { flex: 1 0 auto; display: flex; flex-direction: column; }
   /* Solo la página de Contacto empuja su spec-foot abajo (es la corta donde
      quedaba aire). Las demás páginas (home, locales...) no se tocan: su
      spec-foot conserva su línea separadora y posición. */
-  #root > main > [data-screen-label="contacto"] { flex: 1 0 auto; display: flex; flex-direction: column; }
-  #root > main > [data-screen-label="contacto"] > .spec-foot { margin-top: auto; }
+  main > [data-screen-label="contacto"] { flex: 1 0 auto; display: flex; flex-direction: column; }
+  main > [data-screen-label="contacto"] > .spec-foot { margin-top: auto; }
   /* La sección .contact tiene una línea inferior que, al bajar el spec-foot,
      quedaba flotando en el hueco. La quitamos: el cierre superior de las
      celdas lo da el border-top del propio spec-foot, pegado a ellas. */
-  #root > main > [data-screen-label="contacto"] > .contact { border-bottom: none; }
+  main > [data-screen-label="contacto"] > .contact { border-bottom: none; }
 }
 
 a { color: inherit; text-decoration: none; }
@@ -284,7 +284,7 @@ img { display: block; max-width: 100%; }
 
 /* Primer prefers-reduced-motion del sitio: el relevo aparece sin fundido. */
 @media (prefers-reduced-motion: reduce){
-  .fab, .alerg-fab, .alerg-fab.is-on, .pide-fab{ transition: none; }
+  .fab, .alerg-fab, .alerg-fab.is-on, .pide-fab, .yt-play{ transition: none; }
 }
 
 /* Badge de Cookiebot (el círculo de abajo a la izquierda que reabre el aviso
@@ -387,12 +387,10 @@ img { display: block; max-width: 100%; }
 .reserve-modal .alerg-intro::after,
 .reserve-modal .alerg-title::before,
 .reserve-modal .alerg-title::after{ display:none; }
-.dish-widget-host{ width:100%; }
+
 /* Forzar que el iframe/contenido de DISH ocupe todo el ancho del contenedor,
    para que su borde coincida con el de líneas y textos (que van al 100%). */
-.dish-widget-host iframe,
-.reserve-widget-wrap iframe,
-.reserve-widget-wrap > div{ width:100% !important; max-width:100% !important; }
+.reserve-widget-wrap iframe, .reserve-widget-wrap > div { width:100% !important; max-width:100% !important; }
 @media (max-width:520px){
   .reserve-modal{ border-radius:20px; }
   /* Ancho del widget en móvil: 281px (medido). Líneas y textos a ese ancho. */
@@ -440,9 +438,18 @@ img { display: block; max-width: 100%; }
   color: var(--red);
   text-transform: uppercase;
 }
-.lang-toggle span { opacity: 0.4; transition: opacity .18s ease; }
+.lang-toggle span { position: relative; opacity: 0.4; transition: opacity .18s ease; }
 .lang-toggle span.on { opacity: 1; }
-.lang-toggle .sep { opacity: 0.4; }
+/* Al pasar por encima se subraya solo la lengua que se va a cargar (.otro), no
+   el enlace entero: la regla genérica .topbar a:hover::after no aplica aquí.
+   El filete cae a la misma altura que el de los enlaces del nav (bottom -2px
+   del enlace con padding 4px = -6px del texto). */
+.topbar a.lang-toggle::after { content: none; }
+.lang-toggle:hover .otro { opacity: 1; }
+.lang-toggle:hover .otro::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px; background: var(--red);
+}
+@media (hover: none) { .lang-toggle { -webkit-tap-highlight-color: transparent; } .lang-toggle span { transition: none; } }
 /* Grupo derecho móvil (Reservar + hamburguesa) · oculto en desktop */
 .topbar-mobile-right { display: none; align-items: center; gap: 14px; }
 .topbar-reservar-mobile { font-size: 11px; padding: 7px 14px !important; }
@@ -651,47 +658,6 @@ img { display: block; max-width: 100%; }
 .muted { color: rgba(255,0,30,0.55); }
 .cap { letter-spacing: 0.04em; }
 .tnum { font-variant-numeric: tabular-nums; }
-
-/* ---------- Loading ---------- */
-.loader {
-  position: fixed; inset: 0; z-index: 200;
-  background: var(--bg);
-  display: flex; flex-direction: column; justify-content: space-between;
-  padding: 24px;
-  transition: opacity .6s ease, transform .6s cubic-bezier(.7,0,.2,1);
-}
-.loader.out { opacity: 0; transform: translateY(-12px); pointer-events: none; }
-.loader-top, .loader-bot { display: flex; justify-content: space-between; font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 11px; letter-spacing: 0.06em; }
-.loader-mid {
-  flex: 1;
-  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-}
-/* Loader minimalista: solo el número, centrado en toda la pantalla */
-.loader-bare { justify-content: center; align-items: center; padding: 0; }
-.loader-bare .loader-mid { flex: none; align-items: center; }
-.loader-count-big {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(96px, 26vw, 360px);
-  line-height: 0.82;
-  letter-spacing: -0.06em;
-  color: var(--ink);
-  display: flex;
-  align-items: baseline;
-}
-.loader-pct {
-  font-size: 0.28em;
-  font-weight: 600;
-  margin-left: 0.1em;
-  letter-spacing: 0;
-}
-.loader-count { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 13px; letter-spacing: 0.08em; }
-.loader-bar { height: 1px; background: var(--line-soft); position: relative; margin: 18px 0; }
-.loader-bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); }
-
-/* ---------- Reveal anim ---------- */
-.reveal { opacity: 0; transform: translateY(14px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
-.reveal.in { opacity: 1; transform: none; }
 
 /* ---------- Mobile menu (carta) styles in separate block ---------- */
 
@@ -1021,3 +987,23 @@ img { display: block; max-width: 100%; }
   .alerg-rotate-cta{ display:none; }
   .alerg-table-full{ display:block; }
 }
+
+/* ── Web HTML (cimientos) ─────────────────────────────────────
+   Reglas que solo necesita el marcado estático de src/html/. Van al final de
+   ESTE archivo (el último de la cascada) para ganar por orden a las reglas de
+   display de cada componente sin recurrir a !important. */
+/* Los pasos de "Pide ya" y las vistas de alérgenos no son cajas: sus hijos
+   siguen siendo los ítems del flex del modal, como cuando React los pintaba sueltos. */
+[data-paso], [data-vista] { display: contents; }
+/* Ídem al "marginTop: 8" del footer y al botón "Cambiar de local" de React. */
+.foot-mas { margin-top: 8px; }
+.reserve-cambiar {
+  background: none; border: none; padding: 4px 0; margin-bottom: 8px; cursor: pointer;
+  color: var(--red); font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+}
+/* El foco al abrir un diálogo va al propio diálogo (islas/nucleo.js): sin
+   anillo, que ahí no señala nada; los controles de dentro conservan el suyo. */
+.pide-modal:focus, .alerg-modal:focus, .lb-overlay:focus, .dish-lightbox:focus { outline: none; }
+/* Modales, pasos y flotante se muestran y ocultan con el atributo hidden. */
+[hidden] { display: none; }
