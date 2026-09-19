@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// /api/menu — leer y guardar la carta (usado por el panel de /admin).
+// /api/menu — leer y guardar la carta (usado por el panel de /panel).
 //
 // PROTEGIDO POR CLOUDFLARE ACCESS: /api/* debe estar dentro de la misma
 // aplicación de Access que protege el panel. Access inyecta la cabecera

@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────
 // EVENTOS (/eventos): hero con dossier, espacio, producto, prensa, redes,
 // universo, al frente, servicios y el formulario. Es el componente Eventos de
-// pages.jsx. Los textos editables salen de eventos.json (Sveltia) con caída
+// pages.jsx. Los textos editables salen de eventos.json con caída
 // TOTAL al texto escrito aquí: si el editor no aporta nada, se ve igual.
 // ─────────────────────────────────────────────────────────────
 import { esc, ORIGIN } from "../plantilla.mjs";
@@ -93,7 +93,7 @@ export function eventos(i, { locales, seo, ldGlobal, eventos: ev, galerias, cart
   const ebp = (k, fb) => (campo(k).trim() ? mdParas(campo(k), "body") : fb);
   const eh = (k, negro, rojo) => (campo(k).trim() ? mdInline(campo(k)) : (rojo ? negro + " " + rojo : negro));
   const p = (html, aire) => `<p class="body"${aire ? ` style="margin-top:${aire}px"` : ""}>${html}</p>`;
-  // Dossier de tarifas (campo `dossier`). Sveltia guarda la ruta con o sin "/"
+  // Dossier de tarifas (campo `dossier`). La ruta puede venir con o sin "/"
   // inicial; una URL absoluta se respeta por si algún día se aloja fuera.
   const dossierRaw = campo("dossier").trim();
   const dossier = !dossierRaw ? DOSSIER_POR_DEFECTO
