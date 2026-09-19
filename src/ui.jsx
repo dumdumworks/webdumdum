@@ -127,74 +127,8 @@ function autoLocalize(text) {
   });
   return out;
 }
-// ─── Textos de la sección Eventos (editables en Sveltia → eventos.json) ──
-// Lee un campo de eventos.json según idioma. En EN usa "<key>_en"; si está
-// vacío, cae al español. Si eventos.json no se cargó o falta la clave,
-// devuelve "" y el componente usa su texto de respaldo escrito en el código.
-function ev(key) {
-  const data = (typeof window !== "undefined" && window.PUBLISHED_EVENTOS) || null;
-  if (!data) return "";
-  if (getLang() === "en") {
-    const en = data[key + "_en"];
-    if (en != null && String(en).trim() !== "") return String(en);
-  }
-  const es = data[key];
-  return es != null ? String(es) : "";
-}
-// Convierte una línea de mini-markdown en partes JSX inline:
-//  · **texto**  → <strong>texto</strong>  (negrita, la del botón de Sveltia)
-//  · " / "       → salto de línea <br/>     (saltos fijos dentro de un título)
-function mdInline(text, keyPrefix) {
-  const kp = keyPrefix == null ? "" : keyPrefix + "-";
-  // Salto de línea SOLO en " / " (barra con espacio a ambos lados). Así una
-  // URL ("https://…"), "c/ Blasco de Garay" o "y/o" NO se parten por accidente.
-  const lines = String(text).split(/\s+\/\s+/);
-  const out = [];
-  lines.forEach((line, li) => {
-    const parts = line.split(/(\*\*[^*]+\*\*)/g);
-    parts.forEach((part, pi) => {
-      if (/^\*\*[^*]+\*\*$/.test(part)) {
-        out.push(React.createElement("strong", { key: kp + li + "-" + pi }, part.slice(2, -2)));
-      } else if (part !== "") {
-        out.push(part);
-      }
-    });
-    if (li < lines.length - 1) out.push(React.createElement("br", { key: kp + "br-" + li }));
-  });
-  return out;
-}
-// Texto inline (títulos): devuelve un Fragment. Si vacío, null.
-function mdToJsx(text) {
-  if (text == null || String(text).trim() === "") return null;
-  return React.createElement(React.Fragment, null, mdInline(text, "t"));
-}
-// Párrafos (campo único de Sveltia): separa por LÍNEAS EN BLANCO y devuelve
-// un array de <p>, cada uno con su negrita. Así escribes todo seguido y la
-// web reparte los párrafos sola, sin que calcules saltos. Si vacío, null.
-//  · pProps: props base aplicadas a cada <p> (className, etc.)
-//  · gap: separación (px) entre párrafos a partir del segundo (def. 16)
-function mdParas(text, pProps, gap) {
-  if (text == null || String(text).trim() === "") return null;
-  const sep = (gap == null) ? 16 : gap;
-  // Normalizar saltos y partir por una o más líneas en blanco.
-  const blocks = String(text)
-    .replace(/\r\n/g, "\n")
-    .split(/\n\s*\n+/)
-    .map((b) => b.trim())
-    .filter((b) => b !== "");
-  if (blocks.length === 0) return null;
-  return blocks.map((block, bi) => {
-    const base = Object.assign({ key: "p-" + bi }, pProps || {});
-    // El primer párrafo conserva las props tal cual; los siguientes reciben
-    // separación superior (replica el marginTop:16 que había entre párrafos).
-    if (bi > 0) {
-      base.style = Object.assign({}, (pProps && pProps.style) || {}, { marginTop: sep });
-    }
-    return React.createElement("p", base, mdInline(block, "b" + bi));
-  });
-}
 // Exponer global para que pages.jsx / app.jsx lo usen.
-window.i18n = { getLang, setLang, useLang, t, autoLocalize, ev, mdToJsx, mdParas };
+window.i18n = { getLang, setLang, useLang, t, autoLocalize };
 
 // ─── Focus trap para modales/lightbox (accesibilidad) ────────
 // Devuelve un ref para el contenedor del diálogo. Cuando `active` es true:

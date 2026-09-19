@@ -43,6 +43,15 @@ export function extraerBloqueAnalitica(indexHtml) {
   return indexHtml.slice(ini, fin).trimEnd();
 }
 
+// Datos estructurados globales de index.html (Restaurant con los dos locales):
+// los llevan las páginas HTML que no tienen JSON-LD propio, como hasta ahora
+// lo llevaban todas las de la SPA.
+export function extraerJsonLdGlobal(indexHtml) {
+  const m = indexHtml.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  if (!m) throw new Error("No encuentro el JSON-LD global en index.html");
+  return JSON.parse(m[1]);
+}
+
 // Idioma preferido. Quien ya eligió idioma (el selector lo guarda en
 // localStorage, igual que React) aterriza siempre en su versión, venga por la
 // URL que venga. Sin preferencia guardada no se toca nada: la URL manda, que

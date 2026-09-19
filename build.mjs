@@ -16,9 +16,12 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { idioma, documento, archivoDe, extraerBloqueAnalitica } from "./src/html/plantilla.mjs";
+import { idioma, documento, archivoDe, extraerBloqueAnalitica, extraerJsonLdGlobal } from "./src/html/plantilla.mjs";
 import { local, RUTA_LOCAL } from "./src/html/paginas/local.mjs";
 import { RUTA as RUTA_MENU } from "./src/html/paginas/menu.mjs";
+import { locales as paginaLocales, RUTA as RUTA_LOCALES } from "./src/html/paginas/locales.mjs";
+import { contacto, RUTA as RUTA_CONTACTO } from "./src/html/paginas/contacto.mjs";
+import { eventos, RUTA as RUTA_EVENTOS } from "./src/html/paginas/eventos.mjs";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(ROOT, "dist");
@@ -186,13 +189,10 @@ const boot = `<script src="/${reactName}" integrity="${reactSri}" crossorigin="a
       });
       // Doble red de seguridad: montar igualmente si algo impidiera el then de arriba.
       setTimeout(mount, TIMEOUT + 500);
-      // 2) galerías y textos de eventos en 2º plano; al llegar, avisar (si ya
+      // 2) galerías en 2º plano; al llegar, avisar (si ya
       //    está montado) con "focus", que es lo que recargan los componentes.
       grab("/galerias.json?v=${dataVer.gal}").then(function (d) {
         if (d) { window.PUBLISHED_GALLERY = d; if (mounted) window.dispatchEvent(new Event("focus")); }
-      });
-      grab("/eventos.json?v=${dataVer.ev}").then(function (d) {
-        if (d) { window.PUBLISHED_EVENTOS = d; if (mounted) window.dispatchEvent(new Event("focus")); }
       });
     })();
   </script>`;
@@ -254,10 +254,8 @@ const LOCALES = extractLocales(rd("src/ui.jsx"));
 
 const ROUTES_SEO = extractRoutesSeo(rd("index.html"));
 const FILE_FOR = {
-  "/": "index.html", "/locales": "locales.html",
-  "/eventos": "eventos.html", "/contacto": "contacto.html",
-  // La carta y las fichas de local ya no están aquí: son páginas HTML
-  // (PAGINAS_HTML y RUTAS_EDGE, más abajo).
+  "/": "index.html",
+  // El resto de páginas ya son HTML (PAGINAS_HTML y RUTAS_EDGE, más abajo).
 };
 const ROUTES = Object.keys(FILE_FOR).map((p) => {
   const s = ROUTES_SEO.find((r) => r.p === p);
@@ -300,7 +298,11 @@ function renderRouteHtml(base, route) {
 // idioma (/ruta y /en/ruta). Cada página que se migre se añade al registro
 // (PAGINAS_HTML) y se retira de la SPA (FILE_FOR).
 const ANALITICA = extraerBloqueAnalitica(rd("index.html"));
-const DATOS_HTML = { locales: LOCALES, galerias: JSON.parse(rd("galerias.json")), seo: ROUTES_SEO, raiz: ROOT };
+const DATOS_HTML = {
+  locales: LOCALES, seo: ROUTES_SEO, raiz: ROOT,
+  galerias: JSON.parse(rd("galerias.json")), eventos: JSON.parse(rd("eventos.json")), carta: JSON.parse(rd("menu.json")),
+  ldGlobal: extraerJsonLdGlobal(rd("index.html")),
+};
 function escribirPaginaHtml(render, ruta, lang, rutasEn) {
   const i = idioma(lang, rutasEn);
   const html = documento({
@@ -321,8 +323,11 @@ function escribirPaginaHtml(render, ruta, lang, rutasEn) {
 // dist/en/locales/chamberi.html en /en/locales/chamberi, sin conflicto con
 // locales.html → /locales (comprobado).
 const PAGINAS_HTML = {
+  [RUTA_LOCALES]: paginaLocales,
   [RUTA_LOCAL("chamberi")]: local("chamberi"),
   [RUTA_LOCAL("bernabeu")]: local("bernabeu"),
+  [RUTA_EVENTOS]: eventos,
+  [RUTA_CONTACTO]: contacto,
 };
 // Páginas que se pintan en el edge en cada petición (functions/), con la misma
 // capa de plantillas: la carta, que tiene que salir con lo que edita el panel.

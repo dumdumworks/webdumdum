@@ -20,7 +20,8 @@ const ICONOS = {
   desde: '<path d="M7.6 1.9a1.2 1.2 0 0 1 1.2 1.2v1.1h6.4V3.1a1.2 1.2 0 1 1 2.4 0v1.1H18a3.6 3.6 0 0 1 3.6 3.6v10.6a3.6 3.6 0 0 1-3.6 3.6H6a3.6 3.6 0 0 1-3.6-3.6V7.8A3.6 3.6 0 0 1 6 4.2h.4V3.1a1.2 1.2 0 0 1 1.2-1.2ZM4.8 10.3v8.1c0 .66.54 1.2 1.2 1.2h12c.66 0 1.2-.54 1.2-1.2v-8.1H4.8Z"/>',
 };
 const icono = (k) => `<svg viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true">${ICONOS[k]}</svg>`;
-const TEL_ICO = '<span class="call-ico-wrap"><svg class="tel-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>';
+// Icono del teléfono del botón "Llamar a X"; lo comparte /locales.
+export const TEL_ICO = '<span class="call-ico-wrap"><svg class="tel-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>';
 
 // Las celdas van en paralelo y todas tienen que ocupar las mismas líneas: la
 // segunda línea y el secundario, si faltan, se rellenan con un espacio duro.

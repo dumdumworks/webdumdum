@@ -119,11 +119,12 @@ propio `build.mjs` (el plan está en el informe "Mutación a HTML"). Piezas:
   SEO ya resueltos; no se versiona). Caché corta (`max-age=15`), como `menu.json`.
   `RUTAS_EDGE` en `build.mjs` la incluye en `RUTAS_HTML` sin escribir archivo.
 
-Ya son HTML: **las dos fichas de local** (`/locales/chamberi`, `/locales/bernabeu`
-y sus `/en/…`), con la galería de carga progresiva, el lightbox y el botón de
-llamar como islas, y **la carta** (`/menu`, `/en/menu`) con la ventana de
-alérgenos, el visor de fotos y el relevo del flotante como islas. Se revisan en
-`marco.html?r=/menu`.
+Ya son HTML todas las páginas menos la home: **las fichas de local**, **la
+carta** (en el edge), **`/locales`**, **`/contacto`** y **`/eventos`** (sliders
+paginados de fotos, reels y vídeos con `embeds.mjs`; formulario de Web3Forms
+como isla `formulario.js`; textos editables de `eventos.json` con caída al texto
+del código). Las páginas sin JSON-LD propio llevan el global de `index.html`
+(`extraerJsonLdGlobal`). Se revisan en `marco.html?r=/eventos`, etc.
 
 ## Prerender: alcance
 

@@ -1,54 +1,61 @@
 // ─────────────────────────────────────────────────────────────
-// Galería de fotos (el GallerySlider de la web React, en su variante de dos
-// fotos a la vista con todas en fila): carrusel con snap en móvil y carril
-// movido con la rueda en escritorio. Las dos clases van juntas en la pista:
-// cada una manda en su ancho de pantalla, así que no hay que cambiar el
-// marcado según el aparato. La lógica (flechas, rueda, lightbox, carga
-// progresiva) está en src/islas/galeria.js.
+// Galería de fotos: el GallerySlider de la web React con las mismas clases.
+// Dos modos, según lo que pedía cada página:
+//   carril   → todas las fotos en fila; dos a la vista en escritorio movidas
+//              con la rueda, carrusel con snap en móvil (fichas de local).
+//   paginado → dos a la vista en escritorio, con flechas que cambian de página
+//              y contador "Espacio · 01 / 11"; en móvil, carrusel con snap
+//              (los sliders de Eventos).
+// Las dos clases de pista van juntas: cada una manda en su ancho de pantalla,
+// así que el marcado no depende del aparato. La lógica vive en islas/galeria.js.
 // ─────────────────────────────────────────────────────────────
 import { esc } from "./plantilla.mjs";
 import { srcset } from "./imagenes.mjs";
 
 // Las fotos van todas en fila, así que loading="lazy" no sirve: el navegador
-// las da por visibles y las pediría todas al abrir. Se montan solo las tres
-// primeras; el resto deja su hueco (el ancho de la pista depende de él) y la
-// isla las va montando conforme avanzas.
+// las daría por visibles y las pediría todas al abrir. Se montan solo las tres
+// primeras; el resto deja su hueco y la isla las monta conforme hacen falta.
 const MONTADAS = 3;
 const pad = (n) => String(n).padStart(2, "0");
-
 // En móvil el hueco es la pista entera; en escritorio, la mitad (dos a la vista).
 const SIZES = "(max-width: 879px) 100vw, 50vw";
 
-export function galeria(i, { fotos, ratio = "3 / 4", etiquetaHueco, raiz }) {
+export function galeria(i, { fotos, ratio = "3 / 4", etiquetaHueco, raiz, modo = "carril", etiqueta = null, cta = null, visor = "fotos", huecos = 6 }) {
   const { t } = i;
-  const huecos = fotos.length ? fotos : Array.from({ length: 6 }, () => ({ src: null }));
-  const slots = huecos.map((f, n) => {
+  const lista = fotos.length ? fotos : Array.from({ length: huecos }, () => ({ src: null }));
+  const slots = lista.map((f, n) => {
     let dentro;
     if (!f.src) {
       dentro = `<div class="ev-slider-ph"><span>[ ${esc(etiquetaHueco)} · ${pad(n + 1)} ]</span></div>`;
-    } else if (n < MONTADAS) {
-      dentro = `<img src="${esc(f.src)}" srcset="${esc(srcset(raiz, f.src))}" sizes="${SIZES}" alt="${esc(f.name || "")}"`
-        + ` loading="lazy" decoding="async" style="object-position:${esc(f.pos || "50% 50%")};cursor:pointer" data-foto="${n}">`;
     } else {
-      // Hueco liso, no el marcador de rayas: aquí SÍ hay foto, solo que aún no se ha pedido.
-      dentro = `<div class="ev-slider-espera" aria-hidden="true" data-foto="${n}" data-src="${esc(f.src)}"`
-        + ` data-srcset="${esc(srcset(raiz, f.src))}" data-sizes="${SIZES}"`
-        + ` data-alt="${esc(f.name || "")}" data-pos="${esc(f.pos || "50% 50%")}"></div>`;
+      const ss = srcset(raiz, f.src);
+      const comunes = ` data-foto="${n}"${f.name ? ` data-nombre="${esc(f.name)}"` : ""}`;
+      dentro = n < MONTADAS
+        ? `<img src="${esc(f.src)}"${ss ? ` srcset="${esc(ss)}" sizes="${SIZES}"` : ""} alt="${esc(f.name || "")}" loading="lazy" decoding="async"`
+          + ` style="object-position:${esc(f.pos || "50% 50%")};cursor:pointer"${comunes}>`
+        // Hueco liso, no el marcador de rayas: aquí SÍ hay foto, solo que aún no se ha pedido.
+        : `<div class="ev-slider-espera" aria-hidden="true" data-src="${esc(f.src)}"${ss ? ` data-srcset="${esc(ss)}" data-sizes="${SIZES}"` : ""}`
+          + ` data-alt="${esc(f.name || "")}" data-pos="${esc(f.pos || "50% 50%")}"${comunes}></div>`;
     }
+    // Enlace por foto (prensa: "Ver noticia →"); sin URL no se pinta.
+    if (cta && f.url) dentro += `<a class="ev-slider-cta" href="${esc(f.url)}" target="_blank" rel="noreferrer">${esc(cta)}</a>`;
     return `    <div class="ev-slider-slot" style="aspect-ratio:${ratio}">${dentro}</div>`;
   });
   const textos = {
-    galeria: t("Galería", "Gallery"), cerrar: t("Cerrar", "Close"),
+    galeria: etiqueta || t("Galería", "Gallery"), cerrar: t("Cerrar", "Close"),
     anterior: t("Anterior", "Previous"), siguiente: t("Siguiente", "Next"),
   };
-  return `<div class="ev-slider ev-slider-cols-2" data-galeria data-textos='${esc(JSON.stringify(textos))}'>
+  const cabecera = etiqueta
+    ? `<div class="tiny muted">${esc(etiqueta)} · <span data-galeria-cuenta>01</span> / ${pad(lista.length)}</div>\n    `
+    : "";
+  return `<div class="ev-slider ev-slider-cols-2" data-galeria data-galeria-modo="${modo}" data-galeria-visor="${visor}"${etiqueta ? ` data-galeria-etiqueta="${esc(etiqueta)}"` : ""} data-textos='${esc(JSON.stringify(textos))}'>
   <div class="ev-slider-head">
-    <div class="ev-slider-ctrls">
+    ${cabecera}<div class="ev-slider-ctrls">
       <button type="button" class="ev-slider-btn" data-galeria-ir="-1" aria-label="${esc(textos.anterior)}">←</button>
       <button type="button" class="ev-slider-btn" data-galeria-ir="1" aria-label="${esc(textos.siguiente)}">→</button>
     </div>
   </div>
-  <div class="ev-slider-track ev-slider-carril ev-slider-track-mobile" data-galeria-pista>
+  <div class="ev-slider-track ${modo === "carril" ? "ev-slider-carril " : ""}ev-slider-track-mobile" data-galeria-pista>
 ${slots.join("\n")}
   </div>
 </div>`;

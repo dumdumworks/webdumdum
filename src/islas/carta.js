@@ -2,8 +2,9 @@
 // tabla), el relevo entre el botón de la cabecera y el flotante, "Volver
 // arriba" y el visor de fotos de los platos. Es la lógica del componente Menu
 // de pages.jsx; todo el contenido ya viene pintado desde el edge.
-import { $, $$, atraparFoco, bloquearScroll, deslizar, tecladoVisor, desplazarA } from "./nucleo.js";
+import { $, $$, desplazarA } from "./nucleo.js";
 import { modal } from "./modales.js";
+import { abrirVisorPlatos } from "./visores.js";
 
 export function carta() {
   const raiz = $('[data-screen-label="menu"]');
@@ -95,44 +96,10 @@ function relevoFlotante(raiz) {
   new IntersectionObserver(([e]) => fab.classList.toggle("is-on", !e.isIntersecting)).observe(boton);
 }
 
-// ── Visor de fotos de los platos ────────────────────────────
-// Carrusel: la foto del plato y deslizar/flechas/teclado para recorrer todas
-// las que tienen foto, en el orden de la carta.
+// ── Visor de fotos de los platos: todas las que tienen foto, en el orden de la carta.
 function fotos(raiz) {
   const botones = $$("[data-foto]", raiz);
   if (!botones.length) return;
   const items = botones.map((b) => ({ src: b.dataset.foto, nombre: b.dataset.nombre }));
-  botones.forEach((b, n) => b.addEventListener("click", () => abrirVisor(items, n)));
-}
-function abrirVisor(items, inicio) {
-  let n = inicio;
-  const ov = document.createElement("div");
-  ov.className = "dish-lightbox";
-  ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true");
-  ov.innerHTML = '<button type="button" class="dish-lightbox-close" aria-label="Cerrar">✕</button>'
-    + '<button type="button" class="dish-lightbox-nav prev" aria-label="Anterior">‹</button>'
-    + '<button type="button" class="dish-lightbox-nav next" aria-label="Siguiente">›</button>'
-    + '<figure class="dish-lightbox-fig"><img alt="" draggable="false"><figcaption><span class="dish-lightbox-name"></span><span class="dish-lightbox-count"></span></figcaption></figure>';
-  const fig = $("figure", ov), img = $("img", ov);
-  const pintar = () => {
-    const it = items[n];
-    img.src = it.src; img.alt = it.nombre;
-    ov.setAttribute("aria-label", it.nombre);
-    $(".dish-lightbox-name", ov).textContent = it.nombre;
-    $(".dish-lightbox-count", ov).textContent = (n + 1) + " / " + items.length;
-  };
-  const ir = (d) => { n = (n + d + items.length) % items.length; pintar(); };
-  const desbloquear = bloquearScroll();
-  const sinTeclado = tecladoVisor(() => cerrar(), ir);
-  let soltar = null;
-  const cerrar = () => { sinTeclado(); desbloquear(); if (soltar) soltar(); ov.remove(); };
-  ov.addEventListener("click", cerrar);
-  fig.addEventListener("click", (e) => e.stopPropagation());
-  $(".dish-lightbox-close", ov).addEventListener("click", cerrar);
-  $(".prev", ov).addEventListener("click", (e) => { e.stopPropagation(); ir(-1); });
-  $(".next", ov).addEventListener("click", (e) => { e.stopPropagation(); ir(1); });
-  deslizar(fig, ir);
-  pintar();
-  document.body.appendChild(ov);
-  soltar = atraparFoco(ov);
+  botones.forEach((b, n) => b.addEventListener("click", () => abrirVisorPlatos(items, n)));
 }

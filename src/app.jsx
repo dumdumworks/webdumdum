@@ -29,15 +29,7 @@ function getRoutesTable() {
     // La carta (/menu) y las fichas de local (/locales/chamberi, /locales/bernabeu)
     // ya no son de esta SPA: son páginas HTML (src/html/paginas/); la carta se
     // pinta en el edge (functions/menu.js).
-    mk("/locales",  false, "Locales",
-      "DUM DUM™ — Locales y reservas",
-      "Puedes reservar en Chamberí o en Bernabéu. O en ambos :)."),
-    mk("/eventos",  false, "Eventos",
-      "DUM DUM™ — Eventos",
-      "Espacios cool para eventos en Madrid."),
-    mk("/contacto", false, "Contacto",
-      "DUM DUM™ — Contacto",
-      "dumdum@dum-dum.es / +34 614 746 065")
+    // Locales, Eventos y Contacto también son ya páginas HTML.
     // Nota: /admin/ se sirve como carpeta estática (Sveltia CMS), no como ruta
     // de esta SPA. El _redirects de la raíz tiene una regla "/admin/* 200" antes
     // del catch-all para que Cloudflare Pages sirva los archivos de /admin/.

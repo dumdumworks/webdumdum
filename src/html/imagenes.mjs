@@ -27,15 +27,14 @@ export function anchoJpeg(archivo) {
 }
 
 // srcset de una foto: sus variantes más el original, cada una con su ancho.
-// Si falta una variante el build ABORTA: es señal de que hay una foto nueva
-// sin pasar por dev/fotos-variantes.py.
+// Solo las carpetas que pasan por dev/fotos-variantes.py tienen variantes; el
+// resto de fotos (platos, prensa) se sirven tal cual y aquí devuelve null. Si
+// una carpeta con variantes tiene una foto nueva sin procesar, el build ABORTA.
 export function srcset(raiz, src) {
-  const base = src.replace(/\.jpg$/, "");
-  const partes = ANCHOS.map((w) => {
-    const v = `${base}-${w}.jpg`;
-    if (!fs.existsSync(path.join(raiz, v))) throw new Error("Falta la variante " + v + " (python3 dev/fotos-variantes.py)");
-    return `${v} ${w}w`;
-  });
-  partes.push(`${src} ${anchoJpeg(path.join(raiz, src))}w`);
-  return partes.join(", ");
+  const base = String(src).replace(/^\//, "").replace(/\.jpg$/, "");
+  const variantes = ANCHOS.map((w) => `${base}-${w}.jpg`);
+  const hay = variantes.map((v) => fs.existsSync(path.join(raiz, v)));
+  if (!hay.some(Boolean)) return null;
+  if (!hay.every(Boolean)) throw new Error("Falta una variante de " + src + " (python3 dev/fotos-variantes.py)");
+  return [...variantes.map((v, k) => `${v} ${ANCHOS[k]}w`), `${src} ${anchoJpeg(path.join(raiz, base + ".jpg"))}w`].join(", ");
 }
