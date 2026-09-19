@@ -1,49 +1,85 @@
-# Build de la web (esbuild, sin Babel)
+# Build de la web (HTML generado con Node + esbuild)
 
-La web se compila con **esbuild** y se publica desde `dist/`. **El cutover ya está
-hecho**: en producción NO hay Babel en el navegador ni scripts desde unpkg.
-
-Antes, la web compilaba el JSX en el navegador con **Babel Standalone** (~3 MB +
-transpilar ~230 KB en cada visita, en el móvil que escanea el QR) y cargaba React
-desde unpkg (punto único de fallo). Esto lo elimina.
+La web es **HTML estático por página**, generado por `build.mjs`, con un poco de
+JavaScript en "islas" para lo que se mueve (modales, galerías, formulario…). La
+carta es la excepción: se pinta en el borde de Cloudflare en cada petición con la
+carta viva de KV. No hay framework en el navegador.
 
 ## Configuración en Cloudflare Pages (ya aplicada)
 
 - **Build command:** `npm ci && node build.mjs`
 - **Build output directory:** `dist`
 
-`build.mjs`, `vendor/` (React/ReactDOM) y los JSON se versionan; `dist/` y
-`node_modules/` van en `.gitignore` (los genera el build). Sveltia sigue publicando
-`menu.json` / `galerias.json` / `eventos.json` como siempre: **son la fuente de la
-verdad en runtime**, y cada publicación dispara un rebuild que recalcula los `?v`.
+`build.mjs`, `src/` y los JSON se versionan; `dist/`, `node_modules/` y
+`functions/_generado/` van en `.gitignore` (los genera el build). Sveltia sigue
+editando `galerias.json` y `eventos.json` en el repo: cada publicación dispara un
+rebuild. La carta (`menu.json` / KV) no necesita build: ver más abajo.
 
 ## Qué hace `build.mjs`
 
 `node build.mjs` genera `dist/`:
 
-- Compila `src/*.jsx` con **esbuild** a un bundle único `assets/dumdum.<hash>.js`
-  minificado. Se conservan los identificadores porque los 4 ficheros comparten
-  ámbito global (referencias cruzadas `t`, `useLang`…).
-- Une las **islas** de la web HTML (`src/islas/`) en `assets/islas.<hash>.js`
-  (≈5 kB, 2,3 kB gzip), minificadas y con hash. Ver "Web HTML" más abajo.
-- **Autohospeda** React/ReactDOM 18.3.1 (`vendor/`) con **SRI** — sin unpkg.
-- Une `styles.css` + `styles-2.css` en un CSS **minificado** con hash (sin
-  `@import` en serie).
-- Genera una HTML por ruta (`index/menu/locales/eventos/contacto.html`) con
-  **OG/canónica/título ESTÁTICOS** — así las previews sociales (WhatsApp/Facebook,
-  que no ejecutan JS) muestran el título correcto de cada página. Más un
-  `<noscript>` con lo esencial (direcciones, horario :39, teléfonos, enlaces).
-  Si algún reemplazo de OG/canónica no casa, el build **aborta** (nada silencioso).
-- `404.html`, que Cloudflare Pages sirve automáticamente con **estado 404 real**.
-- Inyecta `<link rel="preload">` del bundle y de `menu.json` con los hashes que él
-  mismo genera, para que se descarguen en paralelo desde el primer momento en vez
-  de en serie tras react-dom. **Ojo con `crossorigin`: no es simétrico** — el
-  bundle se inyecta con `<script src>` (no-CORS) y va SIN; `menu.json` se pide con
-  `fetch()` (cors) y va CON. Equivocarlo duplica la descarga.
-- Escribe `_headers` (HTML `no-cache` incluidas las URLs limpias `/menu`,
-  `/locales`… que no matchean `/*.html`; `/assets/*` inmutable) y `_redirects`.
-- Verifica que todos los recursos locales del `<head>` existen en `dist/`; si falta
-  alguno, aborta.
+1. **Islas** (`src/islas/`): un solo `assets/islas.<hash>.js` (≈17 kB, ~6 kB gzip),
+   minificado con esbuild, cargado con `defer`. Cada isla busca su elemento y, si la
+   página no lo tiene, no hace nada.
+2. **CSS**: `styles-2.css` + `styles.css` (en ese orden, replicando la cascada del
+   `@import` original) minificados en `assets/dumdum.<hash>.css`.
+3. **Páginas**: una función por página en `src/html/paginas/` devuelve
+   `{ titulo, desc, cuerpo, ld }`; `documento()` (`plantilla.mjs`) la envuelve en el
+   `<head>` completo (title, description, canónica, `hreflang`, Open Graph, JSON-LD,
+   fuentes, CSS e islas). Cada página se escribe dos veces: `/ruta` y `/en/ruta`
+   (`dist/en/…`). Más `404.html` y `en/404.html`, que Cloudflare sirve con estado
+   404 real. El build comprueba que existan todas las imágenes referenciadas y los
+   recursos del `<head>`; si falta algo, aborta.
+4. **La carta para el edge**: `src/html/carta-edge.mjs` (documento + shell +
+   platos) se empaqueta con las constantes resueltas (analítica, hashes, locales,
+   SEO) en `functions/_generado/carta.js`. Pages empaqueta `functions/` después.
+5. **Estáticos**: `img/`, `admin/` (Sveltia), `panel/`, favicons, `robots.txt`,
+   `sitemap.xml` y `menu.base.json` (copia de `menu.json`, respaldo de la carta).
+6. **`_redirects`** y **`_headers`**, generados a partir de todas las rutas limpias
+   en los dos idiomas (barra final → 301; HTML `no-cache`; `/assets/*` inmutable).
+
+En local (sin `CF_PAGES`) copia además `dev/*.html` (el visor `marco.html`).
+
+## Dónde vive cada cosa (`src/html/`)
+
+- `plantilla.mjs`: `idioma(lang, rutasEn)` (`t(es, en)`, `ruta(p)`), `documento()`,
+  `archivoDe()`, `esc()`. El script de idioma preferido va el primero del `<head>`.
+- `shell.mjs`: topbar, flotante "Pide ya", modales (pedir, reservar, DISH),
+  footer y `specFoot()`. `esqueleto()` monta una página a partir de su `<main>`.
+- `locales.mjs`: los datos de los dos locales (FUENTE ÚNICA).
+- `seo.mjs`: título y descripción por ruta (`t`/`d` en español, `te`/`de` en inglés).
+- `analitica.html`: Consent Mode v2 → Cookiebot (síncrono) → GA4 (solo en
+  producción) y el listener global de conversiones. **No alterar ese orden.**
+- `ld-global.json`: JSON-LD del restaurante con los dos locales (lo llevan las
+  páginas sin JSON-LD propio).
+- `enlaces.mjs`, `texto.mjs` (mini-markdown, saneador), `imagenes.mjs` (srcset),
+  `galeria.mjs`, `embeds.mjs`, `carta.mjs` (la carta y sus alérgenos).
+- `paginas/`: `home`, `menu`, `locales`, `local` (fichas), `eventos`, `contacto`, `404`.
+
+## La carta (`/menu`, `/en/menu`)
+
+No es un archivo: `functions/menu.js` y `functions/en/menu.js` (vía
+`functions/_lib/carta.js`) leen la carta viva de KV (binding `MENU`, la escribe
+el panel) o `/menu.base.json` si falta, y la pintan en cada petición con
+`functions/_generado/carta.js`. Caché corta (`max-age=15, stale-while-revalidate=60`),
+como `menu.json`. Lleva datos estructurados `schema.org/Menu`. La barra final se
+normaliza en la propia función (`_redirects` no alcanza a las funciones).
+
+## Idiomas
+
+ES y EN son **rutas distintas** (`/menu` y `/en/menu`) con `hreflang` cruzado. El
+selector es un enlace; al pulsarlo guarda la preferencia en `localStorage`
+(`dumdum.lang`) y el script de cabecera lleva a cada uno a su versión al
+aterrizar. Sin preferencia guardada manda la URL (enlaces compartidos,
+rastreadores).
+
+## Fotos
+
+Las fotos de los locales (`img/chamberi`, `img/espacio`) tienen variantes de 480 y
+800 px generadas con `python3 dev/fotos-variantes.py` (Pillow) y guardadas en el
+repo; `imagenes.mjs` monta el `srcset`. Si una carpeta con variantes tiene una foto
+nueva sin procesar, el build aborta. Las demás fotos se sirven tal cual.
 
 ## `_redirects`: solo redirecciones reales
 
@@ -56,19 +92,8 @@ provocó un **bucle infinito** (`ERR_TOO_MANY_REDIRECTS`): Cloudflare redirige
 El `_redirects` generado solo contiene: el 301 de `/menu_eng`, los de `/embed`
 (soft-404 histórico), la normalización de barra final y `/admin/*` (Sveltia).
 
-> No hay `_redirects` en la raíz del repo: se eliminó tras el cutover porque no se
-> publicaba (Cloudflare solo lee `dist/`) y era una trampa — quien lo editara no
-> vería efecto, y copiar su catch-all reintroduciría el bucle. El único válido lo
-> genera `build.mjs`. Lo mismo con `_headers`.
-
-## Arranque (boot)
-
-No es un `Promise.all` de los tres JSON: la carta manda. En cuanto llega
-`menu.json` (o expira a los ~5 s con `AbortController`) se monta la app, para que
-`/menu` —dos tercios del tráfico, móvil en el local— no espere nunca por
-`galerias.json` ni `eventos.json`. Esos dos van en segundo plano y, al llegar,
-despachan un evento `focus`, que es lo que los componentes escuchan para recargar
-sus datos.
+> No hay `_redirects` ni `_headers` en la raíz del repo: Cloudflare solo lee
+> `dist/`, y los únicos válidos los genera `build.mjs`.
 
 ## Fuentes
 
@@ -77,63 +102,10 @@ tipografía es de sistema (`--font-display` / `--font-mono` = Helvetica Neue).
 Hubo un kit de Adobe Typekit que se retiró: ninguna regla usaba sus familias y
 costaba dos orígenes render-blocking. No reintroducir sin comprobar que se usa.
 
-## Web HTML (migración por fases)
+## Embeds de terceros
 
-La web se está pasando de la SPA a **HTML estático por página**, generado por el
-propio `build.mjs` (el plan está en el informe "Mutación a HTML"). Piezas:
-
-- `src/html/plantilla.mjs`: idioma (`idioma(lang, rutasEn)` → `t`, `ruta`), el
-  documento entero (`documento()`: canónica, `hreflang`, OG, JSON-LD) y la
-  extracción del bloque Consent Mode → Cookiebot → GA de `index.html`, para que
-  haya UNA sola copia mientras convivan las dos webs.
-- `src/html/shell.mjs`: topbar, flotante "Pide ya", modales, footer y
-  `specFoot()`, con las MISMAS clases que `ui.jsx` para que el CSS no cambie.
-  `esqueleto()` monta una página completa a partir de su `<main>`.
-- `src/html/enlaces.mjs`: URLs de Uber/Glovo/Square/Instagram/Spotify y horario.
-- `src/html/paginas/*.mjs`: una función por página → `{ titulo, desc, cuerpo, ld }`.
-- `src/islas/*.js`: el JS de las páginas ya pintadas (estado del local, menú
-  móvil, modales con foco atrapado y widget de DISH, flotante arrastrable).
-  Sin React. Entra con `defer`; cada isla busca su elemento y si no está, no hace nada.
-- ES y EN son **rutas distintas**: `/menu` y `/en/menu` (`dist/en/menu.html`).
-  El selector de idioma es un enlace de verdad; al pulsarlo se guarda la
-  preferencia en `localStorage` (`dumdum.lang`, la misma clave que React) y un
-  script al principio del `<head>` lleva a cada uno a su versión al aterrizar.
-  Sin preferencia guardada manda la URL (enlaces compartidos, rastreadores).
-  `idioma().ruta()` solo manda a `/en/` las rutas que YA existen en inglés; el
-  resto sigue en su URL de siempre mientras dure la migración.
-- Cada página migrada se registra en `PAGINAS_HTML` (ruta → plantilla), se
-  retira de `FILE_FOR` y de la tabla de rutas de `app.jsx`, y su componente
-  React se borra. `build.mjs` inyecta la lista (`window.__RUTAS_HTML`) en el
-  HTML de la SPA para que el interceptor de clics de `ui.jsx` deje pasar esos
-  enlaces como navegación normal.
-- `_redirects` (barra final → limpia) y `_headers` (HTML sin caché) se generan
-  a partir de TODAS las rutas limpias, React y HTML, en los dos idiomas.
-- Título y descripción salen de `__ROUTES_SEO` (`index.html`); las páginas HTML
-  añaden `te`/`de` con la versión inglesa.
-
-- **La carta se pinta en el edge.** `/menu` y `/en/menu` no son archivos:
-  `functions/menu.js` y `functions/en/menu.js` (vía `functions/_lib/carta.js`)
-  leen la carta viva de KV (o `/menu.base.json` si KV falta) y la pintan en
-  cada petición con `functions/_generado/carta.js`, que es `src/html/carta-edge.mjs`
-  empaquetado por `build.mjs` con esbuild (analítica, nombres con hash, locales y
-  SEO ya resueltos; no se versiona). Caché corta (`max-age=15`), como `menu.json`.
-  `RUTAS_EDGE` en `build.mjs` la incluye en `RUTAS_HTML` sin escribir archivo.
-
-Ya son HTML todas las páginas menos la home: **las fichas de local**, **la
-carta** (en el edge), **`/locales`**, **`/contacto`** y **`/eventos`** (sliders
-paginados de fotos, reels y vídeos con `embeds.mjs`; formulario de Web3Forms
-como isla `formulario.js`; textos editables de `eventos.json` con caída al texto
-del código). Las páginas sin JSON-LD propio llevan el global de `index.html`
-(`extraerJsonLdGlobal`). Se revisan en `marco.html?r=/eventos`, etc.
-
-## Prerender: alcance
-
-En las páginas que siguen siendo React se prerenderiza el `<head>` (OG/SEO por
-ruta) y un `<noscript>` con lo esencial. **NO** se prerenderiza el `<body>` de la
-app; las páginas que necesitan HTML completo se migran (sección anterior).
-
-Aviso para quien lo intente: la app monta con `createRoot().render()`, que **borra**
-el contenido de `#root`. Meter HTML estático ahí provocaría un parpadeo, no una
-mejora — haría falta migrar a hidratación (`hydrateRoot`), que es un cambio
-arquitectónico serio. Google ya indexa las 5 rutas renderizando el JS, así que el
-valor pendiente sería sobre todo para clientes sin JS.
+Los iframes de YouTube, Instagram y Google Maps llevan `data-cookieconsent="ignore"`:
+el bloqueo automático de Cookiebot vaciaría su `src` hasta el consentimiento (la
+web siempre los ha cargado sin esperar; si algún día se quiere cumplir a
+rajatabla, es una decisión de negocio). Los vídeos de Universo van como
+miniatura + play y solo incrustan el reproductor al pulsar.

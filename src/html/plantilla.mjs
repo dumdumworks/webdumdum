@@ -30,28 +30,6 @@ export function archivoDe(p, lang) {
   return lang === "en" ? "en/" + base : base;
 }
 
-// Bloque del <head> de index.html que se copia TAL CUAL: Consent Mode →
-// Cookiebot → GA, con el listener global de eventos de conversión. Se extrae de
-// la plantilla React para que haya UNA sola copia mientras convivan las dos
-// webs; cuando React se retire, el bloque pasará aquí e index.html morirá.
-export function extraerBloqueAnalitica(indexHtml) {
-  const ini = indexHtml.indexOf("<!-- Google Consent Mode v2");
-  const fin = indexHtml.indexOf("<!-- El index NUNCA se cachea");
-  if (ini === -1 || fin === -1 || fin < ini) {
-    throw new Error("No encuentro el bloque Consent/Cookiebot/GA en index.html");
-  }
-  return indexHtml.slice(ini, fin).trimEnd();
-}
-
-// Datos estructurados globales de index.html (Restaurant con los dos locales):
-// los llevan las páginas HTML que no tienen JSON-LD propio, como hasta ahora
-// lo llevaban todas las de la SPA.
-export function extraerJsonLdGlobal(indexHtml) {
-  const m = indexHtml.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
-  if (!m) throw new Error("No encuentro el JSON-LD global en index.html");
-  return JSON.parse(m[1]);
-}
-
 // Idioma preferido. Quien ya eligió idioma (el selector lo guarda en
 // localStorage, igual que React) aterriza siempre en su versión, venga por la
 // URL que venga. Sin preferencia guardada no se toca nada: la URL manda, que

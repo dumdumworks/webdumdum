@@ -1,14 +1,15 @@
 // ─────────────────────────────────────────────────────────────
-// Build DUM DUM — sin Babel en el navegador.
-//  · Compila src/*.jsx con esbuild (JSX clásico → React.createElement).
-//  · Concatena en un bundle único minificado con hash de contenido.
-//  · Autohospeda React/ReactDOM (vendor/) — sin unpkg (SPOF).
-//  · Une styles.css + styles-2.css en un CSS con hash (sin @import en serie).
-//  · Genera dist/index.html + una HTML por ruta con OG/canónica ESTÁTICOS
-//    (para las previews sociales, que no ejecutan JS) y un <noscript> con lo
-//    esencial. dist/404.html se sirve con estado 404 real.
-//  · Carga de datos (menu/galerias/eventos.json) en PARALELO.
-//  · Copia estáticos (img, json, admin, favicon, etc.) y escribe _headers.
+// Build DUM DUM — web HTML.
+//  · Genera una página HTML por ruta e idioma desde src/html/ (plantillas en
+//    Node): /ruta y /en/ruta, con title/description/canónica/hreflang/OG y
+//    JSON-LD. 404.html y en/404.html se sirven con estado 404 real.
+//  · La carta (/menu) no se escribe aquí: la pinta functions/menu.js en cada
+//    petición con la carta viva de KV, usando la misma plantilla empaquetada
+//    en functions/_generado/carta.js.
+//  · Une styles.css + styles-2.css en un CSS con hash y las islas (src/islas/)
+//    en un JS con hash.
+//  · Copia estáticos (img, admin, panel, favicons…) y escribe _redirects y
+//    _headers.
 // Salida: dist/  (directorio de publicación en Cloudflare Pages).
 // ─────────────────────────────────────────────────────────────
 import esbuild from "esbuild";
@@ -16,7 +17,9 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { idioma, documento, archivoDe, extraerBloqueAnalitica, extraerJsonLdGlobal } from "./src/html/plantilla.mjs";
+import { idioma, documento, archivoDe } from "./src/html/plantilla.mjs";
+import { LOCALES } from "./src/html/locales.mjs";
+import { ROUTES_SEO } from "./src/html/seo.mjs";
 import { local, RUTA_LOCAL } from "./src/html/paginas/local.mjs";
 import { RUTA as RUTA_MENU } from "./src/html/paginas/menu.mjs";
 import { locales as paginaLocales, RUTA as RUTA_LOCALES } from "./src/html/paginas/locales.mjs";
@@ -30,41 +33,15 @@ const DIST = path.join(ROOT, "dist");
 // CF_PAGES solo existe en el build de Cloudflare: lo que dependa de esLocal no se publica.
 const esLocal = !process.env.CF_PAGES;
 const rd = (p) => fs.readFileSync(path.join(ROOT, p), "utf8");
-const rb = (p) => fs.readFileSync(path.join(ROOT, p));
 const hash8 = (buf) => crypto.createHash("sha256").update(buf).digest("hex").slice(0, 8);
-const sri = (buf) => "sha384-" + crypto.createHash("sha384").update(buf).digest("base64");
 
 // ── Limpiar dist ─────────────────────────────────────────────
 fs.rmSync(DIST, { recursive: true, force: true });
-fs.mkdirSync(path.join(DIST, "assets", "vendor"), { recursive: true });
+fs.mkdirSync(path.join(DIST, "assets"), { recursive: true });
 
-// ── 1) Compilar el bundle de la app (sin Babel) ──────────────
-const APP_FILES = ["src/data.jsx", "src/ui.jsx", "src/pages.jsx", "src/app.jsx"];
-let bundle = "";
-for (const f of APP_FILES) {
-  const res = await esbuild.transform(rd(f), {
-    loader: "jsx",
-    jsx: "transform",           // clásico: React.createElement (React global de vendor)
-    jsxFactory: "React.createElement",
-    jsxFragment: "React.Fragment",
-  });
-  bundle += `\n/* ${f} */\n` + res.code;
-}
-// Minificar espacios/sintaxis PERO conservar identificadores: los 4 ficheros
-// comparten ámbito global (referencias cruzadas t/useLang/nav…), así que no
-// renombramos nada para no romper esas referencias.
-const min = await esbuild.transform(bundle, {
-  minifyWhitespace: true,
-  minifySyntax: true,
-  minifyIdentifiers: false,
-});
-const appBuf = Buffer.from(min.code, "utf8");
-const appName = `assets/dumdum.${hash8(appBuf)}.js`;
-fs.writeFileSync(path.join(DIST, appName), appBuf);
-
-// ── 1b) Islas de la web HTML (src/islas/) ────────────────────
-// El poco JS de las páginas estáticas, unido y minificado por esbuild. Con
-// nombre por hash como el bundle, para cachearlo un año (_headers, /assets/*).
+// ── 1) Islas (src/islas/) ────────────────────────────────────
+// El poco JS de las páginas, unido y minificado por esbuild, con nombre por
+// hash para cachearlo un año (_headers, /assets/*).
 const islasRes = await esbuild.build({
   entryPoints: [path.join(ROOT, "src/islas/islas.js")],
   bundle: true, minify: true, format: "iife", target: ["es2018"], write: false,
@@ -89,160 +66,6 @@ const cssBuf = Buffer.from(cssMin.code, "utf8");
 const cssName = `assets/dumdum.${hash8(cssBuf)}.css`;
 fs.writeFileSync(path.join(DIST, cssName), cssBuf);
 
-// ── 3) Vendor React/ReactDOM (autohospedados, con SRI) ───────
-const reactBuf = rb("vendor/react.production.min.js");
-const reactDomBuf = rb("vendor/react-dom.production.min.js");
-const reactName = "assets/vendor/react-18.3.1.min.js";
-const reactDomName = "assets/vendor/react-dom-18.3.1.min.js";
-fs.writeFileSync(path.join(DIST, reactName), reactBuf);
-fs.writeFileSync(path.join(DIST, reactDomName), reactDomBuf);
-const reactSri = sri(reactBuf);
-const reactDomSri = sri(reactDomBuf);
-
-// ── 4) Versiones de datos (para ?v= estable, cacheable) ──────
-const dataVer = {
-  menu: hash8(rb("menu.json")),
-  gal: hash8(rb("galerias.json")),
-  ev: hash8(rb("eventos.json")),
-};
-
-// ── 5) Plantilla index → transformar a versión "buildeada" ───
-let tpl = rd("index.html");
-
-// 5a) Quitar meta http-equiv de caché (no funcionan; lo hace _headers).
-tpl = tpl.replace(/\s*<meta http-equiv="Cache-Control"[^>]*>\s*/i, "\n  ");
-tpl = tpl.replace(/\s*<meta http-equiv="Pragma"[^>]*>\s*/i, "");
-tpl = tpl.replace(/\s*<meta http-equiv="Expires"[^>]*>\s*/i, "");
-
-// 5b) CSS: reemplazar el <link> a src/styles.css por el CSS unido con hash.
-// Con replaceOrThrow (hoisted, definido más abajo) para que FALLE RUIDOSAMENTE si
-// el formato del <link> cambia: si no casara en silencio, el HTML publicado
-// apuntaría a src/styles.css —inexistente en dist/— y verifyAssets no lo cazaría
-// (solo revisa rutas que empiezan por "/"), publicando la web SIN ESTILOS.
-tpl = replaceOrThrow(
-  tpl,
-  /<link rel="stylesheet" href="src\/styles\.css\?v=[^"]*" \/>/,
-  () => `<link rel="stylesheet" href="/${cssName}" />`,
-  "link del CSS"
-);
-
-// 5b-bis) PRELOAD del bundle y de menu.json — rompe la cola en serie.
-// Sin esto la cadena era: react.js → react-dom.js (descarga Y ejecuta) → recién
-// entonces corre el boot → fetch menu.json (1 RTT) → recién entonces se inyecta el
-// bundle (otro RTT). Con los preload, ambos se descargan EN PARALELO desde el
-// primer momento y el boot los encuentra ya en caché. El código no cambia.
-// Los hashes salen de aquí, así que nunca pueden desincronizarse.
-//
-// OJO con crossorigin — debe COINCIDIR con cómo se pide cada recurso, o el
-// navegador descarga dos veces y avisa de "preload no usado":
-//   · bundle  → se inyecta con <script src> SIN crossorigin (modo no-CORS)
-//               ⇒ el preload va SIN crossorigin.
-//   · menu.json → se pide con fetch() (modo cors, credentials same-origin)
-//               ⇒ el preload SÍ lleva crossorigin (anonymous = same-origin creds).
-const PRELOADS = `<link rel="preload" as="script" href="/${appName}">
-  <link rel="preload" as="fetch" href="/menu.json?v=${dataVer.menu}" crossorigin>
-  `;
-tpl = replaceOrThrow(
-  tpl,
-  /(<link rel="preconnect" href="https:\/\/fonts\.googleapis\.com">)/,
-  (m, p1) => PRELOADS + p1,
-  "preloads antes del preconnect de fuentes"
-);
-
-// 5c) Reemplazar los 3 <script> de unpkg (React/ReactDOM/Babel) + el bloque
-//     de arranque con Babel por: vendor React/ReactDOM (SRI) + boot paralelo.
-const startMarker = '<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"';
-const endMarker = ".then(function () { window.__bootDumDum(); });\n  </script>";
-const a = tpl.indexOf(startMarker);
-const b = tpl.indexOf(endMarker);
-if (a === -1 || b === -1) throw new Error("No encuentro el bloque de arranque a reemplazar");
-const boot = `<script src="/${reactName}" integrity="${reactSri}" crossorigin="anonymous"></script>
-  <script src="/${reactDomName}" integrity="${reactDomSri}" crossorigin="anonymous"></script>
-
-  <!-- Arranque sin Babel y ROBUSTO ante datos lentos/colgados (conexión mala):
-       · La CARTA manda: en cuanto menu.json llega (o expira a los ~5s), montamos
-         la app. Así /menu (2/3 del tráfico, móvil en el local) NO espera nunca
-         por galerias.json ni eventos.json, y la web nunca se queda en blanco.
-       · galerias.json y eventos.json van en 2º plano; al llegar avisamos a los
-         componentes, que ya escuchan el evento "focus" para recargar sus datos.
-       · Cada fetch lleva AbortController con timeout, para no colgarse jamás. -->
-  <script>
-    (function () {
-      var TIMEOUT = 5000;
-      function grab(url) {
-        var ctrl = ("AbortController" in window) ? new AbortController() : null;
-        var t = ctrl ? setTimeout(function () { ctrl.abort(); }, TIMEOUT) : null;
-        return fetch(url, ctrl ? { signal: ctrl.signal } : undefined)
-          .then(function (r) { return r.ok ? r.json() : null; })
-          .catch(function () { return null; })
-          .then(function (d) { if (t) clearTimeout(t); return d; });
-      }
-      var mounted = false;
-      function mount() {
-        if (mounted) return; mounted = true;
-        var s = document.createElement("script");
-        s.src = "/${appName}";
-        document.body.appendChild(s);
-      }
-      // 1) menu.json → montar (pase lo que pase con las otras dos peticiones).
-      grab("/menu.json?v=${dataVer.menu}").then(function (d) {
-        if (d && d.sections) window.PUBLISHED_MENU = d;
-        mount();
-      });
-      // Doble red de seguridad: montar igualmente si algo impidiera el then de arriba.
-      setTimeout(mount, TIMEOUT + 500);
-      // 2) galerías en 2º plano; al llegar, avisar (si ya
-      //    está montado) con "focus", que es lo que recargan los componentes.
-      grab("/galerias.json?v=${dataVer.gal}").then(function (d) {
-        if (d) { window.PUBLISHED_GALLERY = d; if (mounted) window.dispatchEvent(new Event("focus")); }
-      });
-    })();
-  </script>`;
-tpl = tpl.slice(0, a) + boot + tpl.slice(b + endMarker.length);
-
-// 5d) <noscript> con lo esencial (para quien no ejecuta JS).
-const NOSCRIPT = `
-  <noscript>
-    <div style="max-width:680px;margin:0 auto;padding:24px;font-family:system-ui,sans-serif;line-height:1.5">
-      <h1>DUM DUM™ — Dumplings &amp; Desobediencia</h1>
-      <p>Dumplings caseros en Madrid. Abiertos todos los días.</p>
-      <p><strong>Horario:</strong> 13.00–15.39 y 20.00–22.39.</p>
-      <p><strong>Chamberí:</strong> Blasco de Garay, 10 · 28015 Madrid · <a href="tel:+34624560181">+34 624 56 01 81</a></p>
-      <p><strong>Bernabéu:</strong> Infanta Mercedes, 17 · 28020 Madrid · <a href="tel:+34614167317">+34 614 16 73 17</a></p>
-      <p><a href="/menu">Ver la carta</a> · <a href="/locales">Locales y reservas</a> · <a href="/eventos">Eventos</a> · <a href="/contacto">Contacto</a></p>
-      <p><a href="https://www.instagram.com/dumdum.plings">Instagram @dumdum.plings</a></p>
-    </div>
-  </noscript>`;
-tpl = tpl.replace('<div id="root"></div>', '<div id="root"></div>' + NOSCRIPT);
-
-// ── 6) Escribir index.html + una HTML por ruta (OG estático) ─
-// Los textos SEO NO se duplican aquí: se leen de la MISMA fuente que usa el
-// runtime (window.__ROUTES_SEO en index.html). Así el OG estático (lo que ven
-// los rastreadores sociales) y el runtime (lo que ve Google) no pueden divergir.
-function extractRoutesSeo(html) {
-  const m = html.match(/window\.__ROUTES_SEO\s*=\s*(\[[\s\S]*?\]);/);
-  if (!m) throw new Error("No encuentro window.__ROUTES_SEO en index.html (¿cambió el formato?)");
-  let arr;
-  try { arr = new Function("return (" + m[1] + ")")(); } // literal de nuestro propio HTML de confianza
-  catch (e) { throw new Error("No puedo evaluar window.__ROUTES_SEO: " + e.message); }
-  if (!Array.isArray(arr) || arr.length === 0) throw new Error("window.__ROUTES_SEO vacío o inválido");
-  return arr;
-}
-// Datos de los locales: se leen del MISMO objeto que usa la web
-// (window.DUMDUM_LOCALES en src/ui.jsx), para que el HTML prerenderizado y el
-// JSON-LD no puedan contradecir nunca a lo que se ve en pantalla.
-function extractLocales(js) {
-  const m = js.match(/window\.DUMDUM_LOCALES\s*=\s*(\{[\s\S]*?\n\};)/);
-  if (!m) throw new Error("No encuentro window.DUMDUM_LOCALES en src/ui.jsx (¿cambió el formato?)");
-  let obj;
-  try { obj = new Function("return (" + m[1].slice(0, -1) + ")")(); } // literal de nuestro propio código
-  catch (e) { throw new Error("No puedo evaluar DUMDUM_LOCALES: " + e.message); }
-  for (const k of ["chamberi", "bernabeu"]) {
-    if (!obj[k] || !obj[k].calle || !obj[k].tel) throw new Error("DUMDUM_LOCALES." + k + " incompleto");
-  }
-  return obj;
-}
-const LOCALES = extractLocales(rd("src/ui.jsx"));
 // Aviso ruidoso mientras algún local tenga texto de relleno. No aborta el build
 // (se quiere poder desplegar la ficha con los datos buenos y la historia luego),
 // pero queda en el log de cada despliegue para que no se olvide.
@@ -254,55 +77,16 @@ const LOCALES = extractLocales(rd("src/ui.jsx"));
   }
 }
 
-const ROUTES_SEO = extractRoutesSeo(rd("index.html"));
-const FILE_FOR = {
-  // Todas las páginas ya son HTML (PAGINAS_HTML y RUTAS_EDGE, más abajo).
-};
-const ROUTES = Object.keys(FILE_FOR).map((p) => {
-  const s = ROUTES_SEO.find((r) => r.p === p);
-  if (!s) throw new Error("Falta la ruta " + p + " en window.__ROUTES_SEO");
-  if (!s.t || s.d == null) throw new Error("Ruta " + p + " sin título/description en window.__ROUTES_SEO");
-  return { p, file: FILE_FOR[p], t: s.t, d: s.d };
-});
-
-const ORIGIN = "https://dum-dum.es";
-const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-// Reemplazo que FALLA RUIDOSAMENTE si el patrón no casa (p. ej. porque cambió el
-// formato de los <meta> en index.html): así el OG por ruta nunca se queda con el
-// de la home en silencio. Usa función de reemplazo para no interpretar "$" del texto.
-function replaceOrThrow(str, re, fn, label) {
-  if (!re.test(str)) throw new Error("Reemplazo NO aplicado en index.html: '" + label + "'. ¿Cambió el formato?");
-  return str.replace(re, fn);
-}
-function renderRouteHtml(base, route) {
-  const url = ORIGIN + (route.p === "/" ? "/" : route.p);
-  let h = base;
-  h = replaceOrThrow(h, /<title>[\s\S]*?<\/title>/, () => `<title>${esc(route.t)}</title>`, "title");
-  h = replaceOrThrow(h, /(<meta name="description" content=")[^"]*(")/, (m, p1, p2) => p1 + esc(route.d) + p2, "description");
-  h = replaceOrThrow(h, /(<link rel="canonical" href=")[^"]*(")/, (m, p1, p2) => p1 + esc(url) + p2, "canonical");
-  const setMeta = (attr, name, val, label) => {
-    const re = new RegExp(`(<meta ${attr}="${name}" content=")[^"]*(")`);
-    h = replaceOrThrow(h, re, (m, p1, p2) => p1 + esc(val) + p2, label);
-  };
-  setMeta("property", "og:title", route.t, "og:title");
-  setMeta("property", "og:description", route.d, "og:description");
-  setMeta("property", "og:url", url, "og:url");
-  setMeta("name", "twitter:title", route.t, "twitter:title");
-  setMeta("name", "twitter:description", route.d, "twitter:description");
-  return h;
-}
-
-// Horario "13.00–15.39 / 20.00–22.39" a partir de los tramos en minutos, para
-// no escribirlo dos veces (la web lo pinta desde los mismos datos).
-// ── 6a) Web HTML (migración por fases) ───────────────────────
-// Las páginas HTML salen de la capa de plantillas de src/html/, una vez por
-// idioma (/ruta y /en/ruta). Cada página que se migre se añade al registro
-// (PAGINAS_HTML) y se retira de la SPA (FILE_FOR).
-const ANALITICA = extraerBloqueAnalitica(rd("index.html"));
+// ── 3) Páginas HTML ──────────────────────────────────────────
+// Cada página sale de su plantilla de src/html/paginas/, una vez por idioma
+// (/ruta y /en/ruta). Para añadir una: plantilla + entrada en PAGINAS_HTML +
+// título/descripción en src/html/seo.mjs (ver COMO-ANADIR-PAGINAS.md).
+// El bloque Consent Mode → Cookiebot → GA va tal cual en cada <head>.
+const ANALITICA = rd("src/html/analitica.html").trimEnd();
 const DATOS_HTML = {
   locales: LOCALES, seo: ROUTES_SEO, raiz: ROOT,
   galerias: JSON.parse(rd("galerias.json")), eventos: JSON.parse(rd("eventos.json")), carta: JSON.parse(rd("menu.json")),
-  ldGlobal: extraerJsonLdGlobal(rd("index.html")),
+  ldGlobal: JSON.parse(rd("src/html/ld-global.json")),
 };
 function escribirPaginaHtml(render, ruta, lang, rutasEn) {
   const i = idioma(lang, rutasEn);
@@ -336,7 +120,7 @@ const PAGINAS_HTML = {
 const RUTAS_EDGE = [RUTA_MENU];
 const RUTAS_HTML = [...Object.keys(PAGINAS_HTML), ...RUTAS_EDGE];
 
-// ── 6b) La carta para el edge ────────────────────────────────
+// ── 4) La carta para el edge ─────────────────────────────────
 // Se empaqueta la plantilla de la carta (documento + shell + platos) con sus
 // constantes ya resueltas en functions/_generado/carta.js, que importa
 // functions/_lib/carta.js. Pages empaqueta functions/ DESPUÉS de este build,
@@ -357,30 +141,18 @@ const RUTAS_HTML = [...Object.keys(PAGINAS_HTML), ...RUTAS_EDGE];
     "// GENERADO por build.mjs desde src/html/carta-edge.mjs. No editar.\n" + res.outputFiles[0].text);
 }
 
-// La SPA no debe interceptar los enlaces a las rutas que ya son HTML (ver el
-// interceptor de clics en ui.jsx): se le inyecta la lista junto a __ROUTES_SEO.
-tpl = replaceOrThrow(tpl, /(<script>\s*window\.__ROUTES_SEO)/,
-  (m, p1) => `<script>window.__RUTAS_HTML = ${JSON.stringify(RUTAS_HTML)};</script>\n  ` + p1,
-  "lista de rutas HTML para la SPA");
-
-for (const route of ROUTES) {
-  const dest = path.join(DIST, route.file);
-  fs.mkdirSync(path.dirname(dest), { recursive: true });
-  fs.writeFileSync(dest, renderRouteHtml(tpl, route));
-}
-
 for (const [ruta, render] of Object.entries(PAGINAS_HTML)) {
   for (const lang of ["es", "en"]) escribirPaginaHtml(render, ruta, lang, RUTAS_HTML);
 }
 // 404 real: Cloudflare Pages sirve 404.html (y en/404.html bajo /en/) con estado 404.
 for (const lang of ["es", "en"]) escribirPaginaHtml(noEncontrada, RUTA_404, lang, RUTAS_HTML);
 
-// ── 7) Copiar estáticos de la raíz ───────────────────────────
+// ── 5) Copiar estáticos de la raíz ───────────────────────────
 const copyFile = (rel) => fs.copyFileSync(path.join(ROOT, rel), path.join(DIST, rel));
 const copyDir = (rel) => fs.cpSync(path.join(ROOT, rel), path.join(DIST, rel), { recursive: true });
 // Datos + ficheros sueltos de raíz habituales (se copian los que existan).
 const ROOT_FILES = [
-  "menu.json", "galerias.json", "eventos.json", "robots.txt", "sitemap.xml",
+  "robots.txt", "sitemap.xml",
   "favicon.ico",
   "favicon-48x48.png",
   "favicon-192x192.png",
@@ -404,19 +176,20 @@ for (const d of ["img", "admin", "panel"]) {
   if (fs.existsSync(path.join(ROOT, d))) copyDir(d);
 }
 
-// ── 7b) Verificar que NINGÚN recurso local del <head> falta en dist/ ──
-// Recorre el HTML final y exige que cada recurso local con extensión de archivo
-// (favicons, og-image, css, js, json…) exista ya en dist/. Si falta alguno,
+// ── 5b) Verificar que NINGÚN recurso local del <head> falta en dist/ ──
+// Recorre la home generada y exige que cada recurso local con extensión de
+// archivo (favicons, og-image, css, js…) exista ya en dist/. Si falta alguno,
 // aborta el build en vez de dejar un 404 silencioso en producción.
 (function verifyAssets() {
+  const home = fs.readFileSync(path.join(DIST, "index.html"), "utf8");
   const refs = new Set();
   // href/src/content="/ruta.ext"
   const reLocal = /(?:href|src|content)="(\/[^"?#]+\.[a-z0-9]+)(?:[?#][^"]*)?"/gi;
   // content="https://dum-dum.es/ruta.ext"  (p. ej. og:image)
   const reAbs = /(?:href|src|content)="https:\/\/dum-dum\.es(\/[^"?#]+\.[a-z0-9]+)(?:[?#][^"]*)?"/gi;
   let m;
-  while ((m = reLocal.exec(tpl))) refs.add(m[1]);
-  while ((m = reAbs.exec(tpl))) refs.add(m[1]);
+  while ((m = reLocal.exec(home))) refs.add(m[1]);
+  while ((m = reAbs.exec(home))) refs.add(m[1]);
   const missing = [...refs].filter((u) => !fs.existsSync(path.join(DIST, u.replace(/^\//, ""))));
   if (missing.length) {
     throw new Error("Recursos referenciados en el <head> que NO están en dist/:\n  " + missing.join("\n  "));
@@ -424,14 +197,11 @@ for (const d of ["img", "admin", "panel"]) {
   console.log("  verificados " + refs.size + " recursos del HTML (sin faltas)");
 })();
 
-// Todas las URLs limpias que sirve la web: las de la SPA y las HTML en sus dos
-// idiomas. Las usan _redirects (barra final) y _headers (HTML sin caché).
-const RUTAS_LIMPIAS = [
-  ...ROUTES.map((r) => r.p),
-  ...RUTAS_HTML.flatMap((p) => [p, idioma("en", RUTAS_HTML).ruta(p)]),
-];
+// Todas las URLs limpias que sirve la web, en sus dos idiomas. Las usan
+// _redirects (barra final) y _headers (HTML sin caché).
+const RUTAS_LIMPIAS = RUTAS_HTML.flatMap((p) => [p, idioma("en", RUTAS_HTML).ruta(p)]);
 
-// ── 8) _redirects ────────────────────────────────────────────
+// ── 6) _redirects ────────────────────────────────────────────
 // IMPORTANTE — NO añadir rewrites "/ruta -> /ruta.html 200" ni un catch-all
 // "/* -> /404.html 404":
 //  · Cloudflare Pages YA sirve las URLs limpias desde los .html de dist/
@@ -464,7 +234,7 @@ ${RUTAS_LIMPIAS.filter((p) => !p.endsWith("/")).map((p) => p + "/    " + p + "  
 /admin/*     /admin/:splat    200
 `);
 
-// ── 9) _headers (caché real; sustituye a los <meta http-equiv>) ─
+// ── 7) _headers (caché real) ─────────────────────────────────
 fs.writeFileSync(path.join(DIST, "_headers"), `# Generado por build.mjs.
 # HTML siempre fresco (contiene los ?v y las URLs con hash). Cloudflare Pages
 # sirve las rutas como URLs LIMPIAS (/menu, no /menu.html), que no matchean
@@ -483,10 +253,6 @@ ${RUTAS_LIMPIAS.map((p) => p + "\n  Cache-Control: no-cache").join("\n")}
 
 # Datos del CMS: cacheables cortos (además el ?v los versiona).
 /menu.json
-  Cache-Control: public, max-age=300
-/galerias.json
-  Cache-Control: public, max-age=300
-/eventos.json
   Cache-Control: public, max-age=300
 
 # ── Seguridad ────────────────────────────────────────────────
@@ -563,10 +329,7 @@ if (esLocal && fs.existsSync(path.join(ROOT, "dev"))) {
 const kb = (b) => (b.length / 1024).toFixed(1) + "kB";
 console.log("BUILD OK → dist/");
 if (devCopiados) console.log(`  dev/ → ${devCopiados} herramienta(s) de revisión (no se publican)`);
-console.log("  " + appName + " (" + kb(appBuf) + ")");
 console.log("  " + cssName + " (" + kb(cssBuf) + ")");
-console.log("  " + islasName + " (" + kb(islasBuf) + ") · islas de la web HTML");
-console.log("  web HTML: " + RUTAS_HTML.map((p) => p + " (+ /en" + p + ")").join(", ") + " · la carta se pinta en el edge (functions/_generado/carta.js)");
-console.log("  vendor React+ReactDOM (SRI ok)");
-console.log("  HTML: " + ROUTES.map((r) => r.file).join(", ") + ", 404.html");
-console.log("  datos ?v: menu=" + dataVer.menu + " gal=" + dataVer.gal + " ev=" + dataVer.ev);
+console.log("  " + islasName + " (" + kb(islasBuf) + ") · islas");
+console.log("  páginas: " + RUTAS_HTML.map((p) => p + " (+ /en" + p + ")").join(", ") + " · la carta se pinta en el edge (functions/_generado/carta.js)");
+console.log("  404.html y en/404.html");

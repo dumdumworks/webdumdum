@@ -1,92 +1,62 @@
-# Cómo añadir una página nueva (sin romper nada)
+# Cómo añadir una página nueva
 
-> **Desde la migración a HTML (2026):** una página nueva se hace como **página
-> HTML**, no como componente React: una función en `src/html/paginas/` que
-> devuelve `{ titulo, desc, cuerpo, ld }` usando `esqueleto()` de `shell.mjs`,
-> registrada en `PAGINAS_HTML` (`build.mjs`) y con su entrada en `__ROUTES_SEO`
-> (`t`/`d` en español y `te`/`de` en inglés). Con eso salen `/ruta` y `/en/ruta`,
-> `_headers`, `_redirects` y los enlaces del resto de la web. Ver "Web HTML" en
-> `BUILD.md`. Lo que sigue describe la SPA, que se mantiene hasta que acabe la
-> migración.
+La web es HTML generado por `build.mjs` (ver `BUILD.md`). Una página nueva son
+**tres pasos** y sale en los dos idiomas.
 
-La web usa **URLs limpias** (`/menu`, no `/#/menu`) y un router central, y se
-compila con esbuild a `dist/` (ver `BUILD.md`). Añadir una página son **4 pasos**.
-Si te saltas el paso 4, la página funcionará al navegar por dentro pero dará
-**404 al entrar directamente por la URL** — que es justo como llega la gente.
+## Paso 1 — La plantilla (en `src/html/paginas/`)
 
-## Paso 1 — Crear el componente (en `src/pages.jsx`)
+    // src/html/paginas/merch.mjs
+    import { esc } from "../plantilla.mjs";
+    import { esqueleto, specFoot } from "../shell.mjs";
 
-    function Merch() {
-      const lang = useLang();
-      return (
-        <div data-screen-label="merch">
-          ...tu contenido...
-        </div>
-      );
+    export const RUTA = "/merch";
+
+    export function merch(i, { locales, seo, ldGlobal }) {
+      const { t } = i;                       // t(es, en) según el idioma de la página
+      const s = seo.find((r) => r.p === RUTA);
+      const main = `<section style="padding:14vh var(--gutter) 6vh">
+      <div class="tiny muted">[06] ${esc(t("Merch", "Merch"))}</div>
+      <h1 class="h-display" style="margin-top:16px">${esc(t("Camisetas.", "Tees."))}</h1>
+    </section>`;
+      return {
+        titulo: i.lang === "en" ? (s.te || s.t) : s.t,
+        desc: i.lang === "en" ? (s.de || s.d) : s.d,
+        cuerpo: esqueleto(i, RUTA, locales, main),   // topbar + flotante + modales + footer
+        ld: ldGlobal,
+      };
     }
 
-Y al final de `pages.jsx`, añádelo al `Object.assign(window, { ... })`:
+- Todo texto en los dos idiomas con `t(es, en)`. Todo lo que venga de datos pasa
+  por `esc()`.
+- Enlaces internos con `i.ruta("/menu")`: en la versión inglesa apunta a `/en/menu`.
+- Botones que abren los modales: `data-reservar` (selector de local),
+  `data-reservar="chamberi"` (directo), `data-pide`, `data-pide="domicilio"`.
+- Si la página necesita comportamiento, una isla en `src/islas/` registrada en
+  `islas.js`: busca su elemento y, si no está, no hace nada.
 
-    Object.assign(window, { Home, Menu, Locales, Contacto, Eventos, Merch });
+## Paso 2 — Título y descripción (en `src/html/seo.mjs`)
 
-## Paso 2 — Título y descripción SEO (en `index.html`)
+    { p: "/merch", t: "DUM DUM™ — Merch", d: "Camisetas y merch de DUM DUM.",
+      te: "DUM DUM™ — Merch", de: "DUM DUM tees and merch." },
 
-`window.__ROUTES_SEO` es la **fuente única** de títulos/descripciones: la consumen
-el "pre-SEO" del primer pintado, `app.jsx` en runtime y `build.mjs` para el OG
-estático de cada HTML. Añade una entrada:
+## Paso 3 — Registrarla (en `build.mjs`)
 
-    { p: "/merch", t: "DUM DUM™ — Merch",
-      d: "Camisetas y merch de DUM DUM." },
+    import { merch, RUTA as RUTA_MERCH } from "./src/html/paginas/merch.mjs";
+    …
+    const PAGINAS_HTML = { …, [RUTA_MERCH]: merch };
 
-## Paso 3 — Registrar la ruta (en `src/app.jsx`)
+Con eso salen `dist/merch.html` y `dist/en/merch.html` (`/merch` y `/en/merch`),
+sus reglas de `_headers` y `_redirects`, y el selector de idioma y el resto de
+enlaces de la web la conocen. El build aborta si falta la entrada de SEO.
 
-En `getRoutesTable()`, una línea `mk(...)` (los textos son solo respaldo por si
-`__ROUTES_SEO` no cargara):
+## Enlazarla
 
-    mk("/merch", false, "Merch",
-      "DUM DUM™ — Merch",
-      "Camisetas y merch de DUM DUM."),
+Desde cualquier plantilla, `<a href="${i.ruta("/merch")}">`. Enlaces externos:
+URL completa con `target="_blank" rel="noreferrer"`. Imágenes como `img/...`
+(el `<base href="/">` las resuelve desde la raíz).
 
-## Paso 4 — Generar su HTML (en `build.mjs`) ← NO TE LO SALTES
-
-Cloudflare sirve cada ruta desde su `.html` prerenderizado. Añade la ruta al mapa
-`FILE_FOR`:
-
-    const FILE_FOR = { …, "/merch": "merch.html" };
-
-Sin esto no existe `dist/merch.html`, y `dum-dum.es/merch` devuelve el 404 real.
-El build **aborta** si la ruta está en `FILE_FOR` pero falta en `__ROUTES_SEO`, así
-que un despiste entre los pasos 2 y 4 se caza solo.
-
-## Paso 5 — Enlazar a la página
-
-Usa siempre rutas que empiezan por `/` (sin `#`):
-
-    <a href="/merch">Merch →</a>
-
-El interceptor de clics la hará navegar sin recargar. Para enlaces EXTERNOS
-(Instagram, Uber, etc.) usa la URL completa y `target="_blank"` — el interceptor
-los respeta y abre en pestaña nueva.
-
-## Reglas de oro (para no romper nada)
-- **Enlaces internos**: `href="/loquesea"` (empieza por `/`). NUNCA `href="#/loquesea"`.
-- **Enlaces externos**: URL completa `https://...` + `target="_blank" rel="noreferrer"`.
-- **Botones que no navegan** (abren un toast, etc.): `href="#"` + `onClick` con `e.preventDefault()`.
-- No uses `window.location.hash` para navegar: usa `nav("/ruta")` o un `<a href="/ruta">`.
-- Las imágenes van como `img/...` (el `<base href="/">` del index las resuelve desde la raíz).
-- **No toques el `_redirects` generado** para dar de alta rutas: no hace falta, y
-  añadir `/ruta → /ruta.html 200` provoca un bucle infinito (ver `BUILD.md`).
-
-## Cosas que ya están resueltas
-- URLs limpias + History API (atrás/adelante funciona, con restauración de scroll).
-- Cada ruta se sirve desde su HTML prerenderizado; lo inexistente da **404 real**.
-- Título, descripción, canónica y Open Graph por página, estáticos (las previews
-  de WhatsApp/Facebook, que no ejecutan JS, ven el título correcto).
-- Match de rutas estricto: páginas con nombres parecidos no colisionan.
-- Sin Babel en el navegador: se compila en el build.
-
-## Pendiente / mejora futura conocida
-- El `<body>` no se prerenderiza (sí el `<head>` y un `<noscript>`). Hacerlo
-  exigiría migrar a hidratación: la app monta con `createRoot().render()`, que
-  borra el contenido de `#root`, así que meter HTML estático ahí solo produciría
-  un parpadeo. Ver `BUILD.md`.
+## Reglas de oro
+- **No toques el `_redirects` ni el `_headers` generados**: no hace falta, y
+  `/ruta → /ruta.html 200` provoca un bucle infinito (ver `BUILD.md`).
+- Nada de estilos nuevos sueltos: tokens (`var(--…)`) y las clases que ya existen.
+- Mide la página en 375, 390, 768, 1024, 1440 y 1920, en ES y EN.

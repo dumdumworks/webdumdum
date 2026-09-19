@@ -6,7 +6,7 @@
 // ─────────────────────────────────────────────────────────────
 import { estado } from "./estado.js";
 import { menuMovil } from "./menu-movil.js";
-import { modales } from "./modales.js";
+import { modales, abrirReservar } from "./modales.js";
 import { flotante } from "./flotante.js";
 import { galerias } from "./galeria.js";
 import { llamar } from "./llamar.js";
@@ -34,7 +34,9 @@ $$("[data-idioma]").forEach((a) => a.addEventListener("click", () => {
   try { localStorage.setItem("dumdum.lang", a.dataset.idioma); } catch (e) {}
 }));
 
-// Mientras convivan las dos webs: quien entra por una página HTML ya ha visto
-// la web, así que la SPA no debe recibirle con su pantalla de carga al saltar
-// a una ruta que aún es React. Es la misma marca que pone el Loader de ui.jsx.
-try { sessionStorage.setItem("dumdum.loaded", "1"); } catch (e) {}
+// Disparador por URL: quien entra con ?reservar (el enlace del anuncio) ve la
+// ventana de reserva abrirse sola, como si hubiera pulsado el botón. Lanza la
+// misma señal que los botones, así la conversión cuenta igual en GA.
+try {
+  if (new URLSearchParams(location.search).has("reservar")) setTimeout(() => abrirReservar(), 600);
+} catch (e) {}

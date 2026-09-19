@@ -637,39 +637,9 @@
   border-color: var(--bg);
 }
 
-.dish .logo-slot {
-  width: 56px; height: 56px;
-  border: 1px dashed var(--line-soft);
-  display: flex; align-items: center; justify-content: center;
-  font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500;
-  text-transform: uppercase; font-size: 8px;
-  letter-spacing: 0;
-  color: rgba(255,0,30,0.4);
-  flex-shrink: 0;
-  margin-top: 4px;
-  border-radius: 6px;
-  overflow: hidden;
-}
-.dish .logo-slot img { width: 100%; height: 100%; object-fit: contain; }
-.dish .logo-slot.is-wide {
-  width: 120px;
-  height: auto;
-  aspect-ratio: 2 / 1;
-  border: none;
-  background: transparent;
-  border-radius: 0;
-  align-self: center;
-  margin-top: 0;
-  padding: 0;
-}
-.dish .logo-slot.is-wide img {
-  object-fit: contain;
-  height: 100%;
-  width: 100%;
-}
 @media (max-width: 879px) {
   .dish.with-logo { grid-template-columns: 56px 1fr 56px auto; }
-  .dish.with-logo:has(.logo-slot.is-wide) { grid-template-columns: 56px 1fr 120px auto; }
+  
 }
 
 /* Mobile featured: tarjeta completa con fondo rojo y texto crema */
@@ -733,10 +703,8 @@
   .dish.is-featured .tag {
     background: transparent;
   }
-  /* Logo: borde crema tenue */
-  .dish.is-featured .logo-slot {
-    border-color: rgba(255,250,243,0.3);
-  }
+  
+  
 }
 
 /* Formulario de Eventos */
@@ -1010,68 +978,6 @@
 .info { display: grid; grid-template-columns: 110px 1fr; gap: 8px 14px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); font-family: var(--font-display); font-weight: 500; font-size: 13px; letter-spacing: 0.02em; }
 .info b { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0; color: rgba(255,0,30,0.55); }
 .locale-card > div > .tiny.muted { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; letter-spacing: 0; }
-
-/* ---------- Google Reviews badge ---------- */
-.grv {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  margin: 28px 0;
-  padding: 14px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  font-family: var(--font-mono); text-transform: uppercase; font-weight: 600;
-  font-size: 13px;
-  letter-spacing: 0;
-  color: var(--ink);
-  background: transparent;
-  transition: opacity .18s ease;
-  width: fit-content;
-  min-width: 320px;
-}
-.grv:hover { opacity: 0.7; }
-.grv-g {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px; height: 22px;
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
-}
-.grv-rating {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: -0.01em;
-}
-.grv-stars { display: inline-flex; gap: 1px; }
-.grv-star {
-  position: relative;
-  display: inline-block;
-  font-size: 14px;
-  line-height: 1;
-}
-.grv-star-empty { opacity: 0.2; }
-.grv-star-fill {
-  position: absolute;
-  top: 0; left: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  color: var(--red);
-}
-.grv-count {
-  margin-left: auto;
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  opacity: 0.7;
-}
-.grv-arrow {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 12px;
-  opacity: 0.6;
-}
 
 .map-placeholder {
   background: repeating-linear-gradient(45deg, var(--sage-faint) 0 8px, var(--bg) 8px 16px);
@@ -1693,10 +1599,7 @@
 }
 
 /* Bebidas: texto compacto, SIN foto ni logo */
-.drinks-grid .dish .dish-img,
-.drinks-grid .dish .dish-card,
-.drinks-grid .dish .logo-slot,
-.drinks-grid .dish .m-only.logo-slot { display: none !important; }
+.drinks-grid .dish .dish-img, .drinks-grid .dish .dish-card { display: none !important; }
 /* Sin número en bebidas (gana espacio) */
 .drinks-grid .dish .num { display: none !important; }
 /* Cada bebida en vertical: nombre arriba, precio debajo */
@@ -1860,9 +1763,7 @@
   .dish.is-featured .dish-tags-overlay .tag.limited {
     border-color: var(--red);
   }
-  .dish.with-logo .dish-img > .logo-slot {
-    display: none;
-  }
+  
 
   /* ─── Ficha técnica (spec card) ───────────────────────────── */
   .dish-card {

@@ -49,8 +49,7 @@ body {
    email/instagram/etc.) hasta abajo, pegándolo al footer rojo sin dejar
    hueco crema. El móvil mantiene su disposición propia (no se toca). */
 @media (min-width: 881px) {
-  /* body en las páginas HTML; #root en la SPA mientras dure (mismo papel). */
-  body, #root {
+  body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -388,12 +387,10 @@ img { display: block; max-width: 100%; }
 .reserve-modal .alerg-intro::after,
 .reserve-modal .alerg-title::before,
 .reserve-modal .alerg-title::after{ display:none; }
-.dish-widget-host{ width:100%; }
+
 /* Forzar que el iframe/contenido de DISH ocupe todo el ancho del contenedor,
    para que su borde coincida con el de líneas y textos (que van al 100%). */
-.dish-widget-host iframe,
-.reserve-widget-wrap iframe,
-.reserve-widget-wrap > div{ width:100% !important; max-width:100% !important; }
+.reserve-widget-wrap iframe, .reserve-widget-wrap > div { width:100% !important; max-width:100% !important; }
 @media (max-width:520px){
   .reserve-modal{ border-radius:20px; }
   /* Ancho del widget en móvil: 281px (medido). Líneas y textos a ese ancho. */
@@ -652,47 +649,6 @@ img { display: block; max-width: 100%; }
 .muted { color: rgba(255,0,30,0.55); }
 .cap { letter-spacing: 0.04em; }
 .tnum { font-variant-numeric: tabular-nums; }
-
-/* ---------- Loading ---------- */
-.loader {
-  position: fixed; inset: 0; z-index: 200;
-  background: var(--bg);
-  display: flex; flex-direction: column; justify-content: space-between;
-  padding: 24px;
-  transition: opacity .6s ease, transform .6s cubic-bezier(.7,0,.2,1);
-}
-.loader.out { opacity: 0; transform: translateY(-12px); pointer-events: none; }
-.loader-top, .loader-bot { display: flex; justify-content: space-between; font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 11px; letter-spacing: 0.06em; }
-.loader-mid {
-  flex: 1;
-  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-}
-/* Loader minimalista: solo el número, centrado en toda la pantalla */
-.loader-bare { justify-content: center; align-items: center; padding: 0; }
-.loader-bare .loader-mid { flex: none; align-items: center; }
-.loader-count-big {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(96px, 26vw, 360px);
-  line-height: 0.82;
-  letter-spacing: -0.06em;
-  color: var(--ink);
-  display: flex;
-  align-items: baseline;
-}
-.loader-pct {
-  font-size: 0.28em;
-  font-weight: 600;
-  margin-left: 0.1em;
-  letter-spacing: 0;
-}
-.loader-count { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 13px; letter-spacing: 0.08em; }
-.loader-bar { height: 1px; background: var(--line-soft); position: relative; margin: 18px 0; }
-.loader-bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); }
-
-/* ---------- Reveal anim ---------- */
-.reveal { opacity: 0; transform: translateY(14px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
-.reveal.in { opacity: 1; transform: none; }
 
 /* ---------- Mobile menu (carta) styles in separate block ---------- */
 
