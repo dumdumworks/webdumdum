@@ -3,8 +3,10 @@
 // (<head> + <body>). Es código de Node: lo ejecuta build.mjs, no el navegador.
 // ─────────────────────────────────────────────────────────────
 export const ORIGIN = "https://dum-dum.es";
+// También la comilla simple: hay atributos con JSON entre comillas simples
+// (data-textos, data-dish…) y un apóstrofo inglés ("Couldn't") los cortaba.
 export const esc = (s) => String(s)
-  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 
 // Las dos lenguas son RUTAS distintas (/menu y /en/menu), así que cada página se
 // renderiza una vez por idioma con su propio `i`.

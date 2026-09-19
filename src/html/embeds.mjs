@@ -53,11 +53,10 @@ ${items.map((it, n) => slot(it, n + 1, n >= visibles)).join("\n")}
 </div>`;
 }
 
-// Universo: hasta 3 vídeos, uno a la vista, 16:9. No se incrusta el reproductor
-// hasta que se pulsa: se pinta la miniatura de YouTube (que sale en cualquier
-// dominio; el reproductor no siempre) con un botón de play, y la isla cambia
-// la miniatura por el iframe con autoplay. Más ligero y sin "vídeo no
-// disponible" en local.
+// Universo: hasta 3 vídeos, uno a la vista, 16:9. La página pinta la miniatura
+// de YouTube con un botón de play (nada de YouTube hasta entonces) y la isla
+// embeds.js la cambia por el reproductor real cuando el vídeo se acerca a la
+// pantalla, para que arranque a la primera al tocar.
 export function sliderYouTube(items) {
   const lista = items.length ? items : [{}, {}, {}];
   return slider({
