@@ -17,3 +17,6 @@ CLAUDE.md
 
 # Lo genera build.mjs (la plantilla de la carta empaquetada para el edge).
 functions/_generado/
+
+# Variables de entorno del servidor de pruebas (wrangler). Nunca al repo.
+.dev.vars

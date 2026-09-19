@@ -8,6 +8,8 @@
 // Devuelve { ok:true, url:"/img/menu/<clave>" } — esa url se guarda en el campo
 // "image" del plato y la sirve functions/img/menu/[[path]].js desde R2.
 // ─────────────────────────────────────────────────────────────
+import { requireAccess } from "../_lib/access.js";
+
 function json(obj, status = 200) {
   return new Response(JSON.stringify(obj), {
     status,
@@ -16,7 +18,8 @@ function json(obj, status = 200) {
 }
 
 export async function onRequestPost({ env, request }) {
-  if (!request.headers.get("Cf-Access-Jwt-Assertion")) return json({ error: "No autorizado" }, 401);
+  const denegado = await requireAccess(request, env);
+  if (denegado) return denegado;
   if (!env.PHOTOS) return json({ error: "El almacén de fotos (R2 binding PHOTOS) no está configurado todavía." }, 500);
 
   let form;
