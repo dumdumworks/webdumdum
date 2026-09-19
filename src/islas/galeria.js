@@ -31,7 +31,10 @@ function montar(raiz) {
   let hasta = 2;
   const montarFoto = (slot) => {
     const e = slot.firstElementChild;
-    if (!e || !e.classList.contains("ev-slider-espera")) return;
+    if (!e) return;
+    // Embeds (reels, vídeos): el src espera en data-src hasta que toca.
+    if (e.tagName === "IFRAME") { if (e.dataset.src) { e.src = e.dataset.src; delete e.dataset.src; } return; }
+    if (!e.classList.contains("ev-slider-espera")) return;
     const img = document.createElement("img");
     img.src = e.dataset.src;
     if (e.dataset.srcset) { img.srcset = e.dataset.srcset; img.sizes = e.dataset.sizes; }
@@ -57,6 +60,8 @@ function montar(raiz) {
       s.hidden = false; s.style.order = String(k);
       montarFoto(s);
     }
+    // La página siguiente se monta ya, escondida: al pasar no espera a la red.
+    for (let k = visibles; k < Math.min(2 * visibles, total); k++) montarFoto(slots[(idx + k) % total]);
   };
   const pintarCuenta = () => { if (cuenta) cuenta.textContent = pad(idx + 1); };
 
@@ -138,5 +143,6 @@ function montar(raiz) {
   }
 
   pintarPagina();
+  if (!pagina()) montarHasta(hasta);
   pintarCuenta();
 }

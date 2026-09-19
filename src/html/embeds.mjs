@@ -1,9 +1,10 @@
 // ─────────────────────────────────────────────────────────────
 // Sliders de vídeos de YouTube y reels de Instagram (Eventos): paginados en
-// todos los anchos, con contador. La página visible carga con la página (para
-// que al llegar ya estén); los demás huecos van con hidden y, al ser lazy, no
-// cargan hasta que se pasa de página. Es el marcado de UniversoSlider/
-// RedesSlider de pages.jsx.
+// escritorio, con contador; en móvil los reels van de uno en uno en carrusel,
+// como las fotos, y el vídeo sigue paginado. La página visible carga con la
+// página (para que al llegar ya esté); el resto lleva el src en data-src y la
+// isla lo monta justo antes de que haga falta (la siguiente página, o los dos
+// siguientes al deslizar), para que cambiar no espere a la red.
 // data-cookieconsent="ignore": el bloqueo automático de Cookiebot vacía el src
 // de los iframes de terceros que encuentra en el HTML inicial (React los
 // insertaba después y se libraba). Se mantiene el comportamiento de siempre:
@@ -37,8 +38,8 @@ export function embedInstagram(url) {
   return /\/embed$/i.test(ruta) ? base + "/" : base + "/embed/";
 }
 
-function slider({ items, etiqueta, visibles, cols, slot }) {
-  return `<div class="ev-slider ev-slider-cols-${cols}" data-galeria data-galeria-modo="paginado" data-galeria-movil="paginado" data-galeria-visibles="${visibles}">
+function slider({ items, etiqueta, visibles, cols, slot, movilPaginado }) {
+  return `<div class="ev-slider ev-slider-cols-${cols}" data-galeria data-galeria-modo="paginado"${movilPaginado ? ' data-galeria-movil="paginado"' : ""} data-galeria-visibles="${visibles}">
   <div class="ev-slider-head">
     <div class="tiny muted">${esc(etiqueta)} · <span data-galeria-cuenta>01</span> / ${pad(items.length)}</div>
     <div class="ev-slider-ctrls">
@@ -46,7 +47,7 @@ function slider({ items, etiqueta, visibles, cols, slot }) {
       <button type="button" class="ev-slider-btn" data-galeria-ir="1" aria-label="Siguiente">→</button>
     </div>
   </div>
-  <div class="ev-slider-track" data-galeria-pista>
+  <div class="ev-slider-track${movilPaginado ? "" : " ev-slider-track-mobile"}" data-galeria-pista>
 ${items.map((it, n) => slot(it, n + 1, n >= visibles)).join("\n")}
   </div>
 </div>`;
@@ -56,19 +57,19 @@ ${items.map((it, n) => slot(it, n + 1, n >= visibles)).join("\n")}
 export function sliderYouTube(items) {
   const lista = items.length ? items : [{}, {}, {}];
   return slider({
-    items: lista, etiqueta: "Universo", visibles: 1, cols: 1,
+    items: lista, etiqueta: "Universo", visibles: 1, cols: 1, movilPaginado: true,
     slot: (it, n, oculto) => {
       const id = idYouTube(it.youtube || it.url);
       const dentro = id
-        ? `<iframe src="https://www.youtube.com/embed/${id}" title="Universo ${n}" style="width:100%;height:100%;border:0;display:block" data-cookieconsent="ignore"`
-          + ` allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen${oculto ? ' loading="lazy"' : ""}></iframe>`
+        ? `<iframe ${oculto ? "data-" : ""}src="https://www.youtube.com/embed/${id}" title="Universo ${n}" style="width:100%;height:100%;border:0;display:block" data-cookieconsent="ignore"`
+          + ` allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`
         : `<div class="ev-slider-ph"><span>[ Vídeo · ${pad(n)} ]</span></div>`;
       return `    <div class="ev-slider-slot" style="aspect-ratio:16 / 9"${oculto ? " hidden" : ""}>${dentro}</div>`;
     },
   });
 }
 
-// Redes: 6 reels, dos a la vista, 9:16.
+// Redes: 6 reels, dos a la vista en escritorio y de uno en uno en móvil, 9:16.
 export function sliderReels(items) {
   const lista = items.length ? items : Array.from({ length: 6 }, () => ({}));
   return slider({
@@ -76,7 +77,7 @@ export function sliderReels(items) {
     slot: (it, n, oculto) => {
       const src = embedInstagram(it.url);
       const dentro = src
-        ? `<iframe src="${esc(src)}" title="Reel ${n}" class="ig-embed" data-cookieconsent="ignore" allow="encrypted-media; picture-in-picture; clipboard-write" allowfullscreen scrolling="no"${oculto ? ' loading="lazy"' : ""}></iframe>`
+        ? `<iframe ${oculto ? "data-" : ""}src="${esc(src)}" title="Reel ${n}" class="ig-embed" data-cookieconsent="ignore" allow="encrypted-media; picture-in-picture; clipboard-write" allowfullscreen scrolling="no"></iframe>`
         : `<div class="ev-slider-ph"><span>[ Reel · ${pad(n)} ]</span></div>`;
       return `    <div class="ev-slider-slot ig-slot"${oculto ? " hidden" : ""}>${dentro}</div>`;
     },
