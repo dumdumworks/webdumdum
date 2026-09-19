@@ -71,10 +71,10 @@ export function documento({ i, ruta, titulo, desc, cuerpo, ld, analitica, css, i
   <link rel="alternate" hreflang="en" href="${esc(urlEn)}">
   <link rel="alternate" hreflang="x-default" href="${esc(urlEs)}">
 
-  <link rel="icon" href="/favicon.ico?v=3" sizes="any">
-  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=3">
-  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png?v=3">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">
+  <link rel="icon" href="/favicon.ico?v=4" sizes="any">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=4">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png?v=4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=4">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="DUM DUM™">
