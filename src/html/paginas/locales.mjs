@@ -34,7 +34,7 @@ function tarjeta(i, L, lema) {
     </div>
     <div class="locale-pie">
       <div class="locale-map">
-        <iframe title="${esc(t("Mapa", "Map") + " " + L.nombre)}" src="${esc(L.mapa)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <iframe title="${esc(t("Mapa", "Map") + " " + L.nombre)}" src="${esc(L.mapa)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" data-cookieconsent="ignore"></iframe>
       </div>
       <a class="btn locale-mas" href="${i.ruta(RUTA_LOCAL(L.slug))}">${esc(t("Saber más de " + L.nombre, "More about " + L.nombre))} →</a>
     </div>

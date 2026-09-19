@@ -1,8 +1,13 @@
 // ─────────────────────────────────────────────────────────────
 // Sliders de vídeos de YouTube y reels de Instagram (Eventos): paginados en
-// todos los anchos, con contador. Solo la página visible lleva sus iframes a la
-// vista; los demás van con hidden y, al ser lazy, no cargan hasta que se pasa
-// de página. Es el marcado de UniversoSlider/RedesSlider de pages.jsx.
+// todos los anchos, con contador. La página visible carga con la página (para
+// que al llegar ya estén); los demás huecos van con hidden y, al ser lazy, no
+// cargan hasta que se pasa de página. Es el marcado de UniversoSlider/
+// RedesSlider de pages.jsx.
+// data-cookieconsent="ignore": el bloqueo automático de Cookiebot vacía el src
+// de los iframes de terceros que encuentra en el HTML inicial (React los
+// insertaba después y se libraba). Se mantiene el comportamiento de siempre:
+// los embeds cargan sin esperar al consentimiento.
 // ─────────────────────────────────────────────────────────────
 import { esc } from "./plantilla.mjs";
 
@@ -55,8 +60,8 @@ export function sliderYouTube(items) {
     slot: (it, n, oculto) => {
       const id = idYouTube(it.youtube || it.url);
       const dentro = id
-        ? `<iframe src="https://www.youtube.com/embed/${id}" title="Universo ${n}" style="width:100%;height:100%;border:0;display:block"`
-          + ` allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>`
+        ? `<iframe src="https://www.youtube.com/embed/${id}" title="Universo ${n}" style="width:100%;height:100%;border:0;display:block" data-cookieconsent="ignore"`
+          + ` allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen${oculto ? ' loading="lazy"' : ""}></iframe>`
         : `<div class="ev-slider-ph"><span>[ Vídeo · ${pad(n)} ]</span></div>`;
       return `    <div class="ev-slider-slot" style="aspect-ratio:16 / 9"${oculto ? " hidden" : ""}>${dentro}</div>`;
     },
@@ -71,7 +76,7 @@ export function sliderReels(items) {
     slot: (it, n, oculto) => {
       const src = embedInstagram(it.url);
       const dentro = src
-        ? `<iframe src="${esc(src)}" title="Reel ${n}" class="ig-embed" allow="encrypted-media; picture-in-picture; clipboard-write" allowfullscreen scrolling="no" loading="lazy"></iframe>`
+        ? `<iframe src="${esc(src)}" title="Reel ${n}" class="ig-embed" data-cookieconsent="ignore" allow="encrypted-media; picture-in-picture; clipboard-write" allowfullscreen scrolling="no"${oculto ? ' loading="lazy"' : ""}></iframe>`
         : `<div class="ev-slider-ph"><span>[ Reel · ${pad(n)} ]</span></div>`;
       return `    <div class="ev-slider-slot ig-slot"${oculto ? " hidden" : ""}>${dentro}</div>`;
     },

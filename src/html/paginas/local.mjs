@@ -130,7 +130,7 @@ ${galeria(i, { fotos: (L.galeria && galerias[L.galeria]) || [], ratio: "3 / 4", 
       </div>
     </div>
     <div class="locale-map">
-      <iframe title="${esc(t("Mapa", "Map") + " " + L.nombre)}" src="${esc(L.mapa)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <iframe title="${esc(t("Mapa", "Map") + " " + L.nombre)}" src="${esc(L.mapa)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" data-cookieconsent="ignore"></iframe>
     </div>
   </div>
 </section>
