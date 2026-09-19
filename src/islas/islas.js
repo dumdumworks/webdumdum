@@ -12,6 +12,7 @@ import { galerias } from "./galeria.js";
 import { llamar } from "./llamar.js";
 import { carta } from "./carta.js";
 import { formulario } from "./formulario.js";
+import { embeds } from "./embeds.js";
 import { $$ } from "./nucleo.js";
 
 estado();
@@ -22,6 +23,7 @@ galerias();
 llamar();
 carta();
 formulario();
+embeds();
 
 // El selector de idioma guarda la preferencia ANTES de navegar (misma clave
 // que React); el script de cabecera la lea al aterrizar para llevar a cada

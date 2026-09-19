@@ -53,7 +53,11 @@ ${items.map((it, n) => slot(it, n + 1, n >= visibles)).join("\n")}
 </div>`;
 }
 
-// Universo: hasta 3 vídeos, uno a la vista, 16:9.
+// Universo: hasta 3 vídeos, uno a la vista, 16:9. No se incrusta el reproductor
+// hasta que se pulsa: se pinta la miniatura de YouTube (que sale en cualquier
+// dominio; el reproductor no siempre) con un botón de play, y la isla cambia
+// la miniatura por el iframe con autoplay. Más ligero y sin "vídeo no
+// disponible" en local.
 export function sliderYouTube(items) {
   const lista = items.length ? items : [{}, {}, {}];
   return slider({
@@ -61,8 +65,9 @@ export function sliderYouTube(items) {
     slot: (it, n, oculto) => {
       const id = idYouTube(it.youtube || it.url);
       const dentro = id
-        ? `<iframe ${oculto ? "data-" : ""}src="https://www.youtube.com/embed/${id}" title="Universo ${n}" style="width:100%;height:100%;border:0;display:block" data-cookieconsent="ignore"`
-          + ` allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`
+        ? `<button type="button" class="yt-facade" data-youtube="${id}" aria-label="Reproducir vídeo ${n}">`
+          + `<img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy" decoding="async" data-cookieconsent="ignore">`
+          + `<span class="yt-play" aria-hidden="true"></span></button>`
         : `<div class="ev-slider-ph"><span>[ Vídeo · ${pad(n)} ]</span></div>`;
       return `    <div class="ev-slider-slot" style="aspect-ratio:16 / 9"${oculto ? " hidden" : ""}>${dentro}</div>`;
     },

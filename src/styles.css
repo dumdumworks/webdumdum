@@ -285,7 +285,7 @@ img { display: block; max-width: 100%; }
 
 /* Primer prefers-reduced-motion del sitio: el relevo aparece sin fundido. */
 @media (prefers-reduced-motion: reduce){
-  .fab, .alerg-fab, .alerg-fab.is-on, .pide-fab{ transition: none; }
+  .fab, .alerg-fab, .alerg-fab.is-on, .pide-fab, .yt-play{ transition: none; }
 }
 
 /* Badge de Cookiebot (el círculo de abajo a la izquierda que reabre el aviso
