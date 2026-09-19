@@ -1103,6 +1103,10 @@
   position: relative;
 }
 .ev-hero p { max-width: 56ch; }
+/* El botón del dossier: a la izquierda en escritorio, con el mismo aire que
+   separa el titular del párrafo. En móvil va centrado (todo el hero lo está) y
+   con el aire de arriba igual al de abajo, el del propio hero (ver el 879). */
+.ev-hero-cta { margin-top: 40px; display: flex; justify-content: flex-start; }
 .ev-hero-meta {
   margin-top: 48px;
   display: grid;
@@ -1350,6 +1354,7 @@
   }
   .ev-hero p { margin-left: auto; margin-right: auto; }
   .ev-hero-row { justify-content: center; }
+  .ev-hero-cta { justify-content: center; margin-top: 36px; }
   .ev-hero-meta {
     grid-template-columns: 1fr 1fr 1fr;
     margin-top: 28px;
