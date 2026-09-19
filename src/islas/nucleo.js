@@ -3,23 +3,26 @@ export const $ = (sel, raiz = document) => raiz.querySelector(sel);
 export const $$ = (sel, raiz = document) => Array.prototype.slice.call(raiz.querySelectorAll(sel));
 export const emitir = (nombre, detail) => window.dispatchEvent(new CustomEvent(nombre, { detail }));
 
-// Atrapa el foco dentro de un diálogo (mismo comportamiento que useFocusTrap en
-// ui.jsx): mueve el foco al primer elemento enfocable, mantiene Tab/Shift+Tab
-// dentro y, al soltar, devuelve el foco a quien lo tenía.
+// Atrapa el foco dentro de un diálogo: lo lleva al propio diálogo (no al primer
+// control: en iOS eso pintaba el anillo azul de foco sobre la X al abrir con el
+// dedo), mantiene Tab/Shift+Tab dentro y, al soltar, devuelve el foco a quien
+// lo tenía. Con Tab se entra al primer control como siempre.
 const ENFOCABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])';
 export function atraparFoco(cont) {
   const previo = document.activeElement;
   const enfocables = () => $$(ENFOCABLE, cont)
     .filter((el) => el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement);
-  const primero = enfocables()[0];
-  if (primero) { try { primero.focus(); } catch (e) {} }
+  if (!cont.hasAttribute("tabindex")) cont.setAttribute("tabindex", "-1");
+  try { cont.focus({ preventScroll: true }); } catch (e) {}
   const onKey = (e) => {
     if (e.key !== "Tab") return;
     const items = enfocables();
     if (!items.length) { e.preventDefault(); return; }
     const ini = items[0], fin = items[items.length - 1];
-    const fuera = !cont.contains(document.activeElement);
-    if (e.shiftKey ? (document.activeElement === ini || fuera) : (document.activeElement === fin || fuera)) {
+    const activo = document.activeElement;
+    const fuera = !cont.contains(activo);
+    // Desde el propio diálogo, Shift+Tab iría al elemento anterior de la página.
+    if (e.shiftKey ? (activo === ini || activo === cont || fuera) : (activo === fin || fuera)) {
       e.preventDefault();
       (e.shiftKey ? fin : ini).focus();
     }

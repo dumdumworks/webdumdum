@@ -996,5 +996,8 @@ img { display: block; max-width: 100%; }
   color: var(--red); font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
 }
+/* El foco al abrir un diálogo va al propio diálogo (islas/nucleo.js): sin
+   anillo, que ahí no señala nada; los controles de dentro conservan el suyo. */
+.pide-modal:focus, .alerg-modal:focus, .lb-overlay:focus, .dish-lightbox:focus { outline: none; }
 /* Modales, pasos y flotante se muestran y ocultan con el atributo hidden. */
 [hidden] { display: none; }
