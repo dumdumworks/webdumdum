@@ -1104,6 +1104,9 @@
   gap: 8px 24px;
   margin-top: 24px;
 }
+/* En móvil la lista se releva por la rejilla de celdas de la ficha de local
+   (.ev-datos, ver el 879); en escritorio la rejilla no existe. */
+.ev-datos { display: none; }
 .ev-list > div {
   display: grid;
   grid-template-columns: 110px 1fr;
@@ -1116,35 +1119,28 @@
   padding: 6px 0;
   border-top: 1px solid var(--line-soft);
 }
+/* La última fila cierra la retícula por abajo (dos columnas: los dos últimos).
+   Entre filas, cada filete queda a 14 del texto de arriba (6 de padding + 8 de
+   gap) y a 6 del de abajo; el de cierre reproduce esos 14 con su padding. */
+.ev-list > div:nth-last-child(-n+2) { border-bottom: 1px solid var(--line-soft); padding-bottom: 14px; }
 .ev-list b {
   font-weight: 500;
   color: rgba(255,0,30,0.55);
 }
 
+/* Las tres cifras de Redes, en las celdas del resumen de la ficha de local
+   (.resumen-dato: icono, rótulo, dato y apostilla, centradas y separadas por
+   verticales), dentro de una caja cerrada con el filete rojo, como allí. La
+   caja pone el marco; las verticales las ponen las celdas (la primera no, que
+   ya está el marco). */
 .ev-stats {
   margin-top: 24px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  border-top: 1px solid var(--line-soft);
-  padding-top: 20px;
+  border: 1px solid var(--line);
 }
-.ev-stats b {
-  display: block;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(20px, 2.4vw, 32px);
-  letter-spacing: -0.02em;
-  color: var(--red);
-}
-.ev-stats span {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-weight: 500;
-  font-size: 11px;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  color: rgba(255,0,30,0.55);
-}
+.ev-stats .resumen-dato:first-child { border-left: none; }
+.ev-stats .resumen-dato:last-child { padding-right: 20px; }
 
 .ev-section {
   padding: 64px var(--gutter);
@@ -1260,6 +1256,20 @@
      - Poco espacio entre el título y el texto. */
   .ev-split > div { padding: 32px var(--gutter); }
   .ev-split > div:first-child { border-right: none; border-bottom: none; padding-bottom: 0; }
+  /* Los datos del espacio, en celdas como la ficha de local: a sangre y con
+     el mismo alto de celda (160). La lista de escritorio no se pinta. */
+  .ev-list { display: none; }
+  .ev-datos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Con el ancho de la columna y enmarcada, como la rejilla de servicios de
+       esta misma página: arriba e izquierda los pone la rejilla y derecha y
+       abajo cada celda, así la caja cierra. */
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    margin-top: 32px;
+  }
+  .ev-datos .dato-celda { min-height: 160px; }
   /* 32px entre el primer bloque (título / título+botón) y el texto.
      Coincide con el marginTop:32 de los botones → todos los huecos iguales. */
   .ev-split > div:last-child { padding-top: 32px; }
@@ -1268,8 +1278,19 @@
   .ev-split.ev-split--contact > div:first-child { border-right: none; border-bottom: none; padding-bottom: 0; }
   .ev-split.ev-split--contact > div:last-child { padding-top: 24px; }
   .ev-list { grid-template-columns: 1fr; }
+  /* En móvil, la misma caja con las tres cifras apiladas y separadas por
+     horizontales del mismo filete. */
   .ev-stats { grid-template-columns: 1fr; }
-  .ev-service { min-height: 150px; }
+  .ev-stats .resumen-dato { border-left: none; border-top: 1px solid var(--line); padding: 24px 20px; }
+  .ev-stats .resumen-dato:first-child { border-top: none; }
+  /* Las celdas de servicios, en el formato de las celdas de datos: 160 de
+     alto, índice en mono rojo y título en display a 22. La rejilla conserva
+     su ancho de siempre (el de la columna) y su marco. */
+  .ev-service { min-height: 160px; padding: 28px 22px 22px; gap: 24px; }
+  .ev-service .n { font-weight: 600; letter-spacing: 0.06em; color: var(--red); }
+  /* hyphens: manual: el corte de "Presenta-ciones" va decidido en el dato (un
+     guion blando), no donde le cuadre al navegador ("Presentacio-nes"). */
+  .ev-service .t { font-size: 22px; font-weight: 500; letter-spacing: -0.025em; line-height: 0.95; hyphens: manual; }
 
   .ev-hero {
     padding: 56px var(--gutter) 36px;
@@ -1303,12 +1324,18 @@
 .ev-slider {
   margin-top: 32px;
 }
+/* Sin filete bajo la cabecera: competía con el cierre rojo de la retícula de
+   encima (los datos del espacio en Eventos, la ficha de local) con solo el
+   contador y dos botones entre medias. Contador y flechas van sobre el aire y
+   el marco de la foto hace de borde. Los 14 de abajo colapsan con los de la
+   pista: es el aire real entre flechas y fotos (la mitad de los 28 de antes). */
+/* El rótulo ("Espacio · 01 / 11") alineado por abajo con los botones, no
+   centrado en su alto: así se asienta en la misma línea que los círculos. */
 .ev-slider-head {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--line-soft);
+  margin-bottom: 14px;
 }
 .ev-slider-ctrls { display: flex; gap: 8px; }
 .ev-slider-btn {
@@ -1327,7 +1354,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-top: 18px;
+  margin-top: 14px;
 }
 .ev-slider-cols-3 .ev-slider-track {
   grid-template-columns: 1fr 1fr 1fr;
@@ -1420,12 +1447,20 @@
   background: var(--red);
   color: var(--bg);
 }
+/* En móvil el enlace por foto viajaría con el carrusel: en su lugar hay UNO
+   fijo, en el mismo sitio (esquina inferior izquierda de la foto a la vista),
+   que la isla apunta a la noticia que hay en pantalla. En escritorio, con dos
+   fotos a la vista, cada una conserva el suyo. */
+.ev-slider { position: relative; }
+.ev-slider-cta-fija { display: none; }
 @keyframes ev-slide-in {
   from { opacity: 0; transform: translateX(8px); }
   to   { opacity: 1; transform: none; }
 }
 
 @media (max-width: 879px) {
+  .ev-slider-slot .ev-slider-cta { display: none; }
+  .ev-slider-cta-fija { display: inline-flex; }
   .ev-slider-track { grid-template-columns: 1fr; gap: 8px; }
   .ev-slider-cols-3 .ev-slider-track { grid-template-columns: 1fr; }
   .ev-slider-cols-2 .ev-slider-track { grid-template-columns: 1fr; }
@@ -2337,16 +2372,6 @@
 
 /* Sin rótulo, las flechas se quedarían a la izquierda por el space-between. */
 .local-galeria .ev-slider-ctrls { margin-left: auto; }
-/* Y sin rótulo tampoco hay nada que subrayar: el filete del head competía con
-   el que cierra la retícula justo encima, con solo dos botones entre medias.
-   Se quita, junto con la altura que la cabecera vacía seguía reservando. */
-.local-galeria .ev-slider-head {
-  padding-top: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-  margin-bottom: 28px;
-}
-
 /* Ficha y mapa, cerrando la página. */
 .local-ficha-sec { padding: 56px 0 8vh; margin: 0 var(--gutter); }
 /* El filete vive aquí, no al pie de la galería: así arranca a la altura exacta
@@ -2433,6 +2458,11 @@
   /* La lista de etiqueta + valor deja el dato en una columna de 202px y casi
      todo cae en tres líneas. Cede el sitio a la retícula de celdas. */
   .local-ficha .info { display: none; }
+  /* Las rejillas a sangre no llevan línea en los bordes de la pantalla: las
+     horizontales van de lado a lado y solo queda la vertical del medio. La
+     celda de la derecha pierde su borde derecho (mismo criterio en .ev-datos y
+     .ev-services-grid de Eventos). */
+  .datos-rejilla .dato-celda:nth-child(2n) { border-right: 0; }
   .datos-rejilla {
     display: grid;
     grid-template-columns: 1fr 1fr;

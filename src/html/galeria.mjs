@@ -45,10 +45,16 @@ export function galeria(i, { fotos, ratio = "3 / 4", etiquetaHueco, raiz, modo =
     galeria: etiqueta || t("Galería", "Gallery"), cerrar: t("Cerrar", "Close"),
     anterior: t("Anterior", "Previous"), siguiente: t("Siguiente", "Next"),
   };
+  // Enlace fijo (móvil): un solo botón que no viaja con las fotos y apunta a la
+  // noticia que hay a la vista; la isla le cambia el href al deslizar.
+  const urls = cta ? lista.map((f) => f.url || "") : null;
+  const ctaFija = cta
+    ? `\n  <a class="ev-slider-cta ev-slider-cta-fija" data-galeria-cta href="${esc(urls[0] || "#")}" target="_blank" rel="noreferrer"${urls[0] ? "" : " hidden"}>${esc(cta)}</a>`
+    : "";
   const cabecera = etiqueta
     ? `<div class="tiny muted">${esc(etiqueta)} · <span data-galeria-cuenta>01</span> / ${pad(lista.length)}</div>\n    `
     : "";
-  return `<div class="ev-slider ev-slider-cols-2" data-galeria data-galeria-modo="${modo}" data-galeria-visor="${visor}"${etiqueta ? ` data-galeria-etiqueta="${esc(etiqueta)}"` : ""} data-textos='${esc(JSON.stringify(textos))}'>
+  return `<div class="ev-slider ev-slider-cols-2" data-galeria data-galeria-modo="${modo}" data-galeria-visor="${visor}"${etiqueta ? ` data-galeria-etiqueta="${esc(etiqueta)}"` : ""} data-textos='${esc(JSON.stringify(textos))}'${urls ? ` data-galeria-urls='${esc(JSON.stringify(urls))}'` : ""}>
   <div class="ev-slider-head">
     ${cabecera}<div class="ev-slider-ctrls">
       <button type="button" class="ev-slider-btn" data-galeria-ir="-1" aria-label="${esc(textos.anterior)}">←</button>
@@ -57,6 +63,6 @@ export function galeria(i, { fotos, ratio = "3 / 4", etiquetaHueco, raiz, modo =
   </div>
   <div class="ev-slider-track ${modo === "carril" ? "ev-slider-carril " : ""}ev-slider-track-mobile" data-galeria-pista>
 ${slots.join("\n")}
-  </div>
+  </div>${ctaFija}
 </div>`;
 }

@@ -10,6 +10,7 @@ import { mdInline, mdParas } from "../texto.mjs";
 import { galeria } from "../galeria.mjs";
 import { sliderYouTube, sliderReels } from "../embeds.mjs";
 import * as E from "../enlaces.mjs";
+import { celdaDato, datoDestacado } from "./local.mjs";
 
 export const RUTA = "/eventos";
 // Clave PÚBLICA de Web3Forms (lo es por diseño) y buzón que recibe las solicitudes.
@@ -125,7 +126,7 @@ ${derecha}
 </section>
 
 ${seccion("01", t("Espacio", "Space"),
-    eh("espacio_title", lang === "en" ? "A well-designed,<br>functional place<br>you'll want to be in." : "Un sitio bien diseñado,<br>funcional, en el que<br>apetece estar."),
+    eh("espacio_title", lang === "en" ? "A well-designed,<br>functional space<br>you'll want to be in." : "Espacio bien diseñado,<br>funcional, en el que<br>apetece estar."),
     p(eb("espacio_body", lang === "en"
       ? "An open-plan <strong>55 m²</strong> space with an <strong>open kitchen</strong> integrated into the room. It blends a <strong>minimal, urban</strong> feel with <strong>cosmopolitan coolness</strong>. Configurable to your event's needs."
       : "Espacio diáfano de <strong>55 m²</strong> con <strong>cocina abierta</strong> integrada en la sala. Combina un aire <strong>minimal y urbano</strong> con un <strong>coolness cosmopolita</strong>. Configurable según necesidades del evento."))
@@ -140,6 +141,21 @@ ${seccion("01", t("Espacio", "Space"),
          [t("Iluminación", "Lighting"), t("Diseño óptimo", "Optimal design")],
          [t("Despejado", "Cleared"), t("Opción sin mesas", "Table-free option")],
         ].map(([b, v]) => `<div><b>${esc(b)}</b><span>${esc(v)}</span></div>`).join("\n      ")}
+    </div>
+    <div class="ev-datos">
+      ${[
+        // Celdas de 155 px: rótulo y apostilla en UNA línea (≤12 caracteres el
+        // rótulo, que comparte sitio con el icono; ≤15 la apostilla). El corte
+        // del dato grande va decidido aquí, no al azar del ancho.
+        celdaDato("aforo", t("Aforo", "Capacity"), ["55 m²", "40 · 60"], t("sentados · pie", "seated · stand.")),
+        celdaDato("barra", t("Barra", "Bar"), [t("Central", "Central"), t("y grande", "and large")]),
+        celdaDato("mesa", t("Mesas bajas", "Low tables"), [t("9 mesas", "9 tables")], t("hasta 3 / mesa", "up to 3 each")),
+        celdaDato("mesaAlta", t("Mesas altas", "High tables"), [t("2 mesas", "2 tables")], t("hasta 5 / mesa", "up to 5 each")),
+        celdaDato("taburete", t("Barra mini", "Small bar"), [t("Hasta 4", "Up to 4"), t("personas", "people")]),
+        celdaDato("audio", t("Audio", "Audio"), [t("Equipo", "Powerful"), t("potente", "system")]),
+        celdaDato("luz", t("Iluminación", "Lighting"), [t("Diseño", "Optimal"), t("óptimo", "design")]),
+        celdaDato("despejado", t("Despejado", "Cleared"), [t("Opción", "Table-free"), t("sin mesas", "option")]),
+      ].join("\n      ")}
     </div>
     ${galeria(i, { fotos: galerias.espacio || [], ratio: "3 / 4", etiquetaHueco: "Espacio", raiz, modo: "paginado", etiqueta: "Espacio" })}`)}
 
@@ -165,9 +181,9 @@ ${seccion("04", t("Redes", "Social"),
       : "<strong>Expertos gastro, perfiles lifestyle</strong> y gente con <strong>muy buen algoritmo</strong> se han pasado por DUM DUM™ y lo han <strong>compartido con sus comunidades</strong>."))
     + `
     <div class="ev-stats">
-      <div><b>${esc(t("Millones", "Millions"))}</b><span>${esc(t("de visualizaciones", "of views"))}</span></div>
-      <div><b>${esc(t("Miles", "Thousands"))}</b><span>${esc(t("de reacciones", "of reactions"))}</span></div>
-      <div><b>Viral</b><span>${esc(t("la palabra que más se repite", "the word that comes up most"))}</span></div>
+      ${datoDestacado("ojo", t("Alcance", "Reach"), t("Millones", "Millions"), t("de visualizaciones", "of views"))}
+      ${datoDestacado("corazon", t("Respuesta", "Response"), t("Miles", "Thousands"), t("de reacciones", "of reactions"))}
+      ${datoDestacado("bocadillo", t("La palabra", "The word"), "Viral", t("la que más se repite", "the one that comes up most"))}
     </div>
     ${sliderReels(galerias.redes || [])}`)}
 
@@ -197,7 +213,7 @@ ${seccion("06", t("Al frente", "At the helm"),
   <div class="tiny muted">[07] ${esc(t("Servicios", "Services"))}</div>
   <h2 class="h-1" style="margin-top:16px;max-width:20ch">${esc(t("Qué hacemos.", "What we do."))}</h2>
   <div class="ev-services-grid">
-    ${["Afterwork", "Cocktails", "Team Building", "Workshops", t("Presentaciones", "Launches"), t("Alquiler de espacio", "Venue rental")]
+    ${["Afterwork", "Cocktails", "Team Building", "Workshops", t("Presenta\u00ADciones", "Launches"), t("Alquiler de espacio", "Venue rental")]
       .map((nombre, n) => `<div class="ev-service"><div class="n">[${String(n + 1).padStart(2, "0")}]</div><div class="t">${esc(nombre)}</div></div>`).join("\n    ")}
   </div>
   <p class="tiny muted" style="margin-top:24px">${esc(t("* Si necesitas un evento fuera del restaurante, pregúntanos.", "* If you need an event outside the restaurant, just ask."))}</p>

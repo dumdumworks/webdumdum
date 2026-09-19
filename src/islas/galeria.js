@@ -64,6 +64,15 @@ function montar(raiz) {
     for (let k = visibles; k < Math.min(2 * visibles, total); k++) montarFoto(slots[(idx + k) % total]);
   };
   const pintarCuenta = () => { if (cuenta) cuenta.textContent = pad(idx + 1); };
+  // El enlace fijo de móvil apunta a la foto a la vista (sin URL, se esconde).
+  const ctaFija = $("[data-galeria-cta]", raiz);
+  const urls = ctaFija ? JSON.parse(raiz.dataset.galeriaUrls) : null;
+  const pintarCta = () => {
+    if (!ctaFija) return;
+    const u = urls[idx];
+    ctaFija.hidden = !u;
+    if (u) ctaFija.href = u;
+  };
 
   // ── Posición al deslizar: lo que avanza una foto se mide del propio hueco.
   let destino = 0, animando = false, ultimo = -1;
@@ -91,9 +100,10 @@ function montar(raiz) {
     idx = Math.max(0, Math.min(total - 1, Math.round(pista.scrollLeft / paso())));
     montarHasta(idx + 2);
     pintarCuenta();
+    pintarCta();
   }, { passive: true });
   // Al cambiar de aparato (girar, redimensionar) cambia el modo: se repinta.
-  MOVIL.addEventListener("change", () => { idx = 0; pintarPagina(); pintarCuenta(); if (!pagina()) pista.scrollTo({ left: 0 }); });
+  MOVIL.addEventListener("change", () => { idx = 0; pintarPagina(); pintarCuenta(); pintarCta(); if (!pagina()) pista.scrollTo({ left: 0 }); });
 
   // ── Rueda (solo carril de escritorio): el scroll vertical del ratón mueve las
   //    fotos, animado hacia un destino con rAF para que un ratón de rueda (que
@@ -145,4 +155,5 @@ function montar(raiz) {
   pintarPagina();
   if (!pagina()) montarHasta(hasta);
   pintarCuenta();
+  pintarCta();
 }
