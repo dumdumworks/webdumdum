@@ -53,8 +53,10 @@ export function tf(i, obj, campo) {
   return v;
 }
 
-// Mes y año en curso, SIEMPRE con la hora de Madrid, para el subtítulo.
-function mesEnCurso(lang) {
+// Mes y año en curso, SIEMPRE con la hora de Madrid (el subtítulo de la carta
+// y el botón de la home). En español en minúscula, en inglés capitalizado: es lo
+// que devuelve Intl para cada locale.
+export function mesEnCurso(lang) {
   const locale = lang === "en" ? "en-US" : "es-ES";
   try { return new Intl.DateTimeFormat(locale, { timeZone: "Europe/Madrid", month: "long" }).format(new Date()); }
   catch (e) { return new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date()); }

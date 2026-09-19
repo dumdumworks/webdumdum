@@ -13,6 +13,7 @@ import { llamar } from "./llamar.js";
 import { carta } from "./carta.js";
 import { formulario } from "./formulario.js";
 import { embeds } from "./embeds.js";
+import { home } from "./home.js";
 import { $$ } from "./nucleo.js";
 
 estado();
@@ -24,6 +25,7 @@ llamar();
 carta();
 formulario();
 embeds();
+home();
 
 // El selector de idioma guarda la preferencia ANTES de navegar (misma clave
 // que React); el script de cabecera la lea al aterrizar para llevar a cada

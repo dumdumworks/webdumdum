@@ -22,6 +22,8 @@ import { RUTA as RUTA_MENU } from "./src/html/paginas/menu.mjs";
 import { locales as paginaLocales, RUTA as RUTA_LOCALES } from "./src/html/paginas/locales.mjs";
 import { contacto, RUTA as RUTA_CONTACTO } from "./src/html/paginas/contacto.mjs";
 import { eventos, RUTA as RUTA_EVENTOS } from "./src/html/paginas/eventos.mjs";
+import { home, RUTA as RUTA_HOME } from "./src/html/paginas/home.mjs";
+import { noEncontrada, RUTA as RUTA_404 } from "./src/html/paginas/404.mjs";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(ROOT, "dist");
@@ -254,8 +256,7 @@ const LOCALES = extractLocales(rd("src/ui.jsx"));
 
 const ROUTES_SEO = extractRoutesSeo(rd("index.html"));
 const FILE_FOR = {
-  "/": "index.html",
-  // El resto de páginas ya son HTML (PAGINAS_HTML y RUTAS_EDGE, más abajo).
+  // Todas las páginas ya son HTML (PAGINAS_HTML y RUTAS_EDGE, más abajo).
 };
 const ROUTES = Object.keys(FILE_FOR).map((p) => {
   const s = ROUTES_SEO.find((r) => r.p === p);
@@ -323,6 +324,7 @@ function escribirPaginaHtml(render, ruta, lang, rutasEn) {
 // dist/en/locales/chamberi.html en /en/locales/chamberi, sin conflicto con
 // locales.html → /locales (comprobado).
 const PAGINAS_HTML = {
+  [RUTA_HOME]: home,
   [RUTA_LOCALES]: paginaLocales,
   [RUTA_LOCAL("chamberi")]: local("chamberi"),
   [RUTA_LOCAL("bernabeu")]: local("bernabeu"),
@@ -366,16 +368,12 @@ for (const route of ROUTES) {
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.writeFileSync(dest, renderRouteHtml(tpl, route));
 }
-// 404 real: base con el título/estado de "no encontrado".
-const notFound = renderRouteHtml(tpl, {
-  p: "/404", t: "DUM DUM™ — Página no encontrada",
-  d: "Por aquí no hay carta. Vuelve al inicio.",
-});
-fs.writeFileSync(path.join(DIST, "404.html"), notFound);
 
 for (const [ruta, render] of Object.entries(PAGINAS_HTML)) {
   for (const lang of ["es", "en"]) escribirPaginaHtml(render, ruta, lang, RUTAS_HTML);
 }
+// 404 real: Cloudflare Pages sirve 404.html (y en/404.html bajo /en/) con estado 404.
+for (const lang of ["es", "en"]) escribirPaginaHtml(noEncontrada, RUTA_404, lang, RUTAS_HTML);
 
 // ── 7) Copiar estáticos de la raíz ───────────────────────────
 const copyFile = (rel) => fs.copyFileSync(path.join(ROOT, rel), path.join(DIST, rel));
@@ -460,7 +458,7 @@ fs.writeFileSync(path.join(DIST, "_redirects"), `# Generado por build.mjs — NO
 # Normalización de barra final → URL canónica sin barra (protege el QR si
 # apunta a /menu/). Redirige HACIA la limpia, que Cloudflare sirve (no vuelve
 # a redirigir), así que no hay bucle.
-${RUTAS_LIMPIAS.filter((p) => p !== "/").map((p) => p + "/    " + p + "    301").join("\n")}
+${RUTAS_LIMPIAS.filter((p) => !p.endsWith("/")).map((p) => p + "/    " + p + "    301").join("\n")}
 
 # CMS Sveltia (carpeta estática).
 /admin/*     /admin/:splat    200
