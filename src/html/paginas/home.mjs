@@ -12,10 +12,30 @@ export const RUTA = "/";
 
 const ROJO = 'style="color:var(--red);font-style:normal;font-weight:inherit"';
 
-export function home(i, { locales, seo, ldGlobal }) {
+// "9" → "nueve" / "nine": el número de dumplings de la carta, en palabras, para
+// la frase de la sección /CARTA. Cubre hasta 20 (de sobra: la carta tiene
+// entre 9 y 13); un número mayor cae al dígito, que sigue leyéndose bien.
+const NUM_ES = ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez",
+  "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte"];
+const NUM_EN = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+  "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
+const numeroALetra = (n, lang) => {
+  const tabla = lang === "en" ? NUM_EN : NUM_ES;
+  return tabla[n] ?? String(n);
+};
+const mayuscInicial = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+export function home(i, { locales, seo, ldGlobal, carta }) {
   const { t } = i;
   const s = seo.find((r) => r.p === RUTA);
   const L = locales;
+  // Solo cuenta lo que de verdad sale en la carta: igual que renderCarta, sin
+  // los platos ocultos (available:false) ni los archivados.
+  const nDumplings = (carta.sections || [])
+    .find((sec) => sec.id === "dumplings")?.items
+    ?.filter((it) => it.available !== false && !it.archived).length || 0;
+  const dumplingsEs = numeroALetra(nDumplings, "es");
+  const dumplingsEn = numeroALetra(nDumplings, "en");
   const celda = (n, titulo, detalle, attrs) =>
     `  <a class="map-cell" ${attrs}><div class="n">[${n}]</div><div class="t">${esc(titulo)}</div><div class="d">${esc(detalle)}</div></a>`;
   const main = `<div data-screen-label="home">
@@ -49,8 +69,8 @@ export function home(i, { locales, seo, ldGlobal }) {
     <div class="tiny muted" style="margin-bottom:16px">/ ${esc(t("CARTA", "MENU"))}</div>
     <h2>${esc(t("Una carta corta", "A short menu"))}<br><em ${ROJO}>${esc(t("que cambia cada mes.", "that changes every month."))}</em></h2>
     <p class="body" style="margin-top:24px">${i.lang === "en"
-      ? 'Nine dumplings. A new one every month. Of the nine, at least 2 vegetarian. Of the nine, <strong style="font-weight:700">not one conventional</strong>.'
-      : 'Nueve dumplings. Uno nuevo cada mes. De los nueve, mínimo 2 vegetarianos. De los nueve, <strong style="font-weight:700">ni uno convencional</strong>.'}</p>
+      ? `${mayuscInicial(dumplingsEn)} dumplings. A new one every month. Of the ${dumplingsEn}, at least 2 vegetarian. Of the ${dumplingsEn}, <strong style="font-weight:700">not one conventional</strong>.`
+      : `${mayuscInicial(dumplingsEs)} dumplings. Uno nuevo cada mes. De los ${dumplingsEs}, mínimo 2 vegetarianos. De los ${dumplingsEs}, <strong style="font-weight:700">ni uno convencional</strong>.`}</p>
     <div class="sistema-ctas" style="margin-top:32px">
       <a class="btn" href="${i.ruta("/menu")}">${esc(t("Leer carta de " + mesEnCurso("es"), "Read " + mesEnCurso("en") + "'s menu"))} →</a>
     </div>
