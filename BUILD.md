@@ -11,9 +11,9 @@ carta viva de KV. No hay framework en el navegador.
 - **Build output directory:** `dist`
 
 `build.mjs`, `src/` y los JSON se versionan; `dist/`, `node_modules/` y
-`functions/_generado/` van en `.gitignore` (los genera el build). Sveltia sigue
-editando `galerias.json` y `eventos.json` en el repo: cada publicación dispara un
-rebuild. La carta (`menu.json` / KV) no necesita build: ver más abajo.
+`functions/_generado/` van en `.gitignore` (los genera el build). `galerias.json`
+y `eventos.json` se editan en el repo: cada push a `main` dispara un rebuild.
+La carta (`menu.json` / KV) no necesita build: ver más abajo.
 
 ## Qué hace `build.mjs`
 
@@ -38,7 +38,7 @@ rebuild. La carta (`menu.json` / KV) no necesita build: ver más abajo.
    del contenido de cada página) para `functions/sitemap.xml.js`, que sirve el
    sitemap en el edge: las 7 rutas en los dos idiomas con `hreflang`, y la carta
    fechada por el panel (KV `updated`).
-5. **Estáticos**: `img/`, `admin/` (Sveltia), `panel/`, favicons, `robots.txt`
+5. **Estáticos**: `img/`, `panel/`, favicons, `robots.txt`
    y `menu.base.json` (copia de `menu.json`, respaldo de la carta).
 6. **`_redirects`** y **`_headers`**, generados a partir de todas las rutas limpias
    en los dos idiomas (barra final → 301; HTML `no-cache`; `/assets/*` inmutable).
@@ -70,6 +70,16 @@ el panel) o `/menu.base.json` si falta, y la pintan en cada petición con
 como `menu.json`. Lleva datos estructurados `schema.org/Menu`. La barra final se
 normaliza en la propia función (`_redirects` no alcanza a las funciones).
 
+### Infraestructura en Cloudflare (proyecto `webdumdum`, entorno Production)
+
+- **KV** `dumdum-menu`, binding **`MENU`**: la carta viva (clave `current`,
+  con `updated` en formato `AAAA-MM-DD`, que fecha `/menu` en el sitemap).
+- **R2** `dumdum-fotos`, binding **`PHOTOS`**: fotos de platos subidas desde el
+  panel, servidas por `functions/img/menu/[[path]].js`.
+- **Access** (Zero Trust): aplicación self-hosted sobre `dum-dum.es/panel` y
+  `dum-dum.es/api`, política Allow por email. Protege el panel y `functions/api/*`.
+- Los previews (`*.pages.dev`) no tienen KV: sirven la copia del repo.
+
 ## Idiomas
 
 ES y EN son **rutas distintas** (`/menu` y `/en/menu`) con `hreflang` cruzado. El
@@ -94,7 +104,7 @@ provocó un **bucle infinito** (`ERR_TOO_MANY_REDIRECTS`): Cloudflare redirige
 `/menu.html → /menu` por su cuenta y el rewrite lo devolvía a `/menu.html`.
 
 El `_redirects` generado solo contiene: el 301 de `/menu_eng`, los de `/embed`
-(soft-404 histórico), la normalización de barra final y `/admin/*` (Sveltia).
+(soft-404 histórico) y la normalización de barra final.
 
 > No hay `_redirects` ni `_headers` en la raíz del repo: Cloudflare solo lee
 > `dist/`, y los únicos válidos los genera `build.mjs`.

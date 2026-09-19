@@ -8,7 +8,7 @@
 //    en functions/_generado/carta.js.
 //  · Une styles.css + styles-2.css en un CSS con hash y las islas (src/islas/)
 //    en un JS con hash.
-//  · Copia estáticos (img, admin, panel, favicons…) y escribe _redirects y
+//  · Copia estáticos (img, panel, favicons…) y escribe _redirects y
 //    _headers.
 // Salida: dist/  (directorio de publicación en Cloudflare Pages).
 // ─────────────────────────────────────────────────────────────
@@ -201,9 +201,9 @@ for (const f of ROOT_FILES) {
 if (fs.existsSync(path.join(ROOT, "menu.json"))) {
   fs.copyFileSync(path.join(ROOT, "menu.json"), path.join(DIST, "menu.base.json"));
 }
-// Directorios de assets estáticos (img incluye favicons y og-image; admin =
-// CMS Sveltia; panel = nuevo editor de carta, protegido por Cloudflare Access).
-for (const d of ["img", "admin", "panel"]) {
+// Directorios de assets estáticos (img incluye favicons y og-image; panel =
+// editor de carta, protegido por Cloudflare Access).
+for (const d of ["img", "panel"]) {
   if (fs.existsSync(path.join(ROOT, d))) copyDir(d);
 }
 
@@ -260,9 +260,6 @@ fs.writeFileSync(path.join(DIST, "_redirects"), `# Generado por build.mjs — NO
 # apunta a /menu/). Redirige HACIA la limpia, que Cloudflare sirve (no vuelve
 # a redirigir), así que no hay bucle.
 ${RUTAS_LIMPIAS.filter((p) => !p.endsWith("/")).map((p) => p + "/    " + p + "    301").join("\n")}
-
-# CMS Sveltia (carpeta estática).
-/admin/*     /admin/:splat    200
 `);
 
 // ── 7) _headers (caché real) ─────────────────────────────────
@@ -275,8 +272,6 @@ fs.writeFileSync(path.join(DIST, "_headers"), `# Generado por build.mjs.
 /*.html
   Cache-Control: no-cache
 ${RUTAS_LIMPIAS.map((p) => p + "\n  Cache-Control: no-cache").join("\n")}
-/admin/
-  Cache-Control: no-cache
 
 # Assets con hash en el nombre: inmutables y cacheables un año.
 /assets/*
@@ -287,8 +282,8 @@ ${RUTAS_LIMPIAS.map((p) => p + "\n  Cache-Control: no-cache").join("\n")}
   Cache-Control: public, max-age=300
 
 # ── Seguridad ────────────────────────────────────────────────
-# Se aplican a TODO (incluido /admin/): una sola regla evita cabeceras
-# duplicadas y contradictorias, que Cloudflare resolvería de forma ambigua.
+# Se aplican a TODO: una sola regla evita cabeceras duplicadas y
+# contradictorias, que Cloudflare resolvería de forma ambigua.
 #
 # NO se declaran aquí X-Content-Type-Options ni Referrer-Policy: Cloudflare ya
 # los envía (nosniff y strict-origin-when-cross-origin). Duplicarlos no aporta.
@@ -301,9 +296,9 @@ ${RUTAS_LIMPIAS.map((p) => p + "\n  Cache-Control: no-cache").join("\n")}
 #
 # Anti-clickjacking por partida doble (X-Frame-Options para navegadores viejos,
 # frame-ancestors para los modernos). SAMEORIGIN/'self', no DENY/'none': bloquea
-# igual el ataque real (que un tercero nos incruste) pero deja margen si Sveltia
-# usara un iframe propio en /admin/. Ojo: esto NO afecta a los iframes que la web
-# INCRUSTA (DISH, Instagram, YouTube, Cookiebot) — eso sería frame-src.
+# igual el ataque real (que un tercero nos incruste) y deja margen a un iframe
+# propio. Ojo: esto NO afecta a los iframes que la web INCRUSTA (DISH,
+# Instagram, YouTube, Cookiebot) — eso sería frame-src.
 #
 # La CSP contiene SOLO frame-ancestors. Una CSP completa exigiría 'unsafe-inline'
 # o hashes para los 7 scripts inline (Consent Mode, boot, SEO, GA…) y una lista
@@ -313,25 +308,14 @@ ${RUTAS_LIMPIAS.map((p) => p + "\n  Cache-Control: no-cache").join("\n")}
 # Romper el consentimiento o las reservas no compensa para una web sin logins ni
 # pagos. frame-ancestors es inmune a todo eso: no restringe scripts.
 #
-# Estas tres van a TODO, /admin/ incluido: no afectan a ventanas emergentes ni a
-# los iframes que incrustamos.
+# Ninguna de las cuatro afecta a las ventanas emergentes ni a los iframes que
+# incrustamos. COOP en su variante same-origin-allow-popups: conserva la relación
+# con las emergentes que abre la página (el login de Cloudflare Access del panel
+# no las usa, pero no cuesta nada dejar el margen).
 /*
   Strict-Transport-Security: max-age=31536000
   X-Frame-Options: SAMEORIGIN
   Content-Security-Policy: frame-ancestors 'self'
-
-# COOP: solo en las rutas PÚBLICAS, deliberadamente NO en /admin/.
-# same-origin-allow-popups es, por especificación, el valor que conserva la
-# relación con las ventanas emergentes que abre la página (justo lo que necesita
-# el OAuth de GitHub de Sveltia, que responde por postMessage al opener). Aun
-# así, no fue posible verificarlo: el navegador de pruebas bloquea las emergentes
-# incluso con clic real, y probar el login exigiría credenciales del repo. Ante la
-# duda, /admin/ se queda sin COOP: su beneficio aquí es marginal y romper el CMS
-# significaría no poder actualizar la carta.
-# Si algún día se quiere COOP también en /admin/, probar ANTES el login real.
-/
-  Cross-Origin-Opener-Policy: same-origin-allow-popups
-/menu
   Cross-Origin-Opener-Policy: same-origin-allow-popups
 /locales
   Cross-Origin-Opener-Policy: same-origin-allow-popups
