@@ -278,8 +278,25 @@
    decidir con la flecha escrita dentro de nueve <div>. */
 .map-cell .t::after { content: " →"; }
 .map-cell .d, .dato-celda .d { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 11px; letter-spacing: 0.04em; color: rgba(255,0,30,0.55); }
-.map-cell:hover { background: var(--ink); color: var(--bg); }
-.map-cell:hover .d { color: rgba(255,255,255,0.6); }
+/* La inversión de la celda. Con puntero: al pasar por encima, con fundido.
+   En táctil, SIN fundido: al tocar, la página cambia antes de que el fundido
+   de 0,25 s termine y el último fotograma era el cruce de texto y fondo a
+   mitad de camino (la letra se veía rosa). La celda se pone roja al instante
+   y se queda roja hasta que se va (el :hover se queda pegado tras el toque, y
+   eso aquí se quiere: no es un pulsador). */
+@media (hover: hover) {
+  .map-cell:hover { background: var(--ink); color: var(--bg); }
+  .map-cell:hover .d { color: rgba(255,255,255,0.6); }
+}
+@media (hover: none) {
+  /* Solo :hover, nada de :active: el :active se va al levantar el dedo y
+     entre eso y el :hover pegado había un fotograma crema (un parpadeo). */
+  /* Sin el resalte gris translúcido que iOS/Android pintan sobre un enlace al
+     tocarlo: sobre la celda ya roja se veía como un parpadeo. */
+  .map-cell { transition: none; -webkit-tap-highlight-color: transparent; }
+  .map-cell:hover { background: var(--ink); color: var(--bg); }
+  .map-cell:hover .d { color: rgba(255,255,255,0.6); }
+}
 .map-cell.span-6 { grid-column: span 1; }
 .map-cell.span-4 { grid-column: span 1; }
 .map-cell.span-3 { grid-column: span 1; }
