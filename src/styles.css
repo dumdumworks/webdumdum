@@ -438,9 +438,18 @@ img { display: block; max-width: 100%; }
   color: var(--red);
   text-transform: uppercase;
 }
-.lang-toggle span { opacity: 0.4; transition: opacity .18s ease; }
+.lang-toggle span { position: relative; opacity: 0.4; transition: opacity .18s ease; }
 .lang-toggle span.on { opacity: 1; }
-.lang-toggle .sep { opacity: 0.4; }
+/* Al pasar por encima se subraya solo la lengua que se va a cargar (.otro), no
+   el enlace entero: la regla genérica .topbar a:hover::after no aplica aquí.
+   El filete cae a la misma altura que el de los enlaces del nav (bottom -2px
+   del enlace con padding 4px = -6px del texto). */
+.topbar a.lang-toggle::after { content: none; }
+.lang-toggle:hover .otro { opacity: 1; }
+.lang-toggle:hover .otro::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px; background: var(--red);
+}
+@media (hover: none) { .lang-toggle { -webkit-tap-highlight-color: transparent; } .lang-toggle span { transition: none; } }
 /* Grupo derecho móvil (Reservar + hamburguesa) · oculto en desktop */
 .topbar-mobile-right { display: none; align-items: center; gap: 14px; }
 .topbar-reservar-mobile { font-size: 11px; padding: 7px 14px !important; }
@@ -983,9 +992,6 @@ img { display: block; max-width: 100%; }
    Reglas que solo necesita el marcado estático de src/html/. Van al final de
    ESTE archivo (el último de la cascada) para ganar por orden a las reglas de
    display de cada componente sin recurrir a !important. */
-/* El selector de idioma es un enlace (la otra lengua es otra URL) y no debe
-   heredar el subrayado de hover de los enlaces de la topbar. */
-.topbar .lang-toggle::after { content: none; }
 /* Los pasos de "Pide ya" y las vistas de alérgenos no son cajas: sus hijos
    siguen siendo los ítems del flex del modal, como cuando React los pintaba sueltos. */
 [data-paso], [data-vista] { display: contents; }

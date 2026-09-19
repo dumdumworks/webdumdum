@@ -83,10 +83,11 @@ export function topbar(i, ruta) {
 // (funciona sin JS y lo siguen los rastreadores).
 function selectorIdioma(i, ruta) {
   const otro = i.lang === "es" ? "en" : "es";
-  const on = (l) => (i.lang === l ? ' class="on"' : "");
+  // "on" es la lengua actual; "otro", la que se va a cargar (la que se subraya).
+  const cl = (l) => (i.lang === l ? "on" : "otro");
   return `<a class="lang-toggle" href="${idioma(otro, [ruta]).ruta(ruta)}" hreflang="${otro}" lang="${otro}" data-idioma="${otro}"`
     + ` aria-label="${otro === "en" ? "Switch to English" : "Cambiar a español"}">`
-    + `<span${on("es")}>ES</span><span class="sep">/</span><span${on("en")}>EN</span></a>`;
+    + `<span class="${cl("es")}">ES</span><span class="sep">/</span><span class="${cl("en")}">EN</span></a>`;
 }
 
 export function flotante(i) {
