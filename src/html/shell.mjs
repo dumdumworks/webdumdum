@@ -36,12 +36,9 @@ export function topbar(i, ruta) {
   const enlace = ([p, label]) =>
     `<a href="${i.ruta(p)}"${ruta === p ? ' class="active"' : ""}>${esc(label)}</a>`;
   // Menú móvil: los mismos destinos que la rejilla de la home, en su orden.
-  // "A domicilio" abre el mismo modal de pedido que la celda [02] de la home
-  // (data-pide="domicilio"): elegir local y ahí sí, Uber Eats o Glovo — antes
-  // iba directo a la tienda de Uber Eats de Chamberí, sin pasar por Bernabéu.
   const movil = [
     enlace(principales[0]),
-    `<a href="#" data-pide="domicilio">${esc(t("A domicilio", "Delivery"))}</a>`,
+    enlaceExterno(E.UBER_CHAMBERI, "Uber Eats"),
     enlaceExterno(E.TAKEAWAY_URL, "Take Away"),
     enlace(principales[1]), enlace(principales[2]), enlace(principales[3]),
     enlaceExterno(E.INSTAGRAM_URL, "Instagram"),
