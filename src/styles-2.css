@@ -561,8 +561,12 @@
 }
 .menu-sub { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; font-size: 11px; letter-spacing: 0; text-transform: uppercase; color: rgba(255,0,30,0.55); margin-top: 10px; }
 
+/* align-items: flex-end (no baseline): título y nota terminan a la misma
+   altura, pegados al filete, sea cual sea el número de líneas de cada uno
+   (la nota es libre en el CMS y varía; con "baseline" un título de una sola
+   línea quedaba flotando lejos del filete cuando la nota envolvía a 3). */
 .menu-sectionhead {
-  display: flex; align-items: baseline; justify-content: space-between;
+  display: flex; align-items: flex-end; justify-content: space-between;
   gap: 16px;
   padding: 40px 0 14px;
   border-bottom: 1px solid var(--ink);
