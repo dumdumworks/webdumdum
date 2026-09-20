@@ -9,14 +9,20 @@ import { esc } from "./plantilla.mjs";
 
 export function mdInline(texto) {
   if (texto == null) return "";
-  return esc(texto)
-    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
-    // " // " primero (sin, sería " / " + " /" sueltos): salto solo en móvil.
-    // Deja un espacio TRAS el <br>: en desktop, donde el <br> desaparece
-    // (display:none), es lo único que separa las dos palabras.
-    .replace(/\s+\/\/\s+/g, '<br class="m-only"> ')
-    // " / " con espacio a ambos lados: así "c/ Blasco" o una URL no se parten.
-    .replace(/\s+\/\s+/g, "<br>");
+  const conFormato = esc(texto).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  // " // ": salto SOLO en móvil. Cada lado va en su propio nowrap: si no, el
+  // lado que quede en una columna estrecha (junto a un título grande) se
+  // parte también por su cuenta, y el salto pedido deja de ser el único.
+  // Solo se activa si de verdad hay " // " (si no, todo el texto normal
+  // quedaría en nowrap y podría desbordar).
+  const partes = conFormato.split(/\s+\/\/\s+/);
+  const conSaltoMovil = partes.length > 1
+    ? partes.map((p) => `<span style="white-space:nowrap">${p}</span>`).join('<br class="m-only"> ')
+    : conFormato;
+  // " / " con espacio a ambos lados: salto SIEMPRE (así "c/ Blasco" o una URL
+  // no se parten). Deja un espacio tras el <br> de " // " en desktop, donde
+  // desaparece por CSS: es lo único que separa entonces las dos frases.
+  return conSaltoMovil.replace(/\s+\/\s+/g, "<br>");
 }
 
 // Párrafos: uno por bloque separado por líneas en blanco. A partir del segundo
