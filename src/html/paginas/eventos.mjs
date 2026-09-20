@@ -4,7 +4,7 @@
 // pages.jsx. Los textos editables salen de eventos.json con caída
 // TOTAL al texto escrito aquí: si el editor no aporta nada, se ve igual.
 // ─────────────────────────────────────────────────────────────
-import { esc, ORIGIN } from "../plantilla.mjs";
+import { esc, ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
 import { mdInline, mdParas } from "../texto.mjs";
 import { galeria } from "../galeria.mjs";
@@ -233,6 +233,6 @@ ${formulario(i)}
     titulo: lang === "en" ? (s.te || s.t) : s.t,
     desc: lang === "en" ? (s.de || s.d) : s.d,
     cuerpo: esqueleto(i, RUTA, locales, main),
-    ld: ldGlobal,
+    ld: [ldGlobal, breadcrumbLd(i, [{ nombre: t("Eventos", "Events"), ruta: RUTA }])],
   };
 }

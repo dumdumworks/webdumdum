@@ -40,6 +40,9 @@ export const LOCALES = {
     telHuman: "+34 624 56 01 81",
     tramos: [[780, 939], [1200, 1359]],
     mapa: "https://www.google.com/maps?q=DUM+DUM+Blasco+de+Garay+10+Madrid&output=embed",
+    // De la ficha de Google Maps del local, comprobado a mano (20/09/2026).
+    // Revisar de vez en cuando: no se actualiza solo.
+    rating: { value: "4.9", count: 2039 },
     // CONFIRMAR: referencia y tiempo a pie sin verificar (la de Bernabéu sí
     // sale de eventos.json). Si no cuadra, se cambia aquí y ya.
     cerca: { es: ["Templo", "de Debod"], en: ["Templo", "de Debod"], tiempo: { es: "12 min a pie", en: "12 min walk" } },
@@ -72,6 +75,9 @@ export const LOCALES = {
     telHuman: "+34 614 16 73 17",
     tramos: [[780, 939], [1200, 1359]],
     mapa: "https://www.google.com/maps?q=DUM+DUM+Infanta+Mercedes+17+Madrid&output=embed",
+    // De la ficha de Google Maps del local, comprobado a mano (20/09/2026).
+    // Revisar de vez en cuando: no se actualiza solo.
+    rating: { value: "4.9", count: 253 },
     cerca: { es: ["Estadio Santiago", "Bernabéu"], en: ["Santiago Bernabéu", "Stadium"], tiempo: { es: "5 min a pie", en: "5 min walk" } },
     // En la celda de la ficha de móvil (163px) el nombre largo se parte en TRES
     // líneas y descuadra la fila entera. Ahí va el corto, que además es como lo

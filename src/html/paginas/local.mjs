@@ -4,7 +4,7 @@
 // DUMDUM_LOCALES (src/ui.jsx), que sigue siendo la fuente única, y las fotos
 // de galerias.json. Es el LocalFicha de pages.jsx con las mismas clases.
 // ─────────────────────────────────────────────────────────────
-import { esc, ORIGIN } from "../plantilla.mjs";
+import { esc, ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto, specFoot } from "../shell.mjs";
 import { mdInline, mdParas, anio } from "../texto.mjs";
 import { galeria } from "../galeria.mjs";
@@ -63,6 +63,7 @@ function jsonLd(L, url) {
     priceRange: "€€",
     acceptsReservations: true,
     hasMenu: ORIGIN + "/menu",
+    ...(L.rating ? { aggregateRating: { "@type": "AggregateRating", ratingValue: L.rating.value, reviewCount: L.rating.count, bestRating: "5", worstRating: "1" } } : {}),
     publicTransport: L.metro,
     openingHoursSpecification: L.tramos.map(([ini, fin]) => ({
       "@type": "OpeningHoursSpecification", dayOfWeek: DIAS, opens: hhmm(ini), closes: hhmm(fin),
@@ -160,7 +161,7 @@ ${specFoot([
       titulo: lang === "en" ? (s.te || s.t) : s.t,
       desc: lang === "en" ? (s.de || s.d) : s.d,
       cuerpo: esqueleto(i, ruta, locales, main),
-      ld: jsonLd(L, url),
+      ld: [jsonLd(L, url), breadcrumbLd(i, [{ nombre: t("Locales", "Locations"), ruta: "/locales" }, { nombre: L.nombre, ruta }])],
     };
   };
 }

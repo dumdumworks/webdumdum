@@ -3,7 +3,7 @@
 // acceso a cada ficha. Es el componente Locales de pages.jsx; los datos salen
 // de DUMDUM_LOCALES, que antes iban escritos a mano en la tarjeta.
 // ─────────────────────────────────────────────────────────────
-import { esc } from "../plantilla.mjs";
+import { esc, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto, specFoot } from "../shell.mjs";
 import { anio } from "../texto.mjs";
 import { RUTA_LOCAL, TEL_ICO } from "./local.mjs";
@@ -66,6 +66,6 @@ ${specFoot([
     titulo: i.lang === "en" ? (s.te || s.t) : s.t,
     desc: i.lang === "en" ? (s.de || s.d) : s.d,
     cuerpo: esqueleto(i, RUTA, locales, main),
-    ld: ldGlobal,
+    ld: [ldGlobal, breadcrumbLd(i, [{ nombre: t("Locales", "Locations"), ruta: RUTA }])],
   };
 }
