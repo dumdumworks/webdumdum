@@ -599,6 +599,11 @@
 }
 .dish .body { max-width: none; }
 .dish .name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* Las etiquetas (VEG, NEW…) van siempre en su propia línea bajo el nombre,
+   nunca a su lado: si no, según lo largo del nombre, unas veces caben al
+   lado y otras saltan debajo, y el resultado es inconsistente entre platos.
+   Excepción: en mochis van junto al nombre (name-row), ver plato(). */
+.dish .tags-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 .dish .name {
   font-family: var(--font-display);
   font-weight: 700;
@@ -1684,6 +1689,24 @@
   .dish-grid-2col-m .dish .name { font-size: 18px; }
   .dish-grid-2col-m .dish .price { padding-top: 4px; }
   .dish-grid-2col-m .dish .ingr { font-size: 13px; margin-top: 6px; }
+
+  /* Subgrid: mochi y su vecino de fila reparten las mismas 3 pistas (número,
+     ficha, precio), así que el número y el precio quedan a la misma altura
+     en las dos columnas. La ficha (nombre + descripción) es una sola pista:
+     por dentro no cambia nada, el nombre sigue pegado arriba y la
+     descripción a su distancia de siempre; lo único que varía de una ficha
+     a otra es cuánto sobra debajo antes del precio, según si el nombre de
+     al lado ocupó una o dos líneas.
+     No se aplica a bebidas (drinks-grid): esa sección no lleva número y usa
+     su propio layout en bloque, ya alineado por ser un texto más simple. */
+  .dish-grid-2col-m:not(.drinks-grid) .dish,
+  .dish-grid-2col-m:not(.drinks-grid) .dish.with-logo {
+    grid-template-rows: subgrid;
+    grid-row: span 3;
+  }
+  .dish-grid-2col-m:not(.drinks-grid) .dish .num { grid-row: 1; }
+  .dish-grid-2col-m:not(.drinks-grid) .dish .body { grid-row: 2; }
+  .dish-grid-2col-m:not(.drinks-grid) .dish .price { grid-row: 3; }
 }
 .tag-inline { display: inline-flex; }
 /* Mobile-only nodes (num/body/price/logo) visibles por defecto */
