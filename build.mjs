@@ -184,6 +184,7 @@ const copyDir = (rel) => fs.cpSync(path.join(ROOT, rel), path.join(DIST, rel), {
 // Datos + ficheros sueltos de raíz habituales (se copian los que existan).
 const ROOT_FILES = [
   "robots.txt",
+  "llms.txt",
   "favicon.ico",
   "favicon-48x48.png",
   "favicon-192x192.png",

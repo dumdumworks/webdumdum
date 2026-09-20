@@ -32,6 +32,23 @@ export function archivoDe(p, lang) {
   return lang === "en" ? "en/" + base : base;
 }
 
+// BreadcrumbList (schema.org): Inicio + los tramos que se le pasen, cada uno
+// {nombre, ruta}. Se combina con el resto del JSON-LD de la página pasando un
+// array a "ld" (ver documento()). Siempre parte de "/", no hace falta pasarlo.
+export function breadcrumbLd(i, tramos) {
+  const items = [{ nombre: i.t("Inicio", "Home"), ruta: "/" }, ...tramos];
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((it, idx) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      name: it.nombre,
+      item: ORIGIN + i.ruta(it.ruta),
+    })),
+  };
+}
+
 // Idioma preferido. Quien ya eligió idioma (el selector lo guarda en
 // localStorage, igual que React) aterriza siempre en su versión, venga por la
 // URL que venga. Sin preferencia guardada no se toca nada: la URL manda, que
@@ -52,8 +69,12 @@ export function documento({ i, ruta, titulo, desc, cuerpo, ld, analitica, css, i
   const urlEs = ORIGIN + ruta;
   const urlEn = ORIGIN + "/en" + (ruta === "/" ? "/" : ruta);
   const url = i.lang === "en" ? urlEn : urlEs;
+  // "ld" admite un objeto (lo de siempre) o varios (p. ej. el Restaurant +
+  // el BreadcrumbList de la página): cada uno en su propio <script>.
   // "</" no puede aparecer dentro de un <script>: se escapa el "<".
-  const jsonLd = ld ? JSON.stringify(ld, null, 2).replace(/</g, "\\u003c") : "";
+  const bloquesLd = (Array.isArray(ld) ? ld : ld ? [ld] : [])
+    .map((item) => `  <script type="application/ld+json">\n${JSON.stringify(item, null, 2).replace(/</g, "\\u003c")}\n  </script>`)
+    .join("\n");
   return `<!DOCTYPE html>
 <html lang="${i.lang}">
 <head>
@@ -90,7 +111,7 @@ export function documento({ i, ruta, titulo, desc, cuerpo, ld, analitica, css, i
   <meta name="twitter:title" content="${esc(titulo)}">
   <meta name="twitter:description" content="${esc(desc)}">
   <meta name="twitter:image" content="${ORIGIN}/og-image.png">
-${ld ? `  <script type="application/ld+json">\n${jsonLd}\n  </script>\n` : ""}
+${bloquesLd ? bloquesLd + "\n" : ""}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">

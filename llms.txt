@@ -1,0 +1,21 @@
+# DUM DUM
+
+> Dumplings de autor en Madrid. Carta corta que cambia cada mes, sin platos convencionales. Dos locales, Chamberí y Bernabéu, para comer en el local, recoger o pedir a domicilio.
+
+DUM DUM™ ("Dumplings & Desobediencia") es un restaurante de dumplings de autor en Madrid. La carta es corta a propósito y renueva un dumpling cada mes; ninguno es una receta convencional. Valoración en Google: 4.9/5 combinando los dos locales (más de 2.200 reseñas). Abierto todos los días, 13:00–15:39 y 20:00–22:39.
+
+DUM DUM™ is a signature-dumpling restaurant in Madrid. The menu is deliberately short and adds one new dumpling every month; none of them is a conventional recipe. Google rating: 4.9/5 across both locations (2,200+ reviews combined). Open every day, 1:00–3:39pm and 8:00–10:39pm.
+
+## Páginas / Pages
+
+- [Carta](https://dum-dum.es/menu) · [Menu](https://dum-dum.es/en/menu): todos los dumplings, mochis y bebidas, con precio, ingredientes, alérgenos y opción vegetariana marcada.
+- [Locales](https://dum-dum.es/locales) · [Locations](https://dum-dum.es/en/locales): los dos restaurantes, horarios y cómo llegar.
+- [Chamberí](https://dum-dum.es/locales/chamberi): el local original, C. de Blasco de Garay 10, Madrid.
+- [Bernabéu](https://dum-dum.es/locales/bernabeu): el segundo local, C. de Infanta Mercedes 17, Madrid.
+- [Eventos](https://dum-dum.es/eventos) · [Events](https://dum-dum.es/en/eventos): espacios y dossier para eventos privados y de empresa.
+- [Contacto](https://dum-dum.es/contacto) · [Contact](https://dum-dum.es/en/contacto): email, teléfono y redes.
+
+## Datos / Data
+
+- [Carta en JSON](https://dum-dum.es/menu.json): la misma carta que ve el cliente, en datos estructurados y siempre actualizada.
+- [Sitemap](https://dum-dum.es/sitemap.xml)

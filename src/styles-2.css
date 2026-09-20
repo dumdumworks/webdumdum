@@ -1588,15 +1588,56 @@
   gap: 64px;
 }
 .contact h1 { font-family: var(--font-display); font-weight: 500; font-size: clamp(48px, 7vw, 120px); letter-spacing: -0.045em; line-height: 0.88; }
-.contact a.big {
+.contact a.big, .contact summary.big {
   display: block; font-family: var(--font-display); font-weight: 500;
   font-size: clamp(28px, 3.6vw, 56px); letter-spacing: -0.03em; line-height: 1.05;
   padding: 14px 0; border-bottom: 1px solid var(--line);
   transition: color .2s ease, padding .2s ease;
 }
-.contact a.big:hover { color: var(--red); padding-left: 12px; }
+.contact a.big:hover, .contact summary.big:hover { color: var(--red); padding-left: 12px; }
 .contact a.big .arr { font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; font-size: 0.4em; vertical-align: middle; margin-left: 12px; opacity: 0.5; }
+.contact summary.big { cursor: pointer; list-style: none; }
+.contact summary.big::-webkit-details-marker { display: none; }
 
+/* ---------- FAQ (/contacto) ---------- */
+/* Acordeón nativo (<details>), sin JS. El disparador "FAQs" es el cuarto
+   enlace grande de la columna de contacto (mismo tamaño que email/Instagram/
+   teléfono, ver .contact a.big), justo debajo del teléfono. Al abrirlo,
+   revela la lista de preguntas a su propia escala, más pequeña.
+   Cada pregunta es su propio <details>: pregunta en rojo como el
+   nombre de un plato, respuesta en negro como su descripción (.ingr) — con
+   12 respuestas seguidas, todo en rojo cansaría la vista. */
+.faq-toggle > summary .faq-ico { display: inline-block; vertical-align: middle; width: 24px; height: 24px; margin-left: 12px; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-list { margin-top: 8px; padding-bottom: 14px; max-width: 480px; }
+/* Sin filete arriba en la primera: el borde inferior de "FAQs" (.contact
+   summary.big) ya cierra por ese lado; duplicarlo dejaba dos filetes juntos. */
+.faq-item { border-bottom: 1px solid var(--line-soft); padding: 16px 0; }
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+.faq-item summary:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
+.faq-ico { flex: none; width: 18px; height: 18px; position: relative; }
+.faq-ico::before, .faq-ico::after { content: ""; position: absolute; background: var(--red); }
+.faq-ico::before { top: 50%; left: 0; right: 0; height: 1.5px; transform: translateY(-50%); }
+.faq-ico::after {
+  left: 50%; top: 0; bottom: 0; width: 1.5px; transform: translateX(-50%);
+  transition: transform .18s ease, opacity .18s ease;
+}
+[open] > summary .faq-ico::after { transform: translateX(-50%) rotate(90deg); opacity: 0; }
+.faq-item .body { margin-top: 10px; font-size: 14px; color: var(--black); }
+@media (prefers-reduced-motion: reduce) {
+  .faq-ico::after { transition: none; }
+}
 /* ---------- FOOTER ---------- */
 .foot {
   background: var(--ink);

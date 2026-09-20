@@ -3,7 +3,7 @@
 // la sirve functions/menu.js en cada petición con la carta viva de KV, usando
 // esta misma plantilla empaquetada por build.mjs (functions/_generado/).
 // ─────────────────────────────────────────────────────────────
-import { ORIGIN } from "../plantilla.mjs";
+import { ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
 import { renderCarta, tf } from "../carta.mjs";
 
@@ -47,6 +47,6 @@ export function menu(i, { locales, seo, carta }) {
     titulo: i.lang === "en" ? (s.te || s.t) : s.t,
     desc: i.lang === "en" ? (s.de || s.d) : s.d,
     cuerpo: esqueleto(i, RUTA, locales, renderCarta(i, carta)),
-    ld: jsonLd(i, carta, ORIGIN + i.ruta(RUTA)),
+    ld: [jsonLd(i, carta, ORIGIN + i.ruta(RUTA)), breadcrumbLd(i, [{ nombre: i.t("Carta", "Menu"), ruta: RUTA }])],
   };
 }
