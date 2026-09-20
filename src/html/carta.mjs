@@ -40,6 +40,11 @@ const tag = (i, tg) => {
 };
 // VEG y HOT van con el nombre; el resto, sobre la foto (solo escritorio).
 const esInline = (tg) => /^(VEG|PICANTE)$/i.test(tg);
+const esLimitado = (tg) => String(tg).toUpperCase() === "POR TIEMPO LIMITADO";
+const esNew = (tg) => String(tg).toUpperCase() === "NEW";
+// Orden fijo al mostrarlas, sea cual sea el orden del CMS: NEW siempre
+// primera. El resto conserva su orden del CMS.
+const conNewPrimero = (tags) => [...tags].sort((a, b) => (esNew(a) ? -1 : esNew(b) ? 1 : 0));
 
 // Campo bilingüe del CMS: en inglés usa "<campo>_en" si tiene contenido.
 // En los ingredientes, " · " pasa a coma y la letra que la sigue a minúscula.
@@ -68,16 +73,27 @@ function anioYY() {
 
 const num = (n) => "[nº" + String(n).padStart(2, "0") + "]";
 
-function plato(i, it) {
+function plato(i, it, opts = {}) {
   const { t } = i;
   const nombre = tf(i, it, "name"), tagline = tf(i, it, "tagline"), ingr = tf(i, it, "ingredients");
-  const tags = it.tags || [];
-  const sobreFoto = tags.filter((x) => !esInline(x));
-  const conNombre = tags.filter(esInline);
+  const tagsCms = conNewPrimero(it.tags || []);
+  const sobreFoto = tagsCms.filter((x) => !esInline(x));
+  const conNombre = tagsCms.filter(esInline);
+  const pills = (arr) => arr.map((x) => tag(i, x).replace('class="tag ', 'style="font-size:10px" class="tag ')).join("");
+  // Móvil: en mochis todas las etiquetas van junto al nombre, como estaba. En
+  // el resto, las etiquetas normales en su línea propia y "POR TIEMPO
+  // LIMITADO" en otra aparte, siempre la última: así su caja no depende de
+  // cuánto texto quepa al lado (en inglés es más corta y quedaba una caja
+  // ancha con hueco vacío si se forzaba el salto por CSS).
+  const tagsMovil = opts.tagsInline ? tagsCms : tagsCms.filter((x) => !esLimitado(x));
+  const limitadoMovil = opts.tagsInline ? [] : tagsCms.filter(esLimitado);
+  const pillsMovil = pills(tagsMovil);
   return `<article class="dish${it.featured ? " is-featured" : ""}">
   <div class="num m-only">${num(it.n)}</div>
   <div class="body m-only">
-    <div class="name-row"><span class="name" style="font-size:20px">${esc(nombre)}</span>${tags.map((x) => tag(i, x).replace('class="tag ', 'style="font-size:10px" class="tag ')).join("")}</div>
+    <div class="name-row"><span class="name" style="font-size:20px">${esc(nombre)}</span>${opts.tagsInline ? pillsMovil : ""}</div>
+    ${!opts.tagsInline && tagsMovil.length ? `<div class="tags-row">${pillsMovil}</div>` : ""}
+    ${limitadoMovil.length ? `<div class="tags-row">${pills(limitadoMovil)}</div>` : ""}
     ${tagline ? `<div class="tagline">${esc(tagline)}</div>` : ""}
     ${ingr ? `<div class="ingr" style="font-size:13px">${esc(ingr)}</div>` : ""}
   </div>
@@ -111,7 +127,9 @@ function seccion(i, sec) {
   return `<section class="menu-section section--${esc(sec.id)}${sec.id === "bebidas" ? " section-mobile-only" : ""}">
   <div class="menu-sectionhead"><h3>${esc(tf(i, sec, "title"))}</h3><div class="meta">${mdInline(tf(i, sec, "note"))}</div></div>
   <div class="${cls}">
-${platos.map((it) => plato(i, it)).join("\n")}
+${/* En mochis las etiquetas van junto al nombre (columna estrecha, ficha
+     compacta); en el resto de secciones, en su propia línea (ver plato()). */
+  platos.map((it) => plato(i, it, { tagsInline: sec.id === "postres" })).join("\n")}
   </div>
 </section>`;
 }
