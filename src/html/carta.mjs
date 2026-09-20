@@ -30,7 +30,7 @@ const TAGS = {
   PICANTE: ["HOT 🌶", "HOT 🌶", "hot"],
   VEG: ["VEG 🌱", "VEG 🌱", "veg"],
   "POR TIEMPO LIMITADO": ["POR TIEMPO LIMITADO", "LIMITED TIME OFFER", "limited"],
-  NEW: ["NEW", "NEW", "red"],
+  NEW: ["NEW ⭐", "NEW ⭐", "black"],
   "DEL MES": ["DEL MES", "OF THE MONTH", "month"],
   TOP: ["TOP", "TOP", "month"],
 };
