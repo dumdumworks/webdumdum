@@ -60,8 +60,8 @@ export function home(i, { locales, seo, ldGlobal, carta }) {
       </div>
     </div>
     <div class="hero-actions hero-actions-4">
+      <a class="btn" href="${i.ruta("/menu")}">${esc(t("La carta", "Menu"))} →</a>
       <a class="btn" href="#" data-reservar>${esc(t("Reservar", "Book"))} →</a>
-      <a class="btn" href="${i.ruta("/locales")}">${esc(t("Llegar", "Directions"))} →</a>
       <a class="btn" href="#" data-pide>${esc(t("Pide ya!", "Order now!"))} →</a>
       <a class="btn" href="${i.ruta("/eventos")}">${esc(t("Eventos", "Events"))} →</a>
     </div>
