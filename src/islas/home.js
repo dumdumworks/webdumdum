@@ -10,30 +10,38 @@ const NUM_ES = ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete"
 const NUM_EN = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
   "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
 
-// El número de dumplings de la frase de /CARTA se fija al desplegar (home es
-// una página estática). Si desde entonces alguien ha tocado la disponibilidad
-// de un plato en el panel sin desplegar, /menu.json ya lo sabe (lee KV en
-// vivo) y esto lo corrige aquí, sin esperar al build.
+// Los números de dumplings y de vegetarianos de la frase de /CARTA se fijan
+// al desplegar (home es una página estática). Si desde entonces alguien ha
+// tocado la disponibilidad o la etiqueta VEG de un plato en el panel sin
+// desplegar, /menu.json ya lo sabe (lee KV en vivo) y esto lo corrige aquí,
+// sin esperar al build.
 async function corregirCifraDumplings() {
   const p = $("[data-n-dumplings]");
   if (!p) return;
-  const actual = Number(p.dataset.nDumplings);
+  const dumplingsActual = Number(p.dataset.nDumplings);
+  const vegActual = Number(p.dataset.nVeg);
   let carta;
   try {
     const res = await fetch("/menu.json", { cache: "no-store" });
     if (!res.ok) return;
     carta = await res.json();
-  } catch (e) { return; } // sin red o JSON roto: se queda con el número del build
+  } catch (e) { return; } // sin red o JSON roto: se queda con los números del build
 
-  const seccion = (carta.sections || []).find((s) => s.id === "dumplings");
-  const n = (seccion?.items || []).filter((it) => it.available !== false && !it.archived).length;
-  if (!n || n === actual) return; // ya estaba bien
+  const disponibles = ((carta.sections || []).find((s) => s.id === "dumplings")?.items || [])
+    .filter((it) => it.available !== false && !it.archived);
+  const n = disponibles.length;
+  const nVeg = disponibles.filter((it) => (it.tags || []).some((x) => String(x).toUpperCase() === "VEG")).length;
 
-  const tabla = document.documentElement.lang === "en" ? NUM_EN : NUM_ES;
-  const palabra = tabla[n] ?? String(n);
-  $$("[data-cifra]", p).forEach((el, i) => {
-    el.textContent = i === 0 ? palabra.charAt(0).toUpperCase() + palabra.slice(1) : palabra;
-  });
+  if (n && n !== dumplingsActual) {
+    const tabla = document.documentElement.lang === "en" ? NUM_EN : NUM_ES;
+    const palabra = tabla[n] ?? String(n);
+    $$("[data-cifra]", p).forEach((el, i) => {
+      el.textContent = i === 0 ? palabra.charAt(0).toUpperCase() + palabra.slice(1) : palabra;
+    });
+  }
+  if (nVeg !== vegActual) {
+    $$("[data-veg]", p).forEach((el) => { el.textContent = nVeg; });
+  }
 }
 
 export function home() {
