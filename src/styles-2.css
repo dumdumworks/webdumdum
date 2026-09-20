@@ -649,7 +649,7 @@
   background: var(--bg);
   text-align: left;
 }
-.tag.red { color: var(--red); border-color: var(--red); }
+.tag.black { color: var(--black); border-color: var(--black); }
 .tag.veg { color: #1f8a5b; border-color: #1f8a5b; }
 .tag.hot { color: var(--red); border-color: var(--red); }
 .tag.month { background: var(--ink); color: var(--bg); border-color: var(--ink); }
