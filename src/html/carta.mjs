@@ -5,7 +5,7 @@
 // lo que edita el panel salga en segundos sin esperar a ningún build.
 // ─────────────────────────────────────────────────────────────
 import { esc } from "./plantilla.mjs";
-import { sanearInline } from "./texto.mjs";
+import { sanearInline, mdInline } from "./texto.mjs";
 
 // Los 14 alérgenos de declaración obligatoria (UE). id = clave que guarda cada plato.
 export const ALERGENOS = [
@@ -105,8 +105,11 @@ function plato(i, it) {
 function seccion(i, sec) {
   const platos = (sec.items || []).filter((it) => it.available !== false && !it.archived);
   const cls = ["dish-grid", sec.id === "postres" ? "dish-grid-2col-m" : "", sec.id === "bebidas" ? "dish-grid-2col-m drinks-grid" : ""].filter(Boolean).join(" ");
+  // La nota admite " / " para forzar un salto de línea (igual que los
+  // títulos, vía mdInline): sin eso, envuelve sola según el ancho y el hueco
+  // hasta el filete varía con la longitud del texto de cada sección.
   return `<section class="menu-section section--${esc(sec.id)}${sec.id === "bebidas" ? " section-mobile-only" : ""}">
-  <div class="menu-sectionhead"><h3>${esc(tf(i, sec, "title"))}</h3><div class="meta">${esc(tf(i, sec, "note"))}</div></div>
+  <div class="menu-sectionhead"><h3>${esc(tf(i, sec, "title"))}</h3><div class="meta">${mdInline(tf(i, sec, "note"))}</div></div>
   <div class="${cls}">
 ${platos.map((it) => plato(i, it)).join("\n")}
   </div>
