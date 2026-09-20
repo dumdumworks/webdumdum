@@ -1,7 +1,8 @@
 // ─────────────────────────────────────────────────────────────
 // Texto editable → HTML. Es el mismo mini-markdown que entiende la web React
-// (mdInline / mdParas en ui.jsx): **negrita** y " / " como salto de línea
-// dentro de un título; párrafos separados por líneas en blanco.
+// (mdInline / mdParas en ui.jsx): **negrita**, " / " como salto de línea
+// siempre y " // " como salto SOLO en móvil (desktop sigue una sola línea);
+// párrafos separados por líneas en blanco.
 // Se escapa PRIMERO y se convierte después: el texto no puede inyectar HTML.
 // ─────────────────────────────────────────────────────────────
 import { esc } from "./plantilla.mjs";
@@ -10,7 +11,11 @@ export function mdInline(texto) {
   if (texto == null) return "";
   return esc(texto)
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
-    // Solo " / " con espacio a ambos lados: así "c/ Blasco" o una URL no se parten.
+    // " // " primero (sin, sería " / " + " /" sueltos): salto solo en móvil.
+    // Deja un espacio TRAS el <br>: en desktop, donde el <br> desaparece
+    // (display:none), es lo único que separa las dos palabras.
+    .replace(/\s+\/\/\s+/g, '<br class="m-only"> ')
+    // " / " con espacio a ambos lados: así "c/ Blasco" o una URL no se parten.
     .replace(/\s+\/\s+/g, "<br>");
 }
 
