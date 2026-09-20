@@ -39,6 +39,8 @@ export function home(i, { locales, seo, ldGlobal, carta }) {
   const nVeg = dumplingsDisponibles.filter((it) => (it.tags || []).some((x) => String(x).toUpperCase() === "VEG")).length;
   const dumplingsEs = numeroALetra(nDumplings, "es");
   const dumplingsEn = numeroALetra(nDumplings, "en");
+  const vegEs = numeroALetra(nVeg, "es");
+  const vegEn = numeroALetra(nVeg, "en");
   const celda = (n, titulo, detalle, attrs) =>
     `  <a class="map-cell" ${attrs}><div class="n">[${n}]</div><div class="t">${esc(titulo)}</div><div class="d">${esc(detalle)}</div></a>`;
   const main = `<div data-screen-label="home">
@@ -72,8 +74,8 @@ export function home(i, { locales, seo, ldGlobal, carta }) {
     <div class="tiny muted" style="margin-bottom:16px">/ ${esc(t("CARTA", "MENU"))}</div>
     <h2>${esc(t("Una carta corta", "A short menu"))}<br><em ${ROJO}>${esc(t("que cambia cada mes.", "that changes every month."))}</em></h2>
     <p class="body" data-n-dumplings="${nDumplings}" data-n-veg="${nVeg}" style="margin-top:24px">${i.lang === "en"
-      ? `<strong style="font-weight:700"><span data-cifra>${mayuscInicial(dumplingsEn)}</span> dumplings</strong>. A new one every month. Of the <span data-cifra>${dumplingsEn}</span>, <strong style="font-weight:700"><span data-veg>${nVeg}</span> vegetarian</strong>. Of the <span data-cifra>${dumplingsEn}</span>, <strong style="font-weight:700">not one conventional</strong>.`
-      : `<strong style="font-weight:700"><span data-cifra>${mayuscInicial(dumplingsEs)}</span> dumplings</strong>. Uno nuevo cada mes. De los <span data-cifra>${dumplingsEs}</span>, <strong style="font-weight:700"><span data-veg>${nVeg}</span> vegetarianos</strong>. De los <span data-cifra>${dumplingsEs}</span>, <strong style="font-weight:700">ni uno convencional</strong>.`}</p>
+      ? `<strong style="font-weight:700"><span data-cifra>${mayuscInicial(dumplingsEn)}</span> dumplings</strong>. A new one every month. Of the <span data-cifra>${dumplingsEn}</span>, <strong style="font-weight:700"><span data-veg>${vegEn}</span> vegetarian</strong>. Of the <span data-cifra>${dumplingsEn}</span>, <strong style="font-weight:700">not one conventional</strong>.`
+      : `<strong style="font-weight:700"><span data-cifra>${mayuscInicial(dumplingsEs)}</span> dumplings</strong>. Uno nuevo cada mes. De los <span data-cifra>${dumplingsEs}</span>, <strong style="font-weight:700"><span data-veg>${vegEs}</span> vegetarianos</strong>. De los <span data-cifra>${dumplingsEs}</span>, <strong style="font-weight:700">ni uno convencional</strong>.`}</p>
     <div class="sistema-ctas" style="margin-top:32px">
       <a class="btn" href="${i.ruta("/menu")}">${esc(t("Leer carta de " + mesEnCurso("es"), "Read " + mesEnCurso("en") + "'s menu"))} →</a>
     </div>

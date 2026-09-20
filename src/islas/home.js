@@ -31,16 +31,16 @@ async function corregirCifraDumplings() {
     .filter((it) => it.available !== false && !it.archived);
   const n = disponibles.length;
   const nVeg = disponibles.filter((it) => (it.tags || []).some((x) => String(x).toUpperCase() === "VEG")).length;
+  const tabla = document.documentElement.lang === "en" ? NUM_EN : NUM_ES;
 
   if (n && n !== dumplingsActual) {
-    const tabla = document.documentElement.lang === "en" ? NUM_EN : NUM_ES;
     const palabra = tabla[n] ?? String(n);
     $$("[data-cifra]", p).forEach((el, i) => {
       el.textContent = i === 0 ? palabra.charAt(0).toUpperCase() + palabra.slice(1) : palabra;
     });
   }
   if (nVeg !== vegActual) {
-    $$("[data-veg]", p).forEach((el) => { el.textContent = nVeg; });
+    $$("[data-veg]", p).forEach((el) => { el.textContent = tabla[nVeg] ?? String(nVeg); });
   }
 }
 
