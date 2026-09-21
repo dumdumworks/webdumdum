@@ -1069,23 +1069,47 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [01] Incluye (/taller-team-building): una lista, como el resto de
-   secciones de esta página (Comida, Horarios, Tarifas) — nada de iconos,
-   cajas ni líneas que conectar. Un número grande hace de ancla visual y un
-   filete fino separa cada paso, coherente con .taller-list en vez de un
-   lenguaje visual nuevo para una sola sección. */
-.taller-pasos {
-  margin-top: 28px;
-  border-top: 1px solid var(--line-soft);
-}
+/* [01] Incluye (/taller-team-building): una lista con hilo — número grande
+   a la izquierda, título y frase a la derecha, y un filete vertical que
+   atraviesa el centro de cada número y los une a todos, de arriba abajo.
+   Sin ese hilo (la versión anterior, solo filetes horizontales entre
+   pasos) esto leía como una lista de datos sueltos, no como una secuencia:
+   el hilo es lo que dice "esto va después de esto". Sigue sin haber
+   iconos, cajas ni flechas — el hilo es el único elemento nuevo, en el
+   mismo --line-soft que separa filas en .taller-list.
+   El hilo se monta por tramos, uno por fila, que encajan sin costura: cada
+   fila dibuja su filete de un borde al otro (arriba y abajo del todo),
+   salvo la primera (que arranca en su propio número, no tiene nada antes)
+   y la última (que para en su propio número, no tiene nada después). */
+.taller-pasos { margin-top: 32px; }
 .taller-pasos > div {
+  position: relative;
   display: grid;
   grid-template-columns: 72px 1fr;
   column-gap: 24px;
-  padding: 28px 0;
-  border-bottom: 1px solid var(--line-soft);
+  padding-bottom: 32px;
 }
+.taller-pasos > div:last-child { padding-bottom: 0; }
+.taller-pasos > div::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  bottom: 0;
+  left: 36px;
+  width: 1px;
+  /* Más presencia que --line-soft (pensado para separadores discretos): el
+     hilo es aquí el elemento que dice "esto es una secuencia", así que tiene
+     que notarse a la primera, no solo al fijarse. */
+  background: rgba(255, 0, 30, 0.45);
+}
+/* Centro del número: 48px de alto ÷ 2 = 24px desde arriba de la fila (el
+   número va pegado arriba, sin padding-top). */
+.taller-pasos > div:first-child::before { top: 24px; }
+.taller-pasos > div:last-child::before { bottom: auto; height: 24px; }
 .taller-pasos-num {
+  position: relative;
+  z-index: 1;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 48px;
@@ -1103,10 +1127,6 @@
   margin-top: 6px;
   font-size: 15px;
   line-height: 1.4;
-}
-@media (max-width: 480px) {
-  .taller-pasos > div { grid-template-columns: 1fr; row-gap: 6px; }
-  .taller-pasos-num { font-size: 36px; }
 }
 
 /* Las tres cifras de Redes, en las celdas del resumen de la ficha de local
