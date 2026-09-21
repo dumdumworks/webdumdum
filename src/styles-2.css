@@ -246,9 +246,15 @@
 .map-nav {
   border-top: 1px solid var(--line);
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* minmax(0, 1fr), no 1fr a secas: una columna 1fr no se encoge por debajo
+     del contenido más ancho que tenga dentro, así que si una celda tiene un
+     texto más largo que las de la otra columna, le roba ancho — descuadraba
+     el divisor vertical contra el de la fila de arriba (spec-foot, que sí
+     usaba minmax). Con el suelo en 0, las dos columnas se reparten el ancho
+     exacto a medias siempre, pase lo que pase el contenido. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-.map-nav-3 { grid-template-columns: repeat(3, 1fr); }
+.map-nav-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 /* Celda-sello · oculta en desktop (la rejilla 3×3 no tiene hueco) */
 .map-cell-seal {
   display: none;
@@ -288,7 +294,7 @@
 .map-cell-seal .seal-texto {
   -webkit-mask: url("../img/logos/dumdum-sello-texto.svg") no-repeat center / contain;
   mask: url("../img/logos/dumdum-sello-texto.svg") no-repeat center / contain;
-  animation: girar-sello 10s linear infinite;
+  animation: girar-sello 11.5s linear infinite;
 }
 @keyframes girar-sello { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
@@ -311,7 +317,15 @@
   position: relative;
   transition: background .25s ease, color .25s ease;
 }
-.map-cell:last-child { border-right: 1px solid var(--line); }
+/* Sin filete en la última columna de cada fila: cierra ella sola, no hace
+   falta enmarcar la rejilla entera por la derecha. 3 columnas en escritorio
+   (map-cell-seal está oculta y no cuenta), 2 en móvil (donde si cuenta). */
+@media (min-width: 881px) {
+  .map-cell:nth-child(3n) { border-right: none; }
+}
+@media (max-width: 880px) {
+  .map-cell:nth-child(2n) { border-right: none; }
+}
 /* Las tres voces de la celda. Las comparte .dato-celda, la ficha de local en
    móvil: es el mismo objeto —rótulo arriba, dato grande, apostilla abajo— y no
    tiene sentido escribirlo dos veces. El cuerpo del titular sí es propio de
@@ -2105,7 +2119,7 @@
      garantiza que ganen en especificidad/orden. */
   .hero { padding: 12vh 0 8vh; }
   .hero-meta { position: static; text-align: left; margin-top: 24px; }
-  .map-nav-3 { grid-template-columns: repeat(2, 1fr); }
+  .map-nav-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   /* Celda-sello visible aquí mismo: rellena el hueco que deja la rejilla
      de 2 columnas con 9 celdas. Debe encenderse en el MISMO punto que la
      rejilla pasa a 2 col, o queda un hueco descuadrado en la franja
