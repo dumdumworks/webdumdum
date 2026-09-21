@@ -1,7 +1,5 @@
 // ─────────────────────────────────────────────────────────────
 // Enlaces y constantes del negocio que comparten TODAS las páginas HTML.
-// Mientras dure la migración conviven con sus gemelos de src/ui.jsx (TopBar);
-// cuando React se retire, esta será la única copia.
 // ─────────────────────────────────────────────────────────────
 export const UBER_CHAMBERI = "https://www.ubereats.com/es/store/dum-dum-%7C-chamberi/7NGxIIg1XVmNEz9mAkgI7Q?diningMode=DELIVERY&ps=1&sc=SEARCH_SUGGESTION";
 export const UBER_BERNABEU = "https://www.ubereats.com/es/store/dum-dum-%7C-bernabeu/y9O2ciM5WRm9gGfszt8UDA?diningMode=DELIVERY&ps=1&sc=SEARCH_SUGGESTION";
