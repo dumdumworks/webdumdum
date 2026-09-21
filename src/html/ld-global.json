@@ -17,13 +17,6 @@
   "sameAs": [
     "https://www.instagram.com/dumdum.plings"
   ],
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": 2292,
-    "bestRating": "5",
-    "worstRating": "1"
-  },
   "department": [
     {
       "@type": "Restaurant",
@@ -41,13 +34,6 @@
         "Fusión"
       ],
       "telephone": "+34624560181",
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "reviewCount": 2039,
-        "bestRating": "5",
-        "worstRating": "1"
-      },
       "openingHoursSpecification": [
         {
           "@type": "OpeningHoursSpecification",
@@ -95,13 +81,6 @@
         "Fusión"
       ],
       "telephone": "+34614167317",
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "reviewCount": 253,
-        "bestRating": "5",
-        "worstRating": "1"
-      },
       "openingHoursSpecification": [
         {
           "@type": "OpeningHoursSpecification",
