@@ -660,6 +660,11 @@
   color: rgba(255,0,30,0.55);
   padding-top: 8px;
 }
+/* En móvil (name a 20px), el número queda al pixel con el cap-height de la
+   primera letra del nombre: medido con la tinta real de cada fuente (no con
+   la métrica del navegador), la línea del número tiene que bajar 2,75px, no
+   8px, para que las dos tintas empiecen en la misma fila. */
+.dish .num.m-only { padding-top: 2.75px; }
 .dish .body { max-width: none; }
 .dish .name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 /* Las etiquetas (VEG, NEW…) van siempre en su propia línea bajo el nombre,
