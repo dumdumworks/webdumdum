@@ -7,10 +7,11 @@ export const ROUTES_SEO = [
     d: "Desobedecer es un derecho y una obligaci\u00f3n. Los dumplings m\u00e1s diferentes y mejor valorados de Espa\u00f1a. Abiertos todos los d\u00edas. Para tomar, para recoger y a domicilio.",
     te: "DUM DUM\u2122 \u2014 Dumplings & Disobedience",
     de: "Disobeying is a right and a duty. The most different and best-rated dumplings in Spain. Open every day. Eat in, take away or delivery." },
+  // Sin "d"/"de": la descripci\u00f3n de /menu se arma en menu.mjs con la cifra
+  // real de la carta viva (para que nunca diga un n\u00famero de dumplings que ya
+  // no es verdad).
   { p: "/menu",     t: "DUM DUM\u2122 \u2014 La carta",
-    d: "Nueve dumplings, uno nuevo cada mes y ni uno convencional.",
-    te: "DUM DUM\u2122 \u2014 The menu",
-    de: "Nine dumplings, a new one every month and not a single conventional one." },
+    te: "DUM DUM\u2122 \u2014 The menu" },
   { p: "/locales",  t: "DUM DUM\u2122 \u2014 Locales y reservas",
     d: "Puedes reservar en Chamber\u00ed o en Bernab\u00e9u. O en ambos :).",
     te: "DUM DUM\u2122 \u2014 Locations and bookings",

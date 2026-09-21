@@ -63,7 +63,6 @@ function jsonLd(L, url) {
     priceRange: "€€",
     acceptsReservations: true,
     hasMenu: ORIGIN + "/menu",
-    ...(L.rating ? { aggregateRating: { "@type": "AggregateRating", ratingValue: L.rating.value, reviewCount: L.rating.count, bestRating: "5", worstRating: "1" } } : {}),
     publicTransport: L.metro,
     openingHoursSpecification: L.tramos.map(([ini, fin]) => ({
       "@type": "OpeningHoursSpecification", dayOfWeek: DIAS, opens: hhmm(ini), closes: hhmm(fin),

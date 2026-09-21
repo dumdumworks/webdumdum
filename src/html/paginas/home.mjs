@@ -5,38 +5,20 @@
 // ─────────────────────────────────────────────────────────────
 import { esc } from "../plantilla.mjs";
 import { esqueleto, specFoot } from "../shell.mjs";
-import { mesEnCurso } from "../carta.mjs";
+import { mesEnCurso, dumplingsDisponibles, numeroALetra, mayuscInicial } from "../carta.mjs";
 import * as E from "../enlaces.mjs";
 
 export const RUTA = "/";
 
 const ROJO = 'style="color:var(--red);font-style:normal;font-weight:inherit"';
 
-// "9" → "nueve" / "nine": el número de dumplings de la carta, en palabras, para
-// la frase de la sección /CARTA. Cubre hasta 20 (de sobra: la carta tiene
-// entre 9 y 13); un número mayor cae al dígito, que sigue leyéndose bien.
-const NUM_ES = ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez",
-  "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte"];
-const NUM_EN = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
-  "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
-const numeroALetra = (n, lang) => {
-  const tabla = lang === "en" ? NUM_EN : NUM_ES;
-  return tabla[n] ?? String(n);
-};
-const mayuscInicial = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-
 export function home(i, { locales, seo, ldGlobal, carta }) {
   const { t } = i;
   const s = seo.find((r) => r.p === RUTA);
   const L = locales;
-  // Solo cuenta lo que de verdad sale en la carta: igual que renderCarta (y
-  // que el VegetarianDiet del JSON-LD de /menu), sin los platos ocultos
-  // (available:false) ni los archivados.
-  const dumplingsDisponibles = (carta.sections || [])
-    .find((sec) => sec.id === "dumplings")?.items
-    ?.filter((it) => it.available !== false && !it.archived) || [];
-  const nDumplings = dumplingsDisponibles.length;
-  const nVeg = dumplingsDisponibles.filter((it) => (it.tags || []).some((x) => String(x).toUpperCase() === "VEG")).length;
+  const disponibles = dumplingsDisponibles(carta);
+  const nDumplings = disponibles.length;
+  const nVeg = disponibles.filter((it) => (it.tags || []).some((x) => String(x).toUpperCase() === "VEG")).length;
   const dumplingsEs = numeroALetra(nDumplings, "es");
   const dumplingsEn = numeroALetra(nDumplings, "en");
   const vegEs = numeroALetra(nVeg, "es");
