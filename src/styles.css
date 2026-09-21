@@ -903,6 +903,11 @@ img { display: block; max-width: 100%; }
   display:flex; justify-content:space-between; align-items:baseline;
   gap:16px; padding:13px 0; border-bottom:var(--alerg-stroke) solid var(--line-soft);
 }
+/* [hidden] por sí solo (specificity 0,1,0) pierde contra el display:flex de
+   arriba (0,1,1): sin esto, el filtro de alérgenos marca bien qué platos
+   ocultar pero NUNCA se ocultan de verdad — se ve la carta entera como si
+   todo llevase el alérgeno marcado. */
+.alerg-list li[hidden]{ display:none; }
 .alerg-list li:first-child{ padding-top:0; }
 .alerg-list li:last-child{ border-bottom:none; padding-bottom:0; }
 .alerg-list-name{ font-family:var(--font-display); font-size:17px; color:var(--red); }
