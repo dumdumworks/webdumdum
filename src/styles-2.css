@@ -294,7 +294,7 @@
 .map-cell-seal .seal-texto {
   -webkit-mask: url("../img/logos/dumdum-sello-texto.svg") no-repeat center / contain;
   mask: url("../img/logos/dumdum-sello-texto.svg") no-repeat center / contain;
-  animation: girar-sello 11.5s linear infinite;
+  animation: girar-sello 14s linear infinite;
 }
 @keyframes girar-sello { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
