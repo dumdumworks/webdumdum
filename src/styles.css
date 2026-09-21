@@ -52,7 +52,10 @@
   --fab-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* Sin el resalte gris translúcido que iOS/Android pintan sobre cualquier
+   elemento tocable al tocarlo (antes se quitaba caso a caso; ahora, para
+   todos a la vez). Solo importa en táctil: en ratón no pinta nada. */
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { background: var(--bg); color: var(--ink); }
 body {
   font-family: var(--font-display);
@@ -468,7 +471,7 @@ img { display: block; max-width: 100%; }
 .lang-toggle:hover .otro::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px; background: var(--red);
 }
-@media (hover: none) { .lang-toggle { -webkit-tap-highlight-color: transparent; } .lang-toggle span { transition: none; } }
+@media (hover: none) { .lang-toggle span { transition: none; } }
 /* Grupo derecho móvil (Reservar + hamburguesa) · oculto en desktop */
 .topbar-mobile-right { display: none; align-items: center; gap: 14px; }
 .topbar-reservar-mobile { font-size: 11px; padding: 7px 14px !important; }

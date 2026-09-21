@@ -318,9 +318,7 @@
 @media (hover: none) {
   /* Solo :hover, nada de :active: el :active se va al levantar el dedo y
      entre eso y el :hover pegado había un fotograma crema (un parpadeo). */
-  /* Sin el resalte gris translúcido que iOS/Android pintan sobre un enlace al
-     tocarlo: sobre la celda ya roja se veía como un parpadeo. */
-  .map-cell { transition: none; -webkit-tap-highlight-color: transparent; }
+  .map-cell { transition: none; }
   .map-cell:hover { background: var(--ink); color: var(--bg); }
   .map-cell:hover .d { color: rgba(255,255,255,0.6); }
 }
@@ -1661,7 +1659,16 @@
   transition: transform .18s ease, opacity .18s ease;
 }
 [open] > summary .faq-ico::after { transform: translateX(-50%) rotate(90deg); opacity: 0; }
+/* Al cerrar con JS el <details> sigue "open" hasta que acaba la animación
+   (si no, el contenido desaparece de golpe): esta clase adelanta el icono a
+   "+" en cuanto empieza el cierre, en vez de esperar a que termine. */
+.faq-cerrando > summary .faq-ico::after { transform: translateX(-50%); opacity: 1; }
 .faq-item .body { margin-top: 10px; font-size: 14px; color: var(--black); }
+/* Dentro de la respuesta, las palabras que ya son un botón, la carta o un
+   local de verdad: en rojo y subrayadas, para que se noten sin salir del
+   tono de conversación (nada de mayúsculas ni caja aparte). */
+.faq-item .body a { color: var(--red); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.faq-item .body a:hover { text-decoration-thickness: 1.5px; }
 @media (prefers-reduced-motion: reduce) {
   .faq-ico::after { transition: none; }
 }
@@ -2150,7 +2157,6 @@
     text-transform: uppercase;
     cursor: pointer;
     white-space: nowrap;
-    -webkit-tap-highlight-color: transparent;
     transition: background 0.15s ease, color 0.15s ease;
   }
   .dish-photo-btn:active {
@@ -2178,7 +2184,6 @@
   justify-content: center;
   padding: 24px;
   animation: dishLbFade 0.18s ease both;
-  -webkit-tap-highlight-color: transparent;
 }
 @keyframes dishLbFade { from { opacity: 0; } to { opacity: 1; } }
 
@@ -2238,7 +2243,6 @@
   align-items: center;
   justify-content: center;
   z-index: 2;
-  -webkit-tap-highlight-color: transparent;
   padding-bottom: 3px;
 }
 .dish-lightbox-nav.prev { left: 14px; }
@@ -2265,7 +2269,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  -webkit-tap-highlight-color: transparent;
 }
 .dish-lightbox-close:active { background: var(--bg); color: var(--red); }
 
