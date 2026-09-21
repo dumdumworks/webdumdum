@@ -92,9 +92,9 @@ ${[
     celda("08", "DD*Radio", "SPOTIFY", `href="${E.SPOTIFY_URL}" target="_blank" rel="noreferrer"`),
     celda("09", "DD*Mer®ch", t("PRÓXIMAMENTE", "COMING SOON"), 'href="#" data-toast'),
   ].join("\n")}
-  <div class="map-cell map-cell-seal" aria-hidden="true">
+  <button type="button" class="map-cell map-cell-seal" data-sello tabindex="-1" aria-hidden="true">
     <span class="seal-mark"><span class="seal-centro"></span><span class="seal-texto"></span></span>
-  </div>
+  </button>
 </nav>
 
 ${specFoot([

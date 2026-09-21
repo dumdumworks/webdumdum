@@ -300,13 +300,12 @@
 @media (prefers-reduced-motion: reduce) {
   .map-cell-seal .seal-texto { animation: none; }
 }
-/* Al pinchar/hover: fondo rojo y sello en crema (colores invertidos) */
-.map-cell-seal:hover,
-.map-cell-seal:active,
-.map-cell-seal:focus { background: var(--ink); }
-.map-cell-seal:hover .seal-centro, .map-cell-seal:hover .seal-texto,
-.map-cell-seal:active .seal-centro, .map-cell-seal:active .seal-texto,
-.map-cell-seal:focus .seal-centro, .map-cell-seal:focus .seal-texto { background-color: var(--bg); }
+/* Cada toque invierte los colores (negativo↔positivo) y se queda así hasta
+   el siguiente — no es un :hover/:active (eso se suelta al levantar el dedo
+   y aquí no hay ratón real), lo lleva la isla home.js con una clase. */
+.map-cell-seal.is-negativo { background: var(--ink); }
+.map-cell-seal.is-negativo .seal-centro,
+.map-cell-seal.is-negativo .seal-texto { background-color: var(--bg); }
 .map-cell, .dato-celda {
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -345,14 +344,17 @@
    y se queda roja hasta que se va (el :hover se queda pegado tras el toque, y
    eso aquí se quiere: no es un pulsador). */
 @media (hover: hover) {
-  .map-cell:hover { background: var(--ink); color: var(--bg); }
+  .map-cell:hover:not(.map-cell-seal) { background: var(--ink); color: var(--bg); }
   .map-cell:hover .d { color: rgba(255,255,255,0.6); }
 }
 @media (hover: none) {
   /* Solo :hover, nada de :active: el :active se va al levantar el dedo y
      entre eso y el :hover pegado había un fotograma crema (un parpadeo). */
   .map-cell { transition: none; }
-  .map-cell:hover { background: var(--ink); color: var(--bg); }
+  /* La celda-sello no entra aquí: su color lo lleva el toggle de home.js
+     (is-negativo), no el :hover pegado del resto de celdas — si no, el
+     :hover que se queda tras el toque le pisaba el color al toggle. */
+  .map-cell:hover:not(.map-cell-seal) { background: var(--ink); color: var(--bg); }
   .map-cell:hover .d { color: rgba(255,255,255,0.6); }
 }
 .map-cell.span-6 { grid-column: span 1; }
