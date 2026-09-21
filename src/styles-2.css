@@ -1738,8 +1738,8 @@
   /* Por debajo de este ancho, clamp() fija .foot-word a su mínimo (80px):
      el 0.21em de arriba, calibrado a un tamaño mayor, ya no cae al pixel
      exacto aquí (el redondeo de fuente no escala igual de fino a 80px que a
-     tamaños más grandes). Medido de nuevo a este tamaño: 2px menos. */
-  .foot-word .tm { margin-top: 0.085em; }
+     tamaños más grandes). Medido de nuevo a este tamaño: 1px menos. */
+  .foot-word .tm { margin-top: 0.1475em; }
 }
 .foot-grid {
   display: grid;
