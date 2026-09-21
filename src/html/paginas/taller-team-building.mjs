@@ -16,9 +16,10 @@ const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
 
 // [es, en] en cada campo, como el resto de listas bilingües de la web.
 const INCLUYE = [
-  ["01", "Taller participativo de elaboración de dumplings", "Hands-on dumpling-making workshop"],
-  ["02", "Dinámicas adaptadas a cada empresa", "Activities tailored to each company"],
-  ["03", "Elaboración por equipos y degustación final", "Team-based cooking and a final tasting"],
+  ["01", "Nos organizamos en equipos.", "We split into teams."],
+  ["02", "Aprendemos a elaborar y manipular la masa.", "We learn to work and shape the dough."],
+  ["03", "Construimos juntos los dumplings.", "We build the dumplings together."],
+  ["04", "Los cocinamos y los emplatamos.", "We cook and plate them."],
 ];
 const COMIDA = [
   ["Entrante", "A compartir", "Starter", "To share"],
@@ -115,8 +116,8 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   <h1 class="h-display" style="margin-top:16px">${esc(t("Team building", "Team building"))}<br>${esc(t("de taller de dumplings.", "dumpling workshop."))}</h1>
   <div class="ev-hero-row" style="margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:32px">
     <p class="body" style="font-size:18px;flex:1 1 420px;min-width:0;margin:0">${esc(t(
-      "Un taller de cocina para empresas: por equipos, aprendéis a elaborar dumplings desde cero guiados por nuestro equipo y, al terminar, os coméis lo que habéis hecho, con el resto de la carta incluida. Unas dos horas, en Chamberí o en Bernabéu.",
-      "A hands-on cooking workshop for companies: in teams, you learn to make dumplings from scratch with our team, then eat what you've made, plus the rest of the menu. About two hours, at Chamberí or Bernabéu."))}</p>
+      "Un taller de cocina para empresas: por equipos, aprendéis a elaborar dumplings desde cero guiados por nuestro equipo y, al terminar, os coméis lo que habéis hecho, con el resto de la carta incluida. Unas dos horas, en nuestro local de Bernabéu.",
+      "A hands-on cooking workshop for companies: in teams, you learn to make dumplings from scratch with our team, then eat what you've made, plus the rest of the menu. About two hours, at our Bernabéu spot."))}</p>
   </div>
   <div class="ev-hero-cta" style="display:flex;flex-wrap:wrap;gap:16px">
     <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
