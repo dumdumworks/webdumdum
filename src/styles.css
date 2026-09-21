@@ -610,15 +610,15 @@ img { display: block; max-width: 100%; }
 .locale-btns > .btn{ flex:1 1 0; justify-content:center; text-align:center; min-width:0; }
 /* Botón "Llamar a Bernabéu": verde con icono de teléfono. Especificidad alta
    (.locale-btns >) para ganar al .btn base. Permite 2 líneas como el rojo. */
-.locale-btns > .btn-call-green{ background:#1f8a5b !important; color:#fff !important; border-color:#1f8a5b !important; letter-spacing:0.06em; }
-.locale-btns > .btn-call-green:hover{ background:#187049 !important; color:#fff !important; border-color:#187049 !important; }
+.locale-btns > .btn-call-green{ background:#1f8a5b; color:#fff; border-color:#1f8a5b; letter-spacing:0.06em; }
+.locale-btns > .btn-call-green:hover{ background:#187049; color:#fff; border-color:#187049; }
 /* "Ver en Maps": el negro de la casa, el mismo de "Pide ya!". Solo aparece en
    móvil, donde el mapa incrustado no se pinta. */
 .btn-maps{ background:var(--black); color:#fff; border-color:var(--black); }
 .btn-maps:hover{ background:#000; color:#fff; border-color:#000; }
 /* Botón de Chamberí: negro #1a1a1a, no clicable. */
-.locale-btns > .btn-disabled-dark{ background:#1a1a1a !important; color:#fff !important; border-color:#1a1a1a !important; cursor:default; }
-.locale-btns > .btn-disabled-dark:hover{ background:#1a1a1a !important; color:#fff !important; border-color:#1a1a1a !important; }
+.locale-btns > .btn-disabled-dark{ background:#1a1a1a; color:#fff; border-color:#1a1a1a; cursor:default; }
+.locale-btns > .btn-disabled-dark:hover{ background:#1a1a1a; color:#fff; border-color:#1a1a1a; }
 /* Chamberí tiene un solo botón: que mida lo mismo que "Reservar en Bernabéu"
    (la mitad del ancho menos medio gap), no todo el ancho de la tarjeta. */
 .locale-btns--single{ display:flex; }
