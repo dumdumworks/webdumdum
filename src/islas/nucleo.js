@@ -51,6 +51,10 @@ export function bloquearScroll() {
 // Deslizar con el dedo (visores): el eje se decide al superar 8px y solo el
 // horizontal arrastra el elemento; al soltar, si pasó del 20% del ancho de la
 // pantalla, avisa con -1 (atrás) o 1 (adelante) y el elemento vuelve animado.
+// alSoltar puede devolver una promesa (la foto nueva terminando de decodificar):
+// se espera antes de animar la vuelta, si no, la foto vieja se queda pintada
+// esos milisegundos y la animación "adelanta" a un cambio que aún no ha
+// pasado — se ve como si volviera atrás y luego, de golpe, cambiase.
 export function deslizar(el, alSoltar) {
   let x0 = null, y0 = null, eje = null, dx = 0;
   el.addEventListener("touchstart", (e) => {
@@ -64,10 +68,10 @@ export function deslizar(el, alSoltar) {
     if (eje === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) eje = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
     if (eje === "x") el.style.transform = `translateX(${dx}px)`;
   }, { passive: true });
-  el.addEventListener("touchend", () => {
+  el.addEventListener("touchend", async () => {
     if (eje === "x") {
       const umbral = window.innerWidth * 0.2;
-      if (dx <= -umbral) alSoltar(1); else if (dx >= umbral) alSoltar(-1);
+      if (dx <= -umbral) await alSoltar(1); else if (dx >= umbral) await alSoltar(-1);
     }
     el.style.transition = "transform 0.25s cubic-bezier(0.16,1,0.3,1)";
     el.style.transform = "translateX(0)";

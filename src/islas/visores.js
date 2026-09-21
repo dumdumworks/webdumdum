@@ -14,7 +14,7 @@ function visor({ clase, html, escenario, pintar, total, inicio, alCerrar }) {
   ov.className = clase;
   ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true");
   ov.innerHTML = html;
-  const ir = (d) => { n = (n + d + total) % total; pintar(ov, n); };
+  const ir = async (d) => { n = (n + d + total) % total; await pintar(ov, n); };
   const desbloquear = bloquearScroll();
   const sinTeclado = tecladoVisor(() => cerrar(), ir);
   let soltar = null;
@@ -46,6 +46,9 @@ export function abrirVisorFotos(fotos, inicio, textos) {
       const img = $("img", ov);
       img.src = f.src; img.style.objectPosition = f.pos || "50% 50%";
       $(".lb-head .tiny", ov).textContent = (textos.etiqueta ? textos.etiqueta + " · " : "") + pad(n + 1) + " / " + pad(total);
+      // Antes de dar la foto por cambiada: que el navegador la haya decodificado
+      // de verdad, o se ve la vieja un instante de más (ver deslizar() en nucleo.js).
+      return img.decode().catch(() => {});
     },
   });
 }
@@ -66,6 +69,7 @@ export function abrirVisorPlatos(platos, inicio) {
       ov.setAttribute("aria-label", it.nombre);
       $(".dish-lightbox-name", ov).textContent = it.nombre;
       $(".dish-lightbox-count", ov).textContent = (n + 1) + " / " + total;
+      return img.decode().catch(() => {});
     },
   });
 }
