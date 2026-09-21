@@ -10,17 +10,20 @@ import { esc, ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
 import { galeria } from "../galeria.mjs";
 import { seccion } from "./eventos.mjs";
+import { icono } from "./local.mjs";
 
 export const RUTA = "/taller-team-building";
 const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
 
-// [es, en] en cada campo, como el resto de listas bilingües de la web.
+// [es, en, icono] en cada paso, como el resto de listas bilingües de la web.
+// El icono reutiliza el registro de iconos de /locales (mismo lenguaje: formas
+// sólidas, sin trazo). "aforo" (dos personas) sirve también para "equipos".
 const INCLUYE = [
-  ["01", "Nos organizamos en equipos.", "We split into teams."],
-  ["02", "Aprendemos a elaborar y manipular la masa.", "We learn to work and shape the dough."],
-  ["03", "Construimos juntos los dumplings.", "We build the dumplings together."],
-  ["04", "Los cocinamos y los emplatamos.", "We cook and plate them."],
-  ["05", "Nos lo comemos.", "We eat."],
+  ["01", "Nos organizamos en equipos.", "We split into teams.", "aforo"],
+  ["02", "Aprendemos a elaborar y manipular la masa.", "We learn to work and shape the dough.", "masa"],
+  ["03", "Construimos juntos los dumplings.", "We build the dumplings together.", "dumpling"],
+  ["04", "Los cocinamos y los emplatamos.", "We cook and plate them.", "cocinar"],
+  ["05", "Nos lo comemos.", "We eat.", "comer"],
 ];
 const COMIDA = [
   ["Entrante", "A compartir", "Starter", "To share"],
@@ -71,10 +74,17 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
-// INCLUYE es una secuencia real (el orden importa), así que se pinta como
-// línea de tiempo: nodos numerados unidos por un filete, no una lista plana.
-const filasIncluye = (i) => `<ol class="taller-timeline">
-    ${INCLUYE.map(([n, es, en]) => `<li><span class="taller-timeline-node">${esc(n)}</span><span class="taller-timeline-txt body">${esc(i.lang === "en" ? en : es)}</span></li>`).join("\n    ")}
+// INCLUYE es una secuencia real (el orden importa) y muy gráfica (cada paso
+// tiene un icono propio), así que se sale de la retícula de dos columnas del
+// resto de secciones y se pinta a todo lo ancho: nodos con icono unidos por
+// un filete horizontal. En móvil, el filete y los nodos se recorren con el
+// dedo (mismo gesto que la galería de fotos de la página).
+const filasIncluye = (i) => `<ol class="taller-timeline-h">
+    ${INCLUYE.map(([n, es, en, ic]) => `<li>
+      <span class="taller-timeline-h-icon">${icono(ic)}</span>
+      <span class="taller-timeline-h-num">${esc(n)}</span>
+      <span class="taller-timeline-h-txt">${esc(i.lang === "en" ? en : es)}</span>
+    </li>`).join("\n    ")}
   </ol>`;
 
 function jsonLd(i, url) {
@@ -113,6 +123,9 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   const s = seo.find((r) => r.p === RUTA);
   const url = ORIGIN + i.ruta(RUTA);
 
+  // [01] Incluye se sale de .ev-split (la retícula de dos columnas del resto
+  // de secciones) a propósito: es una línea de tiempo horizontal con icono y
+  // necesita el ancho completo, ver .taller-proceso en styles-2.css.
   const main = `<div data-screen-label="taller-team-building">
 <section class="ev-hero">
   <div class="tiny muted"><a href="${i.ruta("/eventos")}" class="link-hover">${esc(t("Eventos", "Events"))}</a> · ${esc(t("Talleres Team Building", "Team Building Workshops"))}</div>
@@ -128,9 +141,13 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   </div>
 </section>
 
-${seccion("01", t("Incluye", "Includes"),
-    t("Cocinamos.<br>Todos. A la vez.", "We cook.<br>All of us. Together."),
-    filasIncluye(i))}
+<section class="taller-proceso">
+  <div class="taller-proceso-head">
+    <div class="tiny muted">[01] ${esc(t("Incluye", "Includes"))}</div>
+    <h2 class="h-1" style="margin-top:16px">${t("Cocinamos.<br>Todos. A la vez.", "We cook.<br>All of us. Together.")}</h2>
+  </div>
+  ${filasIncluye(i)}
+</section>
 
 ${seccion("02", t("Comida", "Food"),
     esc(t("Y luego, se come.", "And then, we eat.")),

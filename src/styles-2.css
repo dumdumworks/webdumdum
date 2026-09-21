@@ -1069,49 +1069,77 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* Línea de tiempo del proceso del taller (/taller-team-building): "Incluye"
-   es una secuencia real —el orden importa—, así que se pinta como nodos
-   numerados unidos por un filete vertical, no como lista plana. Mismo
-   lenguaje que el resto de la web: círculo con borde rojo (como las flechas
-   de la galería), número en JetBrains Mono, filete fino entre nodos. */
-.taller-timeline { list-style: none; margin: 32px 0 0; padding: 0; max-width: 420px; }
-.taller-timeline > li {
-  position: relative;
-  display: grid;
-  grid-template-columns: 50px 1fr;
-  column-gap: 20px;
-  padding-bottom: 28px;
+/* [01] Incluye (/taller-team-building): se sale de la retícula de dos
+   columnas del resto de secciones (.ev-split) porque es una línea de tiempo
+   horizontal con icono, y necesita el ancho completo para respirar. Cabecera
+   a una columna, mismo ritmo vertical que .ev-hero, + la línea de tiempo
+   debajo a todo lo ancho. En móvil se recorre con el dedo, como la galería. */
+.taller-proceso { border-bottom: 1px solid var(--line); }
+.taller-proceso-head { padding: 64px var(--gutter) 0; }
+.taller-proceso-head h2 { max-width: 40ch; }
+
+.taller-timeline-h {
+  list-style: none;
+  display: flex;
+  margin: 48px 0 0;
+  padding: 0 var(--gutter) 64px;
+  max-width: calc(var(--max) + 2 * var(--gutter));
+  overflow-x: auto;
+  scrollbar-width: none;
 }
-.taller-timeline > li:last-child { padding-bottom: 0; }
-/* El filete de cada paso cubre el hueco hasta el siguiente nodo: empieza al
-   pie de este círculo (50px) y llega al final de la fila, que linda con el
-   círculo de abajo (no hay padding entre <li>, solo padding-bottom en este). */
-.taller-timeline > li:not(:last-child)::after {
+.taller-timeline-h::-webkit-scrollbar { display: none; }
+.taller-timeline-h > li {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 160px;
+  text-align: center;
+}
+/* El filete de cada paso va del centro de este nodo al centro del siguiente:
+   con flex:1 1 0 y sin gap, el siguiente <li> empieza justo donde acaba este,
+   así que left:50% + width:100% llega exactamente a la mitad del de al lado. */
+.taller-timeline-h > li:not(:last-child)::after {
   content: "";
   position: absolute;
-  top: 50px;
-  bottom: 0;
-  left: 24px;
-  width: 1px;
+  top: 33px;
+  left: 50%;
+  width: 100%;
+  height: 1px;
   background: var(--line-soft);
 }
-.taller-timeline-node {
+.taller-timeline-h-icon {
   position: relative;
   z-index: 1;
-  width: 50px;
-  height: 50px;
+  width: 66px;
+  height: 66px;
+  margin: 0 auto;
   border: 1px solid var(--red);
   border-radius: 999px;
   background: var(--bg);
-  color: var(--red);
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-weight: 600;
-  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.taller-timeline-txt { display: block; padding-top: 14px; }
+.taller-timeline-h-icon svg { width: 28px; height: 28px; color: var(--red); }
+.taller-timeline-h-num {
+  display: block;
+  margin-top: 14px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: rgba(255,0,30,0.55);
+}
+.taller-timeline-h-txt {
+  display: block;
+  margin: 6px auto 0;
+  max-width: 22ch;
+  font-size: 15px;
+  line-height: 1.35;
+}
+@media (max-width: 879px) {
+  .taller-timeline-h { justify-content: flex-start; }
+  .taller-timeline-h > li { flex: none; width: 168px; min-width: 168px; }
+}
 
 /* Las tres cifras de Redes, en las celdas del resumen de la ficha de local
    (.resumen-dato: icono, rótulo, dato y apostilla, centradas y separadas por

@@ -30,6 +30,12 @@ const ICONOS = {
   ojo: '<path d="M12 5C6.6 5 2.7 9.3 1.5 12c1.2 2.7 5.1 7 10.5 7s9.3-4.3 10.5-7C21.3 9.3 17.4 5 12 5Zm0 11.2a4.2 4.2 0 1 1 0-8.4 4.2 4.2 0 0 1 0 8.4Z"/><circle cx="12" cy="12" r="2.1"/>',
   corazon: '<path d="M12 21S3.6 15.8 2.3 10.7C1.3 7 3.6 4 6.9 4c2.1 0 3.9 1.2 5.1 3 1.2-1.8 3-3 5.1-3 3.3 0 5.6 3 4.6 6.7C20.4 15.8 12 21 12 21Z"/>',
   bocadillo: '<path d="M4 3h16a2.5 2.5 0 0 1 2.5 2.5v9A2.5 2.5 0 0 1 20 17h-7.4L7 21.3V17H4a2.5 2.5 0 0 1-2.5-2.5v-9A2.5 2.5 0 0 1 4 3Z"/>',
+  // Los del proceso del taller de team building, mismo lenguaje: sólidos, sin
+  // trazo. "equipo" reutiliza el dibujo de dos personas de "aforo".
+  masa: '<rect x="6.3" y="9.2" width="11.4" height="5.6" rx="2.8"/><rect x="1.4" y="10.5" width="5.6" height="3" rx="1.5"/><rect x="17" y="10.5" width="5.6" height="3" rx="1.5"/>',
+  dumpling: '<path d="M2.2 13.6C2.2 9 6.6 6 12 6s9.8 3 9.8 7.6c0 4-4.4 6.6-9.8 6.6s-9.8-2.6-9.8-6.6Z"/><circle cx="6.7" cy="7.2" r="1.3"/><circle cx="10.5" cy="5.8" r="1.3"/><circle cx="14.2" cy="6" r="1.3"/><circle cx="17.6" cy="7.6" r="1.3"/>',
+  cocinar: '<path d="M2 13a1.2 1.2 0 0 1 1.2-1.2h13.6a1.2 1.2 0 0 1 1.2 1.2c0 3.9-3.5 7-8 7s-8-3.1-8-7Z"/><rect x="17.6" y="11.3" width="5.2" height="2.4" rx="1.2"/><circle cx="6.6" cy="8.2" r="1.1"/><circle cx="10.2" cy="6.7" r="1.1"/><circle cx="13.8" cy="8.2" r="1.1"/>',
+  comer: '<rect x="11" y="1.4" width="2.1" height="21.2" rx="1.05" transform="rotate(17 12 12)"/><rect x="10.9" y="1.4" width="2.1" height="21.2" rx="1.05" transform="rotate(-17 12 12)"/>',
 };
 export const icono = (k) => `<svg viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true">${ICONOS[k]}</svg>`;
 // Icono del teléfono del botón "Llamar a X"; lo comparte /locales.
