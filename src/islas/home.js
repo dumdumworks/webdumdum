@@ -48,6 +48,11 @@ export function home() {
   const bajar = $("[data-bajar]");
   if (bajar) bajar.addEventListener("click", () => desplazarA(window.scrollY + window.innerHeight * 1.05, 900));
   corregirCifraDumplings();
+  // El sello de "DESOBEDIENCIA": cada toque invierte los colores y se queda
+  // así hasta el siguiente toque (no es un :hover/:active — en táctil no hay
+  // estado "encima", solo toques).
+  const sello = $("[data-sello]");
+  if (sello) sello.addEventListener("click", () => sello.classList.toggle("is-negativo"));
   const toast = $(".home-toast"), celda = $("[data-toast]");
   if (!toast || !celda) return;
   let timer = null;
