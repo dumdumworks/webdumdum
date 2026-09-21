@@ -93,8 +93,11 @@ const filasIncluye = (i) => `<div class="taller-flow">
     <div class="taller-flow-arrow taller-flow-arrow-3" aria-hidden="true"></div>
     <div class="taller-flow-return" aria-hidden="true">
       <div class="taller-flow-return-h1"></div>
+      <div class="taller-flow-return-corner-a"></div>
       <div class="taller-flow-return-v1"></div>
+      <div class="taller-flow-return-corner-b"></div>
       <div class="taller-flow-return-h2"></div>
+      <div class="taller-flow-return-corner-c"></div>
       <div class="taller-flow-return-v2"></div>
     </div>
   </div>`;

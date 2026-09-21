@@ -1074,144 +1074,178 @@
    la fila 1, 2 en la fila 2 (bajo las columnas 1 y 2 de la fila 1: mismo
    grid, así que quedan alineados sin estirar nada), y una "vuelta" que baja
    desde el final de la fila 1 y entra en el primer paso de la fila 2, como
-   un texto que salta de línea. Todas las medidas (dónde empieza cada flecha,
-   dónde dobla la vuelta) se derivan de tres números fijos — tamaño del icono,
-   alto del paso, hueco entre filas — para que cuadren exactas; cambiar esos
-   tres números implica recalcular las posiciones de abajo.
-   El rótulo lleva max-width: si se deja crecer libre, un minititulo largo
-   (o una traducción larga) puede acabar más ancho que el icono y meterse en
-   el camino de la vuelta, que solo reserva sitio para escapar del ICONO, no
-   del texto — eso fue exactamente el bug de la primera versión. */
+   un texto que salta de línea — con las esquinas redondeadas esta vez (el
+   truco de siempre: dos lados del marco visibles + radio en esa esquina;
+   comprobado a ojo con una prueba aparte antes de fiarme, que las tres
+   esquinas no son la misma combinación de lados).
+   Iconos grandes (112px) para que el diagrama tenga la presencia del
+   titular de al lado, no una nota a pie. Todas las medidas (dónde empieza
+   cada flecha, dónde dobla la vuelta) se derivan de tres números fijos —
+   tamaño del icono, alto del paso, hueco entre filas — para que cuadren
+   exactas; cambiar esos tres números implica recalcular las de abajo.
+   El rótulo lleva max-width y alto de dos líneas fijo: si se deja crecer
+   libre, un minititulo largo puede acabar más ancho que el icono y meterse
+   en el camino de la vuelta (el bug de la v1), o partirse a dos líneas solo
+   en las columnas más estrechas y descuadrar el alto del paso (el bug de la
+   v2) — con las dos cosas fijas, el paso mide siempre 218px. */
 .taller-flow {
   position: relative;
-  margin-top: 32px;
+  margin-top: 40px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  row-gap: 44px;
+  row-gap: 60px;
 }
 .taller-flow-step { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .taller-flow-step:nth-child(4) { grid-column: 1; grid-row: 2; }
 .taller-flow-step:nth-child(5) { grid-column: 2; grid-row: 2; }
 .taller-flow-icon {
-  width: 84px;
-  height: 84px;
-  border: 2px solid var(--red);
-  border-radius: 20px;
+  width: 112px;
+  height: 112px;
+  border: 3px solid var(--red);
+  border-radius: 26px;
   background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.taller-flow-icon svg { display: block; width: 38px; height: 38px; color: var(--red); }
-/* min-height a dos líneas: a 880px la columna es tan estrecha que "05.
-   Degustación" (el rótulo más largo) se parte en dos SIN que le haga falta
-   max-width — así que el alto del paso no puede depender del ancho de
-   ventana. Reservando siempre el alto de dos líneas, el paso mide 178px
-   (84 + 12 + 44 + 4 + 34) en cualquier ancho, y las flechas y la vuelta,
-   calculadas sobre ese 178, no se descuadran nunca. */
+.taller-flow-icon svg { display: block; width: 48px; height: 48px; color: var(--red); }
 .taller-flow-label {
-  margin-top: 12px;
+  margin-top: 16px;
   max-width: 17ch;
-  min-height: 44px;
+  min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 18px;
-  line-height: 22px;
-  letter-spacing: -0.01em;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.015em;
 }
 /* line-height y min-height fijos (no 1.4 suelto): así el alto del paso es
-   siempre el mismo — 84 (icono) + 12 + 44 (rótulo, a dos líneas siempre) + 4
-   + 34 (apostilla) = 178px — sea cual sea el idioma o el ancho de ventana, y
-   las posiciones de las flechas y la vuelta, calculadas sobre ese 178,
-   cuadran siempre. */
+   siempre el mismo — 112 (icono) + 16 + 48 (rótulo, a dos líneas siempre) +
+   6 + 36 (apostilla) = 218px — sea cual sea el idioma o el ancho de
+   ventana, y las posiciones de las flechas y la vuelta, calculadas sobre
+   ese 218, cuadran siempre. */
 .taller-flow-caption {
-  margin-top: 4px;
-  max-width: 13ch;
+  margin-top: 6px;
+  max-width: 14ch;
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 12px;
-  line-height: 17px;
-  min-height: 34px;
+  font-size: 13px;
+  line-height: 18px;
+  min-height: 36px;
   color: rgba(255,0,30,0.55);
 }
 /* Flecha entre dos pasos de la misma fila: una línea a la altura del centro
-   del icono (42px: mitad de sus 84px) entre el borde derecho de uno
-   (columna·N + 42px) y el borde izquierdo del siguiente (columna·N+1 − 42px),
-   con la punta pegada a ese segundo borde. Ese hueco mide 33.333% − 84px en
-   cualquiera de los tres pares (columnas separadas siempre 33.333%), así que
-   las tres flechas comparten ancho. */
+   del icono (56px: mitad de sus 112px, menos 2 para centrar el trazo de
+   4px) entre el borde derecho de uno (columna·N + 56px) y el izquierdo del
+   siguiente, con la punta pegada a ese segundo borde. Ese hueco mide
+   33.333% − 112px en los tres pares (columnas separadas siempre 33.333%),
+   así que las tres flechas comparten ancho. */
 .taller-flow-arrow {
   position: absolute;
-  top: 41px;
-  width: calc(33.333% - 84px - 10px);
-  height: 2px;
+  top: 54px;
+  width: calc(33.333% - 112px - 14px);
+  height: 4px;
   background: var(--red);
 }
 .taller-flow-arrow::after {
   content: "";
   position: absolute;
-  top: -4px;
-  right: -9px;
-  border: 5px solid transparent;
+  top: -5px;
+  right: -13px;
+  border: 7px solid transparent;
   border-left-color: var(--red);
 }
-.taller-flow-arrow-1 { left: calc(16.667% + 42px); }
-.taller-flow-arrow-2 { left: calc(50% + 42px); }
-.taller-flow-arrow-3 { top: calc(44px + 178px + 41px); left: calc(16.667% + 42px); }
-/* La vuelta, en 4 tramos rectos y cortos (sin redondear: más simple y igual
-   de claro; y sin alargarse más de lo necesario para escapar del rótulo).
-   h1: del borde derecho del 03 hacia la derecha, un tramo corto.
-   v1: baja desde ahí hasta la mitad del hueco entre filas (178 alto de fila
-   + 44 de hueco = 222 es el arranque de la fila 2; el punto medio del hueco,
-   200, es donde dobla hacia la izquierda).
-   h2: recorre ese hueco hacia la izquierda, hasta la columna del 04.
-   v2: baja esos últimos 23px (199→222) y entra en el 04 por arriba, con la
-   punta de flecha justo en su borde superior. */
+.taller-flow-arrow-1 { left: calc(16.667% + 56px); }
+.taller-flow-arrow-2 { left: calc(50% + 56px); }
+.taller-flow-arrow-3 { top: calc(60px + 218px + 54px); left: calc(16.667% + 56px); }
+/* La vuelta, con esquinas redondeadas de 20px, en 3 tramos + 3 giros:
+   h1 → giroA (baja) → v1 → giroB (a la izquierda) → h2 → giroC (baja) → v2.
+   giroA: borde arriba+derecha, radio arriba-derecha (entra horizontal por la
+   izquierda, sale vertical por abajo — confirmado con una prueba aparte).
+   giroB: borde derecha+abajo, radio abajo-derecha (entra vertical por
+   arriba, sale horizontal por la izquierda).
+   giroC: borde izquierda+abajo, radio abajo-izquierda (entra horizontal por
+   la derecha, sale vertical por abajo, con la punta de flecha en el 04). */
 .taller-flow-return-h1 {
   position: absolute;
-  top: 41px;
-  left: calc(83.333% + 42px);
-  width: 16px;
-  height: 2px;
+  top: 54px;
+  left: calc(83.333% + 56px);
+  width: 24px;
+  height: 4px;
   background: var(--red);
+}
+.taller-flow-return-corner-a {
+  position: absolute;
+  top: 54px;
+  left: calc(83.333% + 80px);
+  width: 20px;
+  height: 20px;
+  border-top: 4px solid var(--red);
+  border-right: 4px solid var(--red);
+  border-top-right-radius: 20px;
 }
 .taller-flow-return-v1 {
   position: absolute;
-  top: 41px;
-  left: calc(83.333% + 56px);
-  width: 2px;
-  height: 158px;
+  top: 74px;
+  left: calc(83.333% + 96px);
+  width: 4px;
+  height: 154px;
   background: var(--red);
+}
+.taller-flow-return-corner-b {
+  position: absolute;
+  top: 228px;
+  left: calc(83.333% + 80px);
+  width: 20px;
+  height: 20px;
+  border-right: 4px solid var(--red);
+  border-bottom: 4px solid var(--red);
+  border-bottom-right-radius: 20px;
 }
 .taller-flow-return-h2 {
   position: absolute;
-  top: 199px;
-  left: calc(16.667% - 1px);
-  width: calc(66.667% + 57px);
-  height: 2px;
+  top: 244px;
+  left: calc(16.667% + 18px);
+  width: calc(66.667% + 82px);
+  height: 4px;
   background: var(--red);
+}
+.taller-flow-return-corner-c {
+  position: absolute;
+  top: 228px;
+  left: calc(16.667% - 2px);
+  width: 20px;
+  height: 20px;
+  border-left: 4px solid var(--red);
+  border-bottom: 4px solid var(--red);
+  border-bottom-left-radius: 20px;
 }
 .taller-flow-return-v2 {
   position: absolute;
-  top: 199px;
-  left: calc(16.667% - 1px);
-  width: 2px;
-  height: 23px;
+  top: 248px;
+  left: calc(16.667% - 2px);
+  width: 4px;
+  height: 30px;
   background: var(--red);
 }
 .taller-flow-return-v2::after {
   content: "";
   position: absolute;
-  bottom: -1px;
-  left: -4px;
-  border: 5px solid transparent;
+  bottom: -2px;
+  left: -6px;
+  border: 7px solid transparent;
   border-top-color: var(--red);
 }
-@media (max-width: 879px) {
-  /* En una sola columna el diagrama de flujo no cabe: se convierte en la
-     línea de tiempo vertical simple, un paso bajo otro con un filete recto. */
+@media (max-width: 1099px) {
+  /* Con iconos de 112px, tres por fila no caben ya a partir de 1100px de
+     ventana (la columna de .ev-split se queda sin sitio): el diagrama de
+     flujo se convierte en línea de tiempo vertical simple, un paso bajo
+     otro con un filete recto. Umbral propio, distinto de los 879px en los
+     que .ev-split colapsa a una columna — entre 880 y 1099px la página
+     sigue a dos columnas, pero dentro de la de la derecha el diagrama ya
+     está en modo vertical. */
   .taller-flow {
     display: block;
     width: 100%;
@@ -1243,13 +1277,20 @@
     width: 2px;
     background: var(--line-soft);
   }
-  .taller-flow-icon { grid-column: 1; grid-row: 1 / 3; align-self: start; }
+  /* En vertical el icono vuelve a su tamaño de antes (84px): a 112px, en una
+     columna que en móvil ocupa todo el ancho, se vería desproporcionado
+     frente al rótulo y quitaría sitio a la apostilla. */
+  .taller-flow-icon { width: 84px; height: 84px; border-width: 2px; border-radius: 20px; grid-column: 1; grid-row: 1 / 3; align-self: start; }
+  .taller-flow-icon svg { width: 38px; height: 38px; }
   .taller-flow-label {
     grid-column: 2;
     grid-row: 1;
     align-self: center;
     margin-top: 0;
     max-width: none;
+    min-height: 0;
+    font-size: 18px;
+    line-height: 22px;
   }
   .taller-flow-caption {
     grid-column: 2;
@@ -1257,6 +1298,8 @@
     margin-top: 2px;
     max-width: none;
     min-height: 0;
+    font-size: 12px;
+    line-height: 17px;
   }
   .taller-flow-arrow, .taller-flow-return { display: none; }
 }
