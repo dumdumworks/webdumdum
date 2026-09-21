@@ -1607,7 +1607,8 @@
 /* ---------- CONTACTO ---------- */
 .contact {
   padding: 14vh var(--gutter) 8vh;
-  border-bottom: 1px solid var(--line);
+  /* Sin border-bottom propio: le sigue siempre .spec-foot, con su propio
+     border-top pegado — con los dos filetes de 1px se leía como uno de 2px. */
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 64px;
@@ -1699,6 +1700,13 @@
      0.21em del ™ (≈0.042em del padre) para alinearlos al pixel. */
   margin-top: 0.21em;
   margin-left: 0.04em;
+}
+@media (max-width: 444px) {
+  /* Por debajo de este ancho, clamp() fija .foot-word a su mínimo (80px):
+     el 0.21em de arriba, calibrado a un tamaño mayor, ya no cae al pixel
+     exacto aquí (el redondeo de fuente no escala igual de fino a 80px que a
+     tamaños más grandes). Medido de nuevo a este tamaño: 2px menos. */
+  .foot-word .tm { margin-top: 0.085em; }
 }
 .foot-grid {
   display: grid;
