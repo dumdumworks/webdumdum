@@ -1069,25 +1069,25 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [01] Incluye (/taller-team-building): una lista con hilo — número grande
-   a la izquierda, título y frase a la derecha, y un filete vertical que
-   atraviesa el centro de cada número y los une a todos, de arriba abajo.
-   Sin ese hilo (la versión anterior, solo filetes horizontales entre
-   pasos) esto leía como una lista de datos sueltos, no como una secuencia:
-   el hilo es lo que dice "esto va después de esto". Sigue sin haber
-   iconos, cajas ni flechas — el hilo es el único elemento nuevo, en el
-   mismo --line-soft que separa filas en .taller-list.
+/* [01] Incluye (/taller-team-building): una lista con hilo — número enorme
+   a la izquierda (a la altura del titular de al lado: aquí es donde vive
+   la "presencia" que se pedía, no en un icono ni una caja), título y frase
+   a la derecha, y un filete vertical grueso y sólido (no --line-soft, que
+   es para separadores discretos) que atraviesa el centro de cada número y
+   los une a todos, de arriba abajo — eso es lo que dice "esto va después
+   de esto"; sin él, es una lista de datos sueltos, no una secuencia.
    El hilo se monta por tramos, uno por fila, que encajan sin costura: cada
    fila dibuja su filete de un borde al otro (arriba y abajo del todo),
    salvo la primera (que arranca en su propio número, no tiene nada antes)
-   y la última (que para en su propio número, no tiene nada después). */
-.taller-pasos { margin-top: 32px; }
+   y la última (que para en su propio número, no tiene nada después).
+   Medidas verificadas con getBoundingClientRect tras montarlo, no a ojo. */
+.taller-pasos { margin-top: 40px; }
 .taller-pasos > div {
   position: relative;
   display: grid;
-  grid-template-columns: 72px 1fr;
-  column-gap: 24px;
-  padding-bottom: 32px;
+  grid-template-columns: 132px 1fr;
+  column-gap: 28px;
+  padding-bottom: 44px;
 }
 .taller-pasos > div:last-child { padding-bottom: 0; }
 .taller-pasos > div::before {
@@ -1096,36 +1096,36 @@
   z-index: 0;
   top: 0;
   bottom: 0;
-  left: 36px;
-  width: 1px;
-  /* Más presencia que --line-soft (pensado para separadores discretos): el
-     hilo es aquí el elemento que dice "esto es una secuencia", así que tiene
-     que notarse a la primera, no solo al fijarse. */
-  background: rgba(255, 0, 30, 0.45);
+  /* 53px: centro real del número medido con getBoundingClientRect (no el
+     centro de la columna de 132px — el número, con width:fit-content, es
+     106px de ancho, más estrecho que su columna). */
+  left: 53px;
+  width: 2px;
+  background: var(--red);
 }
-/* Centro del número: 48px de alto ÷ 2 = 24px desde arriba de la fila (el
-   número va pegado arriba, sin padding-top). */
-.taller-pasos > div:first-child::before { top: 24px; }
-.taller-pasos > div:last-child::before { bottom: auto; height: 24px; }
+.taller-pasos > div:first-child::before { top: 50px; }
+.taller-pasos > div:last-child::before { bottom: auto; height: 50px; }
 .taller-pasos-num {
   position: relative;
   z-index: 1;
+  width: fit-content;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 48px;
+  font-size: clamp(64px, 7vw, 104px);
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 .taller-pasos-titulo {
+  margin-top: 4px;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 20px;
+  font-size: 24px;
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
 .taller-pasos-desc {
-  margin-top: 6px;
-  font-size: 15px;
+  margin-top: 8px;
+  font-size: 16px;
   line-height: 1.4;
 }
 
