@@ -26,6 +26,7 @@ import { RUTA as RUTA_MENU } from "./src/html/paginas/menu.mjs";
 import { locales as paginaLocales, RUTA as RUTA_LOCALES } from "./src/html/paginas/locales.mjs";
 import { contacto, RUTA as RUTA_CONTACTO } from "./src/html/paginas/contacto.mjs";
 import { eventos, RUTA as RUTA_EVENTOS } from "./src/html/paginas/eventos.mjs";
+import { tallerTeamBuilding, RUTA as RUTA_TALLER } from "./src/html/paginas/taller-team-building.mjs";
 import { home, RUTA as RUTA_HOME } from "./src/html/paginas/home.mjs";
 import { noEncontrada, RUTA as RUTA_404 } from "./src/html/paginas/404.mjs";
 
@@ -114,6 +115,7 @@ const PAGINAS_HTML = {
   [RUTA_LOCAL("chamberi")]: local("chamberi"),
   [RUTA_LOCAL("bernabeu")]: local("bernabeu"),
   [RUTA_EVENTOS]: eventos,
+  [RUTA_TALLER]: tallerTeamBuilding,
   [RUTA_CONTACTO]: contacto,
 };
 // Páginas que se pintan en el edge en cada petición (functions/), con la misma
@@ -133,6 +135,7 @@ const FUENTES_SITEMAP = {
   [RUTA_LOCAL("chamberi")]: ["src/html/paginas/local.mjs", "src/html/locales.mjs", "galerias.json"],
   [RUTA_LOCAL("bernabeu")]: ["src/html/paginas/local.mjs", "src/html/locales.mjs", "galerias.json"],
   [RUTA_EVENTOS]: ["src/html/paginas/eventos.mjs", "eventos.json", "galerias.json"],
+  [RUTA_TALLER]: ["src/html/paginas/taller-team-building.mjs", "galerias.json"],
   [RUTA_CONTACTO]: ["src/html/paginas/contacto.mjs", "src/html/locales.mjs"],
   [RUTA_MENU]: ["src/html/paginas/menu.mjs", "src/html/carta.mjs", "menu.json"],
 };
