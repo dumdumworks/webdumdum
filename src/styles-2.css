@@ -1071,41 +1071,40 @@
 
 /* [01] Incluye (/taller-team-building): reutiliza la tarjeta de "Redes" de
    /eventos (datoDestacado → .resumen-dato: icono, etiqueta, valor grande,
-   apostilla — mismo aire, misma tipografía), en dos filas dentro de un marco
-   cerrado — 3 pasos arriba, 2 abajo — porque no caben los 5 en una fila sin
-   apretarlos. Las dos filas leen igual que un párrafo: izquierda a derecha
-   las dos, la de abajo no es un espejo de la de arriba. El filete diagonal
-   de .taller-stats-link marca ese salto de línea, del 03 (fin de la fila 1)
-   al 04 (vuelve a la izquierda). Ambas filas comparten el marco entero, así
-   que acaban en el mismo borde derecho aunque tengan distinto nº de columnas
-   (repeat(3,1fr) arriba, repeat(2,1fr) abajo: cada columna de la fila de
-   abajo es más ancha, no queda hueco vacío). */
-.taller-stats { margin-top: 24px; border: 1px solid var(--line); }
-.taller-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); }
-.taller-stats-row-2 { grid-template-columns: repeat(2, 1fr); }
+   apostilla — mismo aire, misma tipografía). Dos cajas, cada una con su
+   propio marco cerrado y las MISMAS columnas (1/3 del ancho cada una): la de
+   arriba, completa (3 pasos); la de abajo, solo dos tercios (2 pasos),
+   empezando por la izquierda — no se estira para "rellenar", que es lo que
+   la rompía. La lectura (números, posición) ya dice que siguen la misma
+   secuencia; no hace falta una línea dibujada para explicarlo. min-height en
+   la apostilla iguala el alto de las celdas aunque el texto sea de una línea
+   o de dos. */
+.taller-stats { margin-top: 24px; }
+.taller-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--line);
+}
+/* repeat(2,1fr) sobre un ancho del 66.667% da columnas de 33.333% del marco
+   completo: EXACTAMENTE el ancho de las columnas de la fila de arriba (33.333%
+   = 100%/3), así que los dos pasos de abajo se alinean con los dos primeros
+   de arriba sin estirarse ni encogerse. */
+.taller-stats-row-2 { grid-template-columns: repeat(2, 1fr); margin-top: 20px; width: 66.667%; }
 .taller-stats .resumen-dato:first-child { border-left: none; }
 .taller-stats .resumen-dato:last-child { padding-right: 20px; }
-/* Franja de 56px entre las dos filas, solo para el filete — no lleva borde:
-   ya lo pone el marco, y una línea horizontal de más competiría con la
-   diagonal. Con preserveAspectRatio="none" el SVG se estira al ancho real de
-   la caja; vector-effect="non-scaling-stroke" evita que ese estirado
-   engorde el trazo en horizontal (ver el cálculo del ángulo en el html). */
-.taller-stats-link { height: 56px; }
-.taller-stats-link svg { display: block; width: 100%; height: 100%; }
-.taller-stats-link line { stroke: var(--line-soft); stroke-width: 1; }
+.taller-stats .resumen-extra { min-height: 2.8em; }
 @media (max-width: 879px) {
   /* Mismo colapso a una columna que .ev-stats: los filetes verticales entre
      celdas pasan a horizontales entre filas, y el primer paso de cada fila
-     pierde el suyo (ya lo pone el marco, o el paso de arriba). La diagonal
-     no tiene sentido en una sola columna, así que desaparece. */
-  .taller-stats-row, .taller-stats-row-2 { grid-template-columns: 1fr; }
+     pierde el suyo (ya lo pone el marco de esa fila). */
+  .taller-stats-row { grid-template-columns: 1fr; }
+  .taller-stats-row-2 { width: 100%; }
   .taller-stats .resumen-dato {
     border-left: none;
     border-top: 1px solid var(--line);
     padding: 24px 20px;
   }
-  .taller-stats-row:first-of-type .resumen-dato:first-child { border-top: none; }
-  .taller-stats-link { display: none; }
+  .taller-stats .resumen-dato:first-child { border-top: none; }
 }
 
 /* Las tres cifras de Redes, en las celdas del resumen de la ficha de local

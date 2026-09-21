@@ -79,19 +79,15 @@ const filas = (i, datos) => datos.map((d) => {
 }).join("\n      ");
 // INCLUYE es una secuencia real, de 5 pasos: 3 arriba + 2 abajo, en la misma
 // lectura de siempre (izquierda a derecha en las dos filas, no en zigzag) —
-// la fila de abajo empieza de nuevo por la izquierda, como un salto de línea.
-// El filete diagonal de .taller-stats-link marca ese "retorno": baja desde el
-// 03 (fin de la fila 1) hasta el 04 (inicio de la fila 2). Las dos filas
-// comparten marco, así que ambas acaban exactamente en el mismo borde
-// derecho, aunque la de abajo tenga menos columnas (2 en vez de 3).
+// la fila de abajo empieza de nuevo por la izquierda, como un salto de línea,
+// y solo ocupa el ancho de sus dos columnas (no se estira a las tres: eso
+// rompía la retícula). Sin filete dibujado entre las dos: los números y la
+// posición ya dicen que es la misma secuencia.
 const celdaIncluye = (i, [n, esT, enT, esC, enC, ic]) =>
   datoDestacado(ic, n, i.lang === "en" ? enT : esT, i.lang === "en" ? enC : esC);
 const filasIncluye = (i) => `<div class="taller-stats">
     <div class="taller-stats-row">
       ${INCLUYE.slice(0, 3).map((p) => celdaIncluye(i, p)).join("\n      ")}
-    </div>
-    <div class="taller-stats-link" aria-hidden="true">
-      <svg viewBox="0 0 100 56" preserveAspectRatio="none"><line x1="83.333" y1="0" x2="25" y2="56" vector-effect="non-scaling-stroke"></line></svg>
     </div>
     <div class="taller-stats-row taller-stats-row-2">
       ${INCLUYE.slice(3, 5).map((p) => celdaIncluye(i, p)).join("\n      ")}
