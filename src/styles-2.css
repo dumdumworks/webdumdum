@@ -1069,89 +1069,43 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [01] Incluye (/taller-team-building): línea de tiempo con icono que cabe en
-   la misma retícula de tres columnas que el resto de listas de la página
-   (dentro de la mitad derecha de .ev-split), en dos filas — 3 pasos arriba,
-   2 abajo — unidas en zigzag: la fila de abajo va de derecha a izquierda
-   (grid-column explícito, no orden de lectura: el DOM sigue 1→5 para el
-   lector de pantalla), así que el filete baja de la columna 3 y sigue hacia
-   la 1 en vez de cortarse en dos líneas sueltas. Cada nodo es solo icono +
-   número + minititulo (sin la frase larga, que ya está en la entradilla del
-   hero): así las dos filas tienen una altura fija y el filete se puede situar
-   con un cálculo exacto, no una que dependa de cuánto ocupe el texto. */
-.taller-timeline-h { margin-top: 40px; max-width: 480px; }
-.tt-row {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  position: relative;
-}
-/* El filete va de centro a centro de las columnas 1 y 3 (16.6% → 83.3%), a la
-   altura del centro del icono (54px de alto ÷ 2 = 27px). Pasa por detrás de
-   los círculos (fondo --bg, z-index por encima) y, en la fila de abajo, por
-   detrás del hueco de la columna 2 — ahí no hay nodo, así que se ve seguido. */
-.tt-row::before {
-  content: "";
-  position: absolute;
-  top: 27px;
-  left: 16.667%;
-  width: 66.667%;
-  height: 1px;
-  background: var(--line-soft);
-}
-.tt-row > li { position: relative; z-index: 1; text-align: center; }
-.tt-row-2 > li:nth-child(1) { grid-column: 3; }
-.tt-row-2 > li:nth-child(2) { grid-column: 1; }
-/* El giro entre las dos filas: un hueco de 40px con el filete vertical bajo
-   la columna 3 (mismo 83.3% que el filete horizontal de arriba), uniendo el
-   icono 03 con el 04 que queda justo debajo. */
-.tt-link { position: relative; height: 40px; }
-.tt-link::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 83.333%;
-  width: 1px;
-  background: var(--line-soft);
-}
-.taller-timeline-h-icon {
-  position: relative;
-  z-index: 1;
-  width: 54px;
-  height: 54px;
-  margin: 0 auto;
-  border: 1px solid var(--red);
-  border-radius: 999px;
-  background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.taller-timeline-h-icon svg { width: 22px; height: 22px; color: var(--red); }
-.taller-timeline-h-num {
-  display: block;
-  margin-top: 12px;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  color: rgba(255,0,30,0.55);
-}
-.taller-timeline-h-txt {
-  display: block;
-  margin-top: 4px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: -0.01em;
-}
-@media (max-width: 480px) {
-  .taller-timeline-h-icon { width: 46px; height: 46px; }
-  .taller-timeline-h-icon svg { width: 19px; height: 19px; }
-  .tt-row::before { top: 23px; }
+/* [01] Incluye (/taller-team-building): reutiliza la tarjeta de "Redes" de
+   /eventos (datoDestacado → .resumen-dato: icono, etiqueta, valor grande,
+   apostilla — mismo aire, misma tipografía), en dos filas dentro de un marco
+   cerrado — 3 pasos arriba, 2 abajo — porque no caben los 5 en una fila sin
+   apretarlos. Las dos filas leen igual que un párrafo: izquierda a derecha
+   las dos, la de abajo no es un espejo de la de arriba. El filete diagonal
+   de .taller-stats-link marca ese salto de línea, del 03 (fin de la fila 1)
+   al 04 (vuelve a la izquierda). Ambas filas comparten el marco entero, así
+   que acaban en el mismo borde derecho aunque tengan distinto nº de columnas
+   (repeat(3,1fr) arriba, repeat(2,1fr) abajo: cada columna de la fila de
+   abajo es más ancha, no queda hueco vacío). */
+.taller-stats { margin-top: 24px; border: 1px solid var(--line); }
+.taller-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); }
+.taller-stats-row-2 { grid-template-columns: repeat(2, 1fr); }
+.taller-stats .resumen-dato:first-child { border-left: none; }
+.taller-stats .resumen-dato:last-child { padding-right: 20px; }
+/* Franja de 56px entre las dos filas, solo para el filete — no lleva borde:
+   ya lo pone el marco, y una línea horizontal de más competiría con la
+   diagonal. Con preserveAspectRatio="none" el SVG se estira al ancho real de
+   la caja; vector-effect="non-scaling-stroke" evita que ese estirado
+   engorde el trazo en horizontal (ver el cálculo del ángulo en el html). */
+.taller-stats-link { height: 56px; }
+.taller-stats-link svg { display: block; width: 100%; height: 100%; }
+.taller-stats-link line { stroke: var(--line-soft); stroke-width: 1; }
+@media (max-width: 879px) {
+  /* Mismo colapso a una columna que .ev-stats: los filetes verticales entre
+     celdas pasan a horizontales entre filas, y el primer paso de cada fila
+     pierde el suyo (ya lo pone el marco, o el paso de arriba). La diagonal
+     no tiene sentido en una sola columna, así que desaparece. */
+  .taller-stats-row, .taller-stats-row-2 { grid-template-columns: 1fr; }
+  .taller-stats .resumen-dato {
+    border-left: none;
+    border-top: 1px solid var(--line);
+    padding: 24px 20px;
+  }
+  .taller-stats-row:first-of-type .resumen-dato:first-child { border-top: none; }
+  .taller-stats-link { display: none; }
 }
 
 /* Las tres cifras de Redes, en las celdas del resumen de la ficha de local

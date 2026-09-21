@@ -10,23 +10,23 @@ import { esc, ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
 import { galeria } from "../galeria.mjs";
 import { seccion } from "./eventos.mjs";
-import { icono } from "./local.mjs";
+import { datoDestacado } from "./local.mjs";
 
 export const RUTA = "/taller-team-building";
 const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
 
-// [es, en, icono] en cada paso, como el resto de listas bilingües de la web.
-// Minititulo corto (no la frase larga: esa ya está en la entradilla del hero),
-// para que cada paso quepa en dos filas de tres columnas dentro de la
-// retícula de .ev-split. El icono reutiliza el registro de /locales (mismo
+// [n, minititulo es/en, frase es/en, icono] de cada paso, como el resto de
+// listas bilingües de la web. Reutiliza exactamente la tarjeta de "Redes" de
+// /eventos (datoDestacado: icono, etiqueta, valor grande, apostilla) — mismo
+// aire, misma tipografía. El icono reutiliza el registro de /locales (mismo
 // lenguaje: formas sólidas, sin trazo). "aforo" (dos personas) sirve también
 // para "equipos".
 const INCLUYE = [
-  ["01", "Equipos", "Teams", "aforo"],
-  ["02", "La masa", "The dough", "masa"],
-  ["03", "Montaje", "Assembly", "dumpling"],
-  ["04", "Cocción", "Cooking", "cocinar"],
-  ["05", "Degustación", "Tasting", "comer"],
+  ["01", "Equipos", "Teams", "Nos organizamos en equipos.", "We split into teams.", "aforo"],
+  ["02", "La masa", "The dough", "Aprendemos a elaborar y manipular la masa.", "We learn to work and shape the dough.", "masa"],
+  ["03", "Montaje", "Assembly", "Construimos juntos los dumplings.", "We build the dumplings together.", "dumpling"],
+  ["04", "Cocción", "Cooking", "Los cocinamos y los emplatamos.", "We cook and plate them.", "cocinar"],
+  ["05", "Degustación", "Tasting", "Nos lo comemos.", "We eat.", "comer"],
 ];
 const COMIDA = [
   ["Entrante", "A compartir", "Starter", "To share"],
@@ -77,24 +77,25 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
-// INCLUYE es una secuencia real, con icono y minititulo propios: cabe en la
-// misma retícula de tres columnas que el resto de listas de la página, pero
-// en dos filas (3 + 2) unidas en zigzag — la fila de abajo va de derecha a
-// izquierda, así que el filete serpentea en vez de cortarse en dos líneas
-// sueltas. Ver .taller-timeline-h en styles-2.css para la geometría.
-const nodoIncluye = (i, [n, es, en, ic]) => `<li>
-        <span class="taller-timeline-h-icon">${icono(ic)}</span>
-        <span class="taller-timeline-h-num">${esc(n)}</span>
-        <span class="taller-timeline-h-txt">${esc(i.lang === "en" ? en : es)}</span>
-      </li>`;
-const filasIncluye = (i) => `<div class="taller-timeline-h">
-    <ol class="tt-row">
-      ${INCLUYE.slice(0, 3).map((p) => nodoIncluye(i, p)).join("\n      ")}
-    </ol>
-    <div class="tt-link" aria-hidden="true"></div>
-    <ol class="tt-row tt-row-2">
-      ${INCLUYE.slice(3, 5).map((p) => nodoIncluye(i, p)).join("\n      ")}
-    </ol>
+// INCLUYE es una secuencia real, de 5 pasos: 3 arriba + 2 abajo, en la misma
+// lectura de siempre (izquierda a derecha en las dos filas, no en zigzag) —
+// la fila de abajo empieza de nuevo por la izquierda, como un salto de línea.
+// El filete diagonal de .taller-stats-link marca ese "retorno": baja desde el
+// 03 (fin de la fila 1) hasta el 04 (inicio de la fila 2). Las dos filas
+// comparten marco, así que ambas acaban exactamente en el mismo borde
+// derecho, aunque la de abajo tenga menos columnas (2 en vez de 3).
+const celdaIncluye = (i, [n, esT, enT, esC, enC, ic]) =>
+  datoDestacado(ic, n, i.lang === "en" ? enT : esT, i.lang === "en" ? enC : esC);
+const filasIncluye = (i) => `<div class="taller-stats">
+    <div class="taller-stats-row">
+      ${INCLUYE.slice(0, 3).map((p) => celdaIncluye(i, p)).join("\n      ")}
+    </div>
+    <div class="taller-stats-link" aria-hidden="true">
+      <svg viewBox="0 0 100 56" preserveAspectRatio="none"><line x1="83.333" y1="0" x2="25" y2="56" vector-effect="non-scaling-stroke"></line></svg>
+    </div>
+    <div class="taller-stats-row taller-stats-row-2">
+      ${INCLUYE.slice(3, 5).map((p) => celdaIncluye(i, p)).join("\n      ")}
+    </div>
   </div>`;
 
 function jsonLd(i, url) {
