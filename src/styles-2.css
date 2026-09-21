@@ -1069,83 +1069,174 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [01] Incluye (/taller-team-building): reutiliza la tarjeta de "Redes" de
-   /eventos (datoDestacado → .resumen-dato: icono, etiqueta, valor grande,
-   apostilla), pero más compacta — la original sobraba de aire para 5 celdas
-   seguidas — y con un filete que atraviesa los iconos de cada fila a su
-   altura: el aire que se quita de las celdas se nota en ese hilo, que es lo
-   que de verdad da sensación de línea de tiempo (antes, sin él, la secuencia
-   solo se notaba en la numeración). Dos cajas, cada una con su propio marco
-   y las MISMAS columnas (1/3 del ancho cada una): la de arriba completa, la
-   de abajo solo dos tercios, empezando por la izquierda — no se estira a
-   rellenar. */
-.taller-stats { margin-top: 24px; }
-.taller-stats-row {
+/* [01] Incluye (/taller-team-building): diagrama de flujo — icono en caja
+   redondeada, minititulo y apostilla debajo, unidos por flechas. 3 pasos en
+   la fila 1, 2 en la fila 2 (bajo las columnas 1 y 2 de la fila 1: mismo
+   grid, así que quedan alineados sin estirar nada), y una "vuelta" que baja
+   desde el final de la fila 1 y entra en el primer paso de la fila 2, como
+   un texto que salta de línea. Todas las medidas (dónde empieza cada flecha,
+   dónde dobla la vuelta) se derivan de tres números fijos — tamaño del icono,
+   alto del paso, hueco entre filas — para que cuadren exactas; cambiar esos
+   tres números implica recalcular las posiciones de abajo. */
+.taller-flow {
   position: relative;
+  margin-top: 32px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border: 1px solid var(--line);
+  row-gap: 60px;
 }
-/* repeat(2,1fr) sobre un ancho del 66.667% da columnas de 33.333% del marco
-   completo: EXACTAMENTE el ancho de las columnas de la fila de arriba (33.333%
-   = 100%/3), así que los dos pasos de abajo se alinean con los dos primeros
-   de arriba sin estirarse ni encogerse. */
-.taller-stats-row-2 { grid-template-columns: repeat(2, 1fr); margin-top: 20px; width: 66.667%; }
-.taller-stats .resumen-dato {
-  padding-top: 22px;
-  padding-bottom: 22px;
+.taller-flow-step { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.taller-flow-step:nth-child(4) { grid-column: 1; grid-row: 2; }
+.taller-flow-step:nth-child(5) { grid-column: 2; grid-row: 2; }
+.taller-flow-icon {
+  width: 64px;
+  height: 64px;
+  border: 2px solid var(--red);
+  border-radius: 16px;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.taller-stats .resumen-dato:first-child { border-left: none; }
-.taller-stats .resumen-dato:last-child { padding-right: 20px; }
-.taller-stats .resumen-dato b { gap: 10px; margin-bottom: 4px; }
-.taller-stats .resumen-extra { margin-top: 6px; min-height: 2.8em; }
-/* El icono se encoge (38px → 30px) y se le pone el fondo de la página detrás:
-   así el filete, que pasa exactamente por su centro, se esconde detrás del
-   icono en vez de atravesar su silueta (que tiene huecos: el asa del rodillo,
-   los palillos…) y se corta limpiamente en cada nodo, como en los círculos de
-   los controles de la galería. */
-.taller-stats .resumen-ico { position: relative; z-index: 1; background: var(--bg); }
-.taller-stats .resumen-ico svg { display: block; width: 30px; height: 30px; }
-/* Centro del icono: 1px de borde del marco + 22px de padding + 30px/2 = 38px
-   desde arriba de la fila (verificado con getBoundingClientRect, no a ojo).
-   La fila de arriba lleva el filete de punta a punta (entra y sale del marco,
-   como si continuara fuera); la de abajo solo hasta el centro del último
-   icono real (75%: no hay "paso 6" al que seguir, así que no sale por la
-   derecha), y con un margen a los lados para no tocar los filetes del marco. */
-.taller-stats-row:not(.taller-stats-row-2)::before {
+.taller-flow-icon svg { display: block; width: 28px; height: 28px; color: var(--red); }
+.taller-flow-label {
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+}
+/* line-height y min-height fijos (no 1.4 suelto): así el alto del paso es
+   siempre el mismo — 64 (icono) + 14 + 20 (rótulo) + 4 + 34 (apostilla) =
+   136px — sea la apostilla de una línea o de dos, y las posiciones de las
+   flechas y la vuelta, calculadas sobre ese 136, cuadran siempre. */
+.taller-flow-caption {
+  margin-top: 4px;
+  max-width: 27ch;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 17px;
+  min-height: 34px;
+  color: rgba(255,0,30,0.55);
+}
+/* Flecha entre dos pasos de la misma fila: una línea a la altura del centro
+   del icono (32px: mitad de sus 64px) entre el borde derecho de uno
+   (columna·N + 32px) y el borde izquierdo del siguiente (columna·N+1 − 32px),
+   con la punta pegada a ese segundo borde. Ese hueco mide 33.333% − 64px en
+   cualquiera de los tres pares (columnas separadas siempre 33.333%), así que
+   las tres flechas comparten ancho. */
+.taller-flow-arrow {
+  position: absolute;
+  top: 31px;
+  width: calc(33.333% - 64px - 10px);
+  height: 2px;
+  background: var(--red);
+}
+.taller-flow-arrow::after {
   content: "";
   position: absolute;
-  z-index: 0;
-  top: 38px;
-  left: 12px;
-  right: 12px;
-  height: 1px;
-  background: var(--line-soft);
+  top: -4px;
+  right: -9px;
+  border: 5px solid transparent;
+  border-left-color: var(--red);
 }
-.taller-stats-row-2::before {
+.taller-flow-arrow-1 { left: calc(16.667% + 32px); }
+.taller-flow-arrow-2 { left: calc(50% + 32px); }
+.taller-flow-arrow-3 { top: calc(60px + 136px + 31px); left: calc(16.667% + 32px); }
+/* La vuelta, en 4 tramos rectos (sin redondear: más simple y igual de claro).
+   h1: del borde derecho del 03 hacia la derecha, hasta el margen reservado.
+   v1: baja desde ahí hasta la mitad del hueco entre filas (136 alto de fila
+   + 60 de hueco = 196 es el arranque de la fila 2; el punto medio del hueco,
+   166, es donde dobla hacia la izquierda).
+   h2: recorre ese hueco hacia la izquierda, hasta la columna del 04.
+   v2: baja esos últimos 30px (166→196) y entra en el 04 por arriba, con la
+   punta de flecha justo en su borde superior. */
+.taller-flow-return-h1 {
+  position: absolute;
+  top: 31px;
+  left: calc(83.333% + 32px);
+  width: 24px;
+  height: 2px;
+  background: var(--red);
+}
+.taller-flow-return-v1 {
+  position: absolute;
+  top: 31px;
+  left: calc(83.333% + 54px);
+  width: 2px;
+  height: 135px;
+  background: var(--red);
+}
+.taller-flow-return-h2 {
+  position: absolute;
+  top: 165px;
+  left: calc(16.667% - 1px);
+  width: calc(66.667% + 55px);
+  height: 2px;
+  background: var(--red);
+}
+.taller-flow-return-v2 {
+  position: absolute;
+  top: 165px;
+  left: calc(16.667% - 1px);
+  width: 2px;
+  height: 31px;
+  background: var(--red);
+}
+.taller-flow-return-v2::after {
   content: "";
   position: absolute;
-  z-index: 0;
-  top: 38px;
-  left: 12px;
-  width: calc(75% - 12px);
-  height: 1px;
-  background: var(--line-soft);
+  bottom: -1px;
+  left: -4px;
+  border: 5px solid transparent;
+  border-top-color: var(--red);
 }
 @media (max-width: 879px) {
-  /* Mismo colapso a una columna que .ev-stats: los filetes verticales entre
-     celdas pasan a horizontales entre filas, y el primer paso de cada fila
-     pierde el suyo (ya lo pone el marco de esa fila). El filete horizontal no
-     tiene sentido en una sola columna, así que desaparece. */
-  .taller-stats-row { grid-template-columns: 1fr; }
-  .taller-stats-row-2 { width: 100%; }
-  .taller-stats .resumen-dato {
-    border-left: none;
-    border-top: 1px solid var(--line);
-    padding: 24px 20px;
+  /* En una sola columna el diagrama de flujo no cabe: se convierte en la
+     línea de tiempo vertical simple, un paso bajo otro con un filete recto. */
+  .taller-flow {
+    display: block;
+    width: 100%;
+    margin-top: 32px;
   }
-  .taller-stats .resumen-dato:first-child { border-top: none; }
-  .taller-stats-row::before { display: none; }
+  /* Grid, no flex: el icono ocupa la primera columna (ancho fijo) en las dos
+     filas; rótulo y apostilla van en la segunda, cada uno en su fila — así se
+     apilan justo al lado del icono, no repartidos en columnas propias. */
+  .taller-flow-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    column-gap: 20px;
+    text-align: left;
+    padding-bottom: 28px;
+  }
+  .taller-flow-step:last-child { padding-bottom: 0; }
+  .taller-flow-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 64px;
+    bottom: 0;
+    left: 31px;
+    width: 2px;
+    background: var(--line-soft);
+  }
+  .taller-flow-icon { grid-column: 1; grid-row: 1 / 3; align-self: start; }
+  .taller-flow-label {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    margin-top: 0;
+    max-width: none;
+  }
+  .taller-flow-caption {
+    grid-column: 2;
+    grid-row: 2;
+    margin-top: 2px;
+    max-width: none;
+    min-height: 0;
+  }
+  .taller-flow-arrow, .taller-flow-return { display: none; }
 }
 
 /* Las tres cifras de Redes, en las celdas del resumen de la ficha de local

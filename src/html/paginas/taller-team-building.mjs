@@ -10,7 +10,7 @@ import { esc, ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
 import { galeria } from "../galeria.mjs";
 import { seccion } from "./eventos.mjs";
-import { datoDestacado } from "./local.mjs";
+import { icono } from "./local.mjs";
 
 export const RUTA = "/taller-team-building";
 const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
@@ -77,20 +77,28 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
-// INCLUYE es una secuencia real, de 5 pasos: 3 arriba + 2 abajo, en la misma
-// lectura de siempre (izquierda a derecha en las dos filas, no en zigzag) —
-// la fila de abajo empieza de nuevo por la izquierda, como un salto de línea,
-// y solo ocupa el ancho de sus dos columnas (no se estira a las tres: eso
-// rompía la retícula). Sin filete dibujado entre las dos: los números y la
-// posición ya dicen que es la misma secuencia.
-const celdaIncluye = (i, [n, esT, enT, esC, enC, ic]) =>
-  datoDestacado(ic, n, i.lang === "en" ? enT : esT, i.lang === "en" ? enC : esC);
-const filasIncluye = (i) => `<div class="taller-stats">
-    <div class="taller-stats-row">
-      ${INCLUYE.slice(0, 3).map((p) => celdaIncluye(i, p)).join("\n      ")}
-    </div>
-    <div class="taller-stats-row taller-stats-row-2">
-      ${INCLUYE.slice(3, 5).map((p) => celdaIncluye(i, p)).join("\n      ")}
+// INCLUYE es un diagrama de flujo: 5 pasos, 3 arriba + 2 abajo, con flechas
+// entre pasos consecutivos de la misma fila y una vuelta (baja, va a la
+// izquierda, entra en el 04) que conecta el final de la fila 1 con el
+// principio de la 2 — como un texto que salta de línea. Los pasos 4 y 5 se
+// colocan bajo las columnas 1 y 2 de la fila 1 (mismo ancho de columna,
+// mismo grid), así que quedan alineados sin estirar nada. Ver .taller-flow
+// en styles-2.css para la geometría de flechas y vuelta.
+const pasoIncluye = (i, [n, esT, enT, esC, enC, ic]) => `<div class="taller-flow-step">
+      <div class="taller-flow-icon">${icono(ic)}</div>
+      <div class="taller-flow-label">${esc(n)}. ${esc(i.lang === "en" ? enT : esT)}</div>
+      <div class="taller-flow-caption">${esc(i.lang === "en" ? enC : esC)}</div>
+    </div>`;
+const filasIncluye = (i) => `<div class="taller-flow">
+    ${INCLUYE.map((p) => pasoIncluye(i, p)).join("\n    ")}
+    <div class="taller-flow-arrow taller-flow-arrow-1" aria-hidden="true"></div>
+    <div class="taller-flow-arrow taller-flow-arrow-2" aria-hidden="true"></div>
+    <div class="taller-flow-arrow taller-flow-arrow-3" aria-hidden="true"></div>
+    <div class="taller-flow-return" aria-hidden="true">
+      <div class="taller-flow-return-h1"></div>
+      <div class="taller-flow-return-v1"></div>
+      <div class="taller-flow-return-h2"></div>
+      <div class="taller-flow-return-v2"></div>
     </div>
   </div>`;
 
