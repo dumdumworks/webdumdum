@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────────
 import { ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
-import { renderCarta, tf } from "../carta.mjs";
+import { renderCarta, tf, dumplingsDisponibles, numeroALetra, mayuscInicial } from "../carta.mjs";
 
 export const RUTA = "/menu";
 
@@ -43,9 +43,16 @@ function jsonLd(i, carta, url) {
 
 export function menu(i, { locales, seo, carta }) {
   const s = seo.find((r) => r.p === RUTA);
+  // La cifra de la meta description sale de la carta viva, no de un número
+  // suelto en seo.mjs: si no, en cuanto cambia la carta la descripción que
+  // enseña Google deja de ser verdad (ver dumplingsDisponibles en carta.mjs).
+  const n = dumplingsDisponibles(carta).length;
+  const cifra = { es: mayuscInicial(numeroALetra(n, "es")), en: mayuscInicial(numeroALetra(n, "en")) };
   return {
     titulo: i.lang === "en" ? (s.te || s.t) : s.t,
-    desc: i.lang === "en" ? (s.de || s.d) : s.d,
+    desc: i.lang === "en"
+      ? `${cifra.en} dumplings, a new one every month and not a single conventional one.`
+      : `${cifra.es} dumplings, uno nuevo cada mes y ni uno convencional.`,
     cuerpo: esqueleto(i, RUTA, locales, renderCarta(i, carta)),
     ld: [jsonLd(i, carta, ORIGIN + i.ruta(RUTA)), breadcrumbLd(i, [{ nombre: i.t("Carta", "Menu"), ruta: RUTA }])],
   };

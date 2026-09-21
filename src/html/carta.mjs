@@ -58,6 +58,29 @@ export function tf(i, obj, campo) {
   return v;
 }
 
+// Los dumplings que de verdad salen en la carta ahora mismo: sin los platos
+// ocultos (available:false) ni los archivados. Única fuente de la cifra que
+// citan la home y el SEO de /menu — así nunca pueden contradecirse entre sí
+// ni quedarse desactualizados cuando cambia la carta.
+export function dumplingsDisponibles(carta) {
+  return (carta.sections || [])
+    .find((sec) => sec.id === "dumplings")?.items
+    ?.filter((it) => it.available !== false && !it.archived) || [];
+}
+
+// "9" → "nueve" / "nine": un número en palabras, para frases como "Nueve
+// dumplings...". Cubre hasta 20 (de sobra: la carta tiene entre 9 y 13); un
+// número mayor cae al dígito, que sigue leyéndose bien.
+const NUM_ES = ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez",
+  "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte"];
+const NUM_EN = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+  "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
+export function numeroALetra(n, lang) {
+  const tabla = lang === "en" ? NUM_EN : NUM_ES;
+  return tabla[n] ?? String(n);
+}
+export const mayuscInicial = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
 // Mes y año en curso, SIEMPRE con la hora de Madrid (el subtítulo de la carta
 // y el botón de la home). En español en minúscula, en inglés capitalizado: es lo
 // que devuelve Intl para cada locale.
