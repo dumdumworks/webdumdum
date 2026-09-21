@@ -15,17 +15,14 @@ import { icono } from "./local.mjs";
 export const RUTA = "/taller-team-building";
 const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
 
-// [n, minititulo es/en, frase es/en, icono] de cada paso, como el resto de
-// listas bilingües de la web. Reutiliza exactamente la tarjeta de "Redes" de
-// /eventos (datoDestacado: icono, etiqueta, valor grande, apostilla) — mismo
-// aire, misma tipografía. El icono reutiliza el registro de /locales (mismo
-// lenguaje: formas sólidas, sin trazo). "aforo" (dos personas) sirve también
-// para "equipos".
+// [n, minititulo es/en, frase es/en, icono] de cada paso. Frases cortas a
+// propósito (máx. ~2 líneas dentro de .taller-flow-caption): si se salen,
+// rompen la altura fija de la celda de la que dependen las flechas.
 const INCLUYE = [
-  ["01", "Equipos", "Teams", "Nos organizamos en equipos.", "We split into teams.", "aforo"],
-  ["02", "La masa", "The dough", "Aprendemos a elaborar y manipular la masa.", "We learn to work and shape the dough.", "masa"],
-  ["03", "Montaje", "Assembly", "Construimos juntos los dumplings.", "We build the dumplings together.", "dumpling"],
-  ["04", "Cocción", "Cooking", "Los cocinamos y los emplatamos.", "We cook and plate them.", "cocinar"],
+  ["01", "Equipos", "Teams", "Por equipos.", "In teams.", "aforo"],
+  ["02", "La masa", "The dough", "Aprendemos a amasar.", "We learn to knead.", "masa"],
+  ["03", "Montaje", "Assembly", "Montamos los dumplings.", "We build the dumplings.", "dumpling"],
+  ["04", "Cocción", "Cooking", "Los cocinamos.", "We cook them.", "cocinar"],
   ["05", "Degustación", "Tasting", "Nos lo comemos.", "We eat.", "comer"],
 ];
 const COMIDA = [
