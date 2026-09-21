@@ -20,6 +20,7 @@ const INCLUYE = [
   ["02", "Aprendemos a elaborar y manipular la masa.", "We learn to work and shape the dough."],
   ["03", "Construimos juntos los dumplings.", "We build the dumplings together."],
   ["04", "Los cocinamos y los emplatamos.", "We cook and plate them."],
+  ["05", "Nos lo comemos.", "We eat."],
 ];
 const COMIDA = [
   ["Entrante", "A compartir", "Starter", "To share"],
@@ -70,9 +71,11 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
-// INCLUYE tiene su propio formato (número + frase larga, no etiqueta/valor corto).
-const filasIncluye = (i) => INCLUYE.map(([n, es, en]) =>
-  `<div><b>${esc(n)}</b><span>${esc(i.lang === "en" ? en : es)}</span></div>`).join("\n      ");
+// INCLUYE es una secuencia real (el orden importa), así que se pinta como
+// línea de tiempo: nodos numerados unidos por un filete, no una lista plana.
+const filasIncluye = (i) => `<ol class="taller-timeline">
+    ${INCLUYE.map(([n, es, en]) => `<li><span class="taller-timeline-node">${esc(n)}</span><span class="taller-timeline-txt body">${esc(i.lang === "en" ? en : es)}</span></li>`).join("\n    ")}
+  </ol>`;
 
 function jsonLd(i, url) {
   const { t } = i;
@@ -127,9 +130,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 
 ${seccion("01", t("Incluye", "Includes"),
     t("Cocinamos.<br>Todos. A la vez.", "We cook.<br>All of us. Together."),
-    `<div class="taller-list">
-      ${filasIncluye(i)}
-    </div>`)}
+    filasIncluye(i))}
 
 ${seccion("02", t("Comida", "Food"),
     esc(t("Y luego, se come.", "And then, we eat.")),
