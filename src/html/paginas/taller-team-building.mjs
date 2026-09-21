@@ -10,20 +10,17 @@ import { esc, ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
 import { galeria } from "../galeria.mjs";
 import { seccion } from "./eventos.mjs";
-import { icono } from "./local.mjs";
 
 export const RUTA = "/taller-team-building";
 const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
 
-// [n, minititulo es/en, frase es/en, icono] de cada paso. Frases cortas a
-// propósito (máx. ~2 líneas dentro de .taller-flow-caption): si se salen,
-// rompen la altura fija de la celda de la que dependen las flechas.
+// [n, minititulo es/en, frase es/en] de cada paso.
 const INCLUYE = [
-  ["01", "Equipos", "Teams", "Por equipos.", "In teams.", "aforo"],
-  ["02", "La masa", "The dough", "Aprendemos a amasar.", "We learn to knead.", "masa"],
-  ["03", "Montaje", "Assembly", "Montamos los dumplings.", "We build the dumplings.", "dumpling"],
-  ["04", "Cocción", "Cooking", "Los cocinamos.", "We cook them.", "cocinar"],
-  ["05", "Degustación", "Tasting", "Nos lo comemos.", "We eat.", "comer"],
+  ["01", "Equipos", "Teams", "Por equipos.", "In teams."],
+  ["02", "La masa", "The dough", "Aprendemos a amasar.", "We learn to knead."],
+  ["03", "Montaje", "Assembly", "Montamos los dumplings.", "We build the dumplings."],
+  ["04", "Cocción", "Cooking", "Los cocinamos.", "We cook them."],
+  ["05", "Degustación", "Tasting", "Nos lo comemos.", "We eat."],
 ];
 const COMIDA = [
   ["Entrante", "A compartir", "Starter", "To share"],
@@ -74,32 +71,18 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
-// INCLUYE es un diagrama de flujo: 5 pasos, 3 arriba + 2 abajo, con flechas
-// entre pasos consecutivos de la misma fila y una vuelta (baja, va a la
-// izquierda, entra en el 04) que conecta el final de la fila 1 con el
-// principio de la 2 — como un texto que salta de línea. Los pasos 4 y 5 se
-// colocan bajo las columnas 1 y 2 de la fila 1 (mismo ancho de columna,
-// mismo grid), así que quedan alineados sin estirar nada. Ver .taller-flow
-// en styles-2.css para la geometría de flechas y vuelta.
-const pasoIncluye = (i, [n, esT, enT, esC, enC, ic]) => `<div class="taller-flow-step">
-      <div class="taller-flow-icon">${icono(ic)}</div>
-      <div class="taller-flow-label">${esc(n)}. ${esc(i.lang === "en" ? enT : esT)}</div>
-      <div class="taller-flow-caption">${esc(i.lang === "en" ? enC : esC)}</div>
+// INCLUYE es una lista, como el resto de secciones de esta página (Comida,
+// Horarios, Tarifas): un número grande hace de ancla visual y un filete fino
+// separa cada paso — nada de iconos, cajas ni líneas que conectar.
+const pasoIncluye = (i, [n, esT, enT, esC, enC]) => `<div>
+      <div class="taller-pasos-num">${esc(n)}</div>
+      <div>
+        <div class="taller-pasos-titulo">${esc(i.lang === "en" ? enT : esT)}</div>
+        <div class="taller-pasos-desc">${esc(i.lang === "en" ? enC : esC)}</div>
+      </div>
     </div>`;
-const filasIncluye = (i) => `<div class="taller-flow">
+const filasIncluye = (i) => `<div class="taller-pasos">
     ${INCLUYE.map((p) => pasoIncluye(i, p)).join("\n    ")}
-    <div class="taller-flow-arrow taller-flow-arrow-1" aria-hidden="true"></div>
-    <div class="taller-flow-arrow taller-flow-arrow-2" aria-hidden="true"></div>
-    <div class="taller-flow-arrow taller-flow-arrow-3" aria-hidden="true"></div>
-    <div class="taller-flow-return" aria-hidden="true">
-      <div class="taller-flow-return-h1"></div>
-      <div class="taller-flow-return-corner-a"></div>
-      <div class="taller-flow-return-v1"></div>
-      <div class="taller-flow-return-corner-b"></div>
-      <div class="taller-flow-return-h2"></div>
-      <div class="taller-flow-return-corner-c"></div>
-      <div class="taller-flow-return-v2"></div>
-    </div>
   </div>`;
 
 function jsonLd(i, url) {
