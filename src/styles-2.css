@@ -246,9 +246,15 @@
 .map-nav {
   border-top: 1px solid var(--line);
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* minmax(0, 1fr), no 1fr a secas: una columna 1fr no se encoge por debajo
+     del contenido más ancho que tenga dentro, así que si una celda tiene un
+     texto más largo que las de la otra columna, le roba ancho — descuadraba
+     el divisor vertical contra el de la fila de arriba (spec-foot, que sí
+     usaba minmax). Con el suelo en 0, las dos columnas se reparten el ancho
+     exacto a medias siempre, pase lo que pase el contenido. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-.map-nav-3 { grid-template-columns: repeat(3, 1fr); }
+.map-nav-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 /* Celda-sello · oculta en desktop (la rejilla 3×3 no tiene hueco) */
 .map-cell-seal {
   display: none;
@@ -264,24 +270,43 @@
   .map-cell-seal { display: none !important; }
 }
 /* El sello se pinta con máscara: el color lo da background-color, así
-   puede invertirse (rojo→crema) igual que el texto de las demás celdas. */
+   puede invertirse (rojo→crema) igual que el texto de las demás celdas.
+   Va en dos capas superpuestas (mismo viewBox, un SVG recortado cada uno):
+   el icono central fijo y el anillo de "DESOBEDIENCIA" girando sin parar. */
 .map-cell-seal .seal-mark {
   display: block;
+  position: relative;
   width: 78%;
   max-width: 200px;
   aspect-ratio: 129.6 / 130.32;
+}
+.map-cell-seal .seal-centro,
+.map-cell-seal .seal-texto {
+  position: absolute;
+  inset: 0;
   background-color: var(--ink);
-  -webkit-mask: url("../img/logos/dumdum-sello.svg") no-repeat center / contain;
-  mask: url("../img/logos/dumdum-sello.svg") no-repeat center / contain;
   transition: background-color .25s ease;
+}
+.map-cell-seal .seal-centro {
+  -webkit-mask: url("../img/logos/dumdum-sello-centro.svg") no-repeat center / contain;
+  mask: url("../img/logos/dumdum-sello-centro.svg") no-repeat center / contain;
+}
+.map-cell-seal .seal-texto {
+  -webkit-mask: url("../img/logos/dumdum-sello-texto.svg") no-repeat center / contain;
+  mask: url("../img/logos/dumdum-sello-texto.svg") no-repeat center / contain;
+  animation: girar-sello 14s linear infinite;
+}
+@keyframes girar-sello { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .map-cell-seal .seal-texto { animation: none; }
 }
 /* Al pinchar/hover: fondo rojo y sello en crema (colores invertidos) */
 .map-cell-seal:hover,
 .map-cell-seal:active,
 .map-cell-seal:focus { background: var(--ink); }
-.map-cell-seal:hover .seal-mark,
-.map-cell-seal:active .seal-mark,
-.map-cell-seal:focus .seal-mark { background-color: var(--bg); }
+.map-cell-seal:hover .seal-centro, .map-cell-seal:hover .seal-texto,
+.map-cell-seal:active .seal-centro, .map-cell-seal:active .seal-texto,
+.map-cell-seal:focus .seal-centro, .map-cell-seal:focus .seal-texto { background-color: var(--bg); }
 .map-cell, .dato-celda {
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -292,7 +317,15 @@
   position: relative;
   transition: background .25s ease, color .25s ease;
 }
-.map-cell:last-child { border-right: 1px solid var(--line); }
+/* Sin filete en la última columna de cada fila: cierra ella sola, no hace
+   falta enmarcar la rejilla entera por la derecha. 3 columnas en escritorio
+   (map-cell-seal está oculta y no cuenta), 2 en móvil (donde si cuenta). */
+@media (min-width: 881px) {
+  .map-cell:nth-child(3n) { border-right: none; }
+}
+@media (max-width: 880px) {
+  .map-cell:nth-child(2n) { border-right: none; }
+}
 /* Las tres voces de la celda. Las comparte .dato-celda, la ficha de local en
    móvil: es el mismo objeto —rótulo arriba, dato grande, apostilla abajo— y no
    tiene sentido escribirlo dos veces. El cuerpo del titular sí es propio de
@@ -2086,7 +2119,7 @@
      garantiza que ganen en especificidad/orden. */
   .hero { padding: 12vh 0 8vh; }
   .hero-meta { position: static; text-align: left; margin-top: 24px; }
-  .map-nav-3 { grid-template-columns: repeat(2, 1fr); }
+  .map-nav-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   /* Celda-sello visible aquí mismo: rellena el hueco que deja la rejilla
      de 2 columnas con 9 celdas. Debe encenderse en el MISMO punto que la
      rejilla pasa a 2 col, o queda un hueco descuadrado en la franja
