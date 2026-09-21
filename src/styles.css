@@ -1030,3 +1030,17 @@ img { display: block; max-width: 100%; }
 .pide-modal:focus, .alerg-modal:focus, .lb-overlay:focus, .dish-lightbox:focus { outline: none; }
 /* Modales, pasos y flotante se muestran y ocultan con el atributo hidden. */
 [hidden] { display: none; }
+/* Botones y enlaces "grandes" con transición de color al :hover: pensada para
+   ratón (fundido suave al pasar por encima). En táctil no hay "por encima",
+   solo toques, y el :hover se queda pegado tras tocar (a propósito, ver
+   .map-cell/.faq-item más arriba) — pero como estos SÍ llevaban transition,
+   el primer toque de la sesión se veía como un cambio de color con retraso en
+   vez de instantáneo. Incluye TODO lo que aquí tenga un fundido de color al
+   :hover: sin esto, ganan por orden a este archivo entero. */
+@media (hover: none) {
+  .btn, .btn-inline, .btn-call, .btn-maps, .topbar-reservar, .topbar-pide,
+  .pide-card, .link-hover, .lb-close, .lb-nav, .ev-service, .ev-slider-btn,
+  .ev-slider-cta, .ev-contact .big, .contact a.big, .contact summary.big {
+    transition: none;
+  }
+}
