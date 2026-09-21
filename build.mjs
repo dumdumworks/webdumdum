@@ -204,7 +204,7 @@ if (fs.existsSync(path.join(ROOT, "menu.json"))) {
 }
 // Directorios de assets estáticos (img incluye favicons y og-image; panel =
 // editor de carta, protegido por Cloudflare Access).
-for (const d of ["img", "panel"]) {
+for (const d of ["img", "panel", "fonts"]) {
   if (fs.existsSync(path.join(ROOT, d))) copyDir(d);
 }
 

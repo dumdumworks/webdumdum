@@ -65,7 +65,7 @@ const PREFERENCIA = '(function(){try{var v=localStorage.getItem("dumdum.lang");i
 //   analitica → src/html/analitica.html; el banner de Cookiebot sale en el
 //               idioma de la página (data-culture), no en el del navegador
 //   css, islas → rutas en dist/ (con hash)
-export function documento({ i, ruta, titulo, desc, cuerpo, ld, analitica, css, islas }) {
+export function documento({ i, ruta, titulo, desc, cuerpo, ld, analitica, css, islas, precargas }) {
   const urlEs = ORIGIN + ruta;
   const urlEn = ORIGIN + "/en" + (ruta === "/" ? "/" : ruta);
   const url = i.lang === "en" ? urlEn : urlEs;
@@ -115,6 +115,7 @@ ${bloquesLd ? bloquesLd + "\n" : ""}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+${precargas || ""}
   <link rel="stylesheet" href="/${css}">
   <script src="/${islas}" defer></script>
 </head>

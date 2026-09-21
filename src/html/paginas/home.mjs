@@ -51,9 +51,14 @@ export function home(i, { locales, seo, ldGlobal, carta }) {
         <div>${esc(t("TODOS LOS DÍAS", "EVERY DAY"))}</div>
         <div>13.00 – 15.39 &amp; 20.00 – 22.39</div>
       </div>
-      <div class="hero-logo">
-        <img src="img/logos/dumdum-claim.svg" alt="DUM DUM™ · Dumplings &amp; Desobediencia">
-      </div>
+      <h1 class="hero-logo" aria-label="DUM DUM™ · Dumplings &amp; Desobediencia">
+        <svg viewBox="-3 -25 456 410" aria-hidden="true">
+          <text x="7.14" y="174.91" class="wordmark-line">DUM</text>
+          <text x="7.14" y="335.69" class="wordmark-line">DUM</text>
+          <text x="412.87" y="193.11" class="wordmark-tm">TM</text>
+          <text x="15.84" y="378.27" class="wordmark-claim">DUMPLINGS &amp; DESOBEDIENCIA</text>
+        </svg>
+      </h1>
       <div class="hero-info hero-info-r">
         <div>${esc(L.chamberi.dirLineas.join(" ").toUpperCase())} — MADRID</div>
         <div>${esc(L.bernabeu.dirLineas.join(" ").toUpperCase())} — MADRID</div>
@@ -117,10 +122,18 @@ ${specFoot([
 
 <div class="home-toast" role="status" hidden>${esc(t("Próximamente.", "Coming soon."))}</div>
 </div>`;
+  // Precarga las dos fuentes del logo tipográfico: sin esto, el navegador no
+  // las descubre hasta parsear el CSS, y esos milisegundos de más son los que
+  // se ve la reserva (sans-serif) en el elemento más visible de la home.
+  const precargas = [
+    "/fonts/MastoneOutline-Regular.woff2",
+    "/fonts/SFCompactDisplay-Bold-subset.woff2",
+  ].map((h) => `  <link rel="preload" href="${h}" as="font" type="font/woff2" crossorigin>`).join("\n");
   return {
     titulo: i.lang === "en" ? (s.te || s.t) : s.t,
     desc: i.lang === "en" ? (s.de || s.d) : s.d,
     cuerpo: esqueleto(i, RUTA, locales, main),
     ld: ldGlobal,
+    precargas,
   };
 }

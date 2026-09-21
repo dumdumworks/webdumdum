@@ -1,5 +1,24 @@
 @import url("styles-2.css");
 
+/* Logo tipográfico de la home (H1): las dos únicas letras que necesita
+   ("DUM" y "DUMPLINGS & DESOBEDIENCIA TM") vienen recortadas de la fuente
+   completa, así que pesan casi nada (~1-2kB cada una) pese a ser fuentes de
+   marca con licencia de uso web. Solo se usan en el H1 de la home. */
+@font-face {
+  font-family: "Mastone-Outline";
+  src: url("/fonts/MastoneOutline-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "SFCompact-Bold";
+  src: url("/fonts/SFCompactDisplay-Bold-subset.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #fffaf3;
   --ink: #ff001e;
