@@ -1069,64 +1069,74 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [01] Incluye (/taller-team-building): una lista con hilo — número enorme
-   a la izquierda (a la altura del titular de al lado: aquí es donde vive
-   la "presencia" que se pedía, no en un icono ni una caja), título y frase
-   a la derecha, y un filete vertical grueso y sólido (no --line-soft, que
-   es para separadores discretos) que atraviesa el centro de cada número y
-   los une a todos, de arriba abajo — eso es lo que dice "esto va después
-   de esto"; sin él, es una lista de datos sueltos, no una secuencia.
-   El hilo se monta por tramos, uno por fila, que encajan sin costura: cada
-   fila dibuja su filete de un borde al otro (arriba y abajo del todo),
-   salvo la primera (que arranca en su propio número, no tiene nada antes)
-   y la última (que para en su propio número, no tiene nada después).
-   Medidas verificadas con getBoundingClientRect tras montarlo, no a ojo. */
-.taller-pasos { margin-top: 40px; }
-.taller-pasos > div {
-  position: relative;
-  display: grid;
-  grid-template-columns: 132px 1fr;
-  column-gap: 28px;
-  padding-bottom: 44px;
+/* [01] Incluye (/taller-team-building): línea de tiempo real a ancho
+   completo — no la rejilla a medias de .ev-split. En escritorio, riel
+   horizontal de cuatro filas (número, riel con puntos, título, frase) con
+   la MISMA rejilla de 5 columnas en cada una, así casan columna a columna
+   sin medir nada a mano; el filete va de grid-column 1 a 5, que es
+   exactamente del primer punto al último (la línea de red antes de una
+   columna N empieza donde empieza esa columna), sin sobrar detrás del
+   quinto. En móvil, riel vertical con el mismo punto-sobre-filete que ya
+   se usó (y validó) en esta misma página. */
+.taller-tl { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
+.taller-tl-head { max-width: 720px; }
+.taller-tl-head h2 { margin-top: 16px; }
+
+.taller-tl-rail { margin-top: 56px; }
+.taller-tl-fila { display: grid; grid-template-columns: repeat(5, 1fr); column-gap: 24px; }
+.taller-tl-fila:nth-child(2) { margin-top: 12px; }
+.taller-tl-fila:nth-child(3) { margin-top: 20px; }
+.taller-tl-fila:nth-child(4) { margin-top: 6px; }
+.taller-tl-linea {
+  grid-column: 1 / 5;
+  grid-row: 1;
+  align-self: center;
+  height: 2px;
+  background: var(--red);
+  /* grid-column 1/5 para en el borde de contenido de la 4ª columna, un
+     column-gap (24px) antes del 5º punto — se suma aquí para que el filete
+     llegue justo hasta él, sin sobrar detrás. Verificado con
+     getBoundingClientRect. */
+  width: calc(100% + 24px);
 }
-.taller-pasos > div:last-child { padding-bottom: 0; }
-.taller-pasos > div::before {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  bottom: 0;
-  /* 53px: centro real del número medido con getBoundingClientRect (no el
-     centro de la columna de 132px — el número, con width:fit-content, es
-     106px de ancho, más estrecho que su columna). */
-  left: 53px;
-  width: 2px;
+.taller-tl-dot {
+  grid-row: 1;
+  align-self: center;
+  justify-self: start;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
   background: var(--red);
 }
-.taller-pasos > div:first-child::before { top: 50px; }
-.taller-pasos > div:last-child::before { bottom: auto; height: 50px; }
-.taller-pasos-num {
-  position: relative;
-  z-index: 1;
-  width: fit-content;
+.taller-tl-titulo {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(64px, 7vw, 104px);
-  line-height: 1;
-  letter-spacing: -0.03em;
-}
-.taller-pasos-titulo {
-  margin-top: 4px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 24px;
+  font-size: clamp(17px, 1.3vw, 21px);
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
-.taller-pasos-desc {
-  margin-top: 8px;
-  font-size: 16px;
-  line-height: 1.4;
+.taller-tl-desc { font-size: 15px; line-height: 1.4; }
+.taller-tl-movil { display: none; }
+
+@media (max-width: 879px) {
+  .taller-tl { padding: 48px var(--gutter); }
+  .taller-tl-rail { display: none; }
+  .taller-tl-movil { display: block; margin-top: 40px; position: relative; padding-left: 28px; }
+  .taller-tl-movil::before {
+    content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px;
+    width: 2px; background: var(--red);
+  }
+  .taller-tl-paso-m { position: relative; margin-bottom: 32px; }
+  .taller-tl-paso-m:last-child { margin-bottom: 0; }
+  .taller-tl-paso-m::before {
+    content: ""; position: absolute; left: -28px; top: 5px;
+    width: 10px; height: 10px; border-radius: 50%; background: var(--red);
+  }
+  .taller-tl-cab-m { display: flex; align-items: baseline; gap: 10px; }
+  .taller-tl-titulo-m {
+    font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: -0.01em;
+  }
+  .taller-tl-desc-m { margin-top: 6px; font-size: 15px; line-height: 1.4; }
 }
 
 /* Las tres cifras de Redes, en las celdas del resumen de la ficha de local

@@ -71,18 +71,35 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
-// INCLUYE es una lista, como el resto de secciones de esta página (Comida,
-// Horarios, Tarifas): un número grande hace de ancla visual y un filete fino
-// separa cada paso — nada de iconos, cajas ni líneas que conectar.
-const pasoIncluye = (i, [n, esT, enT, esC, enC]) => `<div>
-      <div class="taller-pasos-num">${esc(n)}</div>
-      <div>
-        <div class="taller-pasos-titulo">${esc(i.lang === "en" ? enT : esT)}</div>
-        <div class="taller-pasos-desc">${esc(i.lang === "en" ? enC : esC)}</div>
+// INCLUYE es una línea de tiempo real: a ancho completo (no la rejilla a
+// medias de .ev-split), con un riel horizontal en escritorio — cinco filas
+// alineadas por columnas (número / riel con puntos / título / frase), el
+// filete uniendo el primer punto con el último exactamente (grid-column
+// 1/5, sin cálculos a mano) — y un riel vertical en móvil con el mismo
+// punto-sobre-filete, ya validado en esta página.
+const railEscritorio = (i) => `<div class="taller-tl-rail">
+    <div class="taller-tl-fila">
+      ${INCLUYE.map(([n]) => `<div class="taller-tl-num tiny muted">${esc(n)}</div>`).join("\n      ")}
+    </div>
+    <div class="taller-tl-fila taller-tl-riel">
+      <div class="taller-tl-linea"></div>
+      ${INCLUYE.map((_, idx) => `<div class="taller-tl-dot" style="grid-column:${idx + 1}"></div>`).join("\n      ")}
+    </div>
+    <div class="taller-tl-fila">
+      ${INCLUYE.map(([, esT, enT]) => `<div class="taller-tl-titulo">${esc(i.lang === "en" ? enT : esT)}</div>`).join("\n      ")}
+    </div>
+    <div class="taller-tl-fila">
+      ${INCLUYE.map(([, , , esC, enC]) => `<div class="taller-tl-desc">${esc(i.lang === "en" ? enC : esC)}</div>`).join("\n      ")}
+    </div>
+  </div>`;
+const railMovil = (i) => `<div class="taller-tl-movil">
+    ${INCLUYE.map(([n, esT, enT, esC, enC]) => `<div class="taller-tl-paso-m">
+      <div class="taller-tl-cab-m">
+        <span class="taller-tl-num-m tiny muted">${esc(n)}</span>
+        <span class="taller-tl-titulo-m">${esc(i.lang === "en" ? enT : esT)}</span>
       </div>
-    </div>`;
-const filasIncluye = (i) => `<div class="taller-pasos">
-    ${INCLUYE.map((p) => pasoIncluye(i, p)).join("\n    ")}
+      <p class="taller-tl-desc-m">${esc(i.lang === "en" ? enC : esC)}</p>
+    </div>`).join("\n    ")}
   </div>`;
 
 function jsonLd(i, url) {
@@ -136,9 +153,14 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   </div>
 </section>
 
-${seccion("01", t("Incluye", "Includes"),
-    t("Cocinamos.<br>Todos. A la vez.", "We cook.<br>All of us. Together."),
-    filasIncluye(i))}
+<section class="taller-tl">
+  <div class="taller-tl-head">
+    <div class="tiny muted">[01] ${esc(t("Incluye", "Includes"))}</div>
+    <h2 class="h-1">${t("Cocinamos.<br>Todos. A la vez.", "We cook.<br>All of us. Together.")}</h2>
+  </div>
+  ${railEscritorio(i)}
+  ${railMovil(i)}
+</section>
 
 ${seccion("02", t("Comida", "Food"),
     esc(t("Y luego, se come.", "And then, we eat.")),
