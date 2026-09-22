@@ -18,6 +18,19 @@ export const WEB3FORMS_KEY = "7b16c2a8-ccbd-4c0a-8d29-0562bd8646a0";
 
 const DOSSIER_POR_DEFECTO = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
 
+// Bloque de dos columnas (rótulo + título a la izquierda, contenido a la
+// derecha): lo reutiliza /taller-team-building para mantener el mismo
+// lenguaje visual que el resto de secciones de Eventos.
+export const seccion = (n, rotulo, titulo, derecha, extraIzq = "") => `<section class="ev-split">
+  <div>
+    <div class="tiny muted">[${n}] ${esc(rotulo)}</div>
+    <h2 class="h-1" style="margin-top:16px">${titulo}</h2>${extraIzq}
+  </div>
+  <div>
+${derecha}
+  </div>
+</section>`;
+
 // Fecha de hoy (Madrid) en YYYY-MM-DD para el `min` del campo de fecha. La
 // isla lo vuelve a poner al cargar: esta es la del build, solo de respaldo.
 function hoyISOMadrid() {
@@ -100,16 +113,6 @@ export function eventos(i, { locales, seo, ldGlobal, eventos: ev, galerias, cart
     : (/^(https?:)?\/\//i.test(dossierRaw) || dossierRaw.startsWith("/")) ? dossierRaw : "/" + dossierRaw.replace(/^\.?\//, "");
   const nombres = nombresPorFoto(i, carta);
   const producto = (galerias.producto || []).map((f) => ({ ...f, name: f.name || nombres[f.src] || "" }));
-
-  const seccion = (n, rotulo, titulo, derecha, extraIzq = "") => `<section class="ev-split">
-  <div>
-    <div class="tiny muted">[${n}] ${esc(rotulo)}</div>
-    <h2 class="h-1" style="margin-top:16px">${titulo}</h2>${extraIzq}
-  </div>
-  <div>
-${derecha}
-  </div>
-</section>`;
 
   const main = `<div data-screen-label="eventos">
 <section class="ev-hero">
@@ -213,8 +216,20 @@ ${seccion("06", t("Al frente", "At the helm"),
   <div class="tiny muted">[07] ${esc(t("Servicios", "Services"))}</div>
   <h2 class="h-1" style="margin-top:16px;max-width:20ch">${esc(t("Qué hacemos.", "What we do."))}</h2>
   <div class="ev-services-grid">
-    ${["Afterwork", "Cocktails", "Team Building", "Workshops", t("Presenta\u00ADciones", "Launches"), t("Alquiler de espacio", "Venue rental")]
-      .map((nombre, n) => `<div class="ev-service"><div class="n">[${String(n + 1).padStart(2, "0")}]</div><div class="t">${esc(nombre)}</div></div>`).join("\n    ")}
+    ${[
+        { nombre: "Afterwork" },
+        { nombre: "Cocktails" },
+        // El \u00FAnico servicio con p\u00E1gina propia (taller de dumplings, con dossier y tarifas).
+        { nombre: t("Talleres Team Building", "Team Building Workshops"), href: "/taller-team-building" },
+        { nombre: "Workshops" },
+        { nombre: t("Presenta\u00ADciones", "Launches") },
+        { nombre: t("Alquiler de espacio", "Venue rental") },
+      ].map(({ nombre, href }, n) => {
+        const dentro = `<div class="n">[${String(n + 1).padStart(2, "0")}]</div><div class="t">${esc(nombre)}</div>`;
+        return href
+          ? `<a class="ev-service is-link" href="${i.ruta(href)}">${dentro}</a>`
+          : `<div class="ev-service">${dentro}</div>`;
+      }).join("\n    ")}
   </div>
   <p class="tiny muted" style="margin-top:24px">${esc(t("* Si necesitas un evento fuera del restaurante, pregúntanos.", "* If you need an event outside the restaurant, just ask."))}</p>
 </section>

@@ -1046,6 +1046,99 @@
   color: rgba(255,0,30,0.55);
 }
 
+/* Lista de una columna (/taller-team-building): mismo lenguaje que .ev-list
+   (mono, etiqueta en rojo atenuado, filete fino) pero sin el "se oculta en
+   móvil" de esa — aquí no hay una .ev-datos con iconos que la releve, así
+   que se queda en una columna siempre y no hace falta ocultar nada. */
+.taller-list { display: grid; grid-template-columns: 1fr; max-width: 480px; margin-top: 24px; }
+.taller-list > div {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 9px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  padding: 10px 0;
+  border-top: 1px solid var(--line-soft);
+}
+.taller-list > div:last-child { border-bottom: 1px solid var(--line-soft); }
+.taller-list b { font-weight: 500; color: rgba(255,0,30,0.55); }
+@media (max-width: 480px) {
+  .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
+}
+
+/* [01] Incluye (/taller-team-building): línea de tiempo real a ancho
+   completo — no la rejilla a medias de .ev-split. En escritorio, riel
+   horizontal de cuatro filas (número, riel con puntos, título, frase) con
+   la MISMA rejilla de 5 columnas en cada una, así casan columna a columna
+   sin medir nada a mano; el filete va de grid-column 1 a 5, que es
+   exactamente del primer punto al último (la línea de red antes de una
+   columna N empieza donde empieza esa columna), sin sobrar detrás del
+   quinto. En móvil, riel vertical con el mismo punto-sobre-filete que ya
+   se usó (y validó) en esta misma página. */
+.taller-tl { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
+.taller-tl-head { max-width: 720px; }
+.taller-tl-head h2 { margin-top: 16px; }
+
+.taller-tl-rail { margin-top: 56px; }
+.taller-tl-fila { display: grid; grid-template-columns: repeat(5, 1fr); column-gap: 24px; }
+.taller-tl-fila:nth-child(2) { margin-top: 12px; }
+.taller-tl-fila:nth-child(3) { margin-top: 20px; }
+.taller-tl-fila:nth-child(4) { margin-top: 6px; }
+.taller-tl-linea {
+  grid-column: 1 / 5;
+  grid-row: 1;
+  align-self: center;
+  height: 2px;
+  background: var(--red);
+  /* grid-column 1/5 para en el borde de contenido de la 4ª columna, un
+     column-gap (24px) antes del 5º punto — se suma aquí para que el filete
+     llegue justo hasta él, sin sobrar detrás. Verificado con
+     getBoundingClientRect. */
+  width: calc(100% + 24px);
+}
+.taller-tl-dot {
+  grid-row: 1;
+  align-self: center;
+  justify-self: start;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--red);
+}
+.taller-tl-titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(17px, 1.3vw, 21px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.taller-tl-desc { font-size: 15px; line-height: 1.4; }
+.taller-tl-movil { display: none; }
+
+@media (max-width: 879px) {
+  .taller-tl { padding: 48px var(--gutter); }
+  .taller-tl-rail { display: none; }
+  .taller-tl-movil { display: block; margin-top: 40px; position: relative; padding-left: 28px; }
+  .taller-tl-movil::before {
+    content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px;
+    width: 2px; background: var(--red);
+  }
+  .taller-tl-paso-m { position: relative; margin-bottom: 32px; }
+  .taller-tl-paso-m:last-child { margin-bottom: 0; }
+  .taller-tl-paso-m::before {
+    content: ""; position: absolute; left: -28px; top: 5px;
+    width: 10px; height: 10px; border-radius: 50%; background: var(--red);
+  }
+  .taller-tl-cab-m { display: flex; align-items: baseline; gap: 10px; }
+  .taller-tl-titulo-m {
+    font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: -0.01em;
+  }
+  .taller-tl-desc-m { margin-top: 6px; font-size: 15px; line-height: 1.4; }
+}
+
 /* Las tres cifras de Redes, en las celdas del resumen de la ficha de local
    (.resumen-dato: icono, rótulo, dato y apostilla, centradas y separadas por
    verticales), dentro de una caja cerrada con el filete rojo, como allí. La
@@ -1114,6 +1207,12 @@
 .ev-service:last-child { border-right: 1px solid var(--line); }
 .ev-service:hover { background: transparent; color: inherit; }
 .ev-service:hover .n { color: rgba(255,0,30,0.55); }
+/* La única celda con página propia SÍ es clicable: inversión roja, como el
+   resto de la web (el transition:none en táctil ya cubre .ev-service entero,
+   ver el bloque de "sin fundido al tocar" en styles.css). */
+.ev-service.is-link { cursor: pointer; }
+.ev-service.is-link:hover { background: var(--ink); color: var(--bg); }
+.ev-service.is-link:hover .n { color: rgba(255,250,243,0.7); }
 .ev-service .n {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-weight: 500;
