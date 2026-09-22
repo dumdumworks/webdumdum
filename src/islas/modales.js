@@ -16,22 +16,30 @@ export function modal(sel) {
   const overlay = $(sel);
   if (!overlay) return null;
   let soltar = null;
-  const abrir = () => {
-    if (!overlay.hidden) return;
-    overlay.hidden = false;
-    soltar = atraparFoco(overlay.firstElementChild);
-    sincronizarFlotante();
+  // `m` es lo que se devuelve, y quien lo usa (los alérgenos de la carta, el
+  // widget de DISH) a veces reasigna m.cerrar para añadir su propia limpieza
+  // al cerrar. Los listeners de aquí llaman a m.cerrar() — no a una `cerrar`
+  // capturada — para que siempre disparen esa versión reasignada, venga el
+  // cierre del fondo, del botón [data-cerrar] o de fuera (Escape).
+  const m = {
+    overlay,
+    abrir() {
+      if (!overlay.hidden) return;
+      overlay.hidden = false;
+      soltar = atraparFoco(overlay.firstElementChild);
+      sincronizarFlotante();
+    },
+    cerrar() {
+      if (overlay.hidden) return;
+      overlay.hidden = true;
+      if (soltar) soltar();
+      soltar = null;
+      sincronizarFlotante();
+    },
   };
-  const cerrar = () => {
-    if (overlay.hidden) return;
-    overlay.hidden = true;
-    if (soltar) soltar();
-    soltar = null;
-    sincronizarFlotante();
-  };
-  overlay.addEventListener("click", (e) => { if (e.target === overlay) cerrar(); });
-  $$("[data-cerrar]", overlay).forEach((b) => b.addEventListener("click", cerrar));
-  return { overlay, abrir, cerrar };
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) m.cerrar(); });
+  $$("[data-cerrar]", overlay).forEach((b) => b.addEventListener("click", () => m.cerrar()));
+  return m;
 }
 
 let pide, reservar, dish;
