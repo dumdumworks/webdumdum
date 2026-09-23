@@ -10,17 +10,31 @@ import { esc, ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
 import { galeria } from "../galeria.mjs";
 import { seccion } from "./eventos.mjs";
+import { icono } from "./local.mjs";
 
 export const RUTA = "/taller-team-building";
 const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
 
-// [n, minititulo es/en, frase es/en] de cada paso.
+// [n, icono, minititulo es/en, frase es/en] de cada paso. El icono es el
+// mismo lenguaje visual del resto de la web (formas sólidas, sin trazo — ver
+// ICONOS en local.mjs); "aforo" son las dos personas que ya se usan para
+// "equipo" en la ficha de local.
 const INCLUYE = [
-  ["01", "Equipos", "Teams", "Por equipos.", "In teams."],
-  ["02", "La masa", "The dough", "Aprendemos a amasar.", "We learn to knead."],
-  ["03", "Montaje", "Assembly", "Montamos los dumplings.", "We build the dumplings."],
-  ["04", "Cocción", "Cooking", "Los cocinamos.", "We cook them."],
-  ["05", "Degustación", "Tasting", "Nos lo comemos.", "We eat."],
+  ["01", "aforo", "Equipos", "Teams",
+    "En cuanto llegáis os dividimos en equipos: la dinámica es de grupo de principio a fin, no cada uno a su bola.",
+    "As soon as you arrive we split you into teams: it's a group thing from start to finish, not everyone doing their own."],
+  ["02", "masa", "La masa", "The dough",
+    "Amasáis vosotros mismos la masa de los dumplings, paso a paso, con nuestro equipo guiándoos de cerca.",
+    "You knead the dumpling dough yourselves, step by step, with our team guiding you closely."],
+  ["03", "dumpling", "Montaje", "Assembly",
+    "Rellenáis y cerráis cada dumpling a mano: aquí se nota qué equipo tiene más maña.",
+    "You fill and fold each dumpling by hand — this is where you find out which team's got the knack."],
+  ["04", "cocinar", "Cocción", "Cooking",
+    "Nuestro equipo los cocina al momento, a la vista de todos, mientras vais viendo cómo queda el resultado.",
+    "Our team cooks them right there in front of you, while you watch the results come together."],
+  ["05", "comer", "Degustación", "Tasting",
+    "Os sentáis a comer lo que habéis hecho, con el resto de la carta también en la mesa.",
+    "You sit down to eat what you've made, with the rest of the menu on the table too."],
 ];
 const COMIDA = [
   ["Entrante", "A compartir", "Starter", "To share"],
@@ -83,22 +97,25 @@ const railEscritorio = (i) => `<div class="taller-tl-rail">
     </div>
     <div class="taller-tl-fila taller-tl-riel">
       <div class="taller-tl-linea"></div>
-      ${INCLUYE.map((_, idx) => `<div class="taller-tl-dot" style="grid-column:${idx + 1}"></div>`).join("\n      ")}
+      ${INCLUYE.map(([, ico], idx) => `<div class="taller-tl-ico" style="grid-column:${idx + 1}">${icono(ico)}</div>`).join("\n      ")}
     </div>
     <div class="taller-tl-fila">
-      ${INCLUYE.map(([, esT, enT]) => `<div class="taller-tl-titulo">${esc(i.lang === "en" ? enT : esT)}</div>`).join("\n      ")}
+      ${INCLUYE.map(([, , esT, enT]) => `<div class="taller-tl-titulo">${esc(i.lang === "en" ? enT : esT)}</div>`).join("\n      ")}
     </div>
     <div class="taller-tl-fila">
-      ${INCLUYE.map(([, , , esC, enC]) => `<div class="taller-tl-desc">${esc(i.lang === "en" ? enC : esC)}</div>`).join("\n      ")}
+      ${INCLUYE.map(([, , , , esC, enC]) => `<div class="taller-tl-desc">${esc(i.lang === "en" ? enC : esC)}</div>`).join("\n      ")}
     </div>
   </div>`;
 const railMovil = (i) => `<div class="taller-tl-movil">
-    ${INCLUYE.map(([n, esT, enT, esC, enC]) => `<div class="taller-tl-paso-m">
-      <div class="taller-tl-cab-m">
-        <span class="taller-tl-num-m tiny muted">${esc(n)}</span>
-        <span class="taller-tl-titulo-m">${esc(i.lang === "en" ? enT : esT)}</span>
+    ${INCLUYE.map(([n, ico, esT, enT, esC, enC]) => `<div class="taller-tl-paso-m">
+      <span class="taller-tl-ico-m">${icono(ico)}</span>
+      <div class="taller-tl-cuerpo-m">
+        <div class="taller-tl-cab-m">
+          <span class="taller-tl-num-m tiny muted">${esc(n)}</span>
+          <span class="taller-tl-titulo-m">${esc(i.lang === "en" ? enT : esT)}</span>
+        </div>
+        <p class="taller-tl-desc-m">${esc(i.lang === "en" ? enC : esC)}</p>
       </div>
-      <p class="taller-tl-desc-m">${esc(i.lang === "en" ? enC : esC)}</p>
     </div>`).join("\n    ")}
   </div>`;
 

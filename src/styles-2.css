@@ -1071,20 +1071,23 @@
 
 /* [01] Incluye (/taller-team-building): línea de tiempo real a ancho
    completo — no la rejilla a medias de .ev-split. En escritorio, riel
-   horizontal de cuatro filas (número, riel con puntos, título, frase) con
+   horizontal de cuatro filas (número, riel con icono, título, frase) con
    la MISMA rejilla de 5 columnas en cada una, así casan columna a columna
    sin medir nada a mano; el filete va de grid-column 1 a 5, que es
    exactamente del primer punto al último (la línea de red antes de una
    columna N empieza donde empieza esa columna), sin sobrar detrás del
-   quinto. En móvil, riel vertical con el mismo punto-sobre-filete que ya
-   se usó (y validó) en esta misma página. */
+   quinto. El icono se centra en esa fila igual que antes el punto (misma
+   técnica de align-self, así que su tamaño no rompe nada) con un fondo del
+   color de la página detrás para que el filete no se vea a través de los
+   huecos del propio dibujo. En móvil, riel vertical con el mismo
+   icono-sobre-filete. */
 .taller-tl { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
 .taller-tl-head { max-width: 720px; }
 .taller-tl-head h2 { margin-top: 16px; }
 
 .taller-tl-rail { margin-top: 56px; }
 .taller-tl-fila { display: grid; grid-template-columns: repeat(5, 1fr); column-gap: 24px; }
-.taller-tl-fila:nth-child(2) { margin-top: 12px; }
+.taller-tl-fila:nth-child(2) { margin-top: 16px; }
 .taller-tl-fila:nth-child(3) { margin-top: 20px; }
 .taller-tl-fila:nth-child(4) { margin-top: 6px; }
 .taller-tl-linea {
@@ -1099,15 +1102,20 @@
      getBoundingClientRect. */
   width: calc(100% + 24px);
 }
-.taller-tl-dot {
+.taller-tl-ico {
   grid-row: 1;
   align-self: center;
   justify-self: start;
-  width: 12px;
-  height: 12px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: var(--red);
+  background: var(--bg);
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.taller-tl-ico svg { display: block; width: 26px; height: 26px; }
 .taller-tl-titulo {
   font-family: var(--font-display);
   font-weight: 700;
@@ -1121,18 +1129,22 @@
 @media (max-width: 879px) {
   .taller-tl { padding: 48px var(--gutter); }
   .taller-tl-rail { display: none; }
-  .taller-tl-movil { display: block; margin-top: 40px; position: relative; padding-left: 28px; }
+  .taller-tl-movil { display: block; margin-top: 40px; position: relative; }
   .taller-tl-movil::before {
-    content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px;
+    content: ""; position: absolute; left: 20px; top: 6px; bottom: 6px;
     width: 2px; background: var(--red);
   }
-  .taller-tl-paso-m { position: relative; margin-bottom: 32px; }
+  .taller-tl-paso-m { position: relative; display: flex; gap: 16px; align-items: flex-start; margin-bottom: 32px; }
   .taller-tl-paso-m:last-child { margin-bottom: 0; }
-  .taller-tl-paso-m::before {
-    content: ""; position: absolute; left: -28px; top: 5px;
-    width: 10px; height: 10px; border-radius: 50%; background: var(--red);
+  .taller-tl-ico-m {
+    position: relative; flex-shrink: 0;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--bg); color: var(--red);
+    display: flex; align-items: center; justify-content: center;
   }
-  .taller-tl-cab-m { display: flex; align-items: baseline; gap: 10px; }
+  .taller-tl-ico-m svg { display: block; width: 24px; height: 24px; }
+  .taller-tl-cuerpo-m { flex: 1; min-width: 0; }
+  .taller-tl-cab-m { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
   .taller-tl-titulo-m {
     font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: -0.01em;
   }
