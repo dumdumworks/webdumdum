@@ -1078,9 +1078,9 @@
    columna N empieza donde empieza esa columna), sin sobrar detrás del
    quinto. El icono se centra en esa fila igual que antes el punto (misma
    técnica de align-self, así que su tamaño no rompe nada), dentro de un
-   círculo de trazo rojo (no macizo, como los filetes del resto de la web)
-   con el fondo del color de la página para que tape el filete sin que se
-   note. En móvil, riel vertical con el mismo icono-sobre-filete. */
+   círculo rojo macizo con el icono en negativo (color de la página) —
+   tapa el filete por sí solo, sin depender de ningún fondo. En móvil,
+   riel vertical con el mismo icono-sobre-filete. */
 .taller-tl { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
 .taller-tl-head { max-width: 720px; }
 .taller-tl-head h2 { margin-top: 16px; }
@@ -1109,9 +1109,8 @@
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: var(--bg);
-  border: 2px solid var(--red);
-  color: var(--red);
+  background: var(--red);
+  color: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1140,7 +1139,7 @@
   .taller-tl-ico-m {
     position: relative; flex-shrink: 0;
     width: 56px; height: 56px; border-radius: 50%;
-    background: var(--bg); border: 2px solid var(--red); color: var(--red);
+    background: var(--red); color: var(--bg);
     display: flex; align-items: center; justify-content: center;
   }
   .taller-tl-ico-m svg { display: block; width: 34px; height: 34px; }
