@@ -15,12 +15,11 @@ import { icono } from "./local.mjs";
 export const RUTA = "/taller-team-building";
 const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
 
-// [n, icono, minititulo es/en, frase es/en] de cada paso. El icono es el
-// mismo lenguaje visual del resto de la web (formas sólidas, sin trazo — ver
-// ICONOS en local.mjs); "aforo" son las dos personas que ya se usan para
-// "equipo" en la ficha de local.
+// [n, icono, minititulo es/en, frase es/en] de cada paso. Los iconos son
+// ICONOS.equipo/masa/dumpling/cocinar/comer en local.mjs, trazados a partir
+// de bocetos reales del proceso del taller.
 const INCLUYE = [
-  ["01", "aforo", "Equipos", "Teams",
+  ["01", "equipo", "Equipos", "Teams",
     "En cuanto llegáis os dividimos en equipos: la dinámica es de grupo de principio a fin, no cada uno a su bola.",
     "As soon as you arrive we split you into teams: it's a group thing from start to finish, not everyone doing their own."],
   ["02", "masa", "La masa", "The dough",
