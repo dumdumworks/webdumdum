@@ -27,7 +27,7 @@ const INCLUYE = [
   ["03", "dumpling", "Montaje", "Assembly",
     "Rellenáis y cerráis cada dumpling <strong>a mano</strong>: aquí se nota qué equipo tiene más maña.",
     "You fill and fold each dumpling <strong>by hand</strong> — this is where you find out which team's got the knack."],
-  ["04", "cocinar", "Cocción", "Cooking",
+  ["04", "cocinar", "Cocinado", "Cooking",
     "Cocináis lo que habéis montado y aprendéis a emplatarlo tal como hacemos en el restaurante.",
     "You cook what you've put together, and learn to plate it just the way we do it in the restaurant."],
   ["05", "comer", "Degustación", "Tasting",
