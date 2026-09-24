@@ -1069,11 +1069,11 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [02] Comida: el dato grande, en mayúsculas, arriba, y el detalle pequeño
-   debajo — al revés que el eyebrow+titular de "[01] Incluye", aquí lo
-   grande manda. Un "+" (del mismo rojo que el texto) en su propia línea
-   entre cada uno. Sin filetes ni caja: la presencia la pone la escala del
-   texto. */
+/* [02] Comida: el dato grande arriba (frase normal, solo la inicial en
+   mayúscula — no todo el texto) y el detalle pequeño debajo — al revés
+   que el eyebrow+titular de "[01] Incluye", aquí lo grande manda. Un "+"
+   (del mismo rojo que el texto) en su propia línea entre cada uno. Sin
+   filetes ni caja: la presencia la pone la escala del texto. */
 .taller-comida {
   margin-top: 24px;
   display: flex;
@@ -1088,7 +1088,6 @@
   font-size: clamp(19px, 2.2vw, 26px);
   line-height: 1.2;
   letter-spacing: -0.01em;
-  text-transform: uppercase;
   color: var(--red);
   text-wrap: balance;
 }
