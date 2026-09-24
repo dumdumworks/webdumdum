@@ -1097,16 +1097,18 @@
    todo el ancho de su columna aunque el contenido no necesitara tanto —
    el desglose se quedaba con la etiqueta y el valor pegados a la
    izquierda y un hueco enorme sin usar a la derecha de cada fila.
-   Centrada dentro de su columna para no quedar pegada a un lado. */
+   Centrada dentro de su columna para no quedar pegada a un lado. 340px
+   es justo lo que necesita la fila más larga (Dumplings/"10 por
+   persona") para no partirse en más de 2 líneas — ni un pelo de más. */
 .taller-tarifas-caja {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
   width: 100%;
-  max-width: 420px;
+  max-width: 340px;
   margin: 0 auto;
-  padding: 22px 20px;
+  padding: 20px 16px;
   border: 1px solid var(--line);
   border-radius: 18px;
   text-align: center;
@@ -1163,7 +1165,7 @@
 }
 .taller-tarifas-caja-menu > div {
   display: grid;
-  grid-template-columns: 96px 1fr;
+  grid-template-columns: 78px 1fr;
   gap: 8px;
   padding: 6px 0;
   border-top: 1px solid var(--line-soft);
