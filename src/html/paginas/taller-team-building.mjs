@@ -77,6 +77,9 @@ const FAQ = [
   { q: ["¿Cuánto cuesta?", "How much does it cost?"],
     a: ["Desde 65€ por persona, según el número de participantes. Te damos el precio exacto al escribirnos.",
       "From €65 per person, depending on group size. We'll give you the exact price when you reach out."] },
+  { q: ["¿Podéis adaptar el taller a otro tipo de evento?", "Can you adapt the workshop for a different kind of event?"],
+    a: ["Sí: el espacio, la carta y las tarifas se adaptan al tipo de evento. Cumpleaños, despedidas, presentaciones… cuéntanos qué necesitas y le buscamos forma.",
+      "Yes: the space, the menu and the rates all adapt to the type of event. Birthdays, leaving dos, launches… tell us what you need and we'll make it work."] },
 ];
 
 // Fila de .taller-list: dos idiomas o cuatro (etiqueta/valor por idioma).
@@ -108,6 +111,7 @@ const tarifasVisual = (i) => {
   return `      <div class="taller-tarifas-cajas">
 ${cajas}
       </div>
+      <a class="btn red taller-tarifas-btn" href="${i.ruta("/eventos")}#contact-eventos" style="width:fit-content"><span class="btn-label">${esc(t("Contratar", "Book now"))}</span><span class="btn-arrow">→</span></a>
       <p class="taller-tarifas-consulta">${esc(t("+30 personas, consultamos contigo.", "30+ people — let's talk it through."))}</p>`;
 };
 // INCLUYE es una línea de tiempo real: a ancho completo (no la rejilla a
@@ -217,6 +221,10 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   ${railMovil(i)}
 </section>
 
+<section class="taller-galeria">
+${galeria(i, { fotos: galerias.tallerTeamBuilding || [], ratio: "3 / 4", etiquetaHueco: t("Team Building", "Team Building"), raiz })}
+</section>
+
 <section class="taller-grid">
   ${casilla("02", "comida", t("Comida", "Food"),
     t("El menú de<br>la degustación.", "The tasting<br>menu."),
@@ -237,32 +245,29 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
         ${filas(i, HORARIOS)}
       </div>
       <p class="tiny muted taller-casilla-nota">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
-  ${casilla("05", "ajustar", t("Y si tu evento es distinto", "And if your event is different"),
-    t("Adaptabilidad<br>y versatilidad.", "Adaptability<br>and versatility."),
-    esc(t("Adecuamos el taller para que parezca vuestro.", "We shape the workshop to feel like yours.")),
-    `      <p class="body">${esc(t(
-      "El espacio, la carta y las tarifas se adaptan al tipo de evento. Cumpleaños, despedidas, presentaciones… si nos cuentas qué necesitas, le buscamos forma.",
-      "The space, the menu and the rates all adapt to the type of event. Birthdays, leaving dos, launches… tell us what you need and we'll make it work."))}</p>`)}
-  ${casilla("06", "camara", t("En imágenes", "In pictures"),
-    t("Así se ve<br>el taller.", "This is<br>the workshop."),
-    esc(t("La verdad es que la gente lo pasa bien.", "Honestly, people have a great time.")),
-    "      " + galeria(i, { fotos: galerias.tallerTeamBuilding || [], ratio: "3 / 4", etiquetaHueco: t("Team Building", "Team Building"), raiz, modo: "paginado", etiqueta: t("Team Building", "Team Building"), huecos: 4, cols: 1 }))}
-  ${casilla("07", "bocadillo", t("Preguntas frecuentes", "FAQ"),
-    t("Lo que más<br>nos preguntáis.", "What you<br>ask us most."),
-    null,
-    `      <div class="taller-casilla-faq">
-${FAQ.map(({ q, a }) => `        <div style="margin-bottom:18px">
-          <div class="taller-casilla-q">${esc(i.lang === "en" ? q[1] : q[0])}</div>
-          <p class="taller-casilla-a">${esc(i.lang === "en" ? a[1] : a[0])}</p>
-        </div>`).join("\n")}
-      </div>
-      <div class="taller-casilla-cta">
-        <h3 class="taller-casilla-cta-h">${t("¿Hablamos?", "Let's talk?")}</h3>
-        <p class="taller-casilla-cta-p">${esc(t(
-          "Cuéntanos cuántos sois y cuándo, y te mandamos disponibilidad y presupuesto.",
-          "Tell us how many you are and when, and we'll send you availability and a quote."))}</p>
-        <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
-      </div>`)}
+</section>
+
+<section class="taller-faq">
+  <div class="taller-faq-head">
+    <div class="tiny muted">[05] ${esc(t("Preguntas frecuentes", "FAQ"))}</div>
+    <h2 class="h-1">${t("Lo que más<br>nos preguntáis.", "What you<br>ask us most.")}</h2>
+  </div>
+  <details class="faq-toggle taller-faq-toggle" open>
+    <summary class="big">${esc(t("Preguntas frecuentes", "FAQ"))}<span class="faq-ico" aria-hidden="true"></span></summary>
+    <div class="faq-list">
+      ${FAQ.map(({ q, a }) => `      <details class="faq-item">
+        <summary>${esc(i.lang === "en" ? q[1] : q[0])}<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p class="body">${esc(i.lang === "en" ? a[1] : a[0])}</p>
+      </details>`).join("\n")}
+    </div>
+  </details>
+  <div class="taller-faq-cierre">
+    <h3 class="h-1">${t("¿Hablamos?", "Let's talk?")}</h3>
+    <p class="body">${esc(t(
+      "Cuéntanos cuántos sois y cuándo, y te mandamos disponibilidad y presupuesto.",
+      "Tell us how many you are and when, and we'll send you availability and a quote."))}</p>
+    <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos" style="width:fit-content"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
+  </div>
 </section>
 </div>`;
 
