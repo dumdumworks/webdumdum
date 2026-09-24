@@ -35,11 +35,12 @@ const INCLUYE = [
     "Os sentáis a comer lo que habéis hecho, con el resto de la carta también en la mesa.",
     "You sit down to eat what you've made, with the rest of the menu on the table too."],
 ];
+// [grande es, pequeño es, grande en, pequeño en] — grande va en mayúsculas.
 const COMIDA = [
-  ["Entrante", "A compartir", "Starter", "To share"],
-  ["Carta de dumplings", "Toda, por persona", "Dumpling menu", "The whole thing, per person"],
-  ["Bebida", "Una", "Drink", "One"],
-  ["Postre", "Un mochi", "Dessert", "One mochi"],
+  ["Un entrante", "a compartir", "One starter", "to share"],
+  ["Toda la carta de dumplings, por persona", "10 dumplings por persona", "The whole dumpling menu, per person", "10 dumplings per person"],
+  ["Una bebida", "a elegir", "One drink", "your choice"],
+  ["Un mochi", "a elegir", "One mochi", "your choice"],
 ];
 const HORARIOS = [
   ["Duración aprox.", "2 – 2,5 h", "Approx. duration", "2 – 2.5 h"],
@@ -84,13 +85,12 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
-// Celdas de .taller-comida: rótulo pequeño arriba y el dato grande debajo,
-// el mismo patrón eyebrow+titular que "[01] Incluye" — con un "+" en su
-// propia línea entre cada una.
-const filasComida = (i) => COMIDA.map(([esL, esV, enL, enV], idx) => {
-  const etiqueta = i.lang === "en" ? enL : esL;
-  const valor = i.lang === "en" ? enV : esV;
-  const item = `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
+// Celdas de .taller-comida: el dato grande (mayúsculas) arriba, el detalle
+// pequeño debajo — con un "+" en su propia línea entre cada una.
+const filasComida = (i) => COMIDA.map(([esG, esP, enG, enP], idx) => {
+  const grande = i.lang === "en" ? enG : esG;
+  const pequeno = i.lang === "en" ? enP : esP;
+  const item = `<div><b>${esc(grande)}</b><span>${esc(pequeno)}</span></div>`;
   return idx < COMIDA.length - 1 ? `${item}\n      <div class="taller-comida-mas">+</div>` : item;
 }).join("\n      ");
 // INCLUYE es una línea de tiempo real: a ancho completo (no la rejilla a

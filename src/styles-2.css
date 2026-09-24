@@ -1069,10 +1069,11 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [02] Comida: el mismo patrón eyebrow+titular que "[01] Incluye" (rótulo
-   pequeño arriba, dato grande debajo) aplicado a cada uno de los 4 datos,
-   con un "+" en su propia línea entre cada uno. Sin filetes ni caja: la
-   presencia la pone la escala del texto. */
+/* [02] Comida: el dato grande, en mayúsculas, arriba, y el detalle pequeño
+   debajo — al revés que el eyebrow+titular de "[01] Incluye", aquí lo
+   grande manda. Un "+" (del mismo rojo que el texto) en su propia línea
+   entre cada uno. Sin filetes ni caja: la presencia la pone la escala del
+   texto. */
 .taller-comida {
   margin-top: 24px;
   display: flex;
@@ -1082,26 +1083,24 @@
 }
 .taller-comida b {
   display: block;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-weight: 500;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: rgba(255,0,30,0.55);
-  margin-bottom: 6px;
-}
-.taller-comida span {
-  display: block;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(20px, 2.4vw, 28px);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  font-size: clamp(19px, 2.2vw, 26px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
   color: var(--red);
   text-wrap: balance;
 }
+.taller-comida span {
+  display: block;
+  margin-top: 6px;
+  font-size: 15px;
+  line-height: 1.3;
+  color: rgba(255,0,30,0.6);
+}
 .taller-comida-mas {
-  color: var(--sage);
+  color: var(--red);
   font-size: clamp(20px, 2.2vw, 26px);
 }
 
