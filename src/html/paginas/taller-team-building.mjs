@@ -194,7 +194,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 
 <section class="taller-grid">
   ${casilla("02", "comida", t("Comida", "Food"),
-    t("El menú de la<br>degustación.", "The tasting<br>menu."),
+    t("El menú de<br>la degustación.", "The tasting<br>menu."),
     esc(t("Se prueba toda la carta.", "You get to try the whole menu.")),
     `      <div class="taller-list">
         ${filas(i, COMIDA)}
