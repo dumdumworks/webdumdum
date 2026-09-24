@@ -1225,7 +1225,7 @@
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
-.taller-tl-desc { font-size: 15px; line-height: 1.4; }
+.taller-tl-desc { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; line-height: 1.5; }
 .taller-tl-movil { display: none; }
 
 @media (max-width: 879px) {
@@ -1251,7 +1251,7 @@
   .taller-tl-titulo-m {
     font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: -0.01em;
   }
-  .taller-tl-desc-m { margin-top: 6px; font-size: 15px; line-height: 1.4; }
+  .taller-tl-desc-m { margin-top: 6px; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; line-height: 1.5; }
 }
 
 /* Las tres cifras de Redes, en las celdas del resumen de la ficha de local
