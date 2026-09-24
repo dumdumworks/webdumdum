@@ -1081,6 +1081,9 @@
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
+  /* Sin borde arriba: .taller-tl (justo encima) ya pone su propio
+     border-bottom — con los dos juntos, el filete salía de 2px. */
+  border-top: none;
 }
 /* El filete entre casillas salía de sumar el border-right de una columna
    con el borde del contenedor: en un grid de 1fr esas columnas caen en
