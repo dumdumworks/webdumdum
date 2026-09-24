@@ -9,7 +9,6 @@
 import { esc, ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
 import { galeria } from "../galeria.mjs";
-import { seccion } from "./eventos.mjs";
 import { icono } from "./local.mjs";
 
 export const RUTA = "/taller-team-building";
@@ -85,8 +84,8 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
-// Celdas de .taller-comida: el dato grande (mayúsculas) arriba, el detalle
-// pequeño debajo — con un "+" en su propia línea entre cada una.
+// Celdas de .taller-comida: el dato grande arriba, el detalle pequeño
+// debajo — con un "+" en su propia línea entre cada una.
 const filasComida = (i) => COMIDA.map(([esG, esP, enG, enP], idx) => {
   const grande = i.lang === "en" ? enG : esG;
   const pequeno = i.lang === "en" ? enP : esP;
@@ -125,6 +124,17 @@ const railMovil = (i) => `<div class="taller-tl-movil">
         <p class="taller-tl-desc-m">${esc(i.lang === "en" ? enC : esC)}</p>
       </div>
     </div>`).join("\n    ")}
+  </div>`;
+// Casilla de la rejilla de 3×2 ([02]-[07]): rótulo, titular compacto y el
+// contenido, a una sola columna — no el .ev-split a medias de seccion(). El
+// alto de cada fila lo pone la rejilla CSS por su cuenta (stretch): la
+// casilla con más contenido de la fila manda, las demás se adaptan solas.
+const casilla = (n, rotulo, titulo, derecha) => `<div class="taller-casilla">
+    <div class="tiny muted">[${n}] ${esc(rotulo)}</div>
+    <h3 class="taller-casilla-h">${titulo}</h3>
+    <div class="taller-casilla-body">
+${derecha}
+    </div>
   </div>`;
 
 function jsonLd(i, url) {
@@ -187,43 +197,40 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   ${railMovil(i)}
 </section>
 
-${seccion("02", t("Comida", "Food"),
+<section class="taller-grid">
+  ${casilla("02", t("Comida", "Food"),
     esc(t("Y luego, se come.", "And then, we eat.")),
-    `<div class="taller-comida">
-      ${filasComida(i)}
-    </div>
-    <p class="tiny muted" style="margin-top:16px">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
-
-${seccion("03", t("Horarios", "Timings"),
+    `      <div class="taller-comida">
+        ${filasComida(i)}
+      </div>
+      <p class="tiny muted" style="margin-top:16px">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
+  ${casilla("03", t("Horarios", "Timings"),
     t("Un par de horas,<br>ni un minuto más.", "A couple hours,<br>not one more."),
-    `<div class="taller-list">
-      ${filas(i, HORARIOS)}
-    </div>
-    <p class="tiny muted" style="margin-top:16px">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
-
-${seccion("04", t("Tarifas", "Rates"),
+    `      <div class="taller-list">
+        ${filas(i, HORARIOS)}
+      </div>
+      <p class="tiny muted" style="margin-top:16px">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
+  ${casilla("04", t("Tarifas", "Rates"),
     t("Más gente,<br>mejor precio.", "More people,<br>better price."),
-    `<div class="taller-list">
-      ${filas(i, TARIFAS)}
-    </div>
-    <p class="tiny muted" style="margin-top:16px">${esc(t("* Desplazamiento sujeto a disponibilidad; sin comida, solo el taller dinámico.", "* Off-site sessions subject to availability; food not included, workshop only."))}</p>`)}
-
-${seccion("05", t("Y si tu evento es distinto", "And if your event is different"),
+    `      <div class="taller-list">
+        ${filas(i, TARIFAS)}
+      </div>
+      <p class="tiny muted" style="margin-top:16px">${esc(t("* Desplazamiento sujeto a disponibilidad; sin comida, solo el taller dinámico.", "* Off-site sessions subject to availability; food not included, workshop only."))}</p>`)}
+  ${casilla("05", t("Y si tu evento es distinto", "And if your event is different"),
     t("Adaptabilidad<br>y versatilidad.", "Adaptability<br>and versatility."),
-    `<p class="body">${esc(t(
+    `      <p class="body">${esc(t(
       "El espacio, la carta y las tarifas se adaptan al tipo de evento. Cumpleaños, despedidas, presentaciones… si nos cuentas qué necesitas, le buscamos forma.",
       "The space, the menu and the rates all adapt to the type of event. Birthdays, leaving dos, launches… tell us what you need and we'll make it work."))}</p>`)}
-
-${seccion("06", t("En imágenes", "In pictures"),
+  ${casilla("06", t("En imágenes", "In pictures"),
     t("Así se ve<br>el taller.", "This is<br>the workshop."),
-    galeria(i, { fotos: galerias.tallerTeamBuilding || [], ratio: "3 / 4", etiquetaHueco: t("Team Building", "Team Building"), raiz, modo: "paginado", etiqueta: t("Team Building", "Team Building"), huecos: 6 }))}
-
-${seccion("07", t("Preguntas frecuentes", "FAQ"),
+    "      " + galeria(i, { fotos: galerias.tallerTeamBuilding || [], ratio: "3 / 4", etiquetaHueco: t("Team Building", "Team Building"), raiz, modo: "paginado", etiqueta: t("Team Building", "Team Building"), huecos: 4, cols: 1 }))}
+  ${casilla("07", t("Preguntas frecuentes", "FAQ"),
     esc(t("Lo que preguntáis siempre.", "What you always ask.")),
-    FAQ.map(({ q, a }) => `<div style="margin-bottom:24px">
-      <h3 class="h-2" style="font-size:18px">${esc(i.lang === "en" ? q[1] : q[0])}</h3>
-      <p class="body" style="margin-top:8px">${esc(i.lang === "en" ? a[1] : a[0])}</p>
-    </div>`).join("\n    "))}
+    FAQ.map(({ q, a }) => `      <div style="margin-bottom:18px">
+        <div class="taller-casilla-q">${esc(i.lang === "en" ? q[1] : q[0])}</div>
+        <p class="taller-casilla-a">${esc(i.lang === "en" ? a[1] : a[0])}</p>
+      </div>`).join("\n"))}
+</section>
 
 <section class="ev-split ev-split--contact" id="contact-taller">
   <div>

@@ -1106,6 +1106,44 @@
   font-size: clamp(20px, 2.2vw, 26px);
 }
 
+/* Rejilla de [02] a [07] (Comida, Horarios, Tarifas, Y si tu evento es
+   distinto, En imágenes, Preguntas frecuentes): 3 columnas × 2 filas, no
+   secciones apiladas a ancho completo. Cada fila estira sus 3 casillas al
+   alto de la que más contenido tiene (comportamiento normal de CSS grid,
+   sin calcularlo a mano) — así Comida/Horarios/Tarifas se adaptan a la
+   que más mida de las tres, y lo mismo en la fila de abajo. */
+.taller-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+.taller-casilla {
+  padding: 36px var(--gutter);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.taller-casilla-h {
+  margin-top: 12px;
+  margin-bottom: 24px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(21px, 1.8vw, 28px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+.taller-casilla-q {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.3;
+}
+.taller-casilla-a { margin-top: 4px; font-size: 14px; line-height: 1.4; }
+@media (max-width: 879px) {
+  .taller-grid { grid-template-columns: 1fr; border-left: none; }
+  .taller-casilla { border-right: none; padding: 32px var(--gutter); }
+}
+
 /* [01] Incluye (/taller-team-building): línea de tiempo real a ancho
    completo — no la rejilla a medias de .ev-split. En escritorio, riel
    horizontal de cuatro filas (número, riel con icono, título, frase) con
