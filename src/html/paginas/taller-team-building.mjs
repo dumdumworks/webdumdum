@@ -118,12 +118,14 @@ const railMovil = (i) => `<div class="taller-tl-movil">
       </div>
     </div>`).join("\n    ")}
   </div>`;
-// Casilla de la rejilla de 3×2 ([02]-[07]): rótulo, titular compacto y el
-// contenido, a una sola columna — no el .ev-split a medias de seccion(). El
-// alto de cada fila lo pone la rejilla CSS por su cuenta (stretch): la
-// casilla con más contenido de la fila manda, las demás se adaptan solas.
-const casilla = (n, rotulo, titulo, derecha) => `<div class="taller-casilla">
+// Casilla de la rejilla de 3×2 ([02]-[07]): rótulo, icono de categoría,
+// titular compacto y el contenido, a una sola columna — no el .ev-split a
+// medias de seccion(). El alto de cada fila lo pone la rejilla CSS por su
+// cuenta (stretch): la casilla con más contenido de la fila manda, las
+// demás se adaptan solas.
+const casilla = (n, ico, rotulo, titulo, derecha) => `<div class="taller-casilla">
     <div class="tiny muted">[${n}] ${esc(rotulo)}</div>
+    <div class="taller-casilla-ico">${icono(ico)}</div>
     <h3 class="taller-casilla-h">${titulo}</h3>
     <div class="taller-casilla-body">
 ${derecha}
@@ -191,33 +193,33 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 </section>
 
 <section class="taller-grid">
-  ${casilla("02", t("Comida", "Food"),
+  ${casilla("02", "comida", t("Comida", "Food"),
     esc(t("Y luego, se come.", "And then, we eat.")),
     `      <div class="taller-list">
         ${filas(i, COMIDA)}
       </div>
       <p class="tiny muted" style="margin-top:16px">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
-  ${casilla("03", t("Horarios", "Timings"),
+  ${casilla("03", "hora", t("Horarios", "Timings"),
     t("Un par de horas,<br>ni un minuto más.", "A couple hours,<br>not one more."),
     `      <div class="taller-list">
         ${filas(i, HORARIOS)}
       </div>
       <p class="tiny muted" style="margin-top:16px">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
-  ${casilla("04", t("Tarifas", "Rates"),
+  ${casilla("04", "tarifa", t("Tarifas", "Rates"),
     t("Más gente,<br>mejor precio.", "More people,<br>better price."),
     `      <div class="taller-list">
         ${filas(i, TARIFAS)}
       </div>
       <p class="tiny muted" style="margin-top:16px">${esc(t("* Desplazamiento sujeto a disponibilidad; sin comida, solo el taller dinámico.", "* Off-site sessions subject to availability; food not included, workshop only."))}</p>`)}
-  ${casilla("05", t("Y si tu evento es distinto", "And if your event is different"),
+  ${casilla("05", "ajustar", t("Y si tu evento es distinto", "And if your event is different"),
     t("Adaptabilidad<br>y versatilidad.", "Adaptability<br>and versatility."),
     `      <p class="body">${esc(t(
       "El espacio, la carta y las tarifas se adaptan al tipo de evento. Cumpleaños, despedidas, presentaciones… si nos cuentas qué necesitas, le buscamos forma.",
       "The space, the menu and the rates all adapt to the type of event. Birthdays, leaving dos, launches… tell us what you need and we'll make it work."))}</p>`)}
-  ${casilla("06", t("En imágenes", "In pictures"),
+  ${casilla("06", "camara", t("En imágenes", "In pictures"),
     t("Así se ve<br>el taller.", "This is<br>the workshop."),
     "      " + galeria(i, { fotos: galerias.tallerTeamBuilding || [], ratio: "3 / 4", etiquetaHueco: t("Team Building", "Team Building"), raiz, modo: "paginado", etiqueta: t("Team Building", "Team Building"), huecos: 4, cols: 1 }))}
-  ${casilla("07", t("Preguntas frecuentes", "FAQ"),
+  ${casilla("07", "bocadillo", t("Preguntas frecuentes", "FAQ"),
     esc(t("Lo que preguntáis siempre.", "What you always ask.")),
     FAQ.map(({ q, a }) => `      <div style="margin-bottom:18px">
         <div class="taller-casilla-q">${esc(i.lang === "en" ? q[1] : q[0])}</div>

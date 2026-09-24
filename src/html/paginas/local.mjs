@@ -30,6 +30,15 @@ const ICONOS = {
   ojo: '<path d="M12 5C6.6 5 2.7 9.3 1.5 12c1.2 2.7 5.1 7 10.5 7s9.3-4.3 10.5-7C21.3 9.3 17.4 5 12 5Zm0 11.2a4.2 4.2 0 1 1 0-8.4 4.2 4.2 0 0 1 0 8.4Z"/><circle cx="12" cy="12" r="2.1"/>',
   corazon: '<path d="M12 21S3.6 15.8 2.3 10.7C1.3 7 3.6 4 6.9 4c2.1 0 3.9 1.2 5.1 3 1.2-1.8 3-3 5.1-3 3.3 0 5.6 3 4.6 6.7C20.4 15.8 12 21 12 21Z"/>',
   bocadillo: '<path d="M4 3h16a2.5 2.5 0 0 1 2.5 2.5v9A2.5 2.5 0 0 1 20 17h-7.4L7 21.3V17H4a2.5 2.5 0 0 1-2.5-2.5v-9A2.5 2.5 0 0 1 4 3Z"/>',
+  // Las 6 casillas de /taller-team-building ([02]-[07]): mismo lenguaje
+  // sólido de arriba, no el trazo fino de equipo/masa/dumpling/cocinar/comer
+  // (esos son la línea de tiempo del proceso; estos son iconos de categoría
+  // de información). "hora" y "bocadillo" ya existían y sirven tal cual
+  // para Horarios y Preguntas frecuentes.
+  comida: '<path d="M3.2 12.5h17.6a1 1 0 0 1 .98 1.19A8.6 8.6 0 0 1 13.5 21h-3a8.6 8.6 0 0 1-8.28-7.31 1 1 0 0 1 .98-1.19Z"/><rect x="5.5" y="2.2" width="1.5" height="12" rx=".75" transform="rotate(18 6.25 8.2)"/><rect x="9.2" y="2.2" width="1.5" height="12" rx=".75" transform="rotate(18 9.95 8.2)"/>',
+  tarifa: '<path d="M12.6 2.3h6.9A2.1 2.1 0 0 1 21.6 4.4v6.9c0 .56-.22 1.09-.62 1.48l-9.2 9.2a2.1 2.1 0 0 1-2.97 0L2.3 15.47a2.1 2.1 0 0 1 0-2.97l9.2-9.2c.39-.4.92-.62 1.48-.62Z"/><circle cx="16.3" cy="7.1" r="1.6" fill="var(--bg)"/>',
+  ajustar: '<rect x="5" y="3" width="2" height="18" rx="1"/><circle cx="6" cy="9" r="2.6"/><rect x="11" y="3" width="2" height="18" rx="1"/><circle cx="12" cy="15.5" r="2.6"/><rect x="17" y="3" width="2" height="18" rx="1"/><circle cx="18" cy="6.5" r="2.6"/>',
+  camara: '<path d="M9.2 3.6h5.6l1.1 1.9H19a2.4 2.4 0 0 1 2.4 2.4v10a2.4 2.4 0 0 1-2.4 2.4H5a2.4 2.4 0 0 1-2.4-2.4v-10A2.4 2.4 0 0 1 5 5.5h3.1Z"/><circle cx="12" cy="13.2" r="3.3" fill="var(--bg)"/><circle cx="12" cy="13.2" r="1.8"/>',
   // Los del taller de team building: trazados a partir de los iconos
   // finales del set (DUM_DUM_iconos.zip) — vaporera, dumpling, palillos con
   // dumpling, rodillo, equipo (sin dumpling, distinto de "aforo" que sigue
