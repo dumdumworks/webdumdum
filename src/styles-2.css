@@ -1259,6 +1259,15 @@
    "[01] Incluye". Se recorta solo en esta combinación concreta. */
 .ev-hero:has(+ .taller-tl) { padding-bottom: 4vh; }
 .ev-hero + .taller-tl { padding-top: 32px; }
+/* En escritorio (≥880px, ver el media query de abajo) el hero pierde su
+   border-bottom: la caja de .taller-tl-grid ya pone su propio borde justo
+   debajo, a 32px — los dos filetes tan juntos sobraban, con uno basta. En
+   móvil no hay caja (.taller-tl-grid no lleva borde ahí), así que el
+   border-bottom del hero se queda: es la única línea entre el hero y
+   "[01] El taller". */
+@media (min-width: 880px) {
+  .ev-hero:has(+ .taller-tl) { border-bottom: none; }
+}
 /* Mismo tamaño que el resto de titulares de casilla ([02]-[04]): "Así
    funciona el taller" ya no destaca por sí solo, es una casilla más de la
    rejilla de 2×2. */
