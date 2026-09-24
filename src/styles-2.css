@@ -1069,18 +1069,29 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [02] Comida: no etiqueta/valor — las 4 frases completas, una por línea,
-   con un "+" en su propia línea entre cada una: 4 líneas y ya, sin rejilla
-   en dos ejes. Sin filetes ni caja: la presencia la pone la escala del
-   texto, a tamaño de titular. */
+/* [02] Comida: el mismo patrón eyebrow+titular que "[01] Incluye" (rótulo
+   pequeño arriba, dato grande debajo) aplicado a cada uno de los 4 datos,
+   con un "+" en su propia línea entre cada uno. Sin filetes ni caja: la
+   presencia la pone la escala del texto. */
 .taller-comida {
   margin-top: 24px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
   max-width: 480px;
 }
-.taller-comida > div {
+.taller-comida b {
+  display: block;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255,0,30,0.55);
+  margin-bottom: 6px;
+}
+.taller-comida span {
+  display: block;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(20px, 2.4vw, 28px);
