@@ -92,11 +92,16 @@ const filas = (i, datos) => datos.map((d) => {
 // El desglose del menú (antes su propia casilla, [03] Comida) se mete
 // dentro de cada tarjeta de precio: es el mismo menú para los tres
 // tramos, así que se repite igual en las tres — cada tarjeta ya cuenta
-// la historia completa (a quién, cuánto cuesta y qué se come), sin
-// depender de otra casilla aparte.
+// la historia completa (cuánto dura, a quién, cuánto cuesta y qué se
+// come), sin depender de otra casilla aparte. La duración va primero,
+// con el valor tomado de HORARIOS[0] en vez de repetido a mano, para que
+// no se desincronice si cambia ahí.
 const menuDesglose = (i) => {
-  const filas = COMIDA.map(([esL, esV, enL, enV]) =>
-    `        <div><b>${esc(i.lang === "en" ? enL : esL)}</b><span>${esc(i.lang === "en" ? enV : esV)}</span></div>`).join("\n");
+  const { t } = i;
+  const [, esDuracion, , enDuracion] = HORARIOS[0];
+  const filas = [[t("Duración", "Duration"), i.lang === "en" ? enDuracion : esDuracion], ...COMIDA.map(([esL, esV, enL, enV]) =>
+    [i.lang === "en" ? enL : esL, i.lang === "en" ? enV : esV])]
+    .map(([etiqueta, valor]) => `        <div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`).join("\n");
   return `      <div class="taller-tarifas-caja-menu">
 ${filas}
       </div>`;
@@ -104,10 +109,8 @@ ${filas}
 // [02] Tarifas: tres cajas una al lado de la otra, una por tramo — la más
 // barata (más gente) destaca a pastilla entera en rojo sólido: la
 // jerarquía de venta se ve de un vistazo, no hay que leer para encontrar
-// la mejor. El botón y las dos notas van en una fila (en escritorio; en
-// móvil se apilan solas, sin regla especial) — a la altura del botón, no
-// una debajo de otra, para no estirar la casilla de más cuando la rejilla
-// la iguala a la altura del riel de al lado.
+// la mejor. El botón "Contratar" va dentro de cada tarjeta, no uno
+// compartido debajo de las tres — cada tramo se contrata por su cuenta.
 const tarifasVisual = (i, nota) => {
   const { t } = i;
   const precios = TARIFAS.map(([, , , , p]) => p);
@@ -122,17 +125,15 @@ const tarifasVisual = (i, nota) => {
         <div class="taller-tarifas-caja-precio">${p}<span class="taller-tarifas-caja-simbolo">€</span></div>
         <div class="taller-tarifas-caja-persona">${esc(t("por persona", "per person"))}</div>
 ${menuDesglose(i)}
+        <a class="btn red taller-tarifas-btn" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Contratar", "Book now"))}</span><span class="btn-arrow">→</span></a>
       </div>`;
   }).join("\n");
   return `      <div class="taller-tarifas-cajas">
 ${cajas}
       </div>
       <div class="taller-tarifas-pie">
-        <a class="btn red taller-tarifas-btn" href="${i.ruta("/eventos")}#contact-eventos" style="width:fit-content"><span class="btn-label">${esc(t("Contratar", "Book now"))}</span><span class="btn-arrow">→</span></a>
-        <div class="taller-tarifas-notas">
-          <p class="taller-tarifas-consulta">${esc(t("+30 personas, consultamos contigo.", "30+ people — let's talk it through."))}</p>
-          <p class="tiny muted taller-casilla-nota">${esc(nota)}</p>
-        </div>
+        <p class="taller-tarifas-consulta">${esc(t("+30 personas, consultamos contigo.", "30+ people — let's talk it through."))}</p>
+        <p class="tiny muted taller-casilla-nota">${esc(nota)}</p>
       </div>`;
 };
 // INCLUYE es una línea de tiempo real: a ancho completo (no la rejilla a
