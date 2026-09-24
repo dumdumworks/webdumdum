@@ -147,11 +147,12 @@ const railMovil = (i) => `<div class="taller-tl-movil">
       </div>
     </div>`).join("\n    ")}
   </div>`;
-// Casilla de la rejilla de 3×2 ([02]-[07]): rótulo, icono de categoría,
-// titular compacto, un subtítulo opcional y el contenido, a una sola
-// columna — no el .ev-split a medias de seccion(). El alto de cada fila lo
-// pone la rejilla CSS por su cuenta (stretch): la casilla con más
-// contenido de la fila manda, las demás se adaptan solas.
+// Casilla de [02]-[04] (Comida junto al timeline, Horarios y Tarifas
+// debajo): rótulo, icono de categoría, titular compacto, un subtítulo
+// opcional y el contenido, a una sola columna — no el .ev-split a medias
+// de seccion(). El alto de cada fila lo pone la rejilla CSS por su cuenta
+// (stretch): la casilla con más contenido de la fila manda, las demás se
+// adaptan solas.
 const casilla = (n, ico, rotulo, titulo, subtitulo, derecha) => `<div class="taller-casilla">
     <div class="tiny muted">[${n}] ${esc(rotulo)}</div>
     <div class="taller-casilla-ico">${icono(ico)}</div>
@@ -235,18 +236,18 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 </section>
 
 <section class="taller-grid">
-  ${casilla("03", "tarifa", t("Tarifas", "Rates"),
-    t("Precios<br>y tarifas.", "Prices<br>and rates."),
-    esc(t("A más gente, mejor precio.", "More people, better price.")),
-    `${tarifasVisual(i)}
-      <p class="tiny muted taller-casilla-nota">${esc(t("* Talleres fuera del restaurante sujetos a disponibilidad.", "* Off-site workshops subject to availability."))}</p>`)}
-  ${casilla("04", "hora", t("Horarios", "Timings"),
+  ${casilla("03", "hora", t("Horarios", "Timings"),
     t("Horarios y<br>duraciones.", "Timings and<br>durations."),
     esc(t("Un par de horitas, para que no se aburran.", "A couple of hours, so nobody gets bored.")),
     `      <div class="taller-list">
         ${filas(i, HORARIOS)}
       </div>
       <p class="tiny muted taller-casilla-nota">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
+  ${casilla("04", "tarifa", t("Tarifas", "Rates"),
+    t("Precios<br>y tarifas.", "Prices<br>and rates."),
+    esc(t("A más gente, mejor precio.", "More people, better price.")),
+    `${tarifasVisual(i)}
+      <p class="tiny muted taller-casilla-nota">${esc(t("* Talleres fuera del restaurante sujetos a disponibilidad.", "* Off-site workshops subject to availability."))}</p>`)}
 </section>
 
 <section class="taller-galeria">
