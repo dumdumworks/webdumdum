@@ -1,14 +1,14 @@
 // ─────────────────────────────────────────────────────────────
 // TALLER TEAM BUILDING (/taller-team-building): la única celda de "Servicios"
 // de /eventos con página propia. Contenido adaptado del dossier de eventos
-// (incluye, comida, horarios, tarifas), con espacio de fotos (huecos hasta
-// que haya fotos reales en galerias.json) y preguntas frecuentes — pensada
+// (incluye, comida, horarios, tarifas) y preguntas frecuentes — pensada
 // para SEO/GEO: intención de búsqueda real en el H1, Service+FAQPage en el
-// JSON-LD con las tarifas reales.
+// JSON-LD con las tarifas reales. Sin galería de fotos por ahora (se
+// retiró a propósito, pendiente de retomarla — ver .taller-galeria en
+// styles-2.css, que se dejó tal cual para cuando vuelva).
 // ─────────────────────────────────────────────────────────────
 import { esc, ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
-import { galeria } from "../galeria.mjs";
 import { icono } from "./local.mjs";
 
 export const RUTA = "/taller-team-building";
@@ -193,7 +193,7 @@ function faqLd(i) {
   };
 }
 
-export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }) {
+export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
   const { t } = i;
   const s = seo.find((r) => r.p === RUTA);
   const url = ORIGIN + i.ruta(RUTA);
@@ -250,10 +250,6 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
     esc(t("A más gente, mejor precio.", "More people, better price.")),
     `${tarifasVisual(i)}
       <p class="tiny muted taller-casilla-nota">${esc(t("* Talleres fuera del restaurante sujetos a disponibilidad.", "* Off-site workshops subject to availability."))}</p>`)}
-</section>
-
-<section class="taller-galeria">
-${galeria(i, { fotos: galerias.tallerTeamBuilding || [], ratio: "3 / 4", etiquetaHueco: t("Team Building", "Team Building"), raiz })}
 </section>
 
 <section class="taller-faq">
