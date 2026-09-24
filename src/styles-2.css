@@ -1268,17 +1268,12 @@
 @media (min-width: 880px) {
   .ev-hero:has(+ .taller-tl) { border-bottom: none; }
 }
-/* Mismo tamaño que el resto de titulares de casilla ([02]-[04]): "Así
-   funciona el taller" ya no destaca por sí solo, es una casilla más de la
-   rejilla de 2×2. */
-.taller-tl-head h2 {
-  margin-top: 16px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(21px, 1.8vw, 28px);
-  line-height: 1.15;
-  letter-spacing: -0.015em;
-}
+/* [01] El taller ahora es, literalmente, la misma estructura que una
+   casilla (rótulo, icono, título .taller-casilla-h, subtítulo
+   .taller-casilla-sub) en vez de un h2.h-1 aparte con su propio tamaño:
+   así queda alineada con "[02] Comida" pieza a pieza — mismo icono a
+   16px del rótulo, mismo título a 14px del icono, mismo subtítulo a 24px
+   del título — sin duplicar la definición de tamaños en otra regla. */
 /* [01] El taller, a rejilla de dos: "Así funciona el taller" (con su
    riel) a la izquierda, "[02] Comida" a la derecha — ya no una mitad
    vacía. Mismo filete fino que la rejilla de abajo (gap:1px + background

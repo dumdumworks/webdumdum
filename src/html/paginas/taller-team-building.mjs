@@ -218,7 +218,9 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
     <div class="taller-tl-mitad">
       <div class="taller-tl-head">
         <div class="tiny muted">[01] ${esc(t("El taller", "The workshop"))}</div>
-        <h2 class="h-1">${t("Así funciona<br>el taller.", "How the<br>workshop works.")}</h2>
+        <div class="taller-casilla-ico">${icono("equipo")}</div>
+        <h2 class="taller-casilla-h">${t("Así funciona<br>el taller.", "How the<br>workshop works.")}</h2>
+        <p class="taller-casilla-sub">${esc(t("De la masa al plato, en equipo.", "From dough to plate, as a team."))}</p>
       </div>
       ${railEscritorio(i)}
       ${railMovil(i)}
