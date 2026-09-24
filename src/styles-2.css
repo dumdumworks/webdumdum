@@ -1069,45 +1069,31 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [02] Comida: mismo lenguaje que las cifras de Redes (.ev-stats /
-   .resumen-dato) de Eventos — caja cerrada con el filete rojo, rótulo
-   pequeño y el dato grande debajo — pero en rejilla 2×2 (aquí son 4 datos,
-   no 3). Sin icono: la presencia la pone el propio tamaño del dato, a la
-   escala de un titular, no el de una lista. */
+/* [02] Comida: no etiqueta/valor — las 4 frases completas se leen como una
+   fórmula de lo que trae el precio, unidas por el "+" que pone
+   filasComida(). Rejilla 2×2 sin filetes ni caja (a diferencia de las
+   cifras de Redes en Eventos, que sí llevan marco): aquí la presencia la
+   pone solo la escala del texto, a tamaño de titular. */
 .taller-comida {
   margin-top: 24px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border: 1px solid var(--line);
-  max-width: 480px;
+  gap: 28px 32px;
+  max-width: 560px;
 }
 .taller-comida > div {
-  padding: 28px 20px;
-  border-left: 1px solid var(--line);
-  border-top: 1px solid var(--line);
-  text-align: center;
-}
-.taller-comida > div:nth-child(odd) { border-left: none; }
-.taller-comida > div:nth-child(-n+2) { border-top: none; }
-.taller-comida b {
-  display: block;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-weight: 500;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: rgba(255,0,30,0.55);
-  margin-bottom: 12px;
-}
-.taller-comida span {
-  display: block;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(22px, 2.6vw, 32px);
-  line-height: 1.05;
+  font-size: clamp(20px, 2.4vw, 28px);
+  line-height: 1.15;
   letter-spacing: -0.02em;
   color: var(--red);
   text-wrap: balance;
+}
+.taller-comida-mas {
+  display: inline-block;
+  color: var(--sage);
+  margin-left: 2px;
 }
 
 /* [01] Incluye (/taller-team-building): línea de tiempo real a ancho

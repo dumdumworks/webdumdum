@@ -35,11 +35,13 @@ const INCLUYE = [
     "Os sentáis a comer lo que habéis hecho, con el resto de la carta también en la mesa.",
     "You sit down to eat what you've made, with the rest of the menu on the table too."],
 ];
+// Frases completas (no etiqueta/valor): se leen como una fórmula, unidas
+// por el "+" que pone filasComida.
 const COMIDA = [
-  ["Entrante", "A compartir", "Starter", "To share"],
-  ["Carta de dumplings", "Toda, por persona", "Dumpling menu", "The whole thing, per person"],
-  ["Bebida", "Una", "Drink", "One"],
-  ["Postre", "Un mochi", "Dessert", "One mochi"],
+  ["1 entrante a compartir", "1 starter to share"],
+  ["Toda la carta de dumplings, por persona", "The whole dumpling menu, per person"],
+  ["Una bebida", "One drink"],
+  ["Un mochi de postre", "One mochi for dessert"],
 ];
 const HORARIOS = [
   ["Duración aprox.", "2 – 2,5 h", "Approx. duration", "2 – 2.5 h"],
@@ -83,6 +85,13 @@ const filas = (i, datos) => datos.map((d) => {
   const etiqueta = i.lang === "en" ? (d.length === 4 ? en1 : d[0]) : es1;
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
+}).join("\n      ");
+// Celdas de .taller-comida: cada frase, con un "+" detrás de todas menos
+// la última — se lee como una fórmula, no como una lista de datos.
+const filasComida = (i) => COMIDA.map(([es, en], idx) => {
+  const texto = i.lang === "en" ? en : es;
+  const mas = idx < COMIDA.length - 1 ? ` <span class="taller-comida-mas">+</span>` : "";
+  return `<div>${esc(texto)}${mas}</div>`;
 }).join("\n      ");
 // INCLUYE es una línea de tiempo real: a ancho completo (no la rejilla a
 // medias de .ev-split), con un riel horizontal en escritorio — cinco filas
@@ -181,7 +190,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 ${seccion("02", t("Comida", "Food"),
     esc(t("Y luego, se come.", "And then, we eat.")),
     `<div class="taller-comida">
-      ${filas(i, COMIDA)}
+      ${filasComida(i)}
     </div>
     <p class="tiny muted" style="margin-top:16px">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
 
