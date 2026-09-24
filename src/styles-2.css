@@ -1106,12 +1106,21 @@
 .taller-casilla-ico svg { display: block; width: 28px; height: 28px; }
 .taller-casilla-h {
   margin-top: 14px;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(21px, 1.8vw, 28px);
   line-height: 1.15;
   letter-spacing: -0.015em;
+}
+/* Bajo el título: una frase corta, no el párrafo largo de .body — la
+   casilla puede llevar las dos (aquí la promesa, en .taller-casilla-body
+   el detalle, como en [05]). */
+.taller-casilla-sub {
+  margin-bottom: 24px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: rgba(255,0,30,0.7);
 }
 .taller-casilla-q {
   font-family: var(--font-display);
