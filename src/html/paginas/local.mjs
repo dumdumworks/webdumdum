@@ -35,7 +35,6 @@ const ICONOS = {
   // (esos son la línea de tiempo del proceso; estos son iconos de categoría
   // de información). "hora" y "bocadillo" ya existían y sirven tal cual
   // para Horarios y Preguntas frecuentes.
-  comida: '<path d="M3.2 12.5h17.6a1 1 0 0 1 .98 1.19A8.6 8.6 0 0 1 13.5 21h-3a8.6 8.6 0 0 1-8.28-7.31 1 1 0 0 1 .98-1.19Z"/><rect x="5.5" y="2.2" width="1.5" height="12" rx=".75" transform="rotate(18 6.25 8.2)"/><rect x="9.2" y="2.2" width="1.5" height="12" rx=".75" transform="rotate(18 9.95 8.2)"/>',
   tarifa: '<path d="M12.6 2.3h6.9A2.1 2.1 0 0 1 21.6 4.4v6.9c0 .56-.22 1.09-.62 1.48l-9.2 9.2a2.1 2.1 0 0 1-2.97 0L2.3 15.47a2.1 2.1 0 0 1 0-2.97l9.2-9.2c.39-.4.92-.62 1.48-.62Z"/><circle cx="16.3" cy="7.1" r="1.6" fill="var(--bg)"/>',
   // Los del taller de team building: trazados a partir de los iconos
   // finales del set (DUM_DUM_iconos.zip) — vaporera, dumpling, palillos con

@@ -1133,6 +1133,27 @@
 .taller-tarifas-caja.es-mejor .taller-tarifas-caja-precio { color: var(--bg); }
 .taller-tarifas-caja.es-mejor .taller-tarifas-caja-rango,
 .taller-tarifas-caja.es-mejor .taller-tarifas-caja-persona { color: rgba(255,250,243,0.75); }
+/* El desglose del menú (antes la casilla [03] Comida) dentro de cada
+   tarjeta: mismo menú en las tres, por eso se repite igual. align-self:
+   stretch para que ocupe todo el ancho de la tarjeta (el resto del
+   contenido va centrado por .taller-tarifas-caja, pero una lista se lee
+   mejor alineada a la izquierda que centrada línea a línea). */
+.taller-tarifas-caja-menu {
+  align-self: stretch;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px;
+  line-height: 1.5;
+  color: rgba(255,0,30,0.6);
+}
+.taller-tarifas-caja-menu div { margin-top: 4px; }
+.taller-tarifas-caja-menu div:first-child { margin-top: 0; }
+.taller-tarifas-caja-menu b { color: var(--red); font-weight: 600; }
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-menu { color: rgba(255,250,243,0.75); border-top-color: rgba(255,250,243,0.3); }
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-menu b { color: var(--bg); }
 /* Botón y notas en fila, a la altura del botón, no una debajo de otra:
    antes se apilaban (botón, "+30 personas…", nota "*") y, con la casilla
    estirada a la altura del riel de al lado, el margin-top:auto de
@@ -1174,14 +1195,16 @@
 .taller-galeria .ev-slider { margin-top: 0; }
 .taller-galeria .ev-slider-ctrls { margin-left: auto; }
 
-/* Rejilla de [03]-[05] (Comida, Horarios, FAQ): 3 columnas × 1 fila, no
-   secciones apiladas a ancho completo. La fila estira las 3 casillas al
+/* Rejilla de [03]-[04] (Horarios, FAQ): 2 columnas × 1 fila, no
+   secciones apiladas a ancho completo. La fila estira las 2 casillas al
    alto de la que más contenido tiene (comportamiento normal de CSS grid,
    sin calcularlo a mano). Tarifas ([02]) vive al lado de "[01] El
-   taller" — ver .taller-tl-grid. */
+   taller" — ver .taller-tl-grid. Comida ya no tiene casilla propia: su
+   desglose se metió dentro de cada tarjeta de precio de Tarifas (ver
+   .taller-tarifas-caja-menu). */
 .taller-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);

@@ -89,6 +89,19 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
+// El desglose del menú (antes su propia casilla, [03] Comida) se mete
+// dentro de cada tarjeta de precio: es el mismo menú para los tres
+// tramos, así que se repite igual en las tres — cada tarjeta ya cuenta
+// la historia completa (a quién, cuánto cuesta y qué se come), sin
+// depender de otra casilla aparte.
+const menuDesglose = (i) => {
+  const { t } = i;
+  const filas = COMIDA.map(([esL, esV, enL, enV]) =>
+    `        <div><b>${esc(i.lang === "en" ? enL : esL)}</b> ${esc(i.lang === "en" ? enV : esV)}</div>`).join("\n");
+  return `      <div class="taller-tarifas-caja-menu">
+${filas}
+      </div>`;
+};
 // [02] Tarifas: tres cajas una al lado de la otra, una por tramo — la más
 // barata (más gente) destaca a pastilla entera en rojo sólido: la
 // jerarquía de venta se ve de un vistazo, no hay que leer para encontrar
@@ -109,6 +122,7 @@ const tarifasVisual = (i, nota) => {
         <div class="taller-tarifas-caja-rango">${rango}</div>
         <div class="taller-tarifas-caja-precio">${p}<span class="taller-tarifas-caja-simbolo">€</span></div>
         <div class="taller-tarifas-caja-persona">${esc(t("por persona", "per person"))}</div>
+${menuDesglose(i)}
       </div>`;
   }).join("\n");
   return `      <div class="taller-tarifas-cajas">
@@ -155,8 +169,9 @@ const railMovil = (i) => `<div class="taller-tl-movil">
       </div>
     </div>`).join("\n    ")}
   </div>`;
-// Casilla de [02]-[05] (Tarifas junto al timeline, Comida/Horarios/FAQ
-// debajo): rótulo, icono de categoría, titular compacto, un subtítulo
+// Casilla de [02]-[04] (Tarifas junto al timeline, Horarios/FAQ debajo —
+// Comida ya no tiene casilla propia, su desglose vive en cada tarjeta de
+// precio): rótulo, icono de categoría, titular compacto, un subtítulo
 // opcional y el contenido, a una sola columna — no el .ev-split a medias
 // de seccion(). El alto de cada fila lo pone la rejilla CSS por su cuenta
 // (stretch): la casilla con más contenido de la fila manda, las demás se
@@ -237,27 +252,22 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
       ${casilla("02", "tarifa", t("Tarifas", "Rates"),
         t("Precios<br>y tarifas.", "Prices<br>and rates."),
         esc(t("A más gente, mejor precio.", "More people, better price.")),
-        tarifasVisual(i, t("* Talleres fuera del restaurante sujetos a disponibilidad.", "* Off-site workshops subject to availability.")))}
+        tarifasVisual(i, t(
+          "* Consumos extra aparte. Talleres fuera del restaurante sujetos a disponibilidad.",
+          "* Extra consumption not included. Off-site workshops subject to availability.")))}
     </div>
   </div>
 </section>
 
 <section class="taller-grid">
-  ${casilla("03", "comida", t("Comida", "Food"),
-    t("El menú de<br>la degustación.", "The tasting<br>menu."),
-    esc(t("Se prueba toda la carta.", "You get to try the whole menu.")),
-    `      <div class="taller-list">
-        ${filas(i, COMIDA)}
-      </div>
-      <p class="tiny muted taller-casilla-nota">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
-  ${casilla("04", "hora", t("Horarios", "Timings"),
+  ${casilla("03", "hora", t("Horarios", "Timings"),
     t("Horarios y<br>duraciones.", "Timings and<br>durations."),
     esc(t("Un par de horitas, para que no se aburran.", "A couple of hours, so nobody gets bored.")),
     `      <div class="taller-list">
         ${filas(i, HORARIOS)}
       </div>
       <p class="tiny muted taller-casilla-nota">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
-  ${casilla("05", "bocadillo", t("Preguntas frecuentes", "FAQ"),
+  ${casilla("04", "bocadillo", t("Preguntas frecuentes", "FAQ"),
     t("Lo que más<br>nos preguntáis.", "What you<br>ask us most."),
     esc(t("Las dudas más repetidas.", "The questions we hear most.")),
     `      <details class="faq-toggle taller-faq-toggle" open>
