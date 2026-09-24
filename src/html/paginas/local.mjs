@@ -32,10 +32,13 @@ const ICONOS = {
   bocadillo: '<path d="M4 3h16a2.5 2.5 0 0 1 2.5 2.5v9A2.5 2.5 0 0 1 20 17h-7.4L7 21.3V17H4a2.5 2.5 0 0 1-2.5-2.5v-9A2.5 2.5 0 0 1 4 3Z"/>',
   // Los del proceso del taller de team building, mismo lenguaje: sólidos, sin
   // trazo. "equipo" reutiliza el dibujo de dos personas de "aforo".
-  masa: '<rect x="6.3" y="9.2" width="11.4" height="5.6" rx="2.8"/><rect x="1.4" y="10.5" width="5.6" height="3" rx="1.5"/><rect x="17" y="10.5" width="5.6" height="3" rx="1.5"/>',
-  dumpling: '<path d="M2.2 13.6C2.2 9 6.6 6 12 6s9.8 3 9.8 7.6c0 4-4.4 6.6-9.8 6.6s-9.8-2.6-9.8-6.6Z"/><circle cx="6.7" cy="7.2" r="1.3"/><circle cx="10.5" cy="5.8" r="1.3"/><circle cx="14.2" cy="6" r="1.3"/><circle cx="17.6" cy="7.6" r="1.3"/>',
-  cocinar: '<path d="M2 13a1.2 1.2 0 0 1 1.2-1.2h13.6a1.2 1.2 0 0 1 1.2 1.2c0 3.9-3.5 7-8 7s-8-3.1-8-7Z"/><rect x="17.6" y="11.3" width="5.2" height="2.4" rx="1.2"/><circle cx="6.6" cy="8.2" r="1.1"/><circle cx="10.2" cy="6.7" r="1.1"/><circle cx="13.8" cy="8.2" r="1.1"/>',
-  comer: '<rect x="11" y="1.4" width="2.1" height="21.2" rx="1.05" transform="rotate(17 12 12)"/><rect x="10.9" y="1.4" width="2.1" height="21.2" rx="1.05" transform="rotate(-17 12 12)"/>',
+  // La masa: dos bandas (no un bloque) para que se note el amasado; la
+  // vaporera: aros apilados con hueco entre ellos (el tejido de bambú), tapa
+  // y vapor — no una sartén.
+  masa: '<rect x="6.3" y="9.2" width="11.4" height="2.6" rx="1.3"/><rect x="6.3" y="12.2" width="11.4" height="2.6" rx="1.3"/><rect x="1.4" y="10.5" width="5.6" height="3" rx="1.5"/><rect x="17" y="10.5" width="5.6" height="3" rx="1.5"/>',
+  dumpling: '<path d="M2.2 13.6C2.2 9 6.6 6 12 6s9.8 3 9.8 7.6c0 4-4.4 6.6-9.8 6.6s-9.8-2.6-9.8-6.6Z"/><circle cx="6.7" cy="7.2" r="1.3"/><circle cx="9.4" cy="5.9" r="1.05"/><circle cx="12" cy="5.6" r="1.3"/><circle cx="14.6" cy="5.9" r="1.05"/><circle cx="17.3" cy="7.2" r="1.3"/>',
+  cocinar: '<path d="M3 15.5A9 5.4 0 0 1 21 15.5 9 5.4 0 0 1 3 15.5ZM4.5 13.8h15v1H4.5ZM4.5 16.8h15v1H4.5Z"/><rect x="10.9" y="1.6" width="1.6" height="3" rx="0.8" transform="rotate(22 11.7 3.1)"/><rect x="10.9" y="4.2" width="1.6" height="3" rx="0.8" transform="rotate(-22 11.7 5.7)"/><rect x="10.9" y="6.8" width="1.6" height="2.6" rx="0.8" transform="rotate(22 11.7 8.1)"/>',
+  comer: '<rect x="11" y="1.4" width="2.1" height="21.2" rx="1.05" transform="rotate(17 12 12)"/><rect x="10.9" y="1.4" width="2.1" height="21.2" rx="1.05" transform="rotate(-17 12 12)"/><rect x="9.5" y="8.3" width="5" height="2.4" rx="1.2" transform="rotate(17 12 9.5)"/>',
 };
 export const icono = (k) => `<svg viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true">${ICONOS[k]}</svg>`;
 // Icono del teléfono del botón "Llamar a X"; lo comparte /locales.
