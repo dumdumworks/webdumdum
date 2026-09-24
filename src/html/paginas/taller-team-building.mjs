@@ -51,12 +51,12 @@ const HORARIOS = [
   ["Tardes", "18.30 – 21.00", "Afternoons", "6.30 – 9pm"],
 ];
 // [nombre es, nombre en, rango es, rango en, precio€] — el tramo más
-// barato es el foco de venta (la promesa es "a más gente, mejor precio":
-// aquí se ve, no solo se dice).
+// barato primero (el foco de venta: "a más gente, mejor precio", aquí se
+// ve de entrada, no hay que llegar al final para encontrarlo).
 const TARIFAS = [
-  ["Equipo pequeño", "Small team", "6–9 personas", "6–9 people", 75],
-  ["Equipo mediano", "Medium team", "10–20 personas", "10–20 people", 70],
   ["Equipo grande", "Large team", "20–30 personas", "20–30 people", 65],
+  ["Equipo mediano", "Medium team", "10–20 personas", "10–20 people", 70],
+  ["Equipo pequeño", "Small team", "6–9 personas", "6–9 people", 75],
 ];
 // Para el JSON-LD (Service.offers): solo los tramos con precio real.
 const OFERTAS = [
@@ -105,11 +105,7 @@ const tarifasVisual = (i) => {
         <div class="taller-tarifas-caja-persona">${esc(t("por persona", "per person"))}</div>
       </div>`;
   }).join("\n");
-  return `      <div class="taller-tarifas-hero">
-        <span class="taller-tarifas-hero-eyebrow">${esc(t("Desde", "From"))}</span>
-        <span class="taller-tarifas-hero-linea"><span class="taller-tarifas-hero-num">${min}<span class="taller-tarifas-hero-simbolo">€</span></span><span class="taller-tarifas-hero-persona">${esc(t("por persona", "per person"))}</span></span>
-      </div>
-      <div class="taller-tarifas-cajas">
+  return `      <div class="taller-tarifas-cajas">
 ${cajas}
       </div>
       <p class="taller-tarifas-consulta">${esc(t("+30 personas, consultamos contigo.", "30+ people — let's talk it through."))}</p>`;

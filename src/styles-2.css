@@ -1069,42 +1069,15 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [04] Tarifas: el "desde" manda arriba, como un dato editorial grande
-   (etiqueta pequeña encima, número enorme), y debajo tres cajas — una por
-   tramo, lado a lado. La más barata (más gente) es la única a pastilla
-   entera en rojo sólido: se ve de un vistazo cuál conviene, sin leer. */
-.taller-tarifas-hero { margin-top: 22px; margin-bottom: 32px; }
-.taller-tarifas-hero-eyebrow {
-  display: block;
-  margin-bottom: 4px;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: rgba(255,0,30,0.6);
-}
-.taller-tarifas-hero-linea { display: flex; align-items: baseline; gap: 9px; }
-.taller-tarifas-hero-num {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(48px, 4.6vw, 60px);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--red);
-}
-.taller-tarifas-hero-simbolo { font-size: 0.55em; }
-.taller-tarifas-hero-persona {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  color: rgba(255,0,30,0.6);
-}
+/* [04] Tarifas: tres cajas lado a lado, una por tramo, el más barato (más
+   gente) primero — es el foco de venta, no hay que llegar al final para
+   encontrarlo. Es la única a pastilla entera en rojo sólido: se ve de un
+   vistazo cuál conviene, sin leer. */
 .taller-tarifas-cajas {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
+  margin-top: 24px;
 }
 .taller-tarifas-caja {
   display: flex;
