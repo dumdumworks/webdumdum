@@ -1146,14 +1146,14 @@
 .taller-galeria .ev-slider { margin-top: 0; }
 .taller-galeria .ev-slider-ctrls { margin-left: auto; }
 
-/* Rejilla de [03]-[04] (Horarios, Tarifas): 2 columnas × 1 fila, no
-   secciones apiladas a ancho completo. La fila estira las 2 casillas al
+/* Rejilla de [03]-[05] (Comida, Horarios, FAQ): 3 columnas × 1 fila, no
+   secciones apiladas a ancho completo. La fila estira las 3 casillas al
    alto de la que más contenido tiene (comportamiento normal de CSS grid,
-   sin calcularlo a mano). Comida ([02]) ya no vive aquí: se mudó al lado
-   de "[01] El taller" — ver .taller-tl-grid. */
+   sin calcularlo a mano). Tarifas ([02]) vive al lado de "[01] El
+   taller" — ver .taller-tl-grid. */
 .taller-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
@@ -1214,29 +1214,27 @@
   .taller-casilla { padding: 32px var(--gutter); }
 }
 
-/* [05] Preguntas frecuentes: el mismo acordeón de /contacto (.faq-toggle/
-   .faq-list/.faq-item/.faq-ico — ver "FAQ (/contacto)"), no uno nuevo:
-   misma animación, mismo "una respuesta abierta a la vez", mismo
-   prefers-reduced-motion, sin tocar ni duplicar esa CSS ni el faq.js que
-   ya la anima. .taller-faq-toggle va siempre abierto (el título de la
-   sección ya anuncia "preguntas frecuentes", no hace falta otra vez un
+/* [05] Preguntas frecuentes: una casilla más de la rejilla de [03]-[05],
+   con el mismo acordeón de /contacto (.faq-toggle/.faq-list/.faq-item/
+   .faq-ico — ver "FAQ (/contacto)"), no uno nuevo: misma animación,
+   mismo "una respuesta abierta a la vez", mismo prefers-reduced-motion,
+   sin tocar ni duplicar esa CSS ni el faq.js que ya la anima.
+   .taller-faq-toggle va siempre abierto (el rótulo y el título de la
+   casilla ya anuncian "preguntas frecuentes", no hace falta otra vez un
    "FAQs" para desplegarlas) — su <summary> se esconde, pero sigue
-   presente para que animar() en faq.js no falle al buscarlo. */
-.taller-faq { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
-.taller-faq-head { max-width: 720px; }
-.taller-faq-head h2 { margin-top: 16px; }
-.taller-faq-toggle { margin-top: 40px; }
+   presente para que animar() en faq.js no falle al buscarlo. Sin
+   max-width propio: la rejilla ya la deja estrecha (una columna de 3),
+   más que de sobra bajo el límite de 480px de .faq-list. */
+.taller-faq-toggle { margin-top: 0; }
 .taller-faq-toggle > summary { display: none; }
-.taller-faq .faq-list { margin-top: 0; max-width: 720px; }
-.taller-faq .faq-item:first-child { border-top: 1px solid var(--line-soft); }
-/* Cierre con el "¿Hablamos?" de siempre, ahora a ancho completo — ya no
-   depende de caber en una casilla estrecha. */
-.taller-faq-cierre {
-  margin-top: 56px;
-  padding-top: 40px;
-  border-top: 1px solid var(--line);
-  max-width: 560px;
-}
+.taller-grid .faq-list { margin-top: 0; }
+.taller-grid .faq-item:first-child { border-top: 1px solid var(--line-soft); }
+/* Cierre con el "¿Hablamos?" de siempre: su propia sección, a ancho
+   completo, con el ritmo estándar de la página (mismo padding y filete
+   que .taller-tl/.taller-faq de antes) — ya no depende de caber en una
+   casilla estrecha ni de anidarse dentro del bloque de FAQs. */
+.taller-cierre { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
+.taller-faq-cierre { max-width: 560px; }
 .taller-faq-cierre p { margin-top: 12px; }
 .taller-faq-cierre .btn { margin-top: 24px; }
 
@@ -1271,26 +1269,28 @@
 /* [01] El taller ahora es, literalmente, la misma estructura que una
    casilla (rótulo, icono, título .taller-casilla-h, subtítulo
    .taller-casilla-sub) en vez de un h2.h-1 aparte con su propio tamaño:
-   así queda alineada con "[02] Comida" pieza a pieza — mismo icono a
+   así queda alineada con "[02] Tarifas" pieza a pieza — mismo icono a
    16px del rótulo, mismo título a 14px del icono, mismo subtítulo a 24px
    del título — sin duplicar la definición de tamaños en otra regla. */
 /* [01] El taller, a rejilla de dos: "Así funciona el taller" (con su
-   riel) a la izquierda, "[02] Comida" a la derecha — ya no una mitad
-   vacía. Mismo filete fino que la rejilla de abajo (gap:1px + background
-   de relleno, ver el comentario sobre .taller-grid) y el mismo borde que
-   la cierra por los cuatro lados — sin él quedaba un filete suelto en
-   medio del aire, sin caja que lo sujetara. Mismo padding que
-   .taller-casilla (36px var(--gutter)) en las dos columnas, así el marco
-   queda igual de "cerrado" que la rejilla de [03]-[04]. La fila estira
-   ambas columnas al alto de la que más contenido tiene, igual que
-   [03]-[04] — el filete llega así hasta abajo del todo, no se corta a
-   media altura si comida es más corta que el riel. A sangre (como
-   .taller-grid, sin el padding lateral de .taller-tl) y sin el hueco de
-   64px que dejaba el padding-bottom de la sección: las dos rejillas se
-   tocan, un solo filete entre [02] y [03]-[04], no dos separados por
-   aire. En móvil, una sola columna — railMovil (dentro de
-   .taller-tl-mitad) sustituye a railEscritorio antes de llegar a Comida,
-   así el orden de lectura no cambia. */
+   riel) a la izquierda, "[02] Tarifas" a la derecha (.taller-tl-lado —
+   antes vivía aquí Comida, ahora en la rejilla de [03]-[05] de abajo; el
+   nombre de la clase ya no está atado a un contenido concreto). Mismo
+   filete fino que la rejilla de abajo (gap:1px + background de relleno,
+   ver el comentario sobre .taller-grid) y el mismo borde que la cierra
+   por los cuatro lados — sin él quedaba un filete suelto en medio del
+   aire, sin caja que lo sujetara. Mismo padding que .taller-casilla
+   (36px var(--gutter)) en las dos columnas, así el marco queda igual de
+   "cerrado" que la rejilla de abajo. La fila estira ambas columnas al
+   alto de la que más contenido tiene, igual que [03]-[05] — el filete
+   llega así hasta abajo del todo, no se corta a media altura si un lado
+   es más corto que el otro. A sangre (como .taller-grid, sin el padding
+   lateral de .taller-tl) y sin el hueco de 64px que dejaba el
+   padding-bottom de la sección: las dos rejillas se tocan, un solo
+   filete entre [02] y [03]-[05], no dos separados por aire. En móvil,
+   una sola columna — railMovil (dentro de .taller-tl-mitad) sustituye a
+   railEscritorio antes de llegar a Tarifas, así el orden de lectura no
+   cambia. */
 @media (min-width: 880px) {
   .taller-tl { padding-bottom: 0; border-bottom: none; }
   .taller-tl-grid {
@@ -1302,8 +1302,8 @@
     margin: 0 calc(-1 * var(--gutter));
   }
   .taller-tl-mitad { background: var(--bg); padding: 36px var(--gutter); }
-  .taller-tl-comida { background: var(--bg); padding: 36px var(--gutter); display: flex; }
-  .taller-tl-comida .taller-casilla { padding: 0; flex: 1; }
+  .taller-tl-lado { background: var(--bg); padding: 36px var(--gutter); display: flex; }
+  .taller-tl-lado .taller-casilla { padding: 0; flex: 1; }
 }
 
 .taller-tl-rail { margin-top: 56px; }

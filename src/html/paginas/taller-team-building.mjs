@@ -89,7 +89,7 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
-// [04] Tarifas: tres cajas una al lado de la otra, una por tramo — la más
+// [02] Tarifas: tres cajas una al lado de la otra, una por tramo — la más
 // barata (más gente) destaca a pastilla entera en rojo sólido: la
 // jerarquía de venta se ve de un vistazo, no hay que leer para encontrar
 // la mejor.
@@ -147,7 +147,7 @@ const railMovil = (i) => `<div class="taller-tl-movil">
       </div>
     </div>`).join("\n    ")}
   </div>`;
-// Casilla de [02]-[04] (Comida junto al timeline, Horarios y Tarifas
+// Casilla de [02]-[05] (Tarifas junto al timeline, Comida/Horarios/FAQ
 // debajo): rótulo, icono de categoría, titular compacto, un subtítulo
 // opcional y el contenido, a una sola columna — no el .ev-split a medias
 // de seccion(). El alto de cada fila lo pone la rejilla CSS por su cuenta
@@ -225,47 +225,46 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
       ${railEscritorio(i)}
       ${railMovil(i)}
     </div>
-    <div class="taller-tl-comida">
-      ${casilla("02", "comida", t("Comida", "Food"),
-        t("El menú de<br>la degustación.", "The tasting<br>menu."),
-        esc(t("Se prueba toda la carta.", "You get to try the whole menu.")),
-        `      <div class="taller-list">
-        ${filas(i, COMIDA)}
-      </div>
-      <p class="tiny muted taller-casilla-nota">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
+    <div class="taller-tl-lado">
+      ${casilla("02", "tarifa", t("Tarifas", "Rates"),
+        t("Precios<br>y tarifas.", "Prices<br>and rates."),
+        esc(t("A más gente, mejor precio.", "More people, better price.")),
+        `${tarifasVisual(i)}
+      <p class="tiny muted taller-casilla-nota">${esc(t("* Talleres fuera del restaurante sujetos a disponibilidad.", "* Off-site workshops subject to availability."))}</p>`)}
     </div>
   </div>
 </section>
 
 <section class="taller-grid">
-  ${casilla("03", "hora", t("Horarios", "Timings"),
+  ${casilla("03", "comida", t("Comida", "Food"),
+    t("El menú de<br>la degustación.", "The tasting<br>menu."),
+    esc(t("Se prueba toda la carta.", "You get to try the whole menu.")),
+    `      <div class="taller-list">
+        ${filas(i, COMIDA)}
+      </div>
+      <p class="tiny muted taller-casilla-nota">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
+  ${casilla("04", "hora", t("Horarios", "Timings"),
     t("Horarios y<br>duraciones.", "Timings and<br>durations."),
     esc(t("Un par de horitas, para que no se aburran.", "A couple of hours, so nobody gets bored.")),
     `      <div class="taller-list">
         ${filas(i, HORARIOS)}
       </div>
       <p class="tiny muted taller-casilla-nota">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
-  ${casilla("04", "tarifa", t("Tarifas", "Rates"),
-    t("Precios<br>y tarifas.", "Prices<br>and rates."),
-    esc(t("A más gente, mejor precio.", "More people, better price.")),
-    `${tarifasVisual(i)}
-      <p class="tiny muted taller-casilla-nota">${esc(t("* Talleres fuera del restaurante sujetos a disponibilidad.", "* Off-site workshops subject to availability."))}</p>`)}
+  ${casilla("05", "bocadillo", t("Preguntas frecuentes", "FAQ"),
+    t("Lo que más<br>nos preguntáis.", "What you<br>ask us most."),
+    esc(t("Las dudas más repetidas.", "The questions we hear most.")),
+    `      <details class="faq-toggle taller-faq-toggle" open>
+        <summary class="big">${esc(t("Preguntas frecuentes", "FAQ"))}<span class="faq-ico" aria-hidden="true"></span></summary>
+        <div class="faq-list">
+          ${FAQ.map(({ q, a }) => `          <details class="faq-item">
+            <summary>${esc(i.lang === "en" ? q[1] : q[0])}<span class="faq-ico" aria-hidden="true"></span></summary>
+            <p class="body">${esc(i.lang === "en" ? a[1] : a[0])}</p>
+          </details>`).join("\n")}
+        </div>
+      </details>`)}
 </section>
 
-<section class="taller-faq">
-  <div class="taller-faq-head">
-    <div class="tiny muted">[05] ${esc(t("Preguntas frecuentes", "FAQ"))}</div>
-    <h2 class="h-1">${t("Lo que más<br>nos preguntáis.", "What you<br>ask us most.")}</h2>
-  </div>
-  <details class="faq-toggle taller-faq-toggle" open>
-    <summary class="big">${esc(t("Preguntas frecuentes", "FAQ"))}<span class="faq-ico" aria-hidden="true"></span></summary>
-    <div class="faq-list">
-      ${FAQ.map(({ q, a }) => `      <details class="faq-item">
-        <summary>${esc(i.lang === "en" ? q[1] : q[0])}<span class="faq-ico" aria-hidden="true"></span></summary>
-        <p class="body">${esc(i.lang === "en" ? a[1] : a[0])}</p>
-      </details>`).join("\n")}
-    </div>
-  </details>
+<section class="taller-cierre">
   <div class="taller-faq-cierre">
     <h3 class="h-1">${t("¿Hablamos?", "Let's talk?")}</h3>
     <p class="body">${esc(t(
