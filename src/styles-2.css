@@ -1174,6 +1174,12 @@
    tapa el filete por sí solo, sin depender de ningún fondo. En móvil,
    riel vertical con el mismo icono-sobre-filete. */
 .taller-tl { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
+/* Aquí el hero va seguido directamente de esta sección (no de otra con su
+   propio aire de sobra, como en Eventos): el 8vh de abajo del hero + los
+   64px de arriba de esta sumaban casi 180px de vacío entre el botón y
+   "[01] Incluye". Se recorta solo en esta combinación concreta. */
+.ev-hero:has(+ .taller-tl) { padding-bottom: 4vh; }
+.ev-hero + .taller-tl { padding-top: 32px; }
 .taller-tl-head { max-width: 720px; }
 .taller-tl-head h2 { margin-top: 16px; }
 
