@@ -186,7 +186,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 <section class="taller-tl">
   <div class="taller-tl-head">
     <div class="tiny muted">[01] ${esc(t("Incluye", "Includes"))}</div>
-    <h2 class="h-1">${t("Cocinamos.<br>Todos. A la vez.", "We cook.<br>All of us. Together.")}</h2>
+    <h2 class="h-1">${t("Así funciona<br>el taller.", "How the<br>workshop works.")}</h2>
   </div>
   ${railEscritorio(i)}
   ${railMovil(i)}
