@@ -116,12 +116,14 @@ const tarifasVisual = (i, nota) => {
   const { t } = i;
   const precios = TARIFAS.map(([, , , , p]) => p);
   const min = Math.min(...precios);
+  const recomendado = esc(t("Recomendado", "Recommended"));
   const cajas = TARIFAS.map(([esN, enN, esR, enR, p]) => {
     const mejor = p === min;
     const nombre = esc(i.lang === "en" ? enN : esN);
     const rango = esc(i.lang === "en" ? enR : esR);
     return `      <div class="taller-tarifas-caja${mejor ? " es-mejor" : ""}">
-        ${mejor ? `<div class="taller-tarifas-caja-badge">${esc(t("Recomendado", "Recommended"))}</div>\n        ` : ""}<div class="taller-tarifas-caja-nombre">${nombre}</div>
+        <div class="taller-tarifas-caja-badge"${mejor ? "" : " aria-hidden=\"true\""}>${recomendado}</div>
+        <div class="taller-tarifas-caja-nombre">${nombre}</div>
         <div class="taller-tarifas-caja-rango">${rango}</div>
         <div class="taller-tarifas-caja-precio">${p}<span class="taller-tarifas-caja-simbolo">€</span></div>
         <div class="taller-tarifas-caja-persona">${esc(t("por persona", "per person"))}</div>

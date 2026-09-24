@@ -1149,18 +1149,27 @@
    valor que .taller-tarifas-caja, con el signo cambiado) para llegar
    justo al borde de la tarjeta; overflow:hidden en la tarjeta recorta
    sus esquinas rectas a las mismas esquinas redondeadas de la tarjeta,
-   sin tener que igualar el radio a mano. */
+   sin tener que igualar el radio a mano. Se renderiza en las tres
+   tarjetas (con el mismo texto) para que las tres reserven el mismo
+   hueco arriba — visibility:hidden por defecto, visible solo en la
+   destacada, así "Equipo mediano"/"Equipo pequeño" no se suben respecto
+   a "Equipo grande" y todo el contenido de debajo queda alineado fila a
+   fila entre las tres. */
 .taller-tarifas-caja-badge {
   align-self: stretch;
   margin: -20px -16px 16px;
   padding: 9px 16px;
-  background: var(--red);
-  color: var(--bg);
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-weight: 600;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  visibility: hidden;
+}
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-badge {
+  visibility: visible;
+  background: var(--red);
+  color: var(--bg);
 }
 /* El desglose del menú (antes la casilla [03] Comida) dentro de cada
    tarjeta: mismo menú en las tres, por eso se repite igual. Mismo
