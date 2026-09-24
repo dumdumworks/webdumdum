@@ -95,9 +95,8 @@ const filas = (i, datos) => datos.map((d) => {
 // la historia completa (a quién, cuánto cuesta y qué se come), sin
 // depender de otra casilla aparte.
 const menuDesglose = (i) => {
-  const { t } = i;
   const filas = COMIDA.map(([esL, esV, enL, enV]) =>
-    `        <div><b>${esc(i.lang === "en" ? enL : esL)}</b> ${esc(i.lang === "en" ? enV : esV)}</div>`).join("\n");
+    `        <div><b>${esc(i.lang === "en" ? enL : esL)}</b><span>${esc(i.lang === "en" ? enV : esV)}</span></div>`).join("\n");
   return `      <div class="taller-tarifas-caja-menu">
 ${filas}
       </div>`;

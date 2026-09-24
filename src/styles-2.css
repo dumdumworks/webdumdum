@@ -1077,53 +1077,57 @@
    encontrarlo. Es la única a pastilla entera en rojo sólido: se ve de un
    vistazo cuál conviene, sin leer. Sin margin-top, mismo motivo que
    .taller-list: ya lo pone el margin-bottom del subtítulo de encima. */
-/* Ancho tope: desde que [02] pasó a ocupar toda la anchura, las cajas se
-   estiraban a 1/3 de un contenedor mucho más ancho que antes — mucho
-   aire alrededor de "65€ POR PERSONA", pastillas grandes para tan poco
-   contenido. Con un ancho máximo se quedan al tamaño que tenían cuando
-   la casilla iba a media anchura. */
+/* A ancho completo: ahora que cada tarjeta lleva el desglose del menú
+   (antes [03] Comida) tiene contenido de sobra para aprovechar el ancho
+   de la casilla — ya no son 4 datos sueltos en una pastilla, sino la
+   ficha completa del tramo. En móvil, una columna: con las tres a la vez
+   el desglose de cada una se quedaba en ~110px de ancho, partiendo cada
+   valor en 3 líneas — apiladas, cada tarjeta tiene todo el ancho del
+   teléfono para su lista. */
 .taller-tarifas-cajas {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  max-width: 640px;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 880px) {
+  .taller-tarifas-cajas { grid-template-columns: repeat(3, 1fr); }
 }
 .taller-tarifas-caja {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 20px 8px;
+  padding: 32px 24px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 18px;
   text-align: center;
 }
 .taller-tarifas-caja-nombre {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 19px;
   line-height: 1.15;
   color: var(--red);
 }
 .taller-tarifas-caja-rango {
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.01em;
   color: rgba(255,0,30,0.6);
 }
 .taller-tarifas-caja-precio {
-  margin-top: 6px;
+  margin-top: 8px;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(30px, 2.6vw, 38px);
+  font-size: clamp(36px, 3.2vw, 48px);
   line-height: 1;
   color: var(--red);
 }
 .taller-tarifas-caja-simbolo { font-size: 0.6em; }
 .taller-tarifas-caja-persona {
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 10px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.01em;
   color: rgba(255,0,30,0.5);
@@ -1134,26 +1138,38 @@
 .taller-tarifas-caja.es-mejor .taller-tarifas-caja-rango,
 .taller-tarifas-caja.es-mejor .taller-tarifas-caja-persona { color: rgba(255,250,243,0.75); }
 /* El desglose del menú (antes la casilla [03] Comida) dentro de cada
-   tarjeta: mismo menú en las tres, por eso se repite igual. align-self:
-   stretch para que ocupe todo el ancho de la tarjeta (el resto del
-   contenido va centrado por .taller-tarifas-caja, pero una lista se lee
-   mejor alineada a la izquierda que centrada línea a línea). */
+   tarjeta: mismo menú en las tres, por eso se repite igual. Mismo
+   lenguaje que .taller-list (etiqueta en negrita + valor, filete fino
+   entre filas) en vez del texto corrido de antes — con la tarjeta ya
+   ancha, una lista de verdad en dos columnas se lee mejor y aprovecha el
+   espacio en vez de dejarlo en blanco a la derecha. align-self:stretch
+   para ocupar todo el ancho (el resto de la tarjeta va centrado, pero
+   una lista se lee mejor alineada a la izquierda que centrada fila a
+   fila). */
 .taller-tarifas-caja-menu {
   align-self: stretch;
-  margin-top: 12px;
-  padding-top: 12px;
+  margin-top: 24px;
+  padding-top: 4px;
   border-top: 1px solid var(--line);
-  text-align: left;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 10px;
-  line-height: 1.5;
-  color: rgba(255,0,30,0.6);
 }
-.taller-tarifas-caja-menu div { margin-top: 4px; }
-.taller-tarifas-caja-menu div:first-child { margin-top: 0; }
-.taller-tarifas-caja-menu b { color: var(--red); font-weight: 600; }
-.taller-tarifas-caja.es-mejor .taller-tarifas-caja-menu { color: rgba(255,250,243,0.75); border-top-color: rgba(255,250,243,0.3); }
-.taller-tarifas-caja.es-mejor .taller-tarifas-caja-menu b { color: var(--bg); }
+.taller-tarifas-caja-menu > div {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 8px;
+  padding: 9px 0;
+  border-top: 1px solid var(--line-soft);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  text-align: left;
+}
+.taller-tarifas-caja-menu b { font-weight: 600; color: rgba(255,0,30,0.55); }
+.taller-tarifas-caja-menu span { color: var(--ink); }
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-menu { border-top-color: rgba(255,250,243,0.3); }
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-menu > div { border-top-color: rgba(255,250,243,0.25); }
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-menu b { color: rgba(255,250,243,0.75); }
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-menu span { color: var(--bg); }
 /* Botón y notas en fila, a la altura del botón, no una debajo de otra:
    antes se apilaban (botón, "+30 personas…", nota "*") y, con la casilla
    estirada a la altura del riel de al lado, el margin-top:auto de
@@ -1164,10 +1180,7 @@
    izquierda con un hueco enorme hasta las notas, "flotando" sin nada
    alrededor). En móvil, .taller-tarifas-pie no lleva flex: notas debajo
    del botón, como cualquier casilla. */
-/* Mismo ancho tope que .taller-tarifas-cajas: si las cajas ya no llegan
-   al borde derecho de la casilla, dejar esta fila a ancho completo
-   separaba mucho el botón de ellas — vuelven a leerse como un bloque. */
-.taller-tarifas-pie { margin-top: 20px; max-width: 640px; }
+.taller-tarifas-pie { margin-top: 20px; }
 .taller-tarifas-notas { margin-top: 12px; }
 .taller-tarifas-consulta {
   font-family: "JetBrains Mono", ui-monospace, monospace;
