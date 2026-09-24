@@ -1097,7 +1097,11 @@
   gap: 6px;
 }
 @media (min-width: 880px) {
-  .taller-tarifas-cajas { grid-template-columns: repeat(3, 1fr); max-width: 1032px; margin: 0 auto; }
+  /* width:100% explícito: la caja vive dentro de .taller-casilla-body,
+     que es flex en columna, y el margin:auto de aquí abajo desactiva el
+     stretch por defecto del eje transversal — sin el 100% se queda al
+     ancho de su contenido (940px y pico) en vez de llegar al tope. */
+  .taller-tarifas-cajas { grid-template-columns: repeat(3, 1fr); width: 100%; max-width: 1032px; margin: 0 auto; }
 }
 .taller-tarifas-caja {
   display: flex;
@@ -1401,7 +1405,12 @@
   .taller-tl-mitad { padding: 36px var(--gutter); }
 }
 
-.taller-tl-rail { margin-top: 56px; }
+/* Mismo ancho tope que .taller-tarifas-cajas (1032px) y centrado igual:
+   el riel de 5 pasos ocupa lo mismo que las tres cajas de precio de
+   [02], en vez de estirarse a todo el ancho de la casilla — las dos
+   secciones quedan a la misma anchura de contenido, aunque las cajas
+   que las envuelven sigan a sangre. */
+.taller-tl-rail { max-width: 1032px; margin: 56px auto 0; }
 /* Más grandes y en rojo lleno (no .muted): el número de paso tiene que
    leerse tan bien como el título, no quedarse en detalle de fondo. */
 /* Centrado igual que el icono de debajo: si el icono ya no va pegado al
