@@ -92,8 +92,11 @@ const filas = (i, datos) => datos.map((d) => {
 // [02] Tarifas: tres cajas una al lado de la otra, una por tramo — la más
 // barata (más gente) destaca a pastilla entera en rojo sólido: la
 // jerarquía de venta se ve de un vistazo, no hay que leer para encontrar
-// la mejor.
-const tarifasVisual = (i) => {
+// la mejor. El botón y las dos notas van en una fila (en escritorio; en
+// móvil se apilan solas, sin regla especial) — a la altura del botón, no
+// una debajo de otra, para no estirar la casilla de más cuando la rejilla
+// la iguala a la altura del riel de al lado.
+const tarifasVisual = (i, nota) => {
   const { t } = i;
   const precios = TARIFAS.map(([, , , , p]) => p);
   const min = Math.min(...precios);
@@ -111,8 +114,13 @@ const tarifasVisual = (i) => {
   return `      <div class="taller-tarifas-cajas">
 ${cajas}
       </div>
-      <a class="btn red taller-tarifas-btn" href="${i.ruta("/eventos")}#contact-eventos" style="width:fit-content"><span class="btn-label">${esc(t("Contratar", "Book now"))}</span><span class="btn-arrow">→</span></a>
-      <p class="taller-tarifas-consulta">${esc(t("+30 personas, consultamos contigo.", "30+ people — let's talk it through."))}</p>`;
+      <div class="taller-tarifas-pie">
+        <a class="btn red taller-tarifas-btn" href="${i.ruta("/eventos")}#contact-eventos" style="width:fit-content"><span class="btn-label">${esc(t("Contratar", "Book now"))}</span><span class="btn-arrow">→</span></a>
+        <div class="taller-tarifas-notas">
+          <p class="taller-tarifas-consulta">${esc(t("+30 personas, consultamos contigo.", "30+ people — let's talk it through."))}</p>
+          <p class="tiny muted taller-casilla-nota">${esc(nota)}</p>
+        </div>
+      </div>`;
 };
 // INCLUYE es una línea de tiempo real: a ancho completo (no la rejilla a
 // medias de .ev-split), con un riel horizontal en escritorio — cinco filas
@@ -229,8 +237,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
       ${casilla("02", "tarifa", t("Tarifas", "Rates"),
         t("Precios<br>y tarifas.", "Prices<br>and rates."),
         esc(t("A más gente, mejor precio.", "More people, better price.")),
-        `${tarifasVisual(i)}
-      <p class="tiny muted taller-casilla-nota">${esc(t("* Talleres fuera del restaurante sujetos a disponibilidad.", "* Off-site workshops subject to availability."))}</p>`)}
+        tarifasVisual(i, t("* Talleres fuera del restaurante sujetos a disponibilidad.", "* Off-site workshops subject to availability.")))}
     </div>
   </div>
 </section>
