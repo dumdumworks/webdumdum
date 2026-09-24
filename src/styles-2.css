@@ -1078,15 +1078,21 @@
 .taller-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
 }
+/* El filete entre casillas salía de sumar el border-right de una columna
+   con el borde del contenedor: en un grid de 1fr esas columnas caen en
+   posiciones con decimales (480.66px, no 480px), así que el filete se
+   pintaba a caballo entre dos píxeles físicos y se veía más grueso que
+   los demás. El gap relleno del color del filete siempre mide 1px exacto,
+   pase lo que pase con el redondeo de las columnas. */
 .taller-casilla {
   display: flex;
   flex-direction: column;
   padding: 36px var(--gutter);
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  background: var(--bg);
 }
 /* El cuerpo ocupa el resto de la casilla (que la rejilla ya estiró al alto
    de la fila): así una nota con "*" cae siempre al mismo sitio entre las
@@ -1157,8 +1163,8 @@
 .taller-casilla-cta-p { margin-top: 12px; font-size: 16px; line-height: 1.4; }
 .taller-casilla-cta .btn { margin-top: 24px; padding: 16px 22px; font-size: 13px; }
 @media (max-width: 879px) {
-  .taller-grid { grid-template-columns: 1fr; border-left: none; }
-  .taller-casilla { border-right: none; padding: 32px var(--gutter); }
+  .taller-grid { grid-template-columns: 1fr; }
+  .taller-casilla { padding: 32px var(--gutter); }
 }
 
 /* [01] Incluye (/taller-team-building): línea de tiempo real a ancho
