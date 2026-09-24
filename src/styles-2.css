@@ -1157,8 +1157,9 @@
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
-  /* Sin borde arriba: .taller-tl (justo encima) ya pone su propio
-     border-bottom — con los dos juntos, el filete salía de 2px. */
+  /* Sin borde arriba: .taller-tl-grid (justo encima, a sangre igual que
+     esta) ya pone su propio border-bottom — con los dos juntos, el
+     filete salía de 2px. */
   border-top: none;
 }
 /* El filete entre casillas salía de sumar el border-right de una columna
@@ -1279,12 +1280,23 @@
    queda igual de "cerrado" que la rejilla de [03]-[04]. La fila estira
    ambas columnas al alto de la que más contenido tiene, igual que
    [03]-[04] — el filete llega así hasta abajo del todo, no se corta a
-   media altura si comida es más corta que el riel. En móvil, una sola
-   columna — railMovil (dentro de .taller-tl-mitad) sustituye a
-   railEscritorio antes de llegar a Comida, así el orden de lectura no
-   cambia. */
+   media altura si comida es más corta que el riel. A sangre (como
+   .taller-grid, sin el padding lateral de .taller-tl) y sin el hueco de
+   64px que dejaba el padding-bottom de la sección: las dos rejillas se
+   tocan, un solo filete entre [02] y [03]-[04], no dos separados por
+   aire. En móvil, una sola columna — railMovil (dentro de
+   .taller-tl-mitad) sustituye a railEscritorio antes de llegar a Comida,
+   así el orden de lectura no cambia. */
 @media (min-width: 880px) {
-  .taller-tl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .taller-tl { padding-bottom: 0; border-bottom: none; }
+  .taller-tl-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin: 0 calc(-1 * var(--gutter));
+  }
   .taller-tl-mitad { background: var(--bg); padding: 36px var(--gutter); }
   .taller-tl-comida { background: var(--bg); padding: 36px var(--gutter); display: flex; }
   .taller-tl-comida .taller-casilla { padding: 0; flex: 1; }
