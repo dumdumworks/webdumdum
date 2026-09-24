@@ -1257,8 +1257,10 @@
    "[01] Incluye". Se recorta solo en esta combinación concreta. */
 .ev-hero:has(+ .taller-tl) { padding-bottom: 4vh; }
 .ev-hero + .taller-tl { padding-top: 32px; }
-.taller-tl-head { max-width: 720px; }
 .taller-tl-head h2 { margin-top: 16px; }
+@media (min-width: 880px) {
+  .taller-tl-head { max-width: 50%; }
+}
 
 .taller-tl-rail { margin-top: 56px; }
 /* Más grandes y en rojo lleno (no .muted): el número de paso tiene que
