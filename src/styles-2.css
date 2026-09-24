@@ -1255,17 +1255,16 @@
    este comportamiento por defecto: ver el override en
    .taller-tarifas-notas .taller-casilla-nota. */
 .taller-casilla-nota { margin-top: auto; padding-top: 16px; min-height: 44px; box-sizing: border-box; }
-/* Icono de categoría, entre el rótulo "[0N] …" y el título — antes del
-   título, no decorando el rótulo (que ya tiene su propio número). Sin
-   círculo ni filete: el icono suelto, del mismo rojo que el resto. */
-.taller-casilla-ico {
-  margin-top: 16px;
-  color: var(--red);
-}
+/* Icono de categoría, al lado del título (no encima) — el título en una
+   sola línea junto a su icono, no partido en dos con el icono suelto
+   arriba. La separación (antes en el propio icono/título) vive en el
+   contenedor, no en el h3: un margin-bottom en un hijo flex no se
+   comporta como el resto del documento y descuadra el centrado vertical
+   con el icono. */
+.taller-casilla-cab { display: flex; align-items: center; gap: 12px; margin-top: 16px; margin-bottom: 8px; }
+.taller-casilla-ico { color: var(--red); flex-shrink: 0; }
 .taller-casilla-ico svg { display: block; width: 28px; height: 28px; }
 .taller-casilla-h {
-  margin-top: 14px;
-  margin-bottom: 8px;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(21px, 1.8vw, 28px);
