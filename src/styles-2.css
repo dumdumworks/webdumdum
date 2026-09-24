@@ -1329,27 +1329,34 @@
 .taller-tl-rail { margin-top: 56px; }
 /* Más grandes y en rojo lleno (no .muted): el número de paso tiene que
    leerse tan bien como el título, no quedarse en detalle de fondo. */
-.taller-tl-num { font-size: 16px; font-weight: 700; color: var(--red); }
+/* Centrado igual que el icono de debajo: si el icono ya no va pegado al
+   borde de su columna (justify-self:start), dejar el número ahí se
+   notaba — la fila entera queda en el mismo eje. */
+.taller-tl-num { text-align: center; font-size: 16px; font-weight: 700; color: var(--red); }
 .taller-tl-fila { display: grid; grid-template-columns: repeat(5, 1fr); column-gap: 24px; }
 .taller-tl-fila:nth-child(2) { margin-top: 20px; }
 .taller-tl-fila:nth-child(3) { margin-top: 20px; }
 .taller-tl-fila:nth-child(4) { margin-top: 6px; }
 .taller-tl-linea {
-  grid-column: 1 / 5;
+  grid-column: 1 / 6;
   grid-row: 1;
   align-self: center;
   height: 1px;
   background: var(--red);
-  /* grid-column 1/5 para en el borde de contenido de la 4ª columna, un
-     column-gap (24px) antes del 5º punto — se suma aquí para que el filete
-     llegue justo hasta él, sin sobrar detrás. Verificado con
+  /* Los iconos van centrados en su columna (justify-self:center), no
+     pegados al borde — el filete tiene que ir de centro a centro, del
+     primer icono al último, no del borde de la 1ª columna al de la 4ª.
+     grid-column 1/6 abarca las 5 columnas (con sus 4 gaps) y el margin
+     recorta la mitad de una columna a cada lado: con columnas al 20%
+     (100%/5) y un gap de 24px repartido entre 5 columnas (4 gaps ÷ 5 =
+     19.2px por columna), esa mitad es 10% - 9.6px. Verificado con
      getBoundingClientRect. */
-  width: calc(100% + 24px);
+  margin: 0 calc(10% - 9.6px);
 }
 .taller-tl-ico {
   grid-row: 1;
   align-self: center;
-  justify-self: start;
+  justify-self: center;
   width: 72px;
   height: 72px;
   border-radius: 50%;
@@ -1361,7 +1368,15 @@
   justify-content: center;
 }
 .taller-tl-ico svg { display: block; width: 46px; height: 46px; }
+/* Centrado con el icono de encima, no pegado al borde izquierdo de su
+   columna — y centrado también verticalmente dentro de su fila: si el
+   título de un paso ocupa dos líneas, la fila entera (rejilla) se estira
+   a esa altura para las 5 columnas, y sin este align-self los títulos de
+   una sola línea se quedarían pegados arriba, descentrados respecto al
+   icono. */
 .taller-tl-titulo {
+  align-self: center;
+  text-align: center;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(17px, 1.3vw, 21px);
@@ -1371,8 +1386,10 @@
 /* Más pequeña que antes (13px, luego 12px): en 5 columnas estrechas
    seguía leyéndose grande frente al título de 21-28px que tiene encima.
    A 11px (el mismo cuerpo que .tiny) queda claramente subordinada, como
-   nota al pie de cada paso, no como otro titular. */
-.taller-tl-desc { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; line-height: 1.45; }
+   nota al pie de cada paso, no como otro titular. Centrada igual que el
+   título de encima, por el mismo motivo (icono → título → texto, los
+   tres en el mismo eje). */
+.taller-tl-desc { align-self: center; text-align: center; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; line-height: 1.45; }
 .taller-tl-movil { display: none; }
 
 @media (max-width: 879px) {
