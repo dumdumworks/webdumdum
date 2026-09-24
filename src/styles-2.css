@@ -1149,12 +1149,12 @@
 .taller-casilla-cta-h {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(22px, 2vw, 30px);
-  line-height: 1.1;
-  letter-spacing: -0.015em;
+  font-size: clamp(28px, 3.2vw, 42px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
 }
-.taller-casilla-cta-p { margin-top: 10px; font-size: 14px; line-height: 1.4; max-width: 40ch; }
-.taller-casilla-cta .btn { margin-top: 20px; }
+.taller-casilla-cta-p { margin-top: 12px; font-size: 16px; line-height: 1.4; }
+.taller-casilla-cta .btn { margin-top: 24px; padding: 16px 22px; font-size: 13px; }
 @media (max-width: 879px) {
   .taller-grid { grid-template-columns: 1fr; border-left: none; }
   .taller-casilla { border-right: none; padding: 32px var(--gutter); }
