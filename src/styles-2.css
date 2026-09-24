@@ -1049,8 +1049,11 @@
 /* Lista de una columna (/taller-team-building): mismo lenguaje que .ev-list
    (mono, etiqueta en rojo atenuado, filete fino) pero sin el "se oculta en
    móvil" de esa — aquí no hay una .ev-datos con iconos que la releve, así
-   que se queda en una columna siempre y no hace falta ocultar nada. */
-.taller-list { display: grid; grid-template-columns: 1fr; max-width: 480px; margin-top: 24px; }
+   que se queda en una columna siempre y no hace falta ocultar nada. Sin
+   margin-top: .taller-casilla es flex, así que no colapsa con el
+   margin-bottom del subtítulo de encima — poner los dos sumaba 48px de
+   aire en vez de 24. */
+.taller-list { display: grid; grid-template-columns: 1fr; max-width: 480px; }
 .taller-list > div {
   display: grid;
   grid-template-columns: 160px 1fr;
@@ -1072,12 +1075,12 @@
 /* [04] Tarifas: tres cajas lado a lado, una por tramo, el más barato (más
    gente) primero — es el foco de venta, no hay que llegar al final para
    encontrarlo. Es la única a pastilla entera en rojo sólido: se ve de un
-   vistazo cuál conviene, sin leer. */
+   vistazo cuál conviene, sin leer. Sin margin-top, mismo motivo que
+   .taller-list: ya lo pone el margin-bottom del subtítulo de encima. */
 .taller-tarifas-cajas {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  margin-top: 24px;
 }
 .taller-tarifas-caja {
   display: flex;
