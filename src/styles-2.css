@@ -1087,22 +1087,13 @@
   border-bottom: 1px solid var(--line);
 }
 /* Icono de categoría, entre el rótulo "[0N] …" y el título — antes del
-   título, no decorando el rótulo (que ya tiene su propio número). Mismo
-   lenguaje que .taller-tl-ico (círculo rojo, fondo del papel) pero más
-   pequeño: aquí es una marca de apoyo, no la protagonista. */
+   título, no decorando el rótulo (que ya tiene su propio número). Sin
+   círculo ni filete: el icono suelto, del mismo rojo que el resto. */
 .taller-casilla-ico {
   margin-top: 16px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1.5px solid var(--red);
-  background: var(--bg);
   color: var(--red);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
-.taller-casilla-ico svg { display: block; width: 22px; height: 22px; }
+.taller-casilla-ico svg { display: block; width: 28px; height: 28px; }
 .taller-casilla-h {
   margin-top: 14px;
   margin-bottom: 24px;
