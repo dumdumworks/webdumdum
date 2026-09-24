@@ -198,19 +198,19 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
     `      <div class="taller-list">
         ${filas(i, COMIDA)}
       </div>
-      <p class="tiny muted" style="margin-top:16px">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
+      <p class="tiny muted taller-casilla-nota">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
   ${casilla("03", "hora", t("Horarios", "Timings"),
     t("Un par de horas,<br>ni un minuto más.", "A couple hours,<br>not one more."),
     `      <div class="taller-list">
         ${filas(i, HORARIOS)}
       </div>
-      <p class="tiny muted" style="margin-top:16px">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
+      <p class="tiny muted taller-casilla-nota">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
   ${casilla("04", "tarifa", t("Tarifas", "Rates"),
     t("Más gente,<br>mejor precio.", "More people,<br>better price."),
     `      <div class="taller-list">
         ${filas(i, TARIFAS)}
       </div>
-      <p class="tiny muted" style="margin-top:16px">${esc(t("* Desplazamiento sujeto a disponibilidad; sin comida, solo el taller dinámico.", "* Off-site sessions subject to availability; food not included, workshop only."))}</p>`)}
+      <p class="tiny muted taller-casilla-nota">${esc(t("* Talleres fuera del restaurante sujetos a disponibilidad.", "* Off-site workshops subject to availability."))}</p>`)}
   ${casilla("05", "ajustar", t("Y si tu evento es distinto", "And if your event is different"),
     t("Adaptabilidad<br>y versatilidad.", "Adaptability<br>and versatility."),
     `      <p class="body">${esc(t(

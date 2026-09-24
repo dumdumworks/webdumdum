@@ -1082,10 +1082,20 @@
   border-left: 1px solid var(--line);
 }
 .taller-casilla {
+  display: flex;
+  flex-direction: column;
   padding: 36px var(--gutter);
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
+/* El cuerpo ocupa el resto de la casilla (que la rejilla ya estiró al alto
+   de la fila): así una nota con "*" cae siempre al mismo sitio entre las
+   tres columnas, sin importar cuántas líneas tenga cada lista encima. */
+.taller-casilla-body { display: flex; flex-direction: column; flex: 1; }
+/* min-height reserva sitio para 2 líneas siempre (la de Tarifas parte en
+   dos): así el "*" arranca en el mismo punto en las tres, tenga la nota
+   una línea o dos — no solo el borde de abajo. */
+.taller-casilla-nota { margin-top: auto; padding-top: 16px; min-height: 44px; box-sizing: border-box; }
 /* Icono de categoría, entre el rótulo "[0N] …" y el título — antes del
    título, no decorando el rótulo (que ya tiene su propio número). Sin
    círculo ni filete: el icono suelto, del mismo rojo que el resto. */
