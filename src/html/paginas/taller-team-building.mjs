@@ -173,9 +173,9 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   <div class="tiny muted"><a href="${i.ruta("/eventos")}" class="link-hover">${esc(t("Eventos", "Events"))}</a> · ${esc(t("Talleres Team Building", "Team Building Workshops"))}</div>
   <h1 class="h-display" style="margin-top:16px">${esc(t("Team building", "Team building"))}<br>${esc(t("de taller de dumplings.", "dumpling workshop."))}</h1>
   <div class="ev-hero-row" style="margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:32px">
-    <p class="body" style="font-size:18px;flex:1 1 420px;min-width:0;margin:0">${esc(t(
-      "Un taller de cocina para empresas: por equipos, aprendéis a elaborar dumplings desde cero guiados por nuestro equipo y, al terminar, os coméis lo que habéis hecho, con el resto de la carta incluida. Unas dos horas, en nuestro local de Bernabéu.",
-      "A hands-on cooking workshop for companies: in teams, you learn to make dumplings from scratch with our team, then eat what you've made, plus the rest of the menu. About two hours, at our Bernabéu spot."))}</p>
+    <p class="body" style="font-size:18px;flex:1 1 420px;min-width:0;margin:0">${t(
+      "Un <strong>taller de cocina para empresas</strong>: <strong>por equipos</strong>, aprendéis a elaborar <strong>dumplings desde cero</strong> guiados por nuestro equipo y, al terminar, os coméis <strong>lo que habéis hecho</strong>, con el <strong>resto de la carta incluida</strong>. Unas <strong>dos horas</strong>, en nuestro local de <strong>Bernabéu</strong>.",
+      "A <strong>hands-on cooking workshop for companies</strong>: <strong>in teams</strong>, you learn to make <strong>dumplings from scratch</strong> with our team, then eat <strong>what you've made</strong>, plus the <strong>rest of the menu</strong>. <strong>About two hours</strong>, at our <strong>Bernabéu</strong> spot.")}</p>
   </div>
   <div class="ev-hero-cta" style="display:flex;flex-wrap:wrap;gap:16px">
     <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
