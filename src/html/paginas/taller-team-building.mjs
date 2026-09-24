@@ -232,20 +232,14 @@ ${FAQ.map(({ q, a }) => `        <div style="margin-bottom:18px">
           <div class="taller-casilla-q">${esc(i.lang === "en" ? q[1] : q[0])}</div>
           <p class="taller-casilla-a">${esc(i.lang === "en" ? a[1] : a[0])}</p>
         </div>`).join("\n")}
+      </div>
+      <div class="taller-casilla-cta">
+        <h3 class="taller-casilla-cta-h">${t("¿Hablamos?", "Let's talk?")}</h3>
+        <p class="taller-casilla-cta-p">${esc(t(
+          "Cuéntanos cuántos sois y cuándo, y te mandamos disponibilidad y presupuesto.",
+          "Tell us how many you are and when, and we'll send you availability and a quote."))}</p>
+        <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
       </div>`)}
-</section>
-
-<section class="ev-split ev-split--contact" id="contact-taller">
-  <div>
-    <div class="tiny muted">[08] ${esc(t("Contacto", "Contact"))}</div>
-    <h2 class="h-1" style="margin-top:16px">${t("¿Hablamos?", "Let's talk?")}</h2>
-    <p class="body" style="margin-top:16px">${esc(t(
-      "Cuéntanos cuántos sois y cuándo, y te mandamos disponibilidad y presupuesto para el team building.",
-      "Tell us how many you are and when, and we'll send you availability and a quote for the team building."))}</p>
-  </div>
-  <div>
-    <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos" style="width:fit-content"><span class="btn-label">${esc(t("Ir al formulario", "Go to the form"))}</span><span class="btn-arrow">→</span></a>
-  </div>
 </section>
 </div>`;
 
