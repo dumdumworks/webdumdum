@@ -221,10 +221,6 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   ${railMovil(i)}
 </section>
 
-<section class="taller-galeria">
-${galeria(i, { fotos: galerias.tallerTeamBuilding || [], ratio: "3 / 4", etiquetaHueco: t("Team Building", "Team Building"), raiz })}
-</section>
-
 <section class="taller-grid">
   ${casilla("02", "comida", t("Comida", "Food"),
     t("El menú de<br>la degustación.", "The tasting<br>menu."),
@@ -245,6 +241,10 @@ ${galeria(i, { fotos: galerias.tallerTeamBuilding || [], ratio: "3 / 4", etiquet
         ${filas(i, HORARIOS)}
       </div>
       <p class="tiny muted taller-casilla-nota">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
+</section>
+
+<section class="taller-galeria">
+${galeria(i, { fotos: galerias.tallerTeamBuilding || [], ratio: "3 / 4", etiquetaHueco: t("Team Building", "Team Building"), raiz })}
 </section>
 
 <section class="taller-faq">
