@@ -1118,7 +1118,8 @@
    el detalle, como en [05]). */
 .taller-casilla-sub {
   margin-bottom: 24px;
-  font-size: 15px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 13px;
   line-height: 1.4;
   color: rgba(255,0,30,0.7);
 }
