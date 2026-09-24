@@ -201,14 +201,14 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
       </div>
       <p class="tiny muted taller-casilla-nota">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
   ${casilla("03", "hora", t("Horarios", "Timings"),
-    esc(t("Horarios y duraciones.", "Timings and durations.")),
+    t("Horarios y<br>duraciones.", "Timings and<br>durations."),
     esc(t("Un par de horitas, para que no se aburran.", "A couple of hours, so nobody gets bored.")),
     `      <div class="taller-list">
         ${filas(i, HORARIOS)}
       </div>
       <p class="tiny muted taller-casilla-nota">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
   ${casilla("04", "tarifa", t("Tarifas", "Rates"),
-    esc(t("Precios y tarifas.", "Prices and rates.")),
+    t("Precios y<br>tarifas.", "Prices and<br>rates."),
     esc(t("A más gente, mejor precio.", "More people, better price.")),
     `      <div class="taller-list">
         ${filas(i, TARIFAS)}
