@@ -1083,31 +1083,27 @@
    ficha completa del tramo. En móvil, una columna: con las tres a la vez
    el desglose de cada una se quedaba en ~110px de ancho, partiendo cada
    valor en 3 líneas — apiladas, cada tarjeta tiene todo el ancho del
-   teléfono para su lista. */
+   teléfono para su lista. Cerca pero separadas: cada una sigue siendo su
+   propia pastilla (borde y esquinas redondeadas propios, no un bloque
+   fundido), con solo 6px entre medias — ni pegadas ni con el hueco de
+   antes. Tope de 1032px (3 × 340px de tarjeta + 2 × 6px de separación,
+   el ancho que necesita la fila más larga del desglose sin pasarse) y
+   centradas como grupo: por debajo del tope no hace falta, las tres
+   columnas ya se reparten el ancho disponible con esos mismos 6px entre
+   ellas. */
 .taller-tarifas-cajas {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
+  gap: 6px;
 }
 @media (min-width: 880px) {
-  .taller-tarifas-cajas { grid-template-columns: repeat(3, 1fr); }
+  .taller-tarifas-cajas { grid-template-columns: repeat(3, 1fr); max-width: 1032px; margin: 0 auto; }
 }
-/* Ancho tope: en una columna de grid muy ancha (pantallas grandes, o
-   apiladas a ancho completo en móvil/tablet) la tarjeta se estiraba a
-   todo el ancho de su columna aunque el contenido no necesitara tanto —
-   el desglose se quedaba con la etiqueta y el valor pegados a la
-   izquierda y un hueco enorme sin usar a la derecha de cada fila.
-   Centrada dentro de su columna para no quedar pegada a un lado. 340px
-   es justo lo que necesita la fila más larga (Dumplings/"10 por
-   persona") para no partirse en más de 2 líneas — ni un pelo de más. */
 .taller-tarifas-caja {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  width: 100%;
-  max-width: 340px;
-  margin: 0 auto;
   padding: 20px 16px;
   border: 1px solid var(--line);
   border-radius: 18px;
