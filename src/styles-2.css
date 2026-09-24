@@ -1077,10 +1077,16 @@
    encontrarlo. Es la única a pastilla entera en rojo sólido: se ve de un
    vistazo cuál conviene, sin leer. Sin margin-top, mismo motivo que
    .taller-list: ya lo pone el margin-bottom del subtítulo de encima. */
+/* Ancho tope: desde que [02] pasó a ocupar toda la anchura, las cajas se
+   estiraban a 1/3 de un contenedor mucho más ancho que antes — mucho
+   aire alrededor de "65€ POR PERSONA", pastillas grandes para tan poco
+   contenido. Con un ancho máximo se quedan al tamaño que tenían cuando
+   la casilla iba a media anchura. */
 .taller-tarifas-cajas {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
+  max-width: 640px;
 }
 .taller-tarifas-caja {
   display: flex;
@@ -1137,7 +1143,10 @@
    izquierda con un hueco enorme hasta las notas, "flotando" sin nada
    alrededor). En móvil, .taller-tarifas-pie no lleva flex: notas debajo
    del botón, como cualquier casilla. */
-.taller-tarifas-pie { margin-top: 20px; }
+/* Mismo ancho tope que .taller-tarifas-cajas: si las cajas ya no llegan
+   al borde derecho de la casilla, dejar esta fila a ancho completo
+   separaba mucho el botón de ellas — vuelven a leerse como un bloque. */
+.taller-tarifas-pie { margin-top: 20px; max-width: 640px; }
 .taller-tarifas-notas { margin-top: 12px; }
 .taller-tarifas-consulta {
   font-family: "JetBrains Mono", ui-monospace, monospace;
