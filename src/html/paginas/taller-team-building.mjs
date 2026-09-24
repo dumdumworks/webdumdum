@@ -194,7 +194,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 
 <section class="taller-grid">
   ${casilla("02", "comida", t("Comida", "Food"),
-    t("El menú<br>degustación.", "The tasting<br>menu."),
+    t("El menú de la<br>degustación.", "The tasting<br>menu."),
     esc(t("Se prueba toda la carta.", "You get to try the whole menu.")),
     `      <div class="taller-list">
         ${filas(i, COMIDA)}
@@ -225,12 +225,14 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
     esc(t("La verdad es que la gente lo pasa bien.", "Honestly, people have a great time.")),
     "      " + galeria(i, { fotos: galerias.tallerTeamBuilding || [], ratio: "3 / 4", etiquetaHueco: t("Team Building", "Team Building"), raiz, modo: "paginado", etiqueta: t("Team Building", "Team Building"), huecos: 4, cols: 1 }))}
   ${casilla("07", "bocadillo", t("Preguntas frecuentes", "FAQ"),
-    esc(t("Lo que preguntáis siempre.", "What you always ask.")),
+    t("Lo que preguntáis<br>siempre.", "What you<br>always ask."),
     null,
-    FAQ.map(({ q, a }) => `      <div style="margin-bottom:18px">
-        <div class="taller-casilla-q">${esc(i.lang === "en" ? q[1] : q[0])}</div>
-        <p class="taller-casilla-a">${esc(i.lang === "en" ? a[1] : a[0])}</p>
-      </div>`).join("\n"))}
+    `      <div class="taller-casilla-faq">
+${FAQ.map(({ q, a }) => `        <div style="margin-bottom:18px">
+          <div class="taller-casilla-q">${esc(i.lang === "en" ? q[1] : q[0])}</div>
+          <p class="taller-casilla-a">${esc(i.lang === "en" ? a[1] : a[0])}</p>
+        </div>`).join("\n")}
+      </div>`)}
 </section>
 
 <section class="ev-split ev-split--contact" id="contact-taller">

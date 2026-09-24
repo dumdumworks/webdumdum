@@ -1122,6 +1122,10 @@
   line-height: 1.4;
   color: rgba(255,0,30,0.7);
 }
+/* [07] no lleva subtítulo (el titular ya hace de intro) — el aire antes de
+   la primera pregunta lo pone esto, como el margin-top de .taller-list en
+   las otras casillas de la fila. */
+.taller-casilla-faq { margin-top: 24px; }
 .taller-casilla-q {
   font-family: var(--font-display);
   font-weight: 700;
