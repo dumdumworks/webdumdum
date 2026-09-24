@@ -34,12 +34,13 @@ const INCLUYE = [
     "Os sentáis a comer lo que habéis hecho, con el resto de la carta también en la mesa.",
     "You sit down to eat what you've made, with the rest of the menu on the table too."],
 ];
-// [grande es, pequeño es, grande en, pequeño en] — grande va en mayúsculas.
+// Fila de .taller-list, como Horarios y Tarifas: [etiqueta es, valor es,
+// etiqueta en, valor en].
 const COMIDA = [
-  ["Un entrante", "a compartir", "One starter", "to share"],
-  ["Toda la carta de dumplings, por persona", "10 dumplings por persona", "The whole dumpling menu, per person", "10 dumplings per person"],
-  ["Una bebida", "a elegir", "One drink", "your choice"],
-  ["Un mochi", "a elegir", "One mochi", "your choice"],
+  ["Entrante", "Un entrante, a compartir", "Starter", "One starter, to share"],
+  ["Dumplings", "Toda la carta, 10 por persona", "Dumplings", "The whole menu, 10 per person"],
+  ["Bebida", "A elegir", "Drink", "Your choice"],
+  ["Postre", "Un mochi, a elegir", "Dessert", "One mochi, your choice"],
 ];
 const HORARIOS = [
   ["Duración aprox.", "2 – 2,5 h", "Approx. duration", "2 – 2.5 h"],
@@ -83,14 +84,6 @@ const filas = (i, datos) => datos.map((d) => {
   const etiqueta = i.lang === "en" ? (d.length === 4 ? en1 : d[0]) : es1;
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
-}).join("\n      ");
-// Celdas de .taller-comida: el dato grande arriba, el detalle pequeño
-// debajo — con un "+" en su propia línea entre cada una.
-const filasComida = (i) => COMIDA.map(([esG, esP, enG, enP], idx) => {
-  const grande = i.lang === "en" ? enG : esG;
-  const pequeno = i.lang === "en" ? enP : esP;
-  const item = `<div><b>${esc(grande)}</b><span>${esc(pequeno)}</span></div>`;
-  return idx < COMIDA.length - 1 ? `${item}\n      <div class="taller-comida-mas">+</div>` : item;
 }).join("\n      ");
 // INCLUYE es una línea de tiempo real: a ancho completo (no la rejilla a
 // medias de .ev-split), con un riel horizontal en escritorio — cinco filas
@@ -200,8 +193,8 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 <section class="taller-grid">
   ${casilla("02", t("Comida", "Food"),
     esc(t("Y luego, se come.", "And then, we eat.")),
-    `      <div class="taller-comida">
-        ${filasComida(i)}
+    `      <div class="taller-list">
+        ${filas(i, COMIDA)}
       </div>
       <p class="tiny muted" style="margin-top:16px">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
   ${casilla("03", t("Horarios", "Timings"),

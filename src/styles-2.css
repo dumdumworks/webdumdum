@@ -1069,43 +1069,6 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [02] Comida: el dato grande arriba (frase normal, solo la inicial en
-   mayúscula — no todo el texto) y el detalle pequeño debajo — al revés
-   que el eyebrow+titular de "[01] Incluye", aquí lo grande manda. Un "+"
-   (del mismo rojo que el texto) en su propia línea entre cada uno. Sin
-   filetes ni caja: la presencia la pone la escala del texto. */
-.taller-comida {
-  margin-top: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 480px;
-}
-.taller-comida b {
-  display: block;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(19px, 2.2vw, 26px);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  color: var(--red);
-  text-wrap: balance;
-}
-.taller-comida span {
-  display: block;
-  margin-top: 6px;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-weight: 500;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  color: rgba(255,0,30,0.6);
-}
-.taller-comida-mas {
-  color: var(--red);
-  font-size: clamp(20px, 2.2vw, 26px);
-}
-
 /* Rejilla de [02] a [07] (Comida, Horarios, Tarifas, Y si tu evento es
    distinto, En imágenes, Preguntas frecuentes): 3 columnas × 2 filas, no
    secciones apiladas a ancho completo. Cada fila estira sus 3 casillas al
