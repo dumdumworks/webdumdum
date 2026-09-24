@@ -1272,18 +1272,21 @@
 /* [01] El taller, a rejilla de dos: "Así funciona el taller" (con su
    riel) a la izquierda, "[02] Comida" a la derecha — ya no una mitad
    vacía. Mismo filete fino que la rejilla de abajo (gap:1px + background
-   de relleno, ver el comentario sobre .taller-grid): antes el filete
-   salía de sumar el gap con el padding-left de comida y quedaba
-   descentrado. La fila también estira ambas columnas al alto de la que
-   más contenido tiene, igual que [03]-[04] — el filete llega así hasta
-   abajo del todo, no se corta a media altura si comida es más corta que
-   el riel. En móvil, una sola columna — railMovil (dentro de
-   .taller-tl-mitad) sustituye a railEscritorio antes de llegar a Comida,
-   así el orden de lectura no cambia. */
+   de relleno, ver el comentario sobre .taller-grid) y el mismo borde que
+   la cierra por los cuatro lados — sin él quedaba un filete suelto en
+   medio del aire, sin caja que lo sujetara. Mismo padding que
+   .taller-casilla (36px var(--gutter)) en las dos columnas, así el marco
+   queda igual de "cerrado" que la rejilla de [03]-[04]. La fila estira
+   ambas columnas al alto de la que más contenido tiene, igual que
+   [03]-[04] — el filete llega así hasta abajo del todo, no se corta a
+   media altura si comida es más corta que el riel. En móvil, una sola
+   columna — railMovil (dentro de .taller-tl-mitad) sustituye a
+   railEscritorio antes de llegar a Comida, así el orden de lectura no
+   cambia. */
 @media (min-width: 880px) {
-  .taller-tl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); }
-  .taller-tl-mitad { background: var(--bg); padding-right: var(--gutter); }
-  .taller-tl-comida { background: var(--bg); padding-left: var(--gutter); display: flex; }
+  .taller-tl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .taller-tl-mitad { background: var(--bg); padding: 36px var(--gutter); }
+  .taller-tl-comida { background: var(--bg); padding: 36px var(--gutter); display: flex; }
   .taller-tl-comida .taller-casilla { padding: 0; flex: 1; }
 }
 
@@ -1329,10 +1332,11 @@
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
-/* Más pequeña que antes (13px): en 5 columnas, la frase más larga se
-   partía en más líneas que las demás y desequilibraba la fila — a 12px
-   (el mismo cuerpo que .taller-list) cada una reparte mejor sus líneas. */
-.taller-tl-desc { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; line-height: 1.5; }
+/* Más pequeña que antes (13px, luego 12px): en 5 columnas estrechas
+   seguía leyéndose grande frente al título de 21-28px que tiene encima.
+   A 11px (el mismo cuerpo que .tiny) queda claramente subordinada, como
+   nota al pie de cada paso, no como otro titular. */
+.taller-tl-desc { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; line-height: 1.45; }
 .taller-tl-movil { display: none; }
 
 @media (max-width: 879px) {
