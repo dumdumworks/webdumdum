@@ -1069,13 +1069,10 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [04] Tarifas: venta, pero fina — el mismo lenguaje editorial que el
-   resto (filetes finos, mayúsculas mono), no cajas de color ni etiquetas
-   de "oferta". El "desde" manda arriba, como un dato editorial grande
-   (etiqueta pequeña encima, número enorme). Debajo, una carta con guía de
-   puntos como una carta de restaurante real: la jerarquía la pone la
-   escala tipográfica del precio (15px el tramo más caro, 26px el más
-   barato), no un fondo de color. */
+/* [04] Tarifas: el "desde" manda arriba, como un dato editorial grande
+   (etiqueta pequeña encima, número enorme), y debajo tres cajas — una por
+   tramo, lado a lado. La más barata (más gente) es la única a pastilla
+   entera en rojo sólido: se ve de un vistazo cuál conviene, sin leer. */
 .taller-tarifas-hero { margin-top: 22px; margin-bottom: 32px; }
 .taller-tarifas-hero-eyebrow {
   display: block;
@@ -1104,48 +1101,57 @@
   letter-spacing: 0.02em;
   color: rgba(255,0,30,0.6);
 }
-.taller-tarifas-escala { display: flex; flex-direction: column; max-width: 420px; }
-.taller-tarifas-fila {
-  display: flex;
-  align-items: baseline;
+.taller-tarifas-cajas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  padding: 14px 0;
-  border-top: 1px solid var(--line-soft);
+  max-width: 420px;
 }
-.taller-tarifas-escala .taller-tarifas-fila:last-child { border-bottom: 1px solid var(--line-soft); }
-.taller-tarifas-rango {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: rgba(255,0,30,0.65);
-  white-space: nowrap;
+.taller-tarifas-caja {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 16px 6px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  text-align: center;
 }
-.taller-tarifas-leader {
-  flex: 1;
-  min-width: 16px;
-  border-bottom: 1px dotted rgba(255,0,30,0.32);
-  transform: translateY(-5px);
-}
-.taller-tarifas-precio {
+.taller-tarifas-caja-nombre {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: var(--fs);
+  font-size: 13px;
+  line-height: 1.15;
+  color: var(--red);
+}
+.taller-tarifas-caja-rango {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: rgba(255,0,30,0.6);
+}
+.taller-tarifas-caja-precio {
+  margin-top: 5px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
   line-height: 1;
   color: var(--red);
-  white-space: nowrap;
 }
-.taller-tarifas-fila.es-mejor { padding: 18px 0; }
-.taller-tarifas-marca {
-  display: block;
-  margin-top: 3px;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
+.taller-tarifas-caja-simbolo { font-size: 0.6em; }
+.taller-tarifas-caja-persona {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 9px;
   text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: rgba(255,0,30,0.5);
 }
+.taller-tarifas-caja.es-mejor { background: var(--red); border-color: var(--red); }
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-nombre,
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-precio { color: var(--bg); }
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-rango,
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-persona { color: rgba(255,250,243,0.75); }
 .taller-tarifas-consulta {
   margin-top: 16px;
   font-family: "JetBrains Mono", ui-monospace, monospace;

@@ -50,12 +50,13 @@ const HORARIOS = [
   ["Mañanas", "11.30 – 14.00", "Mornings", "11.30am – 2pm"],
   ["Tardes", "18.30 – 21.00", "Afternoons", "6.30 – 9pm"],
 ];
-// [rango es, rango en, precio€] — el tramo más barato es el foco de venta
-// (la promesa es "a más gente, mejor precio": aquí se ve, no solo se dice).
+// [nombre es, nombre en, rango es, rango en, precio€] — el tramo más
+// barato es el foco de venta (la promesa es "a más gente, mejor precio":
+// aquí se ve, no solo se dice).
 const TARIFAS = [
-  ["6–9 personas", "6–9 people", 75],
-  ["10–20 personas", "10–20 people", 70],
-  ["20–30 personas", "20–30 people", 65],
+  ["Equipo pequeño", "Small team", "6–9 personas", "6–9 people", 75],
+  ["Equipo mediano", "Medium team", "10–20 personas", "10–20 people", 70],
+  ["Equipo grande", "Large team", "20–30 personas", "20–30 people", 65],
 ];
 // Para el JSON-LD (Service.offers): solo los tramos con precio real.
 const OFERTAS = [
@@ -85,34 +86,31 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
-// [04] Tarifas: no es una lista más, es venta — pero fina, en el mismo
-// idioma editorial que el resto de la web (filetes finos, mayúsculas
-// mono), no cajas de color ni etiquetas de "oferta". El precio desde
-// manda arriba; abajo, una carta con guía de puntos (como una carta de
-// restaurante de verdad) donde la escala tipográfica —no el color— hace
-// que el tramo más barato sea el que más pesa.
+// [04] Tarifas: tres cajas una al lado de la otra, una por tramo — la más
+// barata (más gente) destaca a pastilla entera en rojo sólido: la
+// jerarquía de venta se ve de un vistazo, no hay que leer para encontrar
+// la mejor.
 const tarifasVisual = (i) => {
   const { t } = i;
-  const precios = TARIFAS.map(([, , p]) => p);
-  const min = Math.min(...precios), max = Math.max(...precios);
-  // De 15px (el tramo más caro) a 26px (el más barato): la jerarquía la
-  // pone el tamaño, no un fondo.
-  const escala = (p) => (max === min ? 26 : Math.round(15 + ((max - p) / (max - min)) * 11));
-  const filasTarifa = TARIFAS.map(([es, en, p]) => {
+  const precios = TARIFAS.map(([, , , , p]) => p);
+  const min = Math.min(...precios);
+  const cajas = TARIFAS.map(([esN, enN, esR, enR, p]) => {
     const mejor = p === min;
-    const rango = esc(i.lang === "en" ? en : es);
-    return `      <div class="taller-tarifas-fila${mejor ? " es-mejor" : ""}" style="--fs:${escala(p)}px">
-        <span class="taller-tarifas-rango">${rango}${mejor ? `<span class="taller-tarifas-marca">${esc(t("el más conveniente", "the best value"))}</span>` : ""}</span>
-        <span class="taller-tarifas-leader" aria-hidden="true"></span>
-        <span class="taller-tarifas-precio">${p}€</span>
+    const nombre = esc(i.lang === "en" ? enN : esN);
+    const rango = esc(i.lang === "en" ? enR : esR);
+    return `      <div class="taller-tarifas-caja${mejor ? " es-mejor" : ""}">
+        <div class="taller-tarifas-caja-nombre">${nombre}</div>
+        <div class="taller-tarifas-caja-rango">${rango}</div>
+        <div class="taller-tarifas-caja-precio">${p}<span class="taller-tarifas-caja-simbolo">€</span></div>
+        <div class="taller-tarifas-caja-persona">${esc(t("por persona", "per person"))}</div>
       </div>`;
   }).join("\n");
   return `      <div class="taller-tarifas-hero">
         <span class="taller-tarifas-hero-eyebrow">${esc(t("Desde", "From"))}</span>
         <span class="taller-tarifas-hero-linea"><span class="taller-tarifas-hero-num">${min}<span class="taller-tarifas-hero-simbolo">€</span></span><span class="taller-tarifas-hero-persona">${esc(t("por persona", "per person"))}</span></span>
       </div>
-      <div class="taller-tarifas-escala">
-${filasTarifa}
+      <div class="taller-tarifas-cajas">
+${cajas}
       </div>
       <p class="taller-tarifas-consulta">${esc(t("+30 personas, consultamos contigo.", "30+ people — let's talk it through."))}</p>`;
 };
