@@ -1070,11 +1070,10 @@
 }
 
 /* [02] Comida: mismo lenguaje que las cifras de Redes (.ev-stats /
-   .resumen-dato) de Eventos — caja cerrada con el filete rojo, icono,
-   rótulo pequeño y el dato grande debajo — pero en rejilla 2×2 (aquí son
-   4 datos, no 3). "Carta de dumplings" reutiliza el icono de arriba; los
-   otros 3 (plato, bebida, postre) son simples a propósito: no hay boceto
-   de referencia para ellos, así que no se inventa de más. */
+   .resumen-dato) de Eventos — caja cerrada con el filete rojo, rótulo
+   pequeño y el dato grande debajo — pero en rejilla 2×2 (aquí son 4 datos,
+   no 3). Sin icono: la presencia la pone el propio tamaño del dato, a la
+   escala de un titular, no el de una lista. */
 .taller-comida {
   margin-top: 24px;
   display: grid;
@@ -1083,37 +1082,30 @@
   max-width: 480px;
 }
 .taller-comida > div {
-  padding: 24px 20px;
+  padding: 28px 20px;
   border-left: 1px solid var(--line);
   border-top: 1px solid var(--line);
   text-align: center;
 }
 .taller-comida > div:nth-child(odd) { border-left: none; }
 .taller-comida > div:nth-child(-n+2) { border-top: none; }
-.taller-comida svg {
-  display: block;
-  width: 30px;
-  height: 30px;
-  margin: 0 auto 12px;
-  color: var(--red);
-}
 .taller-comida b {
   display: block;
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-weight: 500;
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   color: rgba(255,0,30,0.55);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 .taller-comida span {
   display: block;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(17px, 1.6vw, 22px);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  font-size: clamp(22px, 2.6vw, 32px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   color: var(--red);
   text-wrap: balance;
 }

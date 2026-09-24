@@ -35,14 +35,11 @@ const INCLUYE = [
     "Os sentáis a comer lo que habéis hecho, con el resto de la carta también en la mesa.",
     "You sit down to eat what you've made, with the rest of the menu on the table too."],
 ];
-// [icono, etiqueta es/en, valor es/en] — "dumpling" reutiliza el icono de
-// arriba, tal cual; los otros 3 son los simples de ICONOS (sin foto de
-// referencia para ellos).
 const COMIDA = [
-  ["plato", "Entrante", "A compartir", "Starter", "To share"],
-  ["dumpling", "Carta de dumplings", "Toda, por persona", "Dumpling menu", "The whole thing, per person"],
-  ["bebida", "Bebida", "Una", "Drink", "One"],
-  ["postre", "Postre", "Un mochi", "Dessert", "One mochi"],
+  ["Entrante", "A compartir", "Starter", "To share"],
+  ["Carta de dumplings", "Toda, por persona", "Dumpling menu", "The whole thing, per person"],
+  ["Bebida", "Una", "Drink", "One"],
+  ["Postre", "Un mochi", "Dessert", "One mochi"],
 ];
 const HORARIOS = [
   ["Duración aprox.", "2 – 2,5 h", "Approx. duration", "2 – 2.5 h"],
@@ -86,12 +83,6 @@ const filas = (i, datos) => datos.map((d) => {
   const etiqueta = i.lang === "en" ? (d.length === 4 ? en1 : d[0]) : es1;
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
-}).join("\n      ");
-// Celda de .taller-comida: icono, etiqueta, valor.
-const celdasComida = (i) => COMIDA.map(([ico, es1, es2, en1, en2]) => {
-  const etiqueta = i.lang === "en" ? en1 : es1;
-  const valor = i.lang === "en" ? en2 : es2;
-  return `<div>${icono(ico)}<b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
 // INCLUYE es una línea de tiempo real: a ancho completo (no la rejilla a
 // medias de .ev-split), con un riel horizontal en escritorio — cinco filas
@@ -190,7 +181,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 ${seccion("02", t("Comida", "Food"),
     esc(t("Y luego, se come.", "And then, we eat.")),
     `<div class="taller-comida">
-      ${celdasComida(i)}
+      ${filas(i, COMIDA)}
     </div>
     <p class="tiny muted" style="margin-top:16px">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
 
