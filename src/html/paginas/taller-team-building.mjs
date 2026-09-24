@@ -180,7 +180,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 
 ${seccion("02", t("Comida", "Food"),
     esc(t("Y luego, se come.", "And then, we eat.")),
-    `<div class="taller-list">
+    `<div class="taller-comida">
       ${filas(i, COMIDA)}
     </div>
     <p class="tiny muted" style="margin-top:16px">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}

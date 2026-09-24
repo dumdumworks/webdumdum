@@ -1069,6 +1069,47 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
+/* [02] Comida: mismo lenguaje que las cifras de Redes (.ev-stats /
+   .resumen-dato) de Eventos — caja cerrada con el filete rojo, rótulo
+   pequeño arriba y el dato grande debajo — pero en rejilla 2×2 (aquí son
+   4 datos, no 3) y sin icono: no hay uno para cada concepto y cuatro
+   inventados sobre la marcha pesarían más que lo que aportan. */
+.taller-comida {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--line);
+  max-width: 480px;
+}
+.taller-comida > div {
+  padding: 24px 20px;
+  border-left: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+.taller-comida > div:nth-child(odd) { border-left: none; }
+.taller-comida > div:nth-child(-n+2) { border-top: none; }
+.taller-comida b {
+  display: block;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255,0,30,0.55);
+  margin-bottom: 10px;
+}
+.taller-comida span {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(17px, 1.6vw, 22px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--red);
+  text-wrap: balance;
+}
+
 /* [01] Incluye (/taller-team-building): línea de tiempo real a ancho
    completo — no la rejilla a medias de .ev-split. En escritorio, riel
    horizontal de cuatro filas (número, riel con icono, título, frase) con
