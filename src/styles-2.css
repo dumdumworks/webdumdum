@@ -1258,8 +1258,13 @@
 .ev-hero:has(+ .taller-tl) { padding-bottom: 4vh; }
 .ev-hero + .taller-tl { padding-top: 32px; }
 .taller-tl-head h2 { margin-top: 16px; }
+/* Pedido explícito: no solo el titular, toda la sección [01] (rótulo,
+   titular Y el riel de los 5 pasos) comprimida a la mitad izquierda —
+   la otra mitad se queda vacía a propósito. En móvil, .taller-tl-mitad no
+   hace nada (no hay max-width que aplicar) y el riel de escritorio ya
+   está oculto por su cuenta. */
 @media (min-width: 880px) {
-  .taller-tl-head { max-width: 50%; }
+  .taller-tl-mitad { max-width: 50%; }
 }
 
 .taller-tl-rail { margin-top: 56px; }

@@ -213,11 +213,13 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 </section>
 
 <section class="taller-tl">
-  <div class="taller-tl-head">
-    <div class="tiny muted">[01] ${esc(t("El taller", "The workshop"))}</div>
-    <h2 class="h-1">${t("Así funciona<br>el taller.", "How the<br>workshop works.")}</h2>
+  <div class="taller-tl-mitad">
+    <div class="taller-tl-head">
+      <div class="tiny muted">[01] ${esc(t("El taller", "The workshop"))}</div>
+      <h2 class="h-1">${t("Así funciona<br>el taller.", "How the<br>workshop works.")}</h2>
+    </div>
+    ${railEscritorio(i)}
   </div>
-  ${railEscritorio(i)}
   ${railMovil(i)}
 </section>
 
