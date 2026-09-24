@@ -1323,7 +1323,7 @@
   grid-column: 1 / 5;
   grid-row: 1;
   align-self: center;
-  height: 2px;
+  height: 1px;
   background: var(--red);
   /* grid-column 1/5 para en el borde de contenido de la 4ª columna, un
      column-gap (24px) antes del 5º punto — se suma aquí para que el filete
@@ -1339,7 +1339,7 @@
   height: 72px;
   border-radius: 50%;
   background: var(--bg);
-  border: 2px solid var(--red);
+  border: 1px solid var(--red);
   color: var(--red);
   display: flex;
   align-items: center;
@@ -1366,14 +1366,14 @@
   .taller-tl-movil { display: block; margin-top: 40px; position: relative; }
   .taller-tl-movil::before {
     content: ""; position: absolute; left: 28px; top: 6px; bottom: 6px;
-    width: 2px; background: var(--red);
+    width: 1px; background: var(--red);
   }
   .taller-tl-paso-m { position: relative; display: flex; gap: 16px; align-items: flex-start; margin-bottom: 32px; }
   .taller-tl-paso-m:last-child { margin-bottom: 0; }
   .taller-tl-ico-m {
     position: relative; flex-shrink: 0;
     width: 56px; height: 56px; border-radius: 50%;
-    background: var(--bg); border: 2px solid var(--red); color: var(--red);
+    background: var(--bg); border: 1px solid var(--red); color: var(--red);
     display: flex; align-items: center; justify-content: center;
   }
   .taller-tl-ico-m svg { display: block; width: 34px; height: 34px; }
