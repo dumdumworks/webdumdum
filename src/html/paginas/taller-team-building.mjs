@@ -99,7 +99,7 @@ const filas = (i, datos) => datos.map((d) => {
 const menuDesglose = (i) => {
   const { t } = i;
   const [, esDuracion, , enDuracion] = HORARIOS[0];
-  const filas = [[t("Duración", "Duration"), i.lang === "en" ? enDuracion : esDuracion], ...COMIDA.map(([esL, esV, enL, enV]) =>
+  const filas = [[t("Taller", "Workshop"), i.lang === "en" ? enDuracion : esDuracion], ...COMIDA.map(([esL, esV, enL, enV]) =>
     [i.lang === "en" ? enL : esL, i.lang === "en" ? enV : esV])]
     .map(([etiqueta, valor]) => `        <div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`).join("\n");
   return `      <div class="taller-tarifas-caja-menu">
