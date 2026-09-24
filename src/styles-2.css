@@ -1092,11 +1092,20 @@
 @media (min-width: 880px) {
   .taller-tarifas-cajas { grid-template-columns: repeat(3, 1fr); }
 }
+/* Ancho tope: en una columna de grid muy ancha (pantallas grandes, o
+   apiladas a ancho completo en móvil/tablet) la tarjeta se estiraba a
+   todo el ancho de su columna aunque el contenido no necesitara tanto —
+   el desglose se quedaba con la etiqueta y el valor pegados a la
+   izquierda y un hueco enorme sin usar a la derecha de cada fila.
+   Centrada dentro de su columna para no quedar pegada a un lado. */
 .taller-tarifas-caja {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
   padding: 22px 20px;
   border: 1px solid var(--line);
   border-radius: 18px;
