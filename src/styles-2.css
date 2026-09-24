@@ -1070,10 +1070,11 @@
 }
 
 /* [02] Comida: mismo lenguaje que las cifras de Redes (.ev-stats /
-   .resumen-dato) de Eventos — caja cerrada con el filete rojo, rótulo
-   pequeño arriba y el dato grande debajo — pero en rejilla 2×2 (aquí son
-   4 datos, no 3) y sin icono: no hay uno para cada concepto y cuatro
-   inventados sobre la marcha pesarían más que lo que aportan. */
+   .resumen-dato) de Eventos — caja cerrada con el filete rojo, icono,
+   rótulo pequeño y el dato grande debajo — pero en rejilla 2×2 (aquí son
+   4 datos, no 3). "Carta de dumplings" reutiliza el icono de arriba; los
+   otros 3 (plato, bebida, postre) son simples a propósito: no hay boceto
+   de referencia para ellos, así que no se inventa de más. */
 .taller-comida {
   margin-top: 24px;
   display: grid;
@@ -1089,6 +1090,13 @@
 }
 .taller-comida > div:nth-child(odd) { border-left: none; }
 .taller-comida > div:nth-child(-n+2) { border-top: none; }
+.taller-comida svg {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin: 0 auto 12px;
+  color: var(--red);
+}
 .taller-comida b {
   display: block;
   font-family: "JetBrains Mono", ui-monospace, monospace;
