@@ -42,11 +42,15 @@ const COMIDA = [
   ["Bebida", "A elegir", "Drink", "Your choice"],
   ["Postre", "Un mochi, a elegir", "Dessert", "One mochi, your choice"],
 ];
-const HORARIOS = [
-  ["Duración aprox.", "2 – 2,5 h", "Approx. duration", "2 – 2.5 h"],
+// Las tres cajas del reparto del tiempo (mismo sistema que las de
+// Tarifas). Las franjas horarias (mañana/tarde) van aparte, en la lista
+// de siempre — son un dato de otra naturaleza (cuándo, no cuánto).
+const HORARIOS_REPARTO = [
   ["Bienvenida", "5 min", "Welcome", "5 min"],
   ["Taller", "1 h 15", "Workshop", "1 h 15"],
   ["Comida", "1 h 15", "Meal", "1 h 15"],
+];
+const HORARIOS_FRANJAS = [
   ["Mañanas", "11.30 – 14.00", "Mornings", "11.30am – 2pm"],
   ["Tardes", "18.30 – 21.00", "Afternoons", "6.30 – 9pm"],
 ];
@@ -86,10 +90,19 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
-// [04] Tarifas: tres cajas una al lado de la otra, una por tramo — la más
-// barata (más gente) destaca a pastilla entera en rojo sólido: la
-// jerarquía de venta se ve de un vistazo, no hay que leer para encontrar
-// la mejor.
+// [03]/[04]: cajas una al lado de la otra, mismo sistema en las dos
+// casillas. En Horarios son neutras (reparten el tiempo); en Tarifas, la
+// más barata (más gente) destaca a pastilla entera en rojo sólido — la
+// jerarquía de venta se ve de un vistazo, no hay que leer para encontrarla.
+const horariosCajas = (i) => {
+  const cajas = HORARIOS_REPARTO.map(([esN, esV, enN, enV]) => `      <div class="taller-caja">
+        <div class="taller-caja-nombre">${esc(i.lang === "en" ? enN : esN)}</div>
+        <div class="taller-caja-dato">${esc(i.lang === "en" ? enV : esV)}</div>
+      </div>`).join("\n");
+  return `      <div class="taller-cajas">
+${cajas}
+      </div>`;
+};
 const tarifasVisual = (i) => {
   const { t } = i;
   const precios = TARIFAS.map(([, , , , p]) => p);
@@ -98,14 +111,14 @@ const tarifasVisual = (i) => {
     const mejor = p === min;
     const nombre = esc(i.lang === "en" ? enN : esN);
     const rango = esc(i.lang === "en" ? enR : esR);
-    return `      <div class="taller-tarifas-caja${mejor ? " es-mejor" : ""}">
-        <div class="taller-tarifas-caja-nombre">${nombre}</div>
+    return `      <div class="taller-caja${mejor ? " es-mejor" : ""}">
+        <div class="taller-caja-nombre">${nombre}</div>
         <div class="taller-tarifas-caja-rango">${rango}</div>
         <div class="taller-tarifas-caja-precio">${p}<span class="taller-tarifas-caja-simbolo">€</span></div>
         <div class="taller-tarifas-caja-persona">${esc(t("por persona", "per person"))}</div>
       </div>`;
   }).join("\n");
-  return `      <div class="taller-tarifas-cajas">
+  return `      <div class="taller-cajas">
 ${cajas}
       </div>
       <p class="taller-tarifas-consulta">${esc(t("+30 personas, consultamos contigo.", "30+ people — let's talk it through."))}</p>`;
@@ -228,8 +241,9 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   ${casilla("03", "hora", t("Horarios", "Timings"),
     t("Horarios y<br>duraciones.", "Timings and<br>durations."),
     esc(t("Un par de horitas, para que no se aburran.", "A couple of hours, so nobody gets bored.")),
-    `      <div class="taller-list">
-        ${filas(i, HORARIOS)}
+    `${horariosCajas(i)}
+      <div class="taller-list">
+        ${filas(i, HORARIOS_FRANJAS)}
       </div>
       <p class="tiny muted taller-casilla-nota">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
   ${casilla("04", "tarifa", t("Tarifas", "Rates"),
