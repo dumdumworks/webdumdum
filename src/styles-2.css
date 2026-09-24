@@ -1156,6 +1156,9 @@
 .taller-tl-head h2 { margin-top: 16px; }
 
 .taller-tl-rail { margin-top: 56px; }
+/* Más grandes y en rojo lleno (no .muted): el número de paso tiene que
+   leerse tan bien como el título, no quedarse en detalle de fondo. */
+.taller-tl-num { font-size: 16px; font-weight: 700; color: var(--red); }
 .taller-tl-fila { display: grid; grid-template-columns: repeat(5, 1fr); column-gap: 24px; }
 .taller-tl-fila:nth-child(2) { margin-top: 20px; }
 .taller-tl-fila:nth-child(3) { margin-top: 20px; }
@@ -1216,6 +1219,7 @@
   .taller-tl-ico-m svg { display: block; width: 34px; height: 34px; }
   .taller-tl-cuerpo-m { flex: 1; min-width: 0; }
   .taller-tl-cab-m { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .taller-tl-num-m { font-size: 16px; font-weight: 700; color: var(--red); }
   .taller-tl-titulo-m {
     font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: -0.01em;
   }

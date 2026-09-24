@@ -93,7 +93,7 @@ const filas = (i, datos) => datos.map((d) => {
 // punto-sobre-filete, ya validado en esta página.
 const railEscritorio = (i) => `<div class="taller-tl-rail">
     <div class="taller-tl-fila">
-      ${INCLUYE.map(([n]) => `<div class="taller-tl-num tiny muted">${esc(n)}</div>`).join("\n      ")}
+      ${INCLUYE.map(([n]) => `<div class="taller-tl-num tiny">${esc(n)}</div>`).join("\n      ")}
     </div>
     <div class="taller-tl-fila taller-tl-riel">
       <div class="taller-tl-linea"></div>
@@ -111,7 +111,7 @@ const railMovil = (i) => `<div class="taller-tl-movil">
       <span class="taller-tl-ico-m">${icono(ico)}</span>
       <div class="taller-tl-cuerpo-m">
         <div class="taller-tl-cab-m">
-          <span class="taller-tl-num-m tiny muted">${esc(n)}</span>
+          <span class="taller-tl-num-m tiny">${esc(n)}</span>
           <span class="taller-tl-titulo-m">${esc(i.lang === "en" ? enT : esT)}</span>
         </div>
         <p class="taller-tl-desc-m">${esc(i.lang === "en" ? enC : esC)}</p>
