@@ -9,6 +9,7 @@
 //   data-reservar          → reservar: selector de local
 //   data-reservar="slug"   → reservar directamente en ese local
 import { $, $$, emitir, atraparFoco } from "./nucleo.js";
+import { urlReserva } from "./reservas-url.js";
 
 // Un modal es su overlay; la caja del diálogo es su primer hijo. Lo usan
 // también las ventanas de otras islas (los alérgenos de la carta).
@@ -100,6 +101,7 @@ function montarDish(wrap, eid) {
 function desmontarDish(wrap) {
   if (scriptDish) { try { scriptDish.remove(); } catch (e) {} scriptDish = null; }
   wrap.replaceChildren();
+  wrap.classList.remove("reserve-widget-propio");
 }
 export function abrirReservar(slug) {
   cerrarTodo();
@@ -110,7 +112,23 @@ export function abrirReservar(slug) {
   const local = JSON.parse(wrap.dataset.dish)[slug];
   if (!local) return;
   $$("[data-local-nombre]", dish.overlay).forEach((s) => { s.textContent = local.nombre; });
-  montarDish(wrap, local.eid);
+  if (local.reserva?.proveedor === "propio") {
+    desmontarDish(wrap);
+    wrap.classList.add("reserve-widget-propio");
+    const idioma = document.documentElement.lang === "en" ? "en" : "es";
+    const origen = new URLSearchParams(window.location.search).get("origen");
+    const url = urlReserva(local.reserva.url, slug, idioma, origen);
+    const iframe = document.createElement("iframe");
+    iframe.src = url.href;
+    iframe.title = `${idioma === "en" ? "Book" : "Reservar"} · ${local.nombre}`;
+    iframe.referrerPolicy = "strict-origin-when-cross-origin";
+    const link = document.createElement("a");
+    link.href = url.href;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = idioma === "en" ? "Open booking in a new tab" : "Abrir reservas en otra pestaña";
+    wrap.append(iframe, link);
+  } else montarDish(wrap, local.eid);
   dish.abrir();
 }
 function prepararReservar() {
@@ -139,4 +157,10 @@ export function modales() {
     else abrirReservar(el.dataset.reservar);
   });
   window.addEventListener("keydown", (e) => { if (e.key === "Escape") cerrarTodo(); });
+  // Direct URLs for each Google Business location use the same booking entrypoint.
+  const requested = new URLSearchParams(window.location.search).get("reservar");
+  if (requested && dish) {
+    const data = JSON.parse($("[data-dish]", dish.overlay).dataset.dish);
+    if (Object.hasOwn(data, requested)) abrirReservar(requested);
+  }
 }
