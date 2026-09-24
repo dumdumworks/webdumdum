@@ -1069,19 +1069,17 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* Cajas lado a lado — mismo sistema en [03] Horarios (reparto del tiempo:
-   Bienvenida/Taller/Comida, neutras) y [04] Tarifas (donde la más barata,
-   más gente, destaca a pastilla entera en rojo: la jerarquía de venta se
-   ve de un vistazo, no hay que leer para encontrarla). Las franjas
-   horarias (mañana/tarde) son otra naturaleza de dato y van aparte, en
-   .taller-list. */
-.taller-cajas {
+/* [04] Tarifas: tres cajas lado a lado, una por tramo, el más barato (más
+   gente) primero — es el foco de venta, no hay que llegar al final para
+   encontrarlo. Es la única a pastilla entera en rojo sólido: se ve de un
+   vistazo cuál conviene, sin leer. */
+.taller-tarifas-cajas {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   margin-top: 24px;
 }
-.taller-caja {
+.taller-tarifas-caja {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1091,23 +1089,13 @@
   border-radius: 14px;
   text-align: center;
 }
-.taller-caja-nombre {
+.taller-tarifas-caja-nombre {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 15px;
   line-height: 1.15;
   color: var(--red);
 }
-/* [03] Horarios: solo nombre + dato, sin rango/precio. */
-.taller-caja-dato {
-  margin-top: 6px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(20px, 1.8vw, 24px);
-  line-height: 1;
-  color: var(--red);
-}
-/* [04] Tarifas: nombre + rango + precio + "por persona". */
 .taller-tarifas-caja-rango {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 11px;
@@ -1131,11 +1119,11 @@
   letter-spacing: 0.01em;
   color: rgba(255,0,30,0.5);
 }
-.taller-caja.es-mejor { background: var(--red); border-color: var(--red); }
-.taller-caja.es-mejor .taller-caja-nombre,
-.taller-caja.es-mejor .taller-tarifas-caja-precio { color: var(--bg); }
-.taller-caja.es-mejor .taller-tarifas-caja-rango,
-.taller-caja.es-mejor .taller-tarifas-caja-persona { color: rgba(255,250,243,0.75); }
+.taller-tarifas-caja.es-mejor { background: var(--red); border-color: var(--red); }
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-nombre,
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-precio { color: var(--bg); }
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-rango,
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-persona { color: rgba(255,250,243,0.75); }
 .taller-tarifas-consulta {
   margin-top: 16px;
   font-family: "JetBrains Mono", ui-monospace, monospace;
