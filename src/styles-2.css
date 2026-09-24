@@ -1087,7 +1087,7 @@
 .taller-tarifas-cajas {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 10px;
 }
 @media (min-width: 880px) {
   .taller-tarifas-cajas { grid-template-columns: repeat(3, 1fr); }
@@ -1097,7 +1097,7 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 32px 24px;
+  padding: 22px 20px;
   border: 1px solid var(--line);
   border-radius: 18px;
   text-align: center;
@@ -1117,7 +1117,7 @@
   color: rgba(255,0,30,0.6);
 }
 .taller-tarifas-caja-precio {
-  margin-top: 8px;
+  margin-top: 4px;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(36px, 3.2vw, 48px);
@@ -1148,15 +1148,15 @@
    fila). */
 .taller-tarifas-caja-menu {
   align-self: stretch;
-  margin-top: 24px;
-  padding-top: 4px;
+  margin-top: 14px;
+  padding-top: 2px;
   border-top: 1px solid var(--line);
 }
 .taller-tarifas-caja-menu > div {
   display: grid;
   grid-template-columns: 96px 1fr;
   gap: 8px;
-  padding: 9px 0;
+  padding: 6px 0;
   border-top: 1px solid var(--line-soft);
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 11px;
