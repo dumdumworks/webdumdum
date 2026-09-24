@@ -1289,25 +1289,24 @@
 /* [01] El taller ahora es, literalmente, la misma estructura que una
    casilla (rótulo, icono, título .taller-casilla-h, subtítulo
    .taller-casilla-sub) en vez de un h2.h-1 aparte con su propio tamaño:
-   así queda alineada con "[02] Tarifas" pieza a pieza — mismo icono a
-   16px del rótulo, mismo título a 14px del icono, mismo subtítulo a 24px
-   del título — sin duplicar la definición de tamaños en otra regla. */
-/* [01] El taller, a rejilla de dos en escritorio: "Así funciona el
-   taller" (con su riel) a la izquierda, "[02] Tarifas" a la derecha
-   (.taller-tl-lado — antes vivía aquí Comida, ahora en la rejilla de
-   [03]-[05] de abajo; el nombre de la clase ya no está atado a un
-   contenido concreto). En móvil, una sola columna apilada — railMovil
-   (dentro de .taller-tl-mitad) sustituye a railEscritorio antes de
-   llegar a Tarifas, así el orden de lectura no cambia. En los dos casos,
-   la MISMA caja cerrada que [03]-[05]: gap:1px + background de relleno
-   para el filete entre las dos partes (ver el comentario sobre
-   .taller-grid) y un border de los cuatro lados — sin él quedaba un
-   filete suelto en medio del aire, sin caja que lo sujetara; en móvil se
-   notaba aún más, sin ningún borde alrededor. A sangre (como
-   .taller-grid, sin el padding lateral de .taller-tl) y sin el hueco de
-   64px que dejaba el padding-bottom de la sección: las dos rejillas se
-   tocan, un solo filete entre [02] y [03]-[05], no dos separados por
-   aire. */
+   así queda con el mismo aspecto que "[02] Tarifas" justo debajo —
+   mismo icono a 16px del rótulo, mismo título a 14px del icono, mismo
+   subtítulo a 24px del título — sin duplicar la definición de tamaños en
+   otra regla. */
+/* [01] El taller y [02] Tarifas (.taller-tl-lado — antes vivía aquí
+   Comida, ahora en la rejilla de [03]-[05] de abajo; el nombre de la
+   clase ya no está atado a un contenido concreto), cada uno a ancho
+   completo, uno debajo del otro — las 3 columnas de la rejilla de abajo,
+   pero sin dividirlas: [01] y [02] ocupan las tres juntas. Misma caja
+   cerrada que [03]-[05]: gap:1px + background de relleno para el filete
+   entre las dos partes (ver el comentario sobre .taller-grid) y un
+   border de los cuatro lados — sin él quedaba un filete suelto en medio
+   del aire, sin caja que lo sujetara. A sangre (como .taller-grid, sin
+   el padding lateral de .taller-tl) y sin el hueco de 64px que dejaba el
+   padding-bottom de la sección: las dos rejillas se tocan, un solo
+   filete entre [02] y [03]-[05], no dos separados por aire. Mismo
+   apilado en cualquier ancho — no hay rejilla de dos columnas que
+   deshacer en móvil. */
 .taller-tl-grid {
   display: flex;
   flex-direction: column;
@@ -1319,13 +1318,12 @@
 .taller-tl-mitad, .taller-tl-lado { background: var(--bg); }
 /* Mismo padding que .taller-casilla en móvil (32px var(--gutter)): el
    riel no es una casilla y no lo trae de fábrica, así que hay que
-   dárselo a mano para que quede a la misma altura que el resto. */
+   dárselo a mano para que quede a la misma altura que el resto.
+   .taller-tl-lado no necesita nada propio: envuelve una .taller-casilla
+   de verdad, que ya trae su padding de fábrica. */
 .taller-tl-mitad { padding: 32px var(--gutter); }
 @media (min-width: 880px) {
-  .taller-tl-grid { display: grid; grid-template-columns: 1fr 1fr; }
   .taller-tl-mitad { padding: 36px var(--gutter); }
-  .taller-tl-lado { padding: 36px var(--gutter); display: flex; }
-  .taller-tl-lado .taller-casilla { padding: 0; flex: 1; }
 }
 
 .taller-tl-rail { margin-top: 56px; }
