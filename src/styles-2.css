@@ -1131,10 +1131,12 @@
    antes se apilaban (botón, "+30 personas…", nota "*") y, con la casilla
    estirada a la altura del riel de al lado, el margin-top:auto de
    .taller-casilla-nota las separaba con un hueco grande en medio — mucha
-   verticalidad para dos líneas de texto. En escritorio, el botón se
-   queda a la izquierda y las notas se apilan compactas a la derecha,
-   centradas con él. En móvil, .taller-tarifas-pie no lleva flex: notas
-   debajo del botón, como cualquier casilla. */
+   verticalidad para dos líneas de texto. En escritorio, los dos se
+   agrupan y se empujan juntos al borde derecho (justify-content:flex-end,
+   no space-between: con space-between el botón se quedaba solo a la
+   izquierda con un hueco enorme hasta las notas, "flotando" sin nada
+   alrededor). En móvil, .taller-tarifas-pie no lleva flex: notas debajo
+   del botón, como cualquier casilla. */
 .taller-tarifas-pie { margin-top: 20px; }
 .taller-tarifas-notas { margin-top: 12px; }
 .taller-tarifas-consulta {
@@ -1148,7 +1150,7 @@
    pequeño. */
 .taller-tarifas-notas .taller-casilla-nota { margin-top: 4px; padding-top: 0; min-height: 0; }
 @media (min-width: 880px) {
-  .taller-tarifas-pie { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .taller-tarifas-pie { display: flex; align-items: center; justify-content: flex-end; gap: 24px; flex-wrap: wrap; }
   .taller-tarifas-notas { margin-top: 0; text-align: right; }
 }
 
