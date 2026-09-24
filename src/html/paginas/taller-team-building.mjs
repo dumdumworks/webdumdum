@@ -85,27 +85,31 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
-// [04] Tarifas: no es una lista más, es venta. El precio desde manda en
-// grande arriba, y cada tramo es una barra que ocupa más cuanto más barato
-// sale — el tramo más barato (más gente) se pinta a toda barra, en rojo
-// sólido: la jerarquía visual sigue exactamente la promesa del subtítulo.
+// [04] Tarifas: no es una lista más, es venta — pero fina, en el mismo
+// idioma editorial que el resto de la web (filetes finos, mayúsculas
+// mono), no cajas de color ni etiquetas de "oferta". El precio desde
+// manda arriba; abajo, una carta con guía de puntos (como una carta de
+// restaurante de verdad) donde la escala tipográfica —no el color— hace
+// que el tramo más barato sea el que más pesa.
 const tarifasVisual = (i) => {
   const { t } = i;
   const precios = TARIFAS.map(([, , p]) => p);
   const min = Math.min(...precios), max = Math.max(...precios);
-  const pct = (p) => (max === min ? 100 : Math.round(60 + ((max - p) / (max - min)) * 40));
+  // De 15px (el tramo más caro) a 26px (el más barato): la jerarquía la
+  // pone el tamaño, no un fondo.
+  const escala = (p) => (max === min ? 26 : Math.round(15 + ((max - p) / (max - min)) * 11));
   const filasTarifa = TARIFAS.map(([es, en, p]) => {
     const mejor = p === min;
     const rango = esc(i.lang === "en" ? en : es);
-    return `      <div class="taller-tarifas-fila${mejor ? " es-mejor" : ""}" style="--pct:${pct(p)}%">
-        <span class="taller-tarifas-rango">${rango}${mejor ? `<span class="taller-tarifas-tag">${esc(t("Mejor precio", "Best price"))}</span>` : ""}</span>
-        <span class="taller-tarifas-precio">${p}€<span class="taller-tarifas-persona">${esc(t("/persona", "/person"))}</span></span>
+    return `      <div class="taller-tarifas-fila${mejor ? " es-mejor" : ""}" style="--fs:${escala(p)}px">
+        <span class="taller-tarifas-rango">${rango}${mejor ? `<span class="taller-tarifas-marca">${esc(t("el más conveniente", "the best value"))}</span>` : ""}</span>
+        <span class="taller-tarifas-leader" aria-hidden="true"></span>
+        <span class="taller-tarifas-precio">${p}€</span>
       </div>`;
   }).join("\n");
   return `      <div class="taller-tarifas-hero">
         <span class="taller-tarifas-hero-eyebrow">${esc(t("Desde", "From"))}</span>
-        <span class="taller-tarifas-hero-num">${min}<span class="taller-tarifas-hero-simbolo">€</span></span>
-        <span class="taller-tarifas-hero-persona">${esc(t("por persona", "per person"))}</span>
+        <span class="taller-tarifas-hero-linea"><span class="taller-tarifas-hero-num">${min}<span class="taller-tarifas-hero-simbolo">€</span></span><span class="taller-tarifas-hero-persona">${esc(t("por persona", "per person"))}</span></span>
       </div>
       <div class="taller-tarifas-escala">
 ${filasTarifa}

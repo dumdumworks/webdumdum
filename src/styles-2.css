@@ -1069,78 +1069,88 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [04] Tarifas: venta, no lista. El "desde" manda en grande arriba y cada
-   tramo es una barra rellena hasta --pct (más barato = más barra) — el
-   tramo más barato se pinta a toda barra en rojo sólido: la jerarquía
-   visual hace la promesa de "a más gente, mejor precio" sin más texto. */
-.taller-tarifas-hero {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 20px;
-  margin-bottom: 28px;
+/* [04] Tarifas: venta, pero fina — el mismo lenguaje editorial que el
+   resto (filetes finos, mayúsculas mono), no cajas de color ni etiquetas
+   de "oferta". El "desde" manda arriba, como un dato editorial grande
+   (etiqueta pequeña encima, número enorme). Debajo, una carta con guía de
+   puntos como una carta de restaurante real: la jerarquía la pone la
+   escala tipográfica del precio (15px el tramo más caro, 26px el más
+   barato), no un fondo de color. */
+.taller-tarifas-hero { margin-top: 22px; margin-bottom: 32px; }
+.taller-tarifas-hero-eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255,0,30,0.6);
 }
-.taller-tarifas-hero-eyebrow,
+.taller-tarifas-hero-linea { display: flex; align-items: baseline; gap: 9px; }
+.taller-tarifas-hero-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(48px, 4.6vw, 60px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--red);
+}
+.taller-tarifas-hero-simbolo { font-size: 0.55em; }
 .taller-tarifas-hero-persona {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  color: rgba(255,0,30,0.7);
+  color: rgba(255,0,30,0.6);
 }
-.taller-tarifas-hero-num {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(52px, 5.4vw, 72px);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--red);
-}
-.taller-tarifas-hero-simbolo { font-size: 0.5em; }
-.taller-tarifas-escala { display: flex; flex-direction: column; gap: 8px; max-width: 420px; }
+.taller-tarifas-escala { display: flex; flex-direction: column; max-width: 420px; }
 .taller-tarifas-fila {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 11px 14px;
-  border-radius: 8px;
-  background: linear-gradient(to right, rgba(255,0,30,0.1) var(--pct), transparent var(--pct));
+  align-items: baseline;
+  gap: 8px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line-soft);
+}
+.taller-tarifas-escala .taller-tarifas-fila:last-child { border-bottom: 1px solid var(--line-soft); }
+.taller-tarifas-rango {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 13px;
-}
-.taller-tarifas-rango {
-  text-transform: uppercase;
+  font-weight: 500;
   letter-spacing: 0.02em;
-  color: rgba(255,0,30,0.75);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.taller-tarifas-precio { font-weight: 700; color: var(--red); white-space: nowrap; }
-.taller-tarifas-persona { font-weight: 500; opacity: 0.7; margin-left: 1px; }
-.taller-tarifas-tag {
-  background: var(--red);
-  color: var(--bg);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
   text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 999px;
+  color: rgba(255,0,30,0.65);
+  white-space: nowrap;
 }
-.taller-tarifas-fila.es-mejor { background: var(--red); padding: 15px 14px; }
-.taller-tarifas-fila.es-mejor .taller-tarifas-rango,
-.taller-tarifas-fila.es-mejor .taller-tarifas-precio,
-.taller-tarifas-fila.es-mejor .taller-tarifas-persona { color: var(--bg); opacity: 1; }
-.taller-tarifas-fila.es-mejor .taller-tarifas-tag { background: var(--bg); color: var(--red); }
-.taller-tarifas-fila.es-mejor .taller-tarifas-precio { font-size: 15px; }
+.taller-tarifas-leader {
+  flex: 1;
+  min-width: 16px;
+  border-bottom: 1px dotted rgba(255,0,30,0.32);
+  transform: translateY(-5px);
+}
+.taller-tarifas-precio {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs);
+  line-height: 1;
+  color: var(--red);
+  white-space: nowrap;
+}
+.taller-tarifas-fila.es-mejor { padding: 18px 0; }
+.taller-tarifas-marca {
+  display: block;
+  margin-top: 3px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255,0,30,0.5);
+}
 .taller-tarifas-consulta {
-  margin-top: 14px;
+  margin-top: 16px;
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 12px;
-  color: rgba(255,0,30,0.6);
+  color: rgba(255,0,30,0.55);
 }
 
 /* Rejilla de [02] a [07] (Comida, Horarios, Tarifas, Y si tu evento es
