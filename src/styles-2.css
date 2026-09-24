@@ -1107,6 +1107,7 @@
   padding: 20px 16px;
   border: 1px solid var(--line);
   border-radius: 18px;
+  overflow: hidden;
   text-align: center;
 }
 .taller-tarifas-caja-nombre {
@@ -1139,11 +1140,28 @@
   letter-spacing: 0.01em;
   color: rgba(255,0,30,0.5);
 }
-.taller-tarifas-caja.es-mejor { background: var(--red); border-color: var(--red); }
-.taller-tarifas-caja.es-mejor .taller-tarifas-caja-nombre,
-.taller-tarifas-caja.es-mejor .taller-tarifas-caja-precio { color: var(--bg); }
-.taller-tarifas-caja.es-mejor .taller-tarifas-caja-rango,
-.taller-tarifas-caja.es-mejor .taller-tarifas-caja-persona { color: rgba(255,250,243,0.75); }
+/* La destacada ya no es la pastilla entera en rojo — solo el borde y la
+   etiqueta "Recomendado" arriba (ver .taller-tarifas-caja-badge), como
+   la ficha de referencia: menos "bloque de color", más "esta es la
+   buena" sin perder la jerarquía de venta. */
+.taller-tarifas-caja.es-mejor { border-color: var(--red); }
+/* La etiqueta sale a sangre por los cuatro lados de su padding (mismo
+   valor que .taller-tarifas-caja, con el signo cambiado) para llegar
+   justo al borde de la tarjeta; overflow:hidden en la tarjeta recorta
+   sus esquinas rectas a las mismas esquinas redondeadas de la tarjeta,
+   sin tener que igualar el radio a mano. */
+.taller-tarifas-caja-badge {
+  align-self: stretch;
+  margin: -20px -16px 16px;
+  padding: 9px 16px;
+  background: var(--red);
+  color: var(--bg);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
 /* El desglose del menú (antes la casilla [03] Comida) dentro de cada
    tarjeta: mismo menú en las tres, por eso se repite igual. Mismo
    lenguaje que .taller-list (etiqueta en negrita + valor, filete fino
@@ -1173,18 +1191,24 @@
 }
 .taller-tarifas-caja-menu b { font-weight: 600; color: rgba(255,0,30,0.55); }
 .taller-tarifas-caja-menu span { color: var(--ink); }
-.taller-tarifas-caja.es-mejor .taller-tarifas-caja-menu { border-top-color: rgba(255,250,243,0.3); }
-.taller-tarifas-caja.es-mejor .taller-tarifas-caja-menu > div { border-top-color: rgba(255,250,243,0.25); }
-.taller-tarifas-caja.es-mejor .taller-tarifas-caja-menu b { color: rgba(255,250,243,0.75); }
-.taller-tarifas-caja.es-mejor .taller-tarifas-caja-menu span { color: var(--bg); }
 /* Botón "Contratar" dentro de cada tarjeta, no uno compartido debajo de
    las tres: a ancho completo (la tarjeta ya va centrada, pero un botón
    suelto centrado se pierde — a todo lo ancho se lee como el cierre
-   natural de la ficha). En la tarjeta roja (es-mejor) se invierte —
-   fondo claro, texto rojo — para no desaparecer sobre el rojo sólido. */
-.taller-tarifas-btn { align-self: stretch; justify-content: center; margin-top: 16px; }
-.taller-tarifas-caja.es-mejor .taller-tarifas-btn { background: var(--bg); color: var(--red); border-color: var(--bg); }
-.taller-tarifas-caja.es-mejor .taller-tarifas-btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+   natural de la ficha). Negro en las tres por igual (--black, no --red:
+   ese nombre es el rojo de marca pese al nombre) — el rojo ya lo lleva
+   la etiqueta "Recomendado" de la destacada, dos rojos compitiendo por
+   la vista era de más. Dos clases para ganarle a .btn/.btn.red de
+   styles.css, que carga después y empataría en especificidad si solo
+   llevara una. */
+.taller-tarifas-caja .taller-tarifas-btn {
+  align-self: stretch;
+  justify-content: center;
+  margin-top: 16px;
+  background: var(--black);
+  color: #fff;
+  border-color: var(--black);
+}
+.taller-tarifas-caja .taller-tarifas-btn:hover { background: #000; border-color: #000; }
 /* Notas de cierre, centradas bajo las tres tarjetas — ya no tienen que
    alinearse con ningún botón, cada tarjeta lleva ya el suyo. */
 .taller-tarifas-pie { margin-top: 20px; text-align: center; }

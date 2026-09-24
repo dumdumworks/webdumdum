@@ -107,9 +107,10 @@ ${filas}
       </div>`;
 };
 // [02] Tarifas: tres cajas una al lado de la otra, una por tramo — la más
-// barata (más gente) destaca a pastilla entera en rojo sólido: la
-// jerarquía de venta se ve de un vistazo, no hay que leer para encontrar
-// la mejor. El botón "Contratar" va dentro de cada tarjeta, no uno
+// barata (más gente) destaca con una etiqueta "Recomendado" arriba, no
+// la pastilla entera en rojo sólido de antes: la jerarquía de venta se
+// ve igual de rápido sin convertir toda la tarjeta en un bloque de
+// color. El botón "Contratar" va dentro de cada tarjeta, no uno
 // compartido debajo de las tres — cada tramo se contrata por su cuenta.
 const tarifasVisual = (i, nota) => {
   const { t } = i;
@@ -120,12 +121,12 @@ const tarifasVisual = (i, nota) => {
     const nombre = esc(i.lang === "en" ? enN : esN);
     const rango = esc(i.lang === "en" ? enR : esR);
     return `      <div class="taller-tarifas-caja${mejor ? " es-mejor" : ""}">
-        <div class="taller-tarifas-caja-nombre">${nombre}</div>
+        ${mejor ? `<div class="taller-tarifas-caja-badge">${esc(t("Recomendado", "Recommended"))}</div>\n        ` : ""}<div class="taller-tarifas-caja-nombre">${nombre}</div>
         <div class="taller-tarifas-caja-rango">${rango}</div>
         <div class="taller-tarifas-caja-precio">${p}<span class="taller-tarifas-caja-simbolo">€</span></div>
         <div class="taller-tarifas-caja-persona">${esc(t("por persona", "per person"))}</div>
 ${menuDesglose(i)}
-        <a class="btn red taller-tarifas-btn" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Contratar", "Book now"))}</span><span class="btn-arrow">→</span></a>
+        <a class="btn taller-tarifas-btn" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Contratar", "Book now"))}</span><span class="btn-arrow">→</span></a>
       </div>`;
   }).join("\n");
   return `      <div class="taller-tarifas-cajas">
