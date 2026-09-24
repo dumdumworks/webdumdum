@@ -1146,13 +1146,14 @@
 .taller-galeria .ev-slider { margin-top: 0; }
 .taller-galeria .ev-slider-ctrls { margin-left: auto; }
 
-/* Rejilla de [02] a [04] (Comida, Tarifas, Horarios): 3 columnas × 1 fila,
-   no secciones apiladas a ancho completo. La fila estira las 3 casillas al
+/* Rejilla de [03]-[04] (Tarifas, Horarios): 2 columnas × 1 fila, no
+   secciones apiladas a ancho completo. La fila estira las 2 casillas al
    alto de la que más contenido tiene (comportamiento normal de CSS grid,
-   sin calcularlo a mano). */
+   sin calcularlo a mano). Comida ([02]) ya no vive aquí: se mudó al lado
+   de "[01] El taller" — ver .taller-tl-grid. */
 .taller-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
@@ -1258,13 +1259,17 @@
 .ev-hero:has(+ .taller-tl) { padding-bottom: 4vh; }
 .ev-hero + .taller-tl { padding-top: 32px; }
 .taller-tl-head h2 { margin-top: 16px; }
-/* Pedido explícito: no solo el titular, toda la sección [01] (rótulo,
-   titular Y el riel de los 5 pasos) comprimida a la mitad izquierda —
-   la otra mitad se queda vacía a propósito. En móvil, .taller-tl-mitad no
-   hace nada (no hay max-width que aplicar) y el riel de escritorio ya
-   está oculto por su cuenta. */
+/* [01] El taller, a rejilla de dos: "Así funciona el taller" (con su
+   riel) a la izquierda, "[02] Comida" a la derecha — ya no una mitad
+   vacía. El filete central sale de gap:var(--gutter) + el padding-left
+   de la segunda columna, con el border-left justo en medio de los dos
+   (16px a cada lado con --gutter de 32px). En móvil, una sola columna —
+   railMovil (dentro de .taller-tl-mitad) sustituye a railEscritorio antes
+   de llegar a Comida, así el orden de lectura no cambia. */
 @media (min-width: 880px) {
-  .taller-tl-mitad { max-width: 50%; }
+  .taller-tl-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: var(--gutter); }
+  .taller-tl-comida { padding-left: var(--gutter); border-left: 1px solid var(--line); }
+  .taller-tl-comida .taller-casilla { padding: 0; }
 }
 
 .taller-tl-rail { margin-top: 56px; }

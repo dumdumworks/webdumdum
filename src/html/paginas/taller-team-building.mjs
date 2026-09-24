@@ -213,24 +213,28 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 </section>
 
 <section class="taller-tl">
-  <div class="taller-tl-mitad">
-    <div class="taller-tl-head">
-      <div class="tiny muted">[01] ${esc(t("El taller", "The workshop"))}</div>
-      <h2 class="h-1">${t("Así funciona<br>el taller.", "How the<br>workshop works.")}</h2>
+  <div class="taller-tl-grid">
+    <div class="taller-tl-mitad">
+      <div class="taller-tl-head">
+        <div class="tiny muted">[01] ${esc(t("El taller", "The workshop"))}</div>
+        <h2 class="h-1">${t("Así funciona<br>el taller.", "How the<br>workshop works.")}</h2>
+      </div>
+      ${railEscritorio(i)}
+      ${railMovil(i)}
     </div>
-    ${railEscritorio(i)}
-  </div>
-  ${railMovil(i)}
-</section>
-
-<section class="taller-grid">
-  ${casilla("02", "comida", t("Comida", "Food"),
-    t("El menú de<br>la degustación.", "The tasting<br>menu."),
-    esc(t("Se prueba toda la carta.", "You get to try the whole menu.")),
-    `      <div class="taller-list">
+    <div class="taller-tl-comida">
+      ${casilla("02", "comida", t("Comida", "Food"),
+        t("El menú de<br>la degustación.", "The tasting<br>menu."),
+        esc(t("Se prueba toda la carta.", "You get to try the whole menu.")),
+        `      <div class="taller-list">
         ${filas(i, COMIDA)}
       </div>
       <p class="tiny muted taller-casilla-nota">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
+    </div>
+  </div>
+</section>
+
+<section class="taller-grid">
   ${casilla("03", "tarifa", t("Tarifas", "Rates"),
     t("Precios<br>y tarifas.", "Prices<br>and rates."),
     esc(t("A más gente, mejor precio.", "More people, better price.")),
