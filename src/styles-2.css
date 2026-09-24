@@ -1127,6 +1127,10 @@
    la primera pregunta lo pone esto, como el margin-top de .taller-list en
    las otras casillas de la fila. */
 .taller-casilla-faq { margin-top: 24px; }
+/* La galería de [06] trae su propio margin-top (pensado para ir justo bajo
+   un titular a secas); aquí ya lo pone el subtítulo, así que sobraba y
+   desalineaba su cabecera respecto al párrafo de la casilla de al lado. */
+.taller-casilla-body .ev-slider { margin-top: 0; }
 .taller-casilla-q {
   font-family: var(--font-display);
   font-weight: 700;
