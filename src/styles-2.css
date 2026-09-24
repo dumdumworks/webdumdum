@@ -1069,6 +1069,80 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
+/* [04] Tarifas: venta, no lista. El "desde" manda en grande arriba y cada
+   tramo es una barra rellena hasta --pct (más barato = más barra) — el
+   tramo más barato se pinta a toda barra en rojo sólido: la jerarquía
+   visual hace la promesa de "a más gente, mejor precio" sin más texto. */
+.taller-tarifas-hero {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+  margin-bottom: 28px;
+}
+.taller-tarifas-hero-eyebrow,
+.taller-tarifas-hero-persona {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: rgba(255,0,30,0.7);
+}
+.taller-tarifas-hero-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(52px, 5.4vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--red);
+}
+.taller-tarifas-hero-simbolo { font-size: 0.5em; }
+.taller-tarifas-escala { display: flex; flex-direction: column; gap: 8px; max-width: 420px; }
+.taller-tarifas-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 8px;
+  background: linear-gradient(to right, rgba(255,0,30,0.1) var(--pct), transparent var(--pct));
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 13px;
+}
+.taller-tarifas-rango {
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: rgba(255,0,30,0.75);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.taller-tarifas-precio { font-weight: 700; color: var(--red); white-space: nowrap; }
+.taller-tarifas-persona { font-weight: 500; opacity: 0.7; margin-left: 1px; }
+.taller-tarifas-tag {
+  background: var(--red);
+  color: var(--bg);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+.taller-tarifas-fila.es-mejor { background: var(--red); padding: 15px 14px; }
+.taller-tarifas-fila.es-mejor .taller-tarifas-rango,
+.taller-tarifas-fila.es-mejor .taller-tarifas-precio,
+.taller-tarifas-fila.es-mejor .taller-tarifas-persona { color: var(--bg); opacity: 1; }
+.taller-tarifas-fila.es-mejor .taller-tarifas-tag { background: var(--bg); color: var(--red); }
+.taller-tarifas-fila.es-mejor .taller-tarifas-precio { font-size: 15px; }
+.taller-tarifas-consulta {
+  margin-top: 14px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  color: rgba(255,0,30,0.6);
+}
+
 /* Rejilla de [02] a [07] (Comida, Horarios, Tarifas, Y si tu evento es
    distinto, En imágenes, Preguntas frecuentes): 3 columnas × 2 filas, no
    secciones apiladas a ancho completo. Cada fila estira sus 3 casillas al

@@ -50,12 +50,12 @@ const HORARIOS = [
   ["Mañanas", "11.30 – 14.00", "Mornings", "11.30am – 2pm"],
   ["Tardes", "18.30 – 21.00", "Afternoons", "6.30 – 9pm"],
 ];
+// [rango es, rango en, precio€] — el tramo más barato es el foco de venta
+// (la promesa es "a más gente, mejor precio": aquí se ve, no solo se dice).
 const TARIFAS = [
-  ["Desde", "65€ / persona", "From", "€65 / person"],
-  ["6–9 personas", "75€ / persona", "6–9 people", "€75 / person"],
-  ["10–20 personas", "70€ / persona", "10–20 people", "€70 / person"],
-  ["20–30 personas", "65€ / persona", "20–30 people", "€65 / person"],
-  ["+30 personas", "Consultar", "30+ people", "Get in touch"],
+  ["6–9 personas", "6–9 people", 75],
+  ["10–20 personas", "10–20 people", 70],
+  ["20–30 personas", "20–30 people", 65],
 ];
 // Para el JSON-LD (Service.offers): solo los tramos con precio real.
 const OFERTAS = [
@@ -85,6 +85,33 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
+// [04] Tarifas: no es una lista más, es venta. El precio desde manda en
+// grande arriba, y cada tramo es una barra que ocupa más cuanto más barato
+// sale — el tramo más barato (más gente) se pinta a toda barra, en rojo
+// sólido: la jerarquía visual sigue exactamente la promesa del subtítulo.
+const tarifasVisual = (i) => {
+  const { t } = i;
+  const precios = TARIFAS.map(([, , p]) => p);
+  const min = Math.min(...precios), max = Math.max(...precios);
+  const pct = (p) => (max === min ? 100 : Math.round(60 + ((max - p) / (max - min)) * 40));
+  const filasTarifa = TARIFAS.map(([es, en, p]) => {
+    const mejor = p === min;
+    const rango = esc(i.lang === "en" ? en : es);
+    return `      <div class="taller-tarifas-fila${mejor ? " es-mejor" : ""}" style="--pct:${pct(p)}%">
+        <span class="taller-tarifas-rango">${rango}${mejor ? `<span class="taller-tarifas-tag">${esc(t("Mejor precio", "Best price"))}</span>` : ""}</span>
+        <span class="taller-tarifas-precio">${p}€<span class="taller-tarifas-persona">${esc(t("/persona", "/person"))}</span></span>
+      </div>`;
+  }).join("\n");
+  return `      <div class="taller-tarifas-hero">
+        <span class="taller-tarifas-hero-eyebrow">${esc(t("Desde", "From"))}</span>
+        <span class="taller-tarifas-hero-num">${min}<span class="taller-tarifas-hero-simbolo">€</span></span>
+        <span class="taller-tarifas-hero-persona">${esc(t("por persona", "per person"))}</span>
+      </div>
+      <div class="taller-tarifas-escala">
+${filasTarifa}
+      </div>
+      <p class="taller-tarifas-consulta">${esc(t("+30 personas, consultamos contigo.", "30+ people — let's talk it through."))}</p>`;
+};
 // INCLUYE es una línea de tiempo real: a ancho completo (no la rejilla a
 // medias de .ev-split), con un riel horizontal en escritorio — cinco filas
 // alineadas por columnas (número / riel con puntos / título / frase), el
@@ -210,9 +237,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   ${casilla("04", "tarifa", t("Tarifas", "Rates"),
     t("Precios<br>y tarifas.", "Prices<br>and rates."),
     esc(t("A más gente, mejor precio.", "More people, better price.")),
-    `      <div class="taller-list">
-        ${filas(i, TARIFAS)}
-      </div>
+    `${tarifasVisual(i)}
       <p class="tiny muted taller-casilla-nota">${esc(t("* Talleres fuera del restaurante sujetos a disponibilidad.", "* Off-site workshops subject to availability."))}</p>`)}
   ${casilla("05", "ajustar", t("Y si tu evento es distinto", "And if your event is different"),
     t("Adaptabilidad<br>y versatilidad.", "Adaptability<br>and versatility."),
