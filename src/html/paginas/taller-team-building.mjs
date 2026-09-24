@@ -19,20 +19,20 @@ const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
 // de bocetos reales del proceso del taller.
 const INCLUYE = [
   ["01", "equipo", "Equipos", "Teams",
-    "En cuanto llegáis os dividimos en equipos: la dinámica es de grupo de principio a fin, no cada uno a su bola.",
-    "As soon as you arrive we split you into teams: it's a group thing from start to finish, not everyone doing their own."],
+    "En cuanto llegáis os dividimos en equipos: la dinámica es de grupo de principio a fin, <strong>no cada uno a su bola</strong>.",
+    "As soon as you arrive we split you into teams: it's a group thing from start to finish, <strong>not everyone doing their own</strong>."],
   ["02", "masa", "La masa", "The dough",
-    "Amasáis vosotros mismos la masa de los dumplings, paso a paso, con nuestro equipo guiándoos de cerca.",
-    "You knead the dumpling dough yourselves, step by step, with our team guiding you closely."],
+    "<strong>Amasáis vosotros mismos</strong> la masa de los dumplings, paso a paso, con nuestro equipo guiándoos de cerca.",
+    "<strong>You knead the dumpling dough yourselves</strong>, step by step, with our team guiding you closely."],
   ["03", "dumpling", "Montaje", "Assembly",
-    "Rellenáis y cerráis cada dumpling a mano: aquí se nota qué equipo tiene más maña.",
-    "You fill and fold each dumpling by hand — this is where you find out which team's got the knack."],
+    "Rellenáis y cerráis cada dumpling <strong>a mano</strong>: aquí se nota qué equipo tiene más maña.",
+    "You fill and fold each dumpling <strong>by hand</strong> — this is where you find out which team's got the knack."],
   ["04", "cocinar", "Cocción", "Cooking",
-    "Nuestro equipo los cocina al momento, a la vista de todos, mientras vais viendo cómo queda el resultado.",
-    "Our team cooks them right there in front of you, while you watch the results come together."],
+    "Nuestro equipo los cocina <strong>al momento</strong>, a la vista de todos, mientras vais viendo cómo queda el resultado.",
+    "Our team cooks them <strong>right there in front of you</strong>, while you watch the results come together."],
   ["05", "comer", "Degustación", "Tasting",
-    "Os sentáis a comer lo que habéis hecho, con el resto de la carta también en la mesa.",
-    "You sit down to eat what you've made, with the rest of the menu on the table too."],
+    "Os sentáis a comer <strong>lo que habéis hecho</strong>, con el resto de la carta también en la mesa.",
+    "You sit down to eat <strong>what you've made</strong>, with the rest of the menu on the table too."],
 ];
 // Fila de .taller-list, como Horarios y Tarifas: [etiqueta es, valor es,
 // etiqueta en, valor en].
@@ -103,7 +103,7 @@ const railEscritorio = (i) => `<div class="taller-tl-rail">
       ${INCLUYE.map(([, , esT, enT]) => `<div class="taller-tl-titulo">${esc(i.lang === "en" ? enT : esT)}</div>`).join("\n      ")}
     </div>
     <div class="taller-tl-fila">
-      ${INCLUYE.map(([, , , , esC, enC]) => `<div class="taller-tl-desc">${esc(i.lang === "en" ? enC : esC)}</div>`).join("\n      ")}
+      ${INCLUYE.map(([, , , , esC, enC]) => `<div class="taller-tl-desc">${i.lang === "en" ? enC : esC}</div>`).join("\n      ")}
     </div>
   </div>`;
 const railMovil = (i) => `<div class="taller-tl-movil">
@@ -114,7 +114,7 @@ const railMovil = (i) => `<div class="taller-tl-movil">
           <span class="taller-tl-num-m tiny">${esc(n)}</span>
           <span class="taller-tl-titulo-m">${esc(i.lang === "en" ? enT : esT)}</span>
         </div>
-        <p class="taller-tl-desc-m">${esc(i.lang === "en" ? enC : esC)}</p>
+        <p class="taller-tl-desc-m">${i.lang === "en" ? enC : esC}</p>
       </div>
     </div>`).join("\n    ")}
   </div>`;
