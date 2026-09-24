@@ -1109,8 +1109,9 @@
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: var(--red);
-  color: var(--bg);
+  background: var(--bg);
+  border: 2px solid var(--red);
+  color: var(--red);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1139,7 +1140,7 @@
   .taller-tl-ico-m {
     position: relative; flex-shrink: 0;
     width: 56px; height: 56px; border-radius: 50%;
-    background: var(--red); color: var(--bg);
+    background: var(--bg); border: 2px solid var(--red); color: var(--red);
     display: flex; align-items: center; justify-content: center;
   }
   .taller-tl-ico-m svg { display: block; width: 34px; height: 34px; }
