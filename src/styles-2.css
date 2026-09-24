@@ -1069,16 +1069,22 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [02] Comida: no etiqueta/valor — las 4 frases completas se leen como una
-   fórmula de lo que trae el precio, unidas por el "+" que pone
-   filasComida(). Rejilla 2×2 sin filetes ni caja (a diferencia de las
-   cifras de Redes en Eventos, que sí llevan marco): aquí la presencia la
-   pone solo la escala del texto, a tamaño de titular. */
+/* [02] Comida: no etiqueta/valor — las 4 frases completas, en las esquinas
+   de una rejilla de 3×3 (grid-template-areas, no nth-child: cada celda
+   tiene su propio grid-area en el HTML), con un "+" en cada una de las 4
+   celdas intermedias y el centro vacío — se lee como una fórmula en dos
+   ejes, tipo "1 + 2 / + + / 3 + 4". Sin filetes ni caja: la presencia la
+   pone la escala del texto, a tamaño de titular. */
 .taller-comida {
   margin-top: 24px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px 32px;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-areas:
+    "tl tm tr"
+    "ml mid mr"
+    "bl bm br";
+  align-items: center;
+  row-gap: 8px;
   max-width: 560px;
 }
 .taller-comida > div {
@@ -1091,9 +1097,10 @@
   text-wrap: balance;
 }
 .taller-comida-mas {
-  display: inline-block;
   color: var(--sage);
-  margin-left: 2px;
+  text-align: center;
+  font-size: clamp(20px, 2.2vw, 26px);
+  padding: 0 14px;
 }
 
 /* [01] Incluye (/taller-team-building): línea de tiempo real a ancho

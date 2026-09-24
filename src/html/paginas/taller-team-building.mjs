@@ -86,13 +86,18 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
-// Celdas de .taller-comida: cada frase, con un "+" detrás de todas menos
-// la última — se lee como una fórmula, no como una lista de datos.
-const filasComida = (i) => COMIDA.map(([es, en], idx) => {
-  const texto = i.lang === "en" ? en : es;
-  const mas = idx < COMIDA.length - 1 ? ` <span class="taller-comida-mas">+</span>` : "";
-  return `<div>${esc(texto)}${mas}</div>`;
-}).join("\n      ");
+// Celdas de .taller-comida: las 4 frases en las esquinas de una rejilla de
+// 3×3 (por eso grid-area por celda, no nth-child) y un "+" en cada una de
+// las 4 celdas intermedias — arriba, abajo y a los lados —, el centro
+// vacío. Se lee como una fórmula en dos ejes, no una lista.
+const AREAS_COMIDA = ["tl", "tr", "bl", "br"];
+const filasComida = (i) => {
+  const frases = COMIDA.map(([es, en], idx) =>
+    `<div style="grid-area:${AREAS_COMIDA[idx]}">${esc(i.lang === "en" ? en : es)}</div>`).join("\n      ");
+  const mas = ["tm", "ml", "mr", "bm"]
+    .map((a) => `<div class="taller-comida-mas" style="grid-area:${a}">+</div>`).join("\n      ");
+  return frases + "\n      " + mas;
+};
 // INCLUYE es una línea de tiempo real: a ancho completo (no la rejilla a
 // medias de .ev-split), con un riel horizontal en escritorio — cinco filas
 // alineadas por columnas (número / riel con puntos / título / frase), el
