@@ -208,7 +208,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
       </div>
       <p class="tiny muted taller-casilla-nota">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
   ${casilla("04", "tarifa", t("Tarifas", "Rates"),
-    t("Precios y<br>tarifas.", "Prices and<br>rates."),
+    t("Precios<br>y tarifas.", "Prices<br>and rates."),
     esc(t("A más gente, mejor precio.", "More people, better price.")),
     `      <div class="taller-list">
         ${filas(i, TARIFAS)}
@@ -225,7 +225,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
     esc(t("La verdad es que la gente lo pasa bien.", "Honestly, people have a great time.")),
     "      " + galeria(i, { fotos: galerias.tallerTeamBuilding || [], ratio: "3 / 4", etiquetaHueco: t("Team Building", "Team Building"), raiz, modo: "paginado", etiqueta: t("Team Building", "Team Building"), huecos: 4, cols: 1 }))}
   ${casilla("07", "bocadillo", t("Preguntas frecuentes", "FAQ"),
-    t("Lo que preguntáis<br>siempre.", "What you<br>always ask."),
+    t("Lo que más<br>nos preguntáis.", "What you<br>ask us most."),
     null,
     `      <div class="taller-casilla-faq">
 ${FAQ.map(({ q, a }) => `        <div style="margin-bottom:18px">
