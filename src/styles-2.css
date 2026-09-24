@@ -1069,23 +1069,16 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
-/* [02] Comida: no etiqueta/valor — las 4 frases completas, en las esquinas
-   de una rejilla de 3×3 (grid-template-areas, no nth-child: cada celda
-   tiene su propio grid-area en el HTML), con un "+" en cada una de las 4
-   celdas intermedias y el centro vacío — se lee como una fórmula en dos
-   ejes, tipo "1 + 2 / + + / 3 + 4". Sin filetes ni caja: la presencia la
-   pone la escala del texto, a tamaño de titular. */
+/* [02] Comida: no etiqueta/valor — las 4 frases completas, una por línea,
+   con un "+" en su propia línea entre cada una: 4 líneas y ya, sin rejilla
+   en dos ejes. Sin filetes ni caja: la presencia la pone la escala del
+   texto, a tamaño de titular. */
 .taller-comida {
   margin-top: 24px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  grid-template-areas:
-    "tl tm tr"
-    "ml mid mr"
-    "bl bm br";
-  align-items: center;
-  row-gap: 8px;
-  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 480px;
 }
 .taller-comida > div {
   font-family: var(--font-display);
@@ -1098,9 +1091,7 @@
 }
 .taller-comida-mas {
   color: var(--sage);
-  text-align: center;
   font-size: clamp(20px, 2.2vw, 26px);
-  padding: 0 14px;
 }
 
 /* [01] Incluye (/taller-team-building): línea de tiempo real a ancho
