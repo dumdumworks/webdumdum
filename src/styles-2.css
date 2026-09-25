@@ -1528,8 +1528,18 @@
    estrechas el texto envuelve a dos líneas casi siempre, y sin esto la
    última se quedaba con una sola palabra suelta (viuda) en la mitad de
    los pasos — el navegador reparte las palabras entre las dos líneas en
-   vez de dejar caer solo la última. */
-.taller-tl-desc { align-self: center; text-align: center; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; line-height: 1.45; text-wrap: balance; }
+   vez de dejar caer solo la última.
+   max-width:150px fuerza las dos líneas también en los pasos más
+   cortos ("Rellenáis y cerráis a mano.", "You fill and fold by hand."),
+   que si no cabían de sobra en una sola — balance no envuelve un texto
+   que ya cabe, así que sin este tope esos dos pasos se leían más bajos
+   que el resto, rompiendo la fila de cinco. Probado con los 5 textos en
+   los dos idiomas: 150px es ancho de sobra para dos líneas sin llegar a
+   tres en los más largos. justify-self:center porque, en cuanto el
+   texto tiene un ancho fijo menor que su columna, el grid lo pega al
+   lado izquierdo por defecto — sin esto se descentraba respecto al
+   icono y al título de encima, rompiendo el eje común de los tres. */
+.taller-tl-desc { align-self: center; justify-self: center; text-align: center; max-width: 150px; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; line-height: 1.45; text-wrap: balance; }
 .taller-tl-movil { display: none; }
 
 @media (max-width: 879px) {
