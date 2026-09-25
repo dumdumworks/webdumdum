@@ -231,7 +231,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
   const main = `<div data-screen-label="taller-team-building">
 <section class="ev-hero">
   <div class="tiny muted"><a href="${i.ruta("/eventos")}" class="link-hover">${esc(t("Eventos", "Events"))}</a> · ${esc(t("Talleres Team Building", "Team Building Workshops"))}</div>
-  <h1 class="h-display" style="margin-top:16px">${esc(t("Team building", "Team building"))}<br>${esc(t("de taller de dumplings.", "dumpling workshop."))}</h1>
+  <h1 class="h-display" style="margin-top:16px">${esc(t("Team building", "Team building"))}<br>${esc(t("Taller de dumplings.", "dumpling workshop."))}</h1>
   <div class="ev-hero-row" style="margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:32px">
     <p class="body" style="font-size:18px;flex:1 1 420px;min-width:0;margin:0">${t(
       "Un <strong>taller de cocina para empresas</strong>: <strong>por equipos</strong>, aprendéis a elaborar <strong>dumplings desde cero</strong> guiados por nuestro equipo y, al terminar, os coméis <strong>lo que habéis hecho</strong>, con el <strong>resto de la carta incluida</strong>. Unas <strong>dos horas</strong>, en nuestro local de <strong>Bernabéu</strong>.",
