@@ -1365,11 +1365,10 @@
    riel vertical con el mismo icono-sobre-filete. */
 /* Sin border-bottom propio: .taller-tl-grid (justo debajo) ya pone su
    propia caja cerrada. Con los dos juntos el filete salía doble. 32px
-   abajo, igual que el aire de arriba de .taller-tl-tarifas: ahora que la
-   caja no llega a los bordes de la sección (ver el comentario de
-   .taller-tl-grid), hace falta aire real antes de [03]-[05], no el
-   hueco a cero de cuando las dos rejillas se tocaban — pero el mismo
-   aire que separa el timeline de las tarjetas, no el doble. */
+   abajo, la misma escala que separa cualquier bloque de la página (ver
+   .taller-tl-tarifas y su padding-bottom:0 más abajo): hace falta aire
+   real antes de [03]-[05], no el hueco a cero de cuando las dos
+   rejillas se tocaban, pero coherente con el resto, no el doble. */
 .taller-tl { padding: 64px var(--gutter) 32px; border-bottom: none; }
 /* Aquí el hero va seguido directamente de esta sección (no de otra con su
    propio aire de sobra, como en Eventos): el 8vh de abajo del hero + los
@@ -1434,11 +1433,16 @@
    igual que el de debajo (caja → tarjetas): mismo margin-top que el
    padding de .taller-tl-mitad a cada ancho, y sin el padding-top propio
    de .taller-casilla — sinTitulo:true deja ese hueco vacío (sin rótulo
-   ni titular dentro), así que sumaba aire de más en vez de repartirlo. */
+   ni titular dentro), así que sumaba aire de más en vez de repartirlo.
+   Mismo criterio abajo: sin el padding-bottom de .taller-casilla (aquí
+   tampoco lo pide ningún contenido propio), el aire hasta [03]-[05] lo
+   pone solo el padding-bottom de .taller-tl — coherente con el resto de
+   los bloques, no la suma de los dos. */
 .taller-tl-tarifas { margin: 32px calc(-1 * var(--gutter)) 0; }
-.taller-tl-tarifas .taller-casilla { padding-top: 0; }
+.taller-tl-tarifas .taller-casilla { padding-top: 0; padding-bottom: 0; }
 @media (min-width: 880px) {
   .taller-tl-tarifas { margin-top: 36px; }
+  .taller-tl { padding-bottom: 36px; }
 }
 
 /* 1032px de contenido, no el ancho tope de la caja (calc(...+2*gutter+2px)
