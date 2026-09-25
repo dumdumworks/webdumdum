@@ -1249,17 +1249,15 @@
    sin calcularlo a mano). Tarifas ([02]) vive al lado de "[01] El
    taller" — ver .taller-tl-grid. Comida ya no tiene casilla propia: su
    desglose se metió dentro de cada tarjeta de precio de Tarifas (ver
-   .taller-tarifas-caja-menu). */
+   .taller-tarifas-caja-menu). Caja completa (border en los 4 lados): ya
+   no comparte borde con .taller-tl-grid, que ahora es una caja más
+   estrecha y centrada — ver el comentario de ahí. */
 .taller-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
-  /* Sin borde arriba: .taller-tl-grid (justo encima, a sangre igual que
-     esta) ya pone su propio border-bottom — con los dos juntos, el
-     filete salía de 2px. */
-  border-top: none;
 }
 /* El filete entre casillas salía de sumar el border-right de una columna
    con el borde del contenedor: en un grid de 1fr esas columnas caen en
@@ -1350,12 +1348,13 @@
    círculo rojo macizo con el icono en negativo (color de la página) —
    tapa el filete por sí solo, sin depender de ningún fondo. En móvil,
    riel vertical con el mismo icono-sobre-filete. */
-/* Sin padding-bottom ni border-bottom propios: .taller-tl-grid (justo
-   debajo) ya pone su propia caja cerrada con su borde inferior — ver más
-   abajo. Con los dos juntos el filete salía doble, el mismo problema que
-   entre esta caja y la de [03]-[05] (ver el comentario sobre
-   .taller-grid). */
-.taller-tl { padding: 64px var(--gutter) 0; border-bottom: none; }
+/* Sin border-bottom propio: .taller-tl-grid (justo debajo) ya pone su
+   propia caja cerrada. Con los dos juntos el filete salía doble. Mismo
+   64px arriba y abajo: ahora que la caja no llega a los bordes de la
+   sección (ver el comentario de .taller-tl-grid), hace falta aire real
+   antes de [03]-[05], no el hueco a cero de cuando las dos rejillas se
+   tocaban. */
+.taller-tl { padding: 64px var(--gutter); border-bottom: none; }
 /* Aquí el hero va seguido directamente de esta sección (no de otra con su
    propio aire de sobra, como en Eventos): el 8vh de abajo del hero + los
    64px de arriba de esta sumaban casi 180px de vacío entre el botón y
@@ -1375,21 +1374,26 @@
 /* [01] El taller y [02] Tarifas (.taller-tl-lado — antes vivía aquí
    Comida, ahora en la rejilla de [03]-[05] de abajo; el nombre de la
    clase ya no está atado a un contenido concreto), cada uno a ancho
-   completo, uno debajo del otro — las 3 columnas de la rejilla de abajo,
-   pero sin dividirlas: [01] y [02] ocupan las tres juntas. Sin filete
-   entre ambos (mismo fondo, se leen como una sola caja) y un border de
-   los cuatro lados — sin él quedaba un filete suelto en medio del aire,
-   sin caja que lo sujetara. A sangre (como .taller-grid, sin el padding
-   lateral de .taller-tl) y sin el hueco de 64px que dejaba el
-   padding-bottom de la sección: las dos rejillas se tocan, un solo
-   filete entre [02] y [03]-[05], no dos separados por aire. Mismo
+   completo, uno debajo del otro. Sin filete entre ambos (mismo fondo, se
+   leen como una sola caja) y un border de los cuatro lados. Mismo
    apilado en cualquier ancho — no hay rejilla de dos columnas que
-   deshacer en móvil. */
+   deshacer en móvil.
+   Ancho tope, no a sangre: antes esta caja llegaba a los bordes de la
+   página (a sangre, como .taller-grid) y el timeline/las tarjetas de
+   precio quedaban centrados dentro con mucho aire sin usar a los lados
+   en pantallas anchas. Ahora la caja entera se encoge al ancho de lo
+   que suman las tres tarjetas de precio (1032px de contenido +
+   var(--gutter) de cada lado, el mismo padding que trae cada mitad) y
+   se centra — la caja hereda directamente el tamaño de su contenido, en
+   vez de sobrar por fuera. El +2px de más es el border de la propia
+   caja (1px por lado): sin él, el contenido se quedaba 2px corto de los
+   1032px reales. */
 .taller-tl-grid {
   display: flex;
   flex-direction: column;
   border: 1px solid var(--line);
-  margin: 0 calc(-1 * var(--gutter));
+  max-width: calc(1032px + 2 * var(--gutter) + 2px);
+  margin: 0 auto;
 }
 .taller-tl-mitad, .taller-tl-lado { background: var(--bg); }
 /* Mismo padding que .taller-casilla en móvil (32px var(--gutter)): el
