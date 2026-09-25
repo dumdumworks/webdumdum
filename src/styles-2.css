@@ -1046,6 +1046,24 @@
   color: rgba(255,0,30,0.55);
 }
 
+/* Hero centrado en cualquier ancho (/taller-team-building): el titular
+   de .h-display tope a 168px de fuente (clamp), así que a partir de
+   ~1527px de viewport deja de crecer — con el hero alineado a la
+   izquierda de fábrica, en pantallas anchas se quedaba todo el bloque
+   pegado a la izquierda con un hueco enorme sin usar a la derecha.
+   Mismo tratamiento que ya usa esta sección en móvil (más abajo, en el
+   871), pero para todos los anchos: rótulo, titular, párrafo y botones
+   centrados como bloque, no solo apilados. Escrito con
+   [data-screen-label] para no afectar al mismo .ev-hero de otras
+   páginas, que sí quedan alineadas a la izquierda en escritorio. */
+[data-screen-label="taller-team-building"] .ev-hero { text-align: center; }
+/* 72ch, no los 56ch de fábrica: con el párrafo centrado, el de 56ch
+   partía en 4 líneas (la última con una sola palabra suelta) — 72ch le
+   cabe de sobra a las dos versiones (ES más largo, EN más corto) en 3
+   líneas parejas. Probado con getBoundingClientRect en las dos. */
+[data-screen-label="taller-team-building"] .ev-hero p { margin-left: auto; margin-right: auto; max-width: 72ch; }
+[data-screen-label="taller-team-building"] .ev-hero-row { justify-content: center; }
+
 /* .ev-hero-cta trae 40px/36px de margin-top de fábrica, sin relación
    con el aire de después (36px/32px hasta la caja de [01], la misma
    escala que separa el resto de bloques de la página) — quedaba un
@@ -1053,7 +1071,7 @@
    antes. Se igualan los dos a esa misma escala. Escrito con
    [data-screen-label] para no afectar al mismo .ev-hero-cta de otras
    páginas. */
-[data-screen-label="taller-team-building"] .ev-hero-cta { margin-top: 36px; }
+[data-screen-label="taller-team-building"] .ev-hero-cta { margin-top: 36px; justify-content: center; }
 @media (max-width: 879px) {
   [data-screen-label="taller-team-building"] .ev-hero-cta { margin-top: 32px; }
 }
