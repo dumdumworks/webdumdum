@@ -246,6 +246,14 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
 <section class="taller-tl">
   <div class="taller-tl-grid">
     <div class="taller-tl-mitad">
+      <div class="taller-tl-head">
+        <div class="tiny muted">[01] ${esc(t("El taller", "The workshop"))}</div>
+        <div class="taller-casilla-cab">
+          <div class="taller-casilla-ico">${icono("aforo")}</div>
+          <h2 class="taller-casilla-h">${esc(t("Así funciona el taller.", "How the workshop works."))}</h2>
+        </div>
+        <p class="taller-casilla-sub">${esc(t("De la masa al plato, en equipo.", "From dough to plate, as a team."))}</p>
+      </div>
       ${railEscritorio(i)}
       ${railMovil(i)}
     </div>
