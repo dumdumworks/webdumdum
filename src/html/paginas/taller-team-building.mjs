@@ -246,16 +246,13 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
 <section class="taller-tl">
   <div class="taller-tl-grid">
     <div class="taller-tl-mitad">
-      <div class="taller-tl-head">
-        <p class="taller-casilla-sub">${esc(t("De la masa al plato, en equipo.", "From dough to plate, as a team."))}</p>
-      </div>
       ${railEscritorio(i)}
       ${railMovil(i)}
     </div>
     <div class="taller-tl-lado">
       ${casilla("02", "tarifa", t("Tarifas", "Rates"),
         esc(t("Precios y tarifas.", "Prices and rates.")),
-        esc(t("A más gente, mejor precio.", "More people, better price.")),
+        "",
         tarifasVisual(i, t(
           "* Consumos extra aparte. Talleres fuera del restaurante sujetos a disponibilidad.",
           "* Extra consumption not included. Off-site workshops subject to availability.")), true)}
