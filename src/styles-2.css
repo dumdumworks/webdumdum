@@ -1046,6 +1046,17 @@
   color: rgba(255,0,30,0.55);
 }
 
+/* Botones del hero (/taller-team-building) a igual ancho en móvil: los
+   dos textos miden muy distinto ("Pedir presupuesto" vs "Descargar
+   dossier con tarifas") y con el width:fit-content de .btn se veían dos
+   pastillas de tamaños dispares, una mucho más corta que la otra.
+   width:100% iguala las dos al ancho de la columna, apiladas por el
+   propio flex-wrap del contenedor. Escrito con [data-screen-label] para
+   no afectar al mismo .ev-hero-cta de otras páginas. */
+@media (max-width: 879px) {
+  [data-screen-label="taller-team-building"] .ev-hero-cta .btn { width: 100%; }
+}
+
 /* Lista de una columna (/taller-team-building): mismo lenguaje que .ev-list
    (mono, etiqueta en rojo atenuado, filete fino) pero sin el "se oculta en
    móvil" de esa — aquí no hay una .ev-datos con iconos que la releve, así
@@ -1391,7 +1402,13 @@
 .taller-faq-cierre { grid-column: 2; max-width: 560px; padding-left: calc(1px + var(--gutter)); }
 @media (max-width: 879px) {
   .taller-cierre { grid-template-columns: 1fr; }
-  .taller-faq-cierre { grid-column: 1; }
+  /* Centrado, no alineado a la izquierda: en escritorio el texto casa
+     con la columna de Preguntas frecuentes de la caja de encima, pero
+     en móvil esa caja ya apila Horarios y FAQ a ancho completo — sin
+     una columna con la que casar, el cierre se lee mejor centrado que
+     pegado a un lado. Se quita el padding-left que servía para ese
+     encaje en escritorio. */
+  .taller-faq-cierre { grid-column: 1; text-align: center; margin: 0 auto; padding-left: 0; }
 }
 .taller-faq-cierre p { margin-top: 12px; }
 .taller-faq-cierre .btn { margin-top: 24px; }
