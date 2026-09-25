@@ -1086,11 +1086,12 @@
    teléfono para su lista. Cerca pero separadas: cada una sigue siendo su
    propia pastilla (borde y esquinas redondeadas propios, no un bloque
    fundido), con solo 6px entre medias — ni pegadas ni con el hueco de
-   antes. Tope de 1032px (3 × 340px de tarjeta + 2 × 6px de separación,
-   el ancho que necesita la fila más larga del desglose sin pasarse) y
-   centradas como grupo: por debajo del tope no hace falta, las tres
-   columnas ya se reparten el ancho disponible con esos mismos 6px entre
-   ellas. */
+   antes. Tope y centrado como grupo: por debajo del tope no hace falta,
+   las tres columnas ya se reparten el ancho disponible con esos mismos
+   6px entre ellas. Mismo tope que .taller-tl-grid (el timeline de
+   arriba) — si cambia uno, cambia el otro: son dos cajas distintas
+   (esta sin borde de grupo, cada tarjeta con el suyo) pero tienen que
+   alinear sus bordes exteriores, no solo compartir eje central. */
 .taller-tarifas-cajas {
   display: grid;
   grid-template-columns: 1fr;
@@ -1100,8 +1101,8 @@
   /* width:100% explícito: la caja vive dentro de .taller-casilla-body,
      que es flex en columna, y el margin:auto de aquí abajo desactiva el
      stretch por defecto del eje transversal — sin el 100% se queda al
-     ancho de su contenido (940px y pico) en vez de llegar al tope. */
-  .taller-tarifas-cajas { grid-template-columns: repeat(3, 1fr); width: 100%; max-width: 1032px; margin: 0 auto; }
+     ancho de su contenido en vez de llegar al tope. */
+  .taller-tarifas-cajas { grid-template-columns: repeat(3, 1fr); width: 100%; max-width: calc(1032px + 2 * var(--gutter) + 2px); margin: 0 auto; }
 }
 .taller-tarifas-caja {
   display: flex;
@@ -1407,11 +1408,12 @@
    [03]-[05]. */
 .taller-tl-tarifas { margin: 64px calc(-1 * var(--gutter)) 0; }
 
-/* Mismo ancho tope que .taller-tarifas-cajas (1032px) y centrado igual:
-   el riel de 5 pasos ocupa lo mismo que las tres cajas de precio de
-   [02], en vez de estirarse a todo el ancho de la casilla — las dos
-   secciones quedan a la misma anchura de contenido, aunque las cajas
-   que las envuelven sigan a sangre. */
+/* 1032px de contenido, no el ancho tope de la caja (calc(...+2*gutter+2px)
+   en .taller-tl-grid): el riel vive dentro de esa caja, con el mismo
+   padding lateral que .taller-tl-mitad ya le da — entre los dos, el riel
+   cae exactamente en esos 1032px, el mismo tamaño de contenido que las
+   tarjetas de precio de [02] usaban antes de crecer para igualar el
+   borde exterior de la caja (ver .taller-tarifas-cajas). */
 .taller-tl-rail { max-width: 1032px; margin: 56px auto 0; }
 /* Más grandes y en rojo lleno (no .muted): el número de paso tiene que
    leerse tan bien como el título, no quedarse en detalle de fondo. */
