@@ -51,8 +51,8 @@ export function menu(i, { locales, seo, carta }) {
   return {
     titulo: i.lang === "en" ? (s.te || s.t) : s.t,
     desc: i.lang === "en"
-      ? `${cifra.en} dumplings, a new one every month and not a single conventional one.`
-      : `${cifra.es} dumplings, uno nuevo cada mes y ni uno convencional.`,
+      ? `${cifra.en} dumplings, not a single conventional one. Short menu that changes every month: price, ingredients and allergens for each dish.`
+      : `${cifra.es} dumplings de autor, ni uno convencional. Carta corta que cambia cada mes: precio, ingredientes y alérgenos de cada plato.`,
     cuerpo: esqueleto(i, RUTA, locales, renderCarta(i, carta)),
     ld: [jsonLd(i, carta, ORIGIN + i.ruta(RUTA)), breadcrumbLd(i, [{ nombre: i.t("Carta", "Menu"), ruta: RUTA }])],
   };
