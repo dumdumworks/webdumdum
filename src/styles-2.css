@@ -1250,41 +1250,41 @@
    sin calcularlo a mano). Tarifas ([02]) vive al lado de "[01] El
    taller" — ver .taller-tl-grid. Comida ya no tiene casilla propia: su
    desglose se metió dentro de cada tarjeta de precio de Tarifas (ver
-   .taller-tarifas-caja-menu). Caja completa (border en los 4 lados): ya
-   no comparte borde con .taller-tl-grid, que ahora es una caja más
-   estrecha y centrada — ver el comentario de ahí.
-   Mismo ancho tope que .taller-tl-grid y centrada igual: una sola caja,
-   pero con las 2 columnas repartiéndose ese ancho a partes iguales
-   (1fr/1fr), así que cada casilla ([03], [04]) ocupa la mitad exacta de
-   lo que ocupa el timeline de arriba. Sin esto, .taller-grid era la
-   única caja de la página que seguía a sangre (ancho completo) mientras
-   las demás ya se habían encogido a su contenido.
+   .taller-tarifas-caja-menu).
+   Mismo ancho tope que .taller-tl-grid y centrada igual: las 2 columnas
+   se reparten ese ancho a partes iguales (1fr/1fr), así que cada casilla
+   ([03], [04]) ocupa la mitad exacta de lo que ocupa el timeline de
+   arriba.
    width, no solo max-width: esta sección (a diferencia de .taller-tl,
    que le da su padding a .taller-tl-grid) no tiene ningún gutter propio
    — por debajo del tope tocaría los bordes de la pantalla. El
    calc(100% - 2*gutter) reserva ese aire en cualquier ancho; el
-   max-width solo entra a partir de ahí. */
+   max-width solo entra a partir de ahí.
+   Cerca pero separadas, como las tarjetas de precio: cada casilla lleva
+   su propio borde y esquinas redondeadas (ver .taller-grid .taller-casilla
+   más abajo) en vez de compartir un borde de grupo con un filete
+   relleno en medio — mismo gap de 6px que .taller-tarifas-cajas. */
 .taller-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
+  gap: 6px;
   width: calc(100% - 2 * var(--gutter));
   max-width: calc(1032px + 2 * var(--gutter) + 2px);
   margin: 0 auto;
 }
-/* El filete entre casillas salía de sumar el border-right de una columna
-   con el borde del contenedor: en un grid de 1fr esas columnas caen en
-   posiciones con decimales (480.66px, no 480px), así que el filete se
-   pintaba a caballo entre dos píxeles físicos y se veía más grueso que
-   los demás. El gap relleno del color del filete siempre mide 1px exacto,
-   pase lo que pase con el redondeo de las columnas. */
 .taller-casilla {
   display: flex;
   flex-direction: column;
   padding: 36px var(--gutter);
   background: var(--bg);
+}
+/* Solo dentro de [03]-[04]: borde y radio propios (18px, igual que
+   .taller-tarifas-caja y .taller-tl-grid) — [02] Tarifas comparte esta
+   misma clase .taller-casilla pero vive fuera de esta rejilla, sin caja
+   de grupo que reemplazar, así que no lleva este borde. */
+.taller-grid .taller-casilla {
+  border: 1px solid var(--line);
+  border-radius: 18px;
 }
 /* El cuerpo ocupa el resto de la casilla (que la rejilla ya estiró al alto
    de la fila): así una nota con "*" cae siempre al mismo sitio entre las
