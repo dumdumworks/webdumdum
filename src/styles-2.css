@@ -1203,6 +1203,10 @@
   letter-spacing: 0.01em;
   text-align: left;
 }
+/* La primera fila no lleva filete propio: el padre ya pone el suyo
+   (sólido, var(--line)) justo encima — con los dos juntos salía un
+   filete doble, uno sólido y uno claro a un par de píxeles. */
+.taller-tarifas-caja-menu > div:first-child { border-top: none; }
 .taller-tarifas-caja-menu b { font-weight: 600; color: rgba(255,0,30,0.55); }
 .taller-tarifas-caja-menu span { color: var(--ink); }
 /* Botón "Contratar" dentro de cada tarjeta, no uno compartido debajo de
