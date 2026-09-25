@@ -1378,8 +1378,15 @@
   width: calc(100% - 2 * var(--gutter));
   max-width: calc(1032px + 2 * var(--gutter) + 2px);
   margin: 0 auto;
-  padding: 64px 0;
+  padding: 32px 0;
   border-bottom: 1px solid var(--line);
+}
+/* 36px en escritorio: mismo aire que separa el resto de bloques de la
+   página (.taller-tl, .taller-tl-tarifas, .taller-grid) — antes eran
+   64px arriba y abajo, más aire del que pide un simple cierre y sin
+   relación con esa escala. */
+@media (min-width: 880px) {
+  .taller-cierre { padding: 36px 0; }
 }
 .taller-faq-cierre { grid-column: 2; max-width: 560px; padding-left: calc(1px + var(--gutter)); }
 @media (max-width: 879px) {
