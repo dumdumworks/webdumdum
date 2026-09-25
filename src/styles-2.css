@@ -1346,11 +1346,23 @@
 .taller-faq-toggle > summary { display: none; }
 .taller-grid .faq-list { margin-top: 0; }
 .taller-grid .faq-item:first-child { border-top: 1px solid var(--line-soft); }
-/* Cierre con el "¿Hablamos?" de siempre: su propia sección, a ancho
-   completo, con el ritmo estándar de la página (mismo padding y filete
-   que .taller-tl/.taller-faq de antes) — ya no depende de caber en una
-   casilla estrecha ni de anidarse dentro del bloque de FAQs. */
-.taller-cierre { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
+/* Cierre con el "¿Hablamos?" de siempre: su propia sección, con el
+   ritmo estándar de la página (mismo padding y filete que .taller-tl/
+   .taller-faq de antes) — ya no depende de caber en una casilla
+   estrecha ni de anidarse dentro del bloque de FAQs.
+   Mismo ancho tope que .taller-grid y centrada igual: sin esto, esta
+   sección era la única que seguía a sangre (su padding-left de 32px
+   quedaba mucho más a la izquierda que el borde de la caja de
+   Horarios/FAQ en pantallas anchas) — con el mismo max-width y el mismo
+   padding de 32px por dentro, "¿Hablamos?" arranca exactamente donde
+   arranca el rótulo de la caja de encima. */
+.taller-cierre {
+  width: calc(100% - 2 * var(--gutter));
+  max-width: calc(1032px + 2 * var(--gutter) + 2px);
+  margin: 0 auto;
+  padding: 64px var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
 .taller-faq-cierre { max-width: 560px; }
 .taller-faq-cierre p { margin-top: 12px; }
 .taller-faq-cierre .btn { margin-top: 24px; }
