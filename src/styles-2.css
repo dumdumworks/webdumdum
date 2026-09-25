@@ -1374,12 +1374,17 @@
 /* Aquí el hero va seguido directamente de esta sección (no de otra con su
    propio aire de sobra, como en Eventos): el 8vh de abajo del hero + los
    64px de arriba de esta sumaban casi 180px de vacío entre el botón y
-   "[01] Incluye". Se recorta solo en esta combinación concreta. Y el
-   hero pierde su border-bottom, en cualquier ancho: la caja de
-   .taller-tl-grid ya pone el suyo justo debajo — con los dos, el filete
-   salía doble. */
-.ev-hero:has(+ .taller-tl) { padding-bottom: 4vh; border-bottom: none; }
-.ev-hero + .taller-tl { padding-top: 32px; }
+   "[01] Incluye". Y el hero pierde su border-bottom, en cualquier ancho:
+   la caja de .taller-tl-grid ya pone el suyo justo debajo — con los dos,
+   el filete salía doble.
+   Sin padding-bottom propio (antes 4vh, variable con el alto de
+   pantalla): todo el aire hasta la caja lo pone el padding-top de
+   .taller-tl, fijo en 36px — el mismo padding que trae la caja por
+   dentro antes del rótulo "[01] El taller" (.taller-tl-mitad). Mismo
+   aire fuera de la caja que dentro, en vez de la mezcla de vh + px que
+   sumaba casi el doble. */
+.ev-hero:has(+ .taller-tl) { padding-bottom: 0; border-bottom: none; }
+.ev-hero + .taller-tl { padding-top: 36px; }
 /* [01] El taller ahora es, literalmente, la misma estructura que una
    casilla (rótulo, icono, título .taller-casilla-h, subtítulo
    .taller-casilla-sub) en vez de un h2.h-1 aparte con su propio tamaño:
@@ -1503,6 +1508,10 @@
 
 @media (max-width: 879px) {
   .taller-tl { padding: 48px var(--gutter) 32px; }
+  /* 32px, no los 36px de escritorio: aquí .taller-tl-mitad también baja
+     a 32px de padding (ver la regla de arriba), así que el aire fuera de
+     la caja sigue igualando al de dentro en cualquier ancho. */
+  .ev-hero + .taller-tl { padding-top: 32px; }
   .taller-tl-rail { display: none; }
   .taller-tl-movil { display: block; margin-top: 40px; position: relative; }
   .taller-tl-movil::before {
