@@ -1051,10 +1051,14 @@
    dossier con tarifas") y con el width:fit-content de .btn se veían dos
    pastillas de tamaños dispares, una mucho más corta que la otra.
    width:100% iguala las dos al ancho de la columna, apiladas por el
-   propio flex-wrap del contenedor. Escrito con [data-screen-label] para
-   no afectar al mismo .ev-hero-cta de otras páginas. */
+   propio flex-wrap del contenedor. justify-content:center porque .btn
+   es un flex sin ese centrado (no le hace falta cuando mide lo justo
+   para su contenido) — al forzar el ancho completo, la etiqueta se
+   quedaba pegada a la izquierda con un hueco vacío a la derecha.
+   Escrito con [data-screen-label] para no afectar al mismo
+   .ev-hero-cta de otras páginas. */
 @media (max-width: 879px) {
-  [data-screen-label="taller-team-building"] .ev-hero-cta .btn { width: 100%; }
+  [data-screen-label="taller-team-building"] .ev-hero-cta .btn { width: 100%; justify-content: center; }
 }
 
 /* Lista de una columna (/taller-team-building): mismo lenguaje que .ev-list

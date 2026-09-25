@@ -235,7 +235,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
   <div class="ev-hero-row" style="margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:32px">
     <p class="body" style="font-size:18px;flex:1 1 420px;min-width:0;margin:0">${t(
       "Un <strong>taller de cocina para empresas</strong>: <strong>por equipos</strong>, aprendéis a elaborar <strong>dumplings desde cero</strong> guiados por nuestro equipo y, al terminar, os coméis <strong>lo que habéis hecho</strong>, con el <strong>resto de la carta incluida</strong>. Unas <strong>dos horas</strong>, en nuestro local de <strong>Bernabéu</strong>.",
-      "A <strong>hands-on cooking workshop for companies</strong>: <strong>in teams</strong>, you learn to make <strong>dumplings from scratch</strong> with our team, then eat <strong>what you've made</strong>, plus the <strong>rest of the menu</strong>. <strong>About two hours</strong>, at our <strong>Bernabéu</strong> spot.")}</p>
+      "A <strong>hands-on cooking workshop for companies</strong>: <strong>in teams</strong>, you learn to make <strong>dumplings from scratch</strong> with our team, then eat <strong>what you've made</strong>, plus the <strong>rest of the menu</strong>. <strong>About two hours</strong>, at our <strong>Bernabéu</strong>&nbsp;spot.")}</p>
   </div>
   <div class="ev-hero-cta" style="display:flex;flex-wrap:wrap;gap:16px">
     <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
