@@ -1384,11 +1384,17 @@
    padding que trae .taller-tl-mitad) y se centra — la caja hereda
    directamente el tamaño de su contenido, en vez de sobrar por fuera. El
    +2px de más es el border de la propia caja (1px por lado): sin él, el
-   contenido se quedaba 2px corto de los 1032px reales. */
+   contenido se quedaba 2px corto de los 1032px reales. Mismo radio que
+   .taller-tarifas-caja (18px): las dos cajas comparten borde exterior,
+   así que también comparten esquina. overflow:hidden para que el riel
+   (que llega hasta el borde en móvil) no sobresalga de la esquina
+   redondeada. */
 .taller-tl-grid {
   display: flex;
   flex-direction: column;
   border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
   max-width: calc(1032px + 2 * var(--gutter) + 2px);
   margin: 0 auto;
 }
