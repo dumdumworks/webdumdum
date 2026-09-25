@@ -292,7 +292,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
 
 <section class="taller-cierre">
   <div class="taller-faq-cierre">
-    <h3 class="h-1">${t("¿Hablamos?", "Let's talk?")}</h3>
+    <h3 class="h-1">${t("Hablamos?", "Let's talk?")}</h3>
     <p class="body">${esc(t(
       "Cuéntanos cuántos sois y cuándo, y te mandamos disponibilidad y presupuesto.",
       "Tell us how many you are and when, and we'll send you availability and a quote."))}</p>
