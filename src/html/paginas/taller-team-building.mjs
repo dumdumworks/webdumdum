@@ -249,14 +249,14 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
       ${railEscritorio(i)}
       ${railMovil(i)}
     </div>
-    <div class="taller-tl-lado">
-      ${casilla("02", "tarifa", t("Tarifas", "Rates"),
-        esc(t("Precios y tarifas.", "Prices and rates.")),
-        "",
-        tarifasVisual(i, t(
-          "* Consumos extra aparte. Talleres fuera del restaurante sujetos a disponibilidad.",
-          "* Extra consumption not included. Off-site workshops subject to availability.")), true)}
-    </div>
+  </div>
+  <div class="taller-tl-tarifas">
+    ${casilla("02", "tarifa", t("Tarifas", "Rates"),
+      esc(t("Precios y tarifas.", "Prices and rates.")),
+      "",
+      tarifasVisual(i, t(
+        "* Consumos extra aparte. Talleres fuera del restaurante sujetos a disponibilidad.",
+        "* Extra consumption not included. Off-site workshops subject to availability.")), true)}
   </div>
 </section>
 

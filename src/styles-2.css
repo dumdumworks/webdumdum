@@ -1371,23 +1371,19 @@
    mismo icono a 16px del rótulo, mismo título a 14px del icono, mismo
    subtítulo a 24px del título — sin duplicar la definición de tamaños en
    otra regla. */
-/* [01] El taller y [02] Tarifas (.taller-tl-lado — antes vivía aquí
-   Comida, ahora en la rejilla de [03]-[05] de abajo; el nombre de la
-   clase ya no está atado a un contenido concreto), cada uno a ancho
-   completo, uno debajo del otro. Sin filete entre ambos (mismo fondo, se
-   leen como una sola caja) y un border de los cuatro lados. Mismo
-   apilado en cualquier ancho — no hay rejilla de dos columnas que
-   deshacer en móvil.
+/* [01] El taller: solo el timeline va en caja propia, con borde en los
+   cuatro lados. [02] Tarifas ya no vive dentro — ver .taller-tl-tarifas
+   más abajo — así que la caja no tapa ni comparte límites con las
+   tarjetas de precio, solo enmarca el riel de pasos.
    Ancho tope, no a sangre: antes esta caja llegaba a los bordes de la
-   página (a sangre, como .taller-grid) y el timeline/las tarjetas de
-   precio quedaban centrados dentro con mucho aire sin usar a los lados
-   en pantallas anchas. Ahora la caja entera se encoge al ancho de lo
-   que suman las tres tarjetas de precio (1032px de contenido +
-   var(--gutter) de cada lado, el mismo padding que trae cada mitad) y
-   se centra — la caja hereda directamente el tamaño de su contenido, en
-   vez de sobrar por fuera. El +2px de más es el border de la propia
-   caja (1px por lado): sin él, el contenido se quedaba 2px corto de los
-   1032px reales. */
+   página (a sangre, como .taller-grid) y el timeline quedaba centrado
+   dentro con mucho aire sin usar a los lados en pantallas anchas. Ahora
+   se encoge al ancho de lo que suman las tres tarjetas de precio de
+   abajo (1032px de contenido + var(--gutter) de cada lado, el mismo
+   padding que trae .taller-tl-mitad) y se centra — la caja hereda
+   directamente el tamaño de su contenido, en vez de sobrar por fuera. El
+   +2px de más es el border de la propia caja (1px por lado): sin él, el
+   contenido se quedaba 2px corto de los 1032px reales. */
 .taller-tl-grid {
   display: flex;
   flex-direction: column;
@@ -1395,16 +1391,21 @@
   max-width: calc(1032px + 2 * var(--gutter) + 2px);
   margin: 0 auto;
 }
-.taller-tl-mitad, .taller-tl-lado { background: var(--bg); }
+.taller-tl-mitad { background: var(--bg); }
 /* Mismo padding que .taller-casilla en móvil (32px var(--gutter)): el
    riel no es una casilla y no lo trae de fábrica, así que hay que
-   dárselo a mano para que quede a la misma altura que el resto.
-   .taller-tl-lado no necesita nada propio: envuelve una .taller-casilla
-   de verdad, que ya trae su padding de fábrica. */
+   dárselo a mano para que quede a la misma altura que el resto. */
 .taller-tl-mitad { padding: 32px var(--gutter); }
 @media (min-width: 880px) {
   .taller-tl-mitad { padding: 36px var(--gutter); }
 }
+/* [02] Tarifas: fuera de la caja del timeline, sin borde propio (las
+   tres tarjetas ya llevan el suyo) — a sangre como .taller-grid, con el
+   mismo padding lateral que trae .taller-casilla de fábrica, así no se
+   dobla el aire lateral. 64px arriba, misma escala que el resto de la
+   página: el padding-bottom de .taller-tl pone el de abajo, antes de
+   [03]-[05]. */
+.taller-tl-tarifas { margin: 64px calc(-1 * var(--gutter)) 0; }
 
 /* Mismo ancho tope que .taller-tarifas-cajas (1032px) y centrado igual:
    el riel de 5 pasos ocupa lo mismo que las tres cajas de precio de
