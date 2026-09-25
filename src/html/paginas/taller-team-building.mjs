@@ -181,8 +181,8 @@ const railMovil = (i) => `<div class="taller-tl-movil">
 // adaptan solas. sinTitulo (solo [02] Tarifas) se salta el rótulo y el
 // icono+titular: al fundirse visualmente con [01] en la misma caja, un
 // segundo titular ahí quedaba redundante.
-const casilla = (n, ico, rotulo, titulo, subtitulo, derecha, sinTitulo) => `<div class="taller-casilla">
-    ${sinTitulo ? "" : `<div class="tiny muted">[${n}] ${esc(rotulo)}</div>
+const casilla = (ico, rotulo, titulo, subtitulo, derecha, sinTitulo) => `<div class="taller-casilla">
+    ${sinTitulo ? "" : `<div class="tiny muted">${esc(rotulo)}</div>
     <div class="taller-casilla-cab">
       <div class="taller-casilla-ico">${icono(ico)}</div>
       <h3 class="taller-casilla-h">${titulo}</h3>
@@ -247,7 +247,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
   <div class="taller-tl-grid">
     <div class="taller-tl-mitad">
       <div class="taller-tl-head">
-        <div class="tiny muted">[01] ${esc(t("El taller", "The workshop"))}</div>
+        <div class="tiny muted">${esc(t("El taller", "The workshop"))}</div>
         <div class="taller-casilla-cab">
           <div class="taller-casilla-ico">${icono("aforo")}</div>
           <h2 class="taller-casilla-h">${esc(t("Así funciona el taller.", "How the workshop works."))}</h2>
@@ -259,7 +259,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
     </div>
   </div>
   <div class="taller-tl-tarifas">
-    ${casilla("02", "tarifa", t("Tarifas", "Rates"),
+    ${casilla("tarifa", t("Tarifas", "Rates"),
       esc(t("Precios y tarifas.", "Prices and rates.")),
       "",
       tarifasVisual(i, t(
@@ -269,14 +269,14 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
 </section>
 
 <section class="taller-grid">
-  ${casilla("03", "hora", t("Horarios", "Timings"),
+  ${casilla("hora", t("Horarios", "Timings"),
     esc(t("Horarios y duraciones.", "Timings and durations.")),
     esc(t("Un par de horitas, para que no se aburran.", "A couple of hours, so nobody gets bored.")),
     `      <div class="taller-list">
         ${filas(i, HORARIOS)}
       </div>
       <p class="tiny muted taller-casilla-nota">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
-  ${casilla("04", "bocadillo", t("Preguntas frecuentes", "FAQ"),
+  ${casilla("bocadillo", t("Preguntas frecuentes", "FAQ"),
     esc(t("Lo que más nos preguntáis.", "What you ask us most.")),
     esc(t("Las dudas más repetidas.", "The questions we hear most.")),
     `      <details class="faq-toggle taller-faq-toggle" open>
