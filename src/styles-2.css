@@ -1252,13 +1252,27 @@
    desglose se metió dentro de cada tarjeta de precio de Tarifas (ver
    .taller-tarifas-caja-menu). Caja completa (border en los 4 lados): ya
    no comparte borde con .taller-tl-grid, que ahora es una caja más
-   estrecha y centrada — ver el comentario de ahí. */
+   estrecha y centrada — ver el comentario de ahí.
+   Mismo ancho tope que .taller-tl-grid y centrada igual: una sola caja,
+   pero con las 2 columnas repartiéndose ese ancho a partes iguales
+   (1fr/1fr), así que cada casilla ([03], [04]) ocupa la mitad exacta de
+   lo que ocupa el timeline de arriba. Sin esto, .taller-grid era la
+   única caja de la página que seguía a sangre (ancho completo) mientras
+   las demás ya se habían encogido a su contenido.
+   width, no solo max-width: esta sección (a diferencia de .taller-tl,
+   que le da su padding a .taller-tl-grid) no tiene ningún gutter propio
+   — por debajo del tope tocaría los bordes de la pantalla. El
+   calc(100% - 2*gutter) reserva ese aire en cualquier ancho; el
+   max-width solo entra a partir de ahí. */
 .taller-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
+  width: calc(100% - 2 * var(--gutter));
+  max-width: calc(1032px + 2 * var(--gutter) + 2px);
+  margin: 0 auto;
 }
 /* El filete entre casillas salía de sumar el border-right de una columna
    con el borde del contenedor: en un grid de 1fr esas columnas caen en
