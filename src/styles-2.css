@@ -1364,12 +1364,13 @@
    tapa el filete por sí solo, sin depender de ningún fondo. En móvil,
    riel vertical con el mismo icono-sobre-filete. */
 /* Sin border-bottom propio: .taller-tl-grid (justo debajo) ya pone su
-   propia caja cerrada. Con los dos juntos el filete salía doble. Mismo
-   64px arriba y abajo: ahora que la caja no llega a los bordes de la
-   sección (ver el comentario de .taller-tl-grid), hace falta aire real
-   antes de [03]-[05], no el hueco a cero de cuando las dos rejillas se
-   tocaban. */
-.taller-tl { padding: 64px var(--gutter); border-bottom: none; }
+   propia caja cerrada. Con los dos juntos el filete salía doble. 32px
+   abajo, igual que el aire de arriba de .taller-tl-tarifas: ahora que la
+   caja no llega a los bordes de la sección (ver el comentario de
+   .taller-tl-grid), hace falta aire real antes de [03]-[05], no el
+   hueco a cero de cuando las dos rejillas se tocaban — pero el mismo
+   aire que separa el timeline de las tarjetas, no el doble. */
+.taller-tl { padding: 64px var(--gutter) 32px; border-bottom: none; }
 /* Aquí el hero va seguido directamente de esta sección (no de otra con su
    propio aire de sobra, como en Eventos): el 8vh de abajo del hero + los
    64px de arriba de esta sumaban casi 180px de vacío entre el botón y
@@ -1501,7 +1502,7 @@
 .taller-tl-movil { display: none; }
 
 @media (max-width: 879px) {
-  .taller-tl { padding: 48px var(--gutter) 0; }
+  .taller-tl { padding: 48px var(--gutter) 32px; }
   .taller-tl-rail { display: none; }
   .taller-tl-movil { display: block; margin-top: 40px; position: relative; }
   .taller-tl-movil::before {
