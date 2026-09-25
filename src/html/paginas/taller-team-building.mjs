@@ -1,32 +1,46 @@
 // ─────────────────────────────────────────────────────────────
 // TALLER TEAM BUILDING (/taller-team-building): la única celda de "Servicios"
 // de /eventos con página propia. Contenido adaptado del dossier de eventos
-// (incluye, comida, horarios, tarifas), con espacio de fotos (huecos hasta
-// que haya fotos reales en galerias.json) y preguntas frecuentes — pensada
+// (incluye, comida, horarios, tarifas) y preguntas frecuentes — pensada
 // para SEO/GEO: intención de búsqueda real en el H1, Service+FAQPage en el
-// JSON-LD con las tarifas reales.
+// JSON-LD con las tarifas reales. Sin galería de fotos por ahora (se
+// retiró a propósito, pendiente de retomarla — ver .taller-galeria en
+// styles-2.css, que se dejó tal cual para cuando vuelva).
 // ─────────────────────────────────────────────────────────────
 import { esc, ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
-import { galeria } from "../galeria.mjs";
-import { seccion } from "./eventos.mjs";
+import { icono } from "./local.mjs";
 
 export const RUTA = "/taller-team-building";
 const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
 
-// [n, minititulo es/en, frase es/en] de cada paso.
+// [n, icono, minititulo es/en, frase es/en] de cada paso. Los iconos son
+// ICONOS.equipo/masa/dumpling/cocinar/comer en local.mjs, trazados a partir
+// de bocetos reales del proceso del taller.
 const INCLUYE = [
-  ["01", "Equipos", "Teams", "Por equipos.", "In teams."],
-  ["02", "La masa", "The dough", "Aprendemos a amasar.", "We learn to knead."],
-  ["03", "Montaje", "Assembly", "Montamos los dumplings.", "We build the dumplings."],
-  ["04", "Cocción", "Cooking", "Los cocinamos.", "We cook them."],
-  ["05", "Degustación", "Tasting", "Nos lo comemos.", "We eat."],
+  ["01", "equipo", "Equipos", "Teams",
+    "<strong>En equipos</strong> desde que llegáis.",
+    "<strong>Into teams</strong> from the moment you arrive."],
+  ["02", "masa", "La masa", "The dough",
+    "Amasáis, con <strong>nuestro equipo</strong> cerca.",
+    "You knead it, <strong>our team guiding you</strong>."],
+  ["03", "dumpling", "Montaje", "Assembly",
+    "Rellenáis y cerráis <strong>a mano</strong>.",
+    "You fill and fold <strong>by hand</strong>."],
+  ["04", "cocinar", "Cocinado", "Cooking",
+    "<strong>Cocináis</strong> y <strong>aprendéis a emplatar</strong>.",
+    "<strong>You cook</strong> and <strong>learn to plate</strong> it."],
+  ["05", "comer", "Degustación", "Tasting",
+    "Os sentáis a <strong>comer lo hecho</strong>.",
+    "You sit down to <strong>eat what you made</strong>."],
 ];
+// Fila de .taller-list, como Horarios y Tarifas: [etiqueta es, valor es,
+// etiqueta en, valor en].
 const COMIDA = [
-  ["Entrante", "A compartir", "Starter", "To share"],
-  ["Carta de dumplings", "Toda, por persona", "Dumpling menu", "The whole thing, per person"],
-  ["Bebida", "Una", "Drink", "One"],
-  ["Postre", "Un mochi", "Dessert", "One mochi"],
+  ["Entrante", "Un entrante, a compartir", "Starter", "One starter, to share"],
+  ["Dumplings", "Toda la carta, 10 por persona", "Dumplings", "The whole menu, 10 per person"],
+  ["Bebida", "A elegir", "Drink", "Your choice"],
+  ["Postre", "Un mochi, a elegir", "Dessert", "One mochi, your choice"],
 ];
 const HORARIOS = [
   ["Duración aprox.", "2 – 2,5 h", "Approx. duration", "2 – 2.5 h"],
@@ -36,12 +50,13 @@ const HORARIOS = [
   ["Mañanas", "11.30 – 14.00", "Mornings", "11.30am – 2pm"],
   ["Tardes", "18.30 – 21.00", "Afternoons", "6.30 – 9pm"],
 ];
+// [nombre es, nombre en, rango es, rango en, precio€] — el tramo más
+// barato primero (el foco de venta: "a más gente, mejor precio", aquí se
+// ve de entrada, no hay que llegar al final para encontrarlo).
 const TARIFAS = [
-  ["Desde", "65€ / persona", "From", "€65 / person"],
-  ["6–9 personas", "75€ / persona", "6–9 people", "€75 / person"],
-  ["10–20 personas", "70€ / persona", "10–20 people", "€70 / person"],
-  ["20–30 personas", "65€ / persona", "20–30 people", "€65 / person"],
-  ["+30 personas", "Consultar", "30+ people", "Get in touch"],
+  ["Equipo grande", "Large team", "20–30 personas", "20–30 people", 65],
+  ["Equipo mediano", "Medium team", "10–20 personas", "10–20 people", 70],
+  ["Equipo pequeño", "Small team", "6–9 personas", "6–9 people", 75],
 ];
 // Para el JSON-LD (Service.offers): solo los tramos con precio real.
 const OFERTAS = [
@@ -62,6 +77,9 @@ const FAQ = [
   { q: ["¿Cuánto cuesta?", "How much does it cost?"],
     a: ["Desde 65€ por persona, según el número de participantes. Te damos el precio exacto al escribirnos.",
       "From €65 per person, depending on group size. We'll give you the exact price when you reach out."] },
+  { q: ["¿Podéis adaptar el taller a otro tipo de evento?", "Can you adapt the workshop for a different kind of event?"],
+    a: ["Sí: el espacio, la carta y las tarifas se adaptan al tipo de evento. Cumpleaños, despedidas, presentaciones… cuéntanos qué necesitas y le buscamos forma.",
+      "Yes: the space, the menu and the rates all adapt to the type of event. Birthdays, leaving dos, launches… tell us what you need and we'll make it work."] },
 ];
 
 // Fila de .taller-list: dos idiomas o cuatro (etiqueta/valor por idioma).
@@ -71,6 +89,56 @@ const filas = (i, datos) => datos.map((d) => {
   const valor = i.lang === "en" ? en2 : es2;
   return `<div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`;
 }).join("\n      ");
+// El desglose del menú (antes su propia casilla, [03] Comida) se mete
+// dentro de cada tarjeta de precio: es el mismo menú para los tres
+// tramos, así que se repite igual en las tres — cada tarjeta ya cuenta
+// la historia completa (cuánto dura, a quién, cuánto cuesta y qué se
+// come), sin depender de otra casilla aparte. La duración va primero,
+// con el valor tomado de HORARIOS[0] en vez de repetido a mano, para que
+// no se desincronice si cambia ahí.
+const menuDesglose = (i) => {
+  const { t } = i;
+  const [, esDuracion, , enDuracion] = HORARIOS[0];
+  const filas = [[t("Taller", "Workshop"), i.lang === "en" ? enDuracion : esDuracion], ...COMIDA.map(([esL, esV, enL, enV]) =>
+    [i.lang === "en" ? enL : esL, i.lang === "en" ? enV : esV])]
+    .map(([etiqueta, valor]) => `        <div><b>${esc(etiqueta)}</b><span>${esc(valor)}</span></div>`).join("\n");
+  return `      <div class="taller-tarifas-caja-menu">
+${filas}
+      </div>`;
+};
+// [02] Tarifas: tres cajas una al lado de la otra, una por tramo — la más
+// barata (más gente) destaca con una etiqueta "Recomendado" arriba, no
+// la pastilla entera en rojo sólido de antes: la jerarquía de venta se
+// ve igual de rápido sin convertir toda la tarjeta en un bloque de
+// color. El botón "Contratar" va dentro de cada tarjeta, no uno
+// compartido debajo de las tres — cada tramo se contrata por su cuenta.
+const tarifasVisual = (i, nota) => {
+  const { t } = i;
+  const precios = TARIFAS.map(([, , , , p]) => p);
+  const min = Math.min(...precios);
+  const recomendado = esc(t("Recomendado", "Recommended"));
+  const cajas = TARIFAS.map(([esN, enN, esR, enR, p]) => {
+    const mejor = p === min;
+    const nombre = esc(i.lang === "en" ? enN : esN);
+    const rango = esc(i.lang === "en" ? enR : esR);
+    return `      <div class="taller-tarifas-caja${mejor ? " es-mejor" : ""}">
+        <div class="taller-tarifas-caja-badge"${mejor ? "" : " aria-hidden=\"true\""}>${recomendado}</div>
+        <div class="taller-tarifas-caja-nombre">${nombre}</div>
+        <div class="taller-tarifas-caja-rango">${rango}</div>
+        <div class="taller-tarifas-caja-precio">${p}<span class="taller-tarifas-caja-simbolo">€</span></div>
+        <div class="taller-tarifas-caja-persona">${esc(t("por persona", "per person"))}</div>
+${menuDesglose(i)}
+        <a class="btn taller-tarifas-btn" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Contratar", "Book now"))}</span><span class="btn-arrow">→</span></a>
+      </div>`;
+  }).join("\n");
+  return `      <div class="taller-tarifas-cajas">
+${cajas}
+      </div>
+      <div class="taller-tarifas-pie">
+        <p class="taller-tarifas-consulta">${esc(t("+30 personas, consultamos contigo.", "30+ people — let's talk it through."))}</p>
+        <p class="tiny muted taller-casilla-nota">${esc(nota)}</p>
+      </div>`;
+};
 // INCLUYE es una línea de tiempo real: a ancho completo (no la rejilla a
 // medias de .ev-split), con un riel horizontal en escritorio — cinco filas
 // alineadas por columnas (número / riel con puntos / título / frase), el
@@ -79,27 +147,49 @@ const filas = (i, datos) => datos.map((d) => {
 // punto-sobre-filete, ya validado en esta página.
 const railEscritorio = (i) => `<div class="taller-tl-rail">
     <div class="taller-tl-fila">
-      ${INCLUYE.map(([n]) => `<div class="taller-tl-num tiny muted">${esc(n)}</div>`).join("\n      ")}
+      ${INCLUYE.map(([n]) => `<div class="taller-tl-num tiny">${esc(n)}</div>`).join("\n      ")}
     </div>
     <div class="taller-tl-fila taller-tl-riel">
       <div class="taller-tl-linea"></div>
-      ${INCLUYE.map((_, idx) => `<div class="taller-tl-dot" style="grid-column:${idx + 1}"></div>`).join("\n      ")}
+      ${INCLUYE.map(([, ico], idx) => `<div class="taller-tl-ico" style="grid-column:${idx + 1}">${icono(ico)}</div>`).join("\n      ")}
     </div>
     <div class="taller-tl-fila">
-      ${INCLUYE.map(([, esT, enT]) => `<div class="taller-tl-titulo">${esc(i.lang === "en" ? enT : esT)}</div>`).join("\n      ")}
+      ${INCLUYE.map(([, , esT, enT]) => `<div class="taller-tl-titulo">${esc(i.lang === "en" ? enT : esT)}</div>`).join("\n      ")}
     </div>
     <div class="taller-tl-fila">
-      ${INCLUYE.map(([, , , esC, enC]) => `<div class="taller-tl-desc">${esc(i.lang === "en" ? enC : esC)}</div>`).join("\n      ")}
+      ${INCLUYE.map(([, , , , esC, enC]) => `<div class="taller-tl-desc">${i.lang === "en" ? enC : esC}</div>`).join("\n      ")}
     </div>
   </div>`;
 const railMovil = (i) => `<div class="taller-tl-movil">
-    ${INCLUYE.map(([n, esT, enT, esC, enC]) => `<div class="taller-tl-paso-m">
-      <div class="taller-tl-cab-m">
-        <span class="taller-tl-num-m tiny muted">${esc(n)}</span>
-        <span class="taller-tl-titulo-m">${esc(i.lang === "en" ? enT : esT)}</span>
+    ${INCLUYE.map(([n, ico, esT, enT, esC, enC]) => `<div class="taller-tl-paso-m">
+      <span class="taller-tl-ico-m">${icono(ico)}</span>
+      <div class="taller-tl-cuerpo-m">
+        <div class="taller-tl-cab-m">
+          <span class="taller-tl-num-m tiny">${esc(n)}</span>
+          <span class="taller-tl-titulo-m">${esc(i.lang === "en" ? enT : esT)}</span>
+        </div>
+        <p class="taller-tl-desc-m">${i.lang === "en" ? enC : esC}</p>
       </div>
-      <p class="taller-tl-desc-m">${esc(i.lang === "en" ? enC : esC)}</p>
     </div>`).join("\n    ")}
+  </div>`;
+// Casilla de [02]-[04] (Tarifas junto al timeline, Horarios/FAQ debajo —
+// Comida ya no tiene casilla propia, su desglose vive en cada tarjeta de
+// precio): rótulo, icono de categoría, titular compacto, un subtítulo
+// opcional y el contenido, a una sola columna — no el .ev-split a medias
+// de seccion(). El alto de cada fila lo pone la rejilla CSS por su cuenta
+// (stretch): la casilla con más contenido de la fila manda, las demás se
+// adaptan solas. sinTitulo (solo [02] Tarifas) se salta el rótulo y el
+// icono+titular: al fundirse visualmente con [01] en la misma caja, un
+// segundo titular ahí quedaba redundante.
+const casilla = (ico, rotulo, titulo, subtitulo, derecha, sinTitulo) => `<div class="taller-casilla">
+    ${sinTitulo ? "" : `<div class="tiny muted">${esc(rotulo)}</div>
+    <div class="taller-casilla-cab">
+      <div class="taller-casilla-ico">${icono(ico)}</div>
+      <h3 class="taller-casilla-h">${titulo}</h3>
+    </div>
+    `}${subtitulo ? `<p class="taller-casilla-sub">${subtitulo}</p>\n    ` : ""}<div class="taller-casilla-body">
+${derecha}
+    </div>
   </div>`;
 
 function jsonLd(i, url) {
@@ -133,7 +223,7 @@ function faqLd(i) {
   };
 }
 
-export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }) {
+export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
   const { t } = i;
   const s = seo.find((r) => r.p === RUTA);
   const url = ORIGIN + i.ruta(RUTA);
@@ -143,9 +233,9 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   <div class="tiny muted"><a href="${i.ruta("/eventos")}" class="link-hover">${esc(t("Eventos", "Events"))}</a> · ${esc(t("Talleres Team Building", "Team Building Workshops"))}</div>
   <h1 class="h-display" style="margin-top:16px">${esc(t("Team building", "Team building"))}<br>${esc(t("de taller de dumplings.", "dumpling workshop."))}</h1>
   <div class="ev-hero-row" style="margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:32px">
-    <p class="body" style="font-size:18px;flex:1 1 420px;min-width:0;margin:0">${esc(t(
-      "Un taller de cocina para empresas: por equipos, aprendéis a elaborar dumplings desde cero guiados por nuestro equipo y, al terminar, os coméis lo que habéis hecho, con el resto de la carta incluida. Unas dos horas, en nuestro local de Bernabéu.",
-      "A hands-on cooking workshop for companies: in teams, you learn to make dumplings from scratch with our team, then eat what you've made, plus the rest of the menu. About two hours, at our Bernabéu spot."))}</p>
+    <p class="body" style="font-size:18px;flex:1 1 420px;min-width:0;margin:0">${t(
+      "Un <strong>taller de cocina para empresas</strong>: <strong>por equipos</strong>, aprendéis a elaborar <strong>dumplings desde cero</strong> guiados por nuestro equipo y, al terminar, os coméis <strong>lo que habéis hecho</strong>, con el <strong>resto de la carta incluida</strong>. Unas <strong>dos horas</strong>, en nuestro local de <strong>Bernabéu</strong>.",
+      "A <strong>hands-on cooking workshop for companies</strong>: <strong>in teams</strong>, you learn to make <strong>dumplings from scratch</strong> with our team, then eat <strong>what you've made</strong>, plus the <strong>rest of the menu</strong>. <strong>About two hours</strong>, at our <strong>Bernabéu</strong>&nbsp;spot.")}</p>
   </div>
   <div class="ev-hero-cta" style="display:flex;flex-wrap:wrap;gap:16px">
     <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
@@ -154,62 +244,59 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 </section>
 
 <section class="taller-tl">
-  <div class="taller-tl-head">
-    <div class="tiny muted">[01] ${esc(t("Incluye", "Includes"))}</div>
-    <h2 class="h-1">${t("Cocinamos.<br>Todos. A la vez.", "We cook.<br>All of us. Together.")}</h2>
+  <div class="taller-tl-grid">
+    <div class="taller-tl-mitad">
+      <div class="taller-tl-head">
+        <div class="tiny muted">${esc(t("El taller", "The workshop"))}</div>
+        <div class="taller-casilla-cab">
+          <div class="taller-casilla-ico">${icono("aforo")}</div>
+          <h2 class="taller-casilla-h">${esc(t("Así funciona el taller.", "How the workshop works."))}</h2>
+        </div>
+        <p class="taller-casilla-sub">${esc(t("De la masa al plato, en equipo.", "From dough to plate, as a team."))}</p>
+      </div>
+      ${railEscritorio(i)}
+      ${railMovil(i)}
+    </div>
   </div>
-  ${railEscritorio(i)}
-  ${railMovil(i)}
+  <div class="taller-tl-tarifas">
+    ${casilla("tarifa", t("Tarifas", "Rates"),
+      esc(t("Precios y tarifas.", "Prices and rates.")),
+      "",
+      tarifasVisual(i, t(
+        "* Consumos extra aparte. Talleres fuera del restaurante sujetos a disponibilidad.",
+        "* Extra consumption not included. Off-site workshops subject to availability.")), true)}
+  </div>
 </section>
 
-${seccion("02", t("Comida", "Food"),
-    esc(t("Y luego, se come.", "And then, we eat.")),
-    `<div class="taller-list">
-      ${filas(i, COMIDA)}
-    </div>
-    <p class="tiny muted" style="margin-top:16px">${esc(t("* Consumos extra aparte.", "* Extra consumption not included."))}</p>`)}
+<section class="taller-grid">
+  ${casilla("hora", t("Horarios", "Timings"),
+    esc(t("Horarios y duraciones.", "Timings and durations.")),
+    esc(t("Un par de horitas, para que no se aburran.", "A couple of hours, so nobody gets bored.")),
+    `      <div class="taller-list">
+        ${filas(i, HORARIOS)}
+      </div>
+      <p class="tiny muted taller-casilla-nota">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
+  ${casilla("bocadillo", t("Preguntas frecuentes", "FAQ"),
+    esc(t("Lo que más nos preguntáis.", "What you ask us most.")),
+    esc(t("Las dudas más repetidas.", "The questions we hear most.")),
+    `      <details class="faq-toggle taller-faq-toggle" open>
+        <summary class="big">${esc(t("Preguntas frecuentes", "FAQ"))}<span class="faq-ico" aria-hidden="true"></span></summary>
+        <div class="faq-list">
+          ${FAQ.map(({ q, a }) => `          <details class="faq-item">
+            <summary>${esc(i.lang === "en" ? q[1] : q[0])}<span class="faq-ico" aria-hidden="true"></span></summary>
+            <p class="body">${esc(i.lang === "en" ? a[1] : a[0])}</p>
+          </details>`).join("\n")}
+        </div>
+      </details>`)}
+</section>
 
-${seccion("03", t("Horarios", "Timings"),
-    t("Un par de horas,<br>ni un minuto más.", "A couple hours,<br>not one more."),
-    `<div class="taller-list">
-      ${filas(i, HORARIOS)}
-    </div>
-    <p class="tiny muted" style="margin-top:16px">${esc(t("* Otros horarios o más duración, bajo consulta.", "* Other times or a longer session, on request."))}</p>`)}
-
-${seccion("04", t("Tarifas", "Rates"),
-    t("Más gente,<br>mejor precio.", "More people,<br>better price."),
-    `<div class="taller-list">
-      ${filas(i, TARIFAS)}
-    </div>
-    <p class="tiny muted" style="margin-top:16px">${esc(t("* Desplazamiento sujeto a disponibilidad; sin comida, solo el taller dinámico.", "* Off-site sessions subject to availability; food not included, workshop only."))}</p>`)}
-
-${seccion("05", t("Y si tu evento es distinto", "And if your event is different"),
-    t("Adaptabilidad<br>y versatilidad.", "Adaptability<br>and versatility."),
-    `<p class="body">${esc(t(
-      "El espacio, la carta y las tarifas se adaptan al tipo de evento. Cumpleaños, despedidas, presentaciones… si nos cuentas qué necesitas, le buscamos forma.",
-      "The space, the menu and the rates all adapt to the type of event. Birthdays, leaving dos, launches… tell us what you need and we'll make it work."))}</p>`)}
-
-${seccion("06", t("En imágenes", "In pictures"),
-    t("Así se ve<br>el taller.", "This is<br>the workshop."),
-    galeria(i, { fotos: galerias.tallerTeamBuilding || [], ratio: "3 / 4", etiquetaHueco: t("Team Building", "Team Building"), raiz, modo: "paginado", etiqueta: t("Team Building", "Team Building"), huecos: 6 }))}
-
-${seccion("07", t("Preguntas frecuentes", "FAQ"),
-    esc(t("Lo que preguntáis siempre.", "What you always ask.")),
-    FAQ.map(({ q, a }) => `<div style="margin-bottom:24px">
-      <h3 class="h-2" style="font-size:18px">${esc(i.lang === "en" ? q[1] : q[0])}</h3>
-      <p class="body" style="margin-top:8px">${esc(i.lang === "en" ? a[1] : a[0])}</p>
-    </div>`).join("\n    "))}
-
-<section class="ev-split ev-split--contact" id="contact-taller">
-  <div>
-    <div class="tiny muted">[08] ${esc(t("Contacto", "Contact"))}</div>
-    <h2 class="h-1" style="margin-top:16px">${t("¿Hablamos?", "Let's talk?")}</h2>
-    <p class="body" style="margin-top:16px">${esc(t(
-      "Cuéntanos cuántos sois y cuándo, y te mandamos disponibilidad y presupuesto para el team building.",
-      "Tell us how many you are and when, and we'll send you availability and a quote for the team building."))}</p>
-  </div>
-  <div>
-    <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos" style="width:fit-content"><span class="btn-label">${esc(t("Ir al formulario", "Go to the form"))}</span><span class="btn-arrow">→</span></a>
+<section class="taller-cierre">
+  <div class="taller-faq-cierre">
+    <h3 class="h-1">${t("Hablamos?", "Let's talk?")}</h3>
+    <p class="body">${esc(t(
+      "Cuéntanos cuántos sois y cuándo, y te mandamos disponibilidad y presupuesto.",
+      "Tell us how many you are and when, and we'll send you availability and a quote."))}</p>
+    <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos" style="width:fit-content"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
   </div>
 </section>
 </div>`;

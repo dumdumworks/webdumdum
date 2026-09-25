@@ -20,7 +20,7 @@ const pad = (n) => String(n).padStart(2, "0");
 // En móvil el hueco es la pista entera; en escritorio, la mitad (dos a la vista).
 const SIZES = "(max-width: 879px) 100vw, 50vw";
 
-export function galeria(i, { fotos, ratio = "3 / 4", etiquetaHueco, raiz, modo = "carril", etiqueta = null, cta = null, visor = "fotos", huecos = 6 }) {
+export function galeria(i, { fotos, ratio = "3 / 4", etiquetaHueco, raiz, modo = "carril", etiqueta = null, cta = null, visor = "fotos", huecos = 6, cols = 2, visibles = cols }) {
   const { t } = i;
   const lista = fotos.length ? fotos : Array.from({ length: huecos }, () => ({ src: null }));
   const slots = lista.map((f, n) => {
@@ -54,7 +54,7 @@ export function galeria(i, { fotos, ratio = "3 / 4", etiquetaHueco, raiz, modo =
   const cabecera = etiqueta
     ? `<div class="tiny muted">${esc(etiqueta)} · <span data-galeria-cuenta>01</span> / ${pad(lista.length)}</div>\n    `
     : "";
-  return `<div class="ev-slider ev-slider-cols-2" data-galeria data-galeria-modo="${modo}" data-galeria-visor="${visor}"${etiqueta ? ` data-galeria-etiqueta="${esc(etiqueta)}"` : ""} data-textos='${esc(JSON.stringify(textos))}'${urls ? ` data-galeria-urls='${esc(JSON.stringify(urls))}'` : ""}>
+  return `<div class="ev-slider ev-slider-cols-${cols}" data-galeria data-galeria-modo="${modo}" data-galeria-visibles="${visibles}" data-galeria-visor="${visor}"${etiqueta ? ` data-galeria-etiqueta="${esc(etiqueta)}"` : ""} data-textos='${esc(JSON.stringify(textos))}'${urls ? ` data-galeria-urls='${esc(JSON.stringify(urls))}'` : ""}>
   <div class="ev-slider-head">
     ${cabecera}<div class="ev-slider-ctrls">
       <button type="button" class="ev-slider-btn" data-galeria-ir="-1" aria-label="${esc(textos.anterior)}">←</button>

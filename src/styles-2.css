@@ -1046,11 +1046,41 @@
   color: rgba(255,0,30,0.55);
 }
 
+/* .ev-hero-cta trae 40px/36px de margin-top de fábrica, sin relación
+   con el aire de después (36px/32px hasta la caja de [01], la misma
+   escala que separa el resto de bloques de la página) — quedaba un
+   poco más apretado el hueco de después de los botones que el de
+   antes. Se igualan los dos a esa misma escala. Escrito con
+   [data-screen-label] para no afectar al mismo .ev-hero-cta de otras
+   páginas. */
+[data-screen-label="taller-team-building"] .ev-hero-cta { margin-top: 36px; }
+@media (max-width: 879px) {
+  [data-screen-label="taller-team-building"] .ev-hero-cta { margin-top: 32px; }
+}
+
+/* Botones del hero (/taller-team-building) a igual ancho en móvil: los
+   dos textos miden muy distinto ("Pedir presupuesto" vs "Descargar
+   dossier con tarifas") y con el width:fit-content de .btn se veían dos
+   pastillas de tamaños dispares, una mucho más corta que la otra.
+   width:100% iguala las dos al ancho de la columna, apiladas por el
+   propio flex-wrap del contenedor. justify-content:center porque .btn
+   es un flex sin ese centrado (no le hace falta cuando mide lo justo
+   para su contenido) — al forzar el ancho completo, la etiqueta se
+   quedaba pegada a la izquierda con un hueco vacío a la derecha.
+   Escrito con [data-screen-label] para no afectar al mismo
+   .ev-hero-cta de otras páginas. */
+@media (max-width: 879px) {
+  [data-screen-label="taller-team-building"] .ev-hero-cta .btn { width: 100%; justify-content: center; }
+}
+
 /* Lista de una columna (/taller-team-building): mismo lenguaje que .ev-list
    (mono, etiqueta en rojo atenuado, filete fino) pero sin el "se oculta en
    móvil" de esa — aquí no hay una .ev-datos con iconos que la releve, así
-   que se queda en una columna siempre y no hace falta ocultar nada. */
-.taller-list { display: grid; grid-template-columns: 1fr; max-width: 480px; margin-top: 24px; }
+   que se queda en una columna siempre y no hace falta ocultar nada. Sin
+   margin-top: .taller-casilla es flex, así que no colapsa con el
+   margin-bottom del subtítulo de encima — poner los dos sumaba 48px de
+   aire en vez de 24. */
+.taller-list { display: grid; grid-template-columns: 1fr; max-width: 480px; }
 .taller-list > div {
   display: grid;
   grid-template-columns: 160px 1fr;
@@ -1069,74 +1099,551 @@
   .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
 }
 
+/* [04] Tarifas: tres cajas lado a lado, una por tramo, el más barato (más
+   gente) primero — es el foco de venta, no hay que llegar al final para
+   encontrarlo. Es la única a pastilla entera en rojo sólido: se ve de un
+   vistazo cuál conviene, sin leer. Sin margin-top, mismo motivo que
+   .taller-list: ya lo pone el margin-bottom del subtítulo de encima. */
+/* A ancho completo: ahora que cada tarjeta lleva el desglose del menú
+   (antes [03] Comida) tiene contenido de sobra para aprovechar el ancho
+   de la casilla — ya no son 4 datos sueltos en una pastilla, sino la
+   ficha completa del tramo. En móvil, una columna: con las tres a la vez
+   el desglose de cada una se quedaba en ~110px de ancho, partiendo cada
+   valor en 3 líneas — apiladas, cada tarjeta tiene todo el ancho del
+   teléfono para su lista. Cerca pero separadas: cada una sigue siendo su
+   propia pastilla (borde y esquinas redondeadas propios, no un bloque
+   fundido), con solo 6px entre medias — ni pegadas ni con el hueco de
+   antes. Tope y centrado como grupo: por debajo del tope no hace falta,
+   las tres columnas ya se reparten el ancho disponible con esos mismos
+   6px entre ellas. Mismo tope que .taller-tl-grid (el timeline de
+   arriba) — si cambia uno, cambia el otro: son dos cajas distintas
+   (esta sin borde de grupo, cada tarjeta con el suyo) pero tienen que
+   alinear sus bordes exteriores, no solo compartir eje central. */
+.taller-tarifas-cajas {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+@media (min-width: 880px) {
+  /* width:100% explícito: la caja vive dentro de .taller-casilla-body,
+     que es flex en columna, y el margin:auto de aquí abajo desactiva el
+     stretch por defecto del eje transversal — sin el 100% se queda al
+     ancho de su contenido en vez de llegar al tope. */
+  .taller-tarifas-cajas { grid-template-columns: repeat(3, 1fr); width: 100%; max-width: calc(1032px + 2 * var(--gutter) + 2px); margin: 0 auto; }
+}
+.taller-tarifas-caja {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 20px 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  text-align: center;
+}
+.taller-tarifas-caja-nombre {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 1.15;
+  color: var(--red);
+}
+.taller-tarifas-caja-rango {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: rgba(255,0,30,0.6);
+}
+.taller-tarifas-caja-precio {
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(36px, 3.2vw, 48px);
+  line-height: 1;
+  color: var(--red);
+}
+.taller-tarifas-caja-simbolo { font-size: 0.6em; }
+.taller-tarifas-caja-persona {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: rgba(255,0,30,0.5);
+}
+/* La destacada ya no es la pastilla entera en rojo — solo el borde y la
+   etiqueta "Recomendado" arriba (ver .taller-tarifas-caja-badge), como
+   la ficha de referencia: menos "bloque de color", más "esta es la
+   buena" sin perder la jerarquía de venta. */
+.taller-tarifas-caja.es-mejor { border-color: var(--red); }
+/* La etiqueta sale a sangre por los cuatro lados de su padding (mismo
+   valor que .taller-tarifas-caja, con el signo cambiado) para llegar
+   justo al borde de la tarjeta; overflow:hidden en la tarjeta recorta
+   sus esquinas rectas a las mismas esquinas redondeadas de la tarjeta,
+   sin tener que igualar el radio a mano. Se renderiza en las tres
+   tarjetas (con el mismo texto) para que las tres reserven el mismo
+   hueco arriba — visibility:hidden por defecto, visible solo en la
+   destacada, así "Equipo mediano"/"Equipo pequeño" no se suben respecto
+   a "Equipo grande" y todo el contenido de debajo queda alineado fila a
+   fila entre las tres. */
+.taller-tarifas-caja-badge {
+  align-self: stretch;
+  margin: -20px -16px 16px;
+  padding: 9px 16px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  visibility: hidden;
+}
+.taller-tarifas-caja.es-mejor .taller-tarifas-caja-badge {
+  visibility: visible;
+  background: var(--red);
+  color: var(--bg);
+}
+/* El desglose del menú (antes la casilla [03] Comida) dentro de cada
+   tarjeta: mismo menú en las tres, por eso se repite igual. Mismo
+   lenguaje que .taller-list (etiqueta en negrita + valor, filete fino
+   entre filas) en vez del texto corrido de antes — con la tarjeta ya
+   ancha, una lista de verdad en dos columnas se lee mejor y aprovecha el
+   espacio en vez de dejarlo en blanco a la derecha. align-self:stretch
+   para ocupar todo el ancho (el resto de la tarjeta va centrado, pero
+   una lista se lee mejor alineada a la izquierda que centrada fila a
+   fila). */
+.taller-tarifas-caja-menu {
+  align-self: stretch;
+  margin-top: 14px;
+  padding-top: 2px;
+  border-top: 1px solid var(--line);
+}
+.taller-tarifas-caja-menu > div {
+  display: grid;
+  grid-template-columns: 78px 1fr;
+  gap: 8px;
+  padding: 6px 0;
+  border-top: 1px solid var(--line-soft);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  text-align: left;
+}
+/* La primera fila no lleva filete propio: el padre ya pone el suyo
+   (sólido, var(--line)) justo encima — con los dos juntos salía un
+   filete doble, uno sólido y uno claro a un par de píxeles. */
+.taller-tarifas-caja-menu > div:first-child { border-top: none; }
+.taller-tarifas-caja-menu b { font-weight: 600; color: rgba(255,0,30,0.55); }
+.taller-tarifas-caja-menu span { color: var(--ink); }
+/* Botón "Contratar" dentro de cada tarjeta, no uno compartido debajo de
+   las tres: a ancho completo (la tarjeta ya va centrada, pero un botón
+   suelto centrado se pierde — a todo lo ancho se lee como el cierre
+   natural de la ficha). Negro en las tres por igual (--black, no --red:
+   ese nombre es el rojo de marca pese al nombre) — el rojo ya lo lleva
+   la etiqueta "Recomendado" de la destacada, dos rojos compitiendo por
+   la vista era de más. Dos clases para ganarle a .btn/.btn.red de
+   styles.css, que carga después y empataría en especificidad si solo
+   llevara una. */
+.taller-tarifas-caja .taller-tarifas-btn {
+  align-self: stretch;
+  justify-content: center;
+  margin-top: 16px;
+  background: var(--black);
+  color: #fff;
+  border-color: var(--black);
+}
+.taller-tarifas-caja .taller-tarifas-btn:hover { background: #000; border-color: #000; }
+/* Notas de cierre, centradas bajo las tres tarjetas — ya no tienen que
+   alinearse con ningún botón, cada tarjeta lleva ya el suyo. */
+.taller-tarifas-pie { margin-top: 20px; text-align: center; }
+.taller-tarifas-consulta {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  color: rgba(255,0,30,0.55);
+}
+.taller-tarifas-pie .taller-casilla-nota { margin-top: 4px; padding-top: 0; min-height: 0; }
+
+/* Galería a ancho completo entre [01] El taller y la rejilla — el mismo
+   componente y el mismo aire que la de la ficha de local (.local-galeria,
+   ver ahí), no confinada a una casilla estrecha como antes. */
+.taller-galeria {
+  padding: 28px 0 40px;
+  margin: 0 var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
+.taller-galeria .ev-slider { margin-top: 0; }
+.taller-galeria .ev-slider-ctrls { margin-left: auto; }
+
+/* Rejilla de [03]-[04] (Horarios, FAQ): 2 columnas × 1 fila, no
+   secciones apiladas a ancho completo. La fila estira las 2 casillas al
+   alto de la que más contenido tiene (comportamiento normal de CSS grid,
+   sin calcularlo a mano). Tarifas ([02]) vive al lado de "[01] El
+   taller" — ver .taller-tl-grid. Comida ya no tiene casilla propia: su
+   desglose se metió dentro de cada tarjeta de precio de Tarifas (ver
+   .taller-tarifas-caja-menu).
+   Mismo ancho tope que .taller-tl-grid y centrada igual: las 2 columnas
+   se reparten ese ancho a partes iguales (1fr/1fr), así que cada casilla
+   ([03], [04]) ocupa la mitad exacta de lo que ocupa el timeline de
+   arriba.
+   width, no solo max-width: esta sección (a diferencia de .taller-tl,
+   que le da su padding a .taller-tl-grid) no tiene ningún gutter propio
+   — por debajo del tope tocaría los bordes de la pantalla. El
+   calc(100% - 2*gutter) reserva ese aire en cualquier ancho; el
+   max-width solo entra a partir de ahí.
+   Cerca pero separadas, como las tarjetas de precio: cada casilla lleva
+   su propio borde y esquinas redondeadas (ver .taller-grid .taller-casilla
+   más abajo) en vez de compartir un borde de grupo con un filete
+   relleno en medio — mismo gap de 6px que .taller-tarifas-cajas. */
+.taller-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  width: calc(100% - 2 * var(--gutter));
+  max-width: calc(1032px + 2 * var(--gutter) + 2px);
+  margin: 0 auto;
+}
+.taller-casilla {
+  display: flex;
+  flex-direction: column;
+  padding: 36px var(--gutter);
+  background: var(--bg);
+}
+/* Solo dentro de [03]-[04]: borde y radio propios (18px, igual que
+   .taller-tarifas-caja y .taller-tl-grid) — [02] Tarifas comparte esta
+   misma clase .taller-casilla pero vive fuera de esta rejilla, sin caja
+   de grupo que reemplazar, así que no lleva este borde. */
+.taller-grid .taller-casilla {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+/* El cuerpo ocupa el resto de la casilla (que la rejilla ya estiró al alto
+   de la fila): así una nota con "*" cae siempre al mismo sitio entre las
+   tres columnas, sin importar cuántas líneas tenga cada lista encima. */
+.taller-casilla-body { display: flex; flex-direction: column; flex: 1; }
+/* min-height reserva sitio para 2 líneas siempre (la de Horarios parte
+   en dos): así el "*" arranca en el mismo punto en las tres, tenga la
+   nota una línea o dos — no solo el borde de abajo. Tarifas ya no usa
+   este comportamiento por defecto: ver el override en
+   .taller-tarifas-pie .taller-casilla-nota. */
+.taller-casilla-nota { margin-top: auto; padding-top: 16px; min-height: 44px; box-sizing: border-box; }
+/* Icono de categoría, al lado del título (no encima) — el título en una
+   sola línea junto a su icono, no partido en dos con el icono suelto
+   arriba. La separación (antes en el propio icono/título) vive en el
+   contenedor, no en el h3: un margin-bottom en un hijo flex no se
+   comporta como el resto del documento y descuadra el centrado vertical
+   con el icono. */
+.taller-casilla-cab { display: flex; align-items: center; gap: 12px; margin-top: 16px; margin-bottom: 8px; }
+.taller-casilla-ico { color: var(--red); flex-shrink: 0; }
+.taller-casilla-ico svg { display: block; width: 28px; height: 28px; }
+.taller-casilla-h {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(21px, 1.8vw, 28px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+/* Bajo el título: una frase corta, no el párrafo largo de .body — la
+   casilla puede llevar las dos (aquí la promesa, en .taller-casilla-body
+   el detalle, como en [05]). */
+.taller-casilla-sub {
+  margin-bottom: 24px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255,0,30,0.7);
+}
+@media (max-width: 879px) {
+  .taller-grid { grid-template-columns: 1fr; }
+  .taller-casilla { padding: 32px var(--gutter); }
+  /* En móvil el icono pasa al lado derecho, alineado con el borde del
+     contenido de debajo (subtítulo, timeline, lista…) en vez de ir
+     pegado a la izquierda antes del título. row-reverse conserva el
+     orden del HTML (icono primero, por su semántica de categoría) pero
+     lo pinta al final de la fila; space-between empuja el título al
+     borde izquierdo y el icono al derecho, cada uno a su tope, en vez
+     de los dos juntos en el centro. */
+  .taller-casilla-cab { flex-direction: row-reverse; justify-content: space-between; }
+}
+
+/* [05] Preguntas frecuentes: una casilla más de la rejilla de [03]-[05],
+   con el mismo acordeón de /contacto (.faq-toggle/.faq-list/.faq-item/
+   .faq-ico — ver "FAQ (/contacto)"), no uno nuevo: misma animación,
+   mismo "una respuesta abierta a la vez", mismo prefers-reduced-motion,
+   sin tocar ni duplicar esa CSS ni el faq.js que ya la anima.
+   .taller-faq-toggle va siempre abierto (el rótulo y el título de la
+   casilla ya anuncian "preguntas frecuentes", no hace falta otra vez un
+   "FAQs" para desplegarlas) — su <summary> se esconde, pero sigue
+   presente para que animar() en faq.js no falle al buscarlo. Sin
+   max-width propio: la rejilla ya la deja estrecha (una columna de 3),
+   más que de sobra bajo el límite de 480px de .faq-list. */
+.taller-faq-toggle { margin-top: 0; }
+.taller-faq-toggle > summary { display: none; }
+.taller-grid .faq-list { margin-top: 0; }
+.taller-grid .faq-item:first-child { border-top: 1px solid var(--line-soft); }
+/* Cierre con el "¿Hablamos?" de siempre: su propia sección, con el
+   ritmo estándar de la página (mismo padding y filete que .taller-tl/
+   .taller-faq de antes) — ya no depende de caber en una casilla
+   estrecha ni de anidarse dentro del bloque de FAQs.
+   Alineada con la caja de Preguntas frecuentes en concreto (la segunda
+   columna de .taller-grid), no con Horarios ni con el conjunto: misma
+   rejilla de 2 columnas, mismo ancho tope y mismo gap que .taller-grid
+   (sin padding horizontal propio, para que las columnas midan
+   exactamente lo mismo en los dos sitios) y el contenido va en la
+   columna 2. .taller-faq-cierre añade el propio inset de una casilla
+   (1px de borde + el padding de turno) para arrancar en el mismo punto
+   que el rótulo "Preguntas frecuentes" de la caja de encima, no en el
+   borde de su columna — calc(1px + var(--gutter)) en vez de un número
+   suelto porque --gutter cambia en móvil (32px → 20px) y el inset de la
+   casilla cambia con él. En móvil, .taller-grid pasa a una sola columna
+   (Horarios y FAQ apilados a ancho completo) y esta rejilla hace lo
+   mismo, con el contenido en esa única columna. */
+.taller-cierre {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  width: calc(100% - 2 * var(--gutter));
+  max-width: calc(1032px + 2 * var(--gutter) + 2px);
+  margin: 0 auto;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--line);
+}
+/* 36px en escritorio: mismo aire que separa el resto de bloques de la
+   página (.taller-tl, .taller-tl-tarifas, .taller-grid) — antes eran
+   64px arriba y abajo, más aire del que pide un simple cierre y sin
+   relación con esa escala. */
+@media (min-width: 880px) {
+  .taller-cierre { padding: 36px 0; }
+}
+.taller-faq-cierre { grid-column: 2; max-width: 560px; padding-left: calc(1px + var(--gutter)); }
+@media (max-width: 879px) {
+  .taller-cierre { grid-template-columns: 1fr; }
+  /* Centrado, no alineado a la izquierda: en escritorio el texto casa
+     con la columna de Preguntas frecuentes de la caja de encima, pero
+     en móvil esa caja ya apila Horarios y FAQ a ancho completo — sin
+     una columna con la que casar, el cierre se lee mejor centrado que
+     pegado a un lado. Se quita el padding-left que servía para ese
+     encaje en escritorio. */
+  .taller-faq-cierre { grid-column: 1; text-align: center; margin: 0 auto; padding-left: 0; }
+}
+.taller-faq-cierre p { margin-top: 12px; }
+.taller-faq-cierre .btn { margin-top: 24px; }
+
 /* [01] Incluye (/taller-team-building): línea de tiempo real a ancho
    completo — no la rejilla a medias de .ev-split. En escritorio, riel
-   horizontal de cuatro filas (número, riel con puntos, título, frase) con
+   horizontal de cuatro filas (número, riel con icono, título, frase) con
    la MISMA rejilla de 5 columnas en cada una, así casan columna a columna
    sin medir nada a mano; el filete va de grid-column 1 a 5, que es
    exactamente del primer punto al último (la línea de red antes de una
    columna N empieza donde empieza esa columna), sin sobrar detrás del
-   quinto. En móvil, riel vertical con el mismo punto-sobre-filete que ya
-   se usó (y validó) en esta misma página. */
-.taller-tl { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
-.taller-tl-head { max-width: 720px; }
-.taller-tl-head h2 { margin-top: 16px; }
+   quinto. El icono se centra en esa fila igual que antes el punto (misma
+   técnica de align-self, así que su tamaño no rompe nada), dentro de un
+   círculo rojo macizo con el icono en negativo (color de la página) —
+   tapa el filete por sí solo, sin depender de ningún fondo. En móvil,
+   riel vertical con el mismo icono-sobre-filete. */
+/* Sin border-bottom propio: .taller-tl-grid (justo debajo) ya pone su
+   propia caja cerrada. Con los dos juntos el filete salía doble. 32px
+   abajo, la misma escala que separa cualquier bloque de la página (ver
+   .taller-tl-tarifas y su padding-bottom:0 más abajo): hace falta aire
+   real antes de [03]-[05], no el hueco a cero de cuando las dos
+   rejillas se tocaban, pero coherente con el resto, no el doble. */
+.taller-tl { padding: 64px var(--gutter) 32px; border-bottom: none; }
+/* Aquí el hero va seguido directamente de esta sección (no de otra con su
+   propio aire de sobra, como en Eventos): el 8vh de abajo del hero + los
+   64px de arriba de esta sumaban casi 180px de vacío entre el botón y
+   "[01] Incluye". Y el hero pierde su border-bottom, en cualquier ancho:
+   la caja de .taller-tl-grid ya pone el suyo justo debajo — con los dos,
+   el filete salía doble.
+   Sin padding-bottom propio (antes 4vh, variable con el alto de
+   pantalla): todo el aire hasta la caja lo pone el padding-top de
+   .taller-tl, fijo en 36px — el mismo padding que trae la caja por
+   dentro antes del rótulo "[01] El taller" (.taller-tl-mitad). Mismo
+   aire fuera de la caja que dentro, en vez de la mezcla de vh + px que
+   sumaba casi el doble. */
+.ev-hero:has(+ .taller-tl) { padding-bottom: 0; border-bottom: none; }
+.ev-hero + .taller-tl { padding-top: 36px; }
+/* [01] El taller ahora es, literalmente, la misma estructura que una
+   casilla (rótulo, icono, título .taller-casilla-h, subtítulo
+   .taller-casilla-sub) en vez de un h2.h-1 aparte con su propio tamaño:
+   así queda con el mismo aspecto que "[02] Tarifas" justo debajo —
+   mismo icono a 16px del rótulo, mismo título a 14px del icono, mismo
+   subtítulo a 24px del título — sin duplicar la definición de tamaños en
+   otra regla. */
+/* [01] El taller: solo el timeline va en caja propia, con borde en los
+   cuatro lados. [02] Tarifas ya no vive dentro — ver .taller-tl-tarifas
+   más abajo — así que la caja no tapa ni comparte límites con las
+   tarjetas de precio, solo enmarca el riel de pasos.
+   Ancho tope, no a sangre: antes esta caja llegaba a los bordes de la
+   página (a sangre, como .taller-grid) y el timeline quedaba centrado
+   dentro con mucho aire sin usar a los lados en pantallas anchas. Ahora
+   se encoge al ancho de lo que suman las tres tarjetas de precio de
+   abajo (1032px de contenido + var(--gutter) de cada lado, el mismo
+   padding que trae .taller-tl-mitad) y se centra — la caja hereda
+   directamente el tamaño de su contenido, en vez de sobrar por fuera. El
+   +2px de más es el border de la propia caja (1px por lado): sin él, el
+   contenido se quedaba 2px corto de los 1032px reales. Mismo radio que
+   .taller-tarifas-caja (18px): las dos cajas comparten borde exterior,
+   así que también comparten esquina. overflow:hidden para que el riel
+   (que llega hasta el borde en móvil) no sobresalga de la esquina
+   redondeada. */
+.taller-tl-grid {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  max-width: calc(1032px + 2 * var(--gutter) + 2px);
+  margin: 0 auto;
+}
+.taller-tl-mitad { background: var(--bg); }
+/* Mismo padding que .taller-casilla en móvil (32px var(--gutter)): el
+   riel no es una casilla y no lo trae de fábrica, así que hay que
+   dárselo a mano para que quede a la misma altura que el resto. */
+.taller-tl-mitad { padding: 32px var(--gutter); }
+@media (min-width: 880px) {
+  .taller-tl-mitad { padding: 36px var(--gutter); }
+}
+/* [02] Tarifas: fuera de la caja del timeline, sin borde propio (las
+   tres tarjetas ya llevan el suyo) — a sangre como .taller-grid, con el
+   mismo padding lateral que trae .taller-casilla de fábrica, así no se
+   dobla el aire lateral.
+   El aire de encima del bloque 1 (hero → caja, 36px/32px) tiene que ser
+   igual que el de debajo (caja → tarjetas): mismo margin-top que el
+   padding de .taller-tl-mitad a cada ancho, y sin el padding-top propio
+   de .taller-casilla — sinTitulo:true deja ese hueco vacío (sin rótulo
+   ni titular dentro), así que sumaba aire de más en vez de repartirlo.
+   Mismo criterio abajo: sin el padding-bottom de .taller-casilla (aquí
+   tampoco lo pide ningún contenido propio), el aire hasta [03]-[05] lo
+   pone solo el padding-bottom de .taller-tl — coherente con el resto de
+   los bloques, no la suma de los dos. */
+.taller-tl-tarifas { margin: 32px calc(-1 * var(--gutter)) 0; }
+.taller-tl-tarifas .taller-casilla { padding-top: 0; padding-bottom: 0; }
+@media (min-width: 880px) {
+  .taller-tl-tarifas { margin-top: 36px; }
+  .taller-tl { padding-bottom: 36px; }
+}
 
-.taller-tl-rail { margin-top: 56px; }
+/* 1032px de contenido, no el ancho tope de la caja (calc(...+2*gutter+2px)
+   en .taller-tl-grid): el riel vive dentro de esa caja, con el mismo
+   padding lateral que .taller-tl-mitad ya le da — entre los dos, el riel
+   cae exactamente en esos 1032px, el mismo tamaño de contenido que las
+   tarjetas de precio de [02] usaban antes de crecer para igualar el
+   borde exterior de la caja (ver .taller-tarifas-cajas). */
+.taller-tl-rail { max-width: 1032px; margin: 56px auto 0; }
+/* Más grandes y en rojo lleno (no .muted): el número de paso tiene que
+   leerse tan bien como el título, no quedarse en detalle de fondo. */
+/* Centrado igual que el icono de debajo: si el icono ya no va pegado al
+   borde de su columna (justify-self:start), dejar el número ahí se
+   notaba — la fila entera queda en el mismo eje. */
+.taller-tl-num { text-align: center; font-size: 16px; font-weight: 700; color: var(--red); }
 .taller-tl-fila { display: grid; grid-template-columns: repeat(5, 1fr); column-gap: 24px; }
-.taller-tl-fila:nth-child(2) { margin-top: 12px; }
+.taller-tl-fila:nth-child(2) { margin-top: 20px; }
 .taller-tl-fila:nth-child(3) { margin-top: 20px; }
 .taller-tl-fila:nth-child(4) { margin-top: 6px; }
 .taller-tl-linea {
-  grid-column: 1 / 5;
+  grid-column: 1 / 6;
   grid-row: 1;
   align-self: center;
-  height: 2px;
+  height: 1px;
   background: var(--red);
-  /* grid-column 1/5 para en el borde de contenido de la 4ª columna, un
-     column-gap (24px) antes del 5º punto — se suma aquí para que el filete
-     llegue justo hasta él, sin sobrar detrás. Verificado con
+  /* Los iconos van centrados en su columna (justify-self:center), no
+     pegados al borde — el filete tiene que ir de centro a centro, del
+     primer icono al último, no del borde de la 1ª columna al de la 4ª.
+     grid-column 1/6 abarca las 5 columnas (con sus 4 gaps) y el margin
+     recorta la mitad de una columna a cada lado: con columnas al 20%
+     (100%/5) y un gap de 24px repartido entre 5 columnas (4 gaps ÷ 5 =
+     19.2px por columna), esa mitad es 10% - 9.6px. Verificado con
      getBoundingClientRect. */
-  width: calc(100% + 24px);
+  margin: 0 calc(10% - 9.6px);
 }
-.taller-tl-dot {
+/* Más grande que antes (72px → 86px): con el texto de debajo repartido
+   en dos líneas equilibradas (text-wrap:balance en .taller-tl-desc, ver
+   más abajo) el paso ya no se ve apretado, así que el icono puede crecer
+   sin descuadrar la fila — la fórmula de .taller-tl-linea no depende de
+   este tamaño, solo del número de columnas y su gap, así que la regla de
+   maquetación (5 columnas, filete centro a centro) no cambia. */
+.taller-tl-ico {
   grid-row: 1;
   align-self: center;
-  justify-self: start;
-  width: 12px;
-  height: 12px;
+  justify-self: center;
+  width: 86px;
+  height: 86px;
   border-radius: 50%;
-  background: var(--red);
+  background: var(--bg);
+  border: 1px solid var(--red);
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.taller-tl-ico svg { display: block; width: 54px; height: 54px; }
+/* Centrado con el icono de encima, no pegado al borde izquierdo de su
+   columna — y centrado también verticalmente dentro de su fila: si el
+   título de un paso ocupa dos líneas, la fila entera (rejilla) se estira
+   a esa altura para las 5 columnas, y sin este align-self los títulos de
+   una sola línea se quedarían pegados arriba, descentrados respecto al
+   icono. */
 .taller-tl-titulo {
+  align-self: center;
+  text-align: center;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(17px, 1.3vw, 21px);
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
-.taller-tl-desc { font-size: 15px; line-height: 1.4; }
+/* Más pequeña que antes (13px, luego 12px): en 5 columnas estrechas
+   seguía leyéndose grande frente al título de 21-28px que tiene encima.
+   A 11px (el mismo cuerpo que .tiny) queda claramente subordinada, como
+   nota al pie de cada paso, no como otro titular. Centrada igual que el
+   título de encima, por el mismo motivo (icono → título → texto, los
+   tres en el mismo eje). */
+/* text-wrap:balance (mismo recurso que .resumen-valor): en columnas tan
+   estrechas el texto envuelve a dos líneas casi siempre, y sin esto la
+   última se quedaba con una sola palabra suelta (viuda) en la mitad de
+   los pasos — el navegador reparte las palabras entre las dos líneas en
+   vez de dejar caer solo la última.
+   max-width:150px fuerza las dos líneas también en los pasos más
+   cortos ("Rellenáis y cerráis a mano.", "You fill and fold by hand."),
+   que si no cabían de sobra en una sola — balance no envuelve un texto
+   que ya cabe, así que sin este tope esos dos pasos se leían más bajos
+   que el resto, rompiendo la fila de cinco. Probado con los 5 textos en
+   los dos idiomas: 150px es ancho de sobra para dos líneas sin llegar a
+   tres en los más largos. justify-self:center porque, en cuanto el
+   texto tiene un ancho fijo menor que su columna, el grid lo pega al
+   lado izquierdo por defecto — sin esto se descentraba respecto al
+   icono y al título de encima, rompiendo el eje común de los tres. */
+.taller-tl-desc { align-self: center; justify-self: center; text-align: center; max-width: 150px; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; line-height: 1.45; text-wrap: balance; }
 .taller-tl-movil { display: none; }
 
 @media (max-width: 879px) {
-  .taller-tl { padding: 48px var(--gutter); }
+  .taller-tl { padding: 48px var(--gutter) 32px; }
+  /* 32px, no los 36px de escritorio: aquí .taller-tl-mitad también baja
+     a 32px de padding (ver la regla de arriba), así que el aire fuera de
+     la caja sigue igualando al de dentro en cualquier ancho. */
+  .ev-hero + .taller-tl { padding-top: 32px; }
   .taller-tl-rail { display: none; }
-  .taller-tl-movil { display: block; margin-top: 40px; position: relative; padding-left: 28px; }
+  .taller-tl-movil { display: block; margin-top: 40px; position: relative; }
   .taller-tl-movil::before {
-    content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px;
-    width: 2px; background: var(--red);
+    content: ""; position: absolute; left: 28px; top: 6px; bottom: 6px;
+    width: 1px; background: var(--red);
   }
-  .taller-tl-paso-m { position: relative; margin-bottom: 32px; }
+  .taller-tl-paso-m { position: relative; display: flex; gap: 16px; align-items: flex-start; margin-bottom: 32px; }
   .taller-tl-paso-m:last-child { margin-bottom: 0; }
-  .taller-tl-paso-m::before {
-    content: ""; position: absolute; left: -28px; top: 5px;
-    width: 10px; height: 10px; border-radius: 50%; background: var(--red);
+  .taller-tl-ico-m {
+    position: relative; flex-shrink: 0;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--bg); border: 1px solid var(--red); color: var(--red);
+    display: flex; align-items: center; justify-content: center;
   }
-  .taller-tl-cab-m { display: flex; align-items: baseline; gap: 10px; }
+  .taller-tl-ico-m svg { display: block; width: 34px; height: 34px; }
+  .taller-tl-cuerpo-m { flex: 1; min-width: 0; }
+  .taller-tl-cab-m { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .taller-tl-num-m { font-size: 16px; font-weight: 700; color: var(--red); }
   .taller-tl-titulo-m {
     font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: -0.01em;
   }
-  .taller-tl-desc-m { margin-top: 6px; font-size: 15px; line-height: 1.4; }
+  .taller-tl-desc-m { margin-top: 6px; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; line-height: 1.5; text-wrap: balance; }
 }
 
 /* Las tres cifras de Redes, en las celdas del resumen de la ficha de local
