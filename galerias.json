@@ -1,5 +1,11 @@
 {
-  "tallerTeamBuilding": [],
+  "tallerTeamBuilding": [
+    { "src": "img/espacio/02-barra-horizontal.jpg", "pos": "50% 50%" },
+    { "src": "img/dumplings/par.jpg", "pos": "50% 50%" },
+    { "src": "img/espacio/04-general-vertical.jpg", "pos": "50% 30%" },
+    { "src": "img/dumplings/teriyaki.jpg", "pos": "50% 50%" },
+    { "src": "img/espacio/08-mesa-alta-juliette.jpg", "pos": "50% 40%" }
+  ],
   "espacio": [
     {
       "src": "img/espacio/11-merchandising.jpg",

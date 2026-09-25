@@ -3088,3 +3088,202 @@
   }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   EXPERIMENTO — /taller-team-building, versión emocional (pedido
+   por Yerai: más fotos, más tono, sin precios, libertad para romper
+   el lenguaje visual del resto de la web). Todo lo de aquí abajo es
+   nuevo y solo para esta página; no toca ni borra el sistema
+   .taller-tl-*/.taller-casilla-*/.taller-cierre de la versión
+   anterior, que sigue en el CSS por si se vuelve a ella.
+   Deshace primero el tamaño del titular calculado para casar con la
+   caja de precios de la versión anterior (esa caja ya no existe
+   aquí) y lo devuelve al clamp de fábrica de .h-display. Va después
+   en el archivo para ganar el empate de especificidad. */
+[data-screen-label="taller-team-building"] .ev-hero h1.h-display {
+  font-size: clamp(56px, 11vw, 168px);
+}
+html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display {
+  font-size: clamp(56px, 11vw, 168px);
+}
+
+/* Foto a sangre justo debajo del hero: la primera ruptura de la regla
+   "esta página no lleva fotos". object-fit cubre el ancho completo,
+   con un alto en proporción (no el 3/4 de retrato de las galerías) —
+   aquí es una foto de ambiente panorámica, no una ficha de producto.
+   El pie va dentro, superpuesto abajo a la izquierda, legible sobre
+   cualquier foto gracias al degradado. */
+.taller2-foto-hero { position: relative; margin: 0; }
+.taller2-foto-hero img { display: block; width: 100%; height: 56vw; max-height: 620px; min-height: 260px; object-fit: cover; object-position: 50% 35%; }
+.taller2-foto-hero::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0; height: 40%;
+  background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+  pointer-events: none;
+}
+.taller2-foto-hero figcaption {
+  position: absolute; left: var(--gutter); bottom: 20px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--bg);
+}
+
+/* [Así va la cosa]: a sangre, sin caja — solo aire y un rótulo, como
+   el resto de esta versión. Mismo padding vertical que .ev-hero para
+   que las transiciones entre secciones respiren igual en toda la
+   página. */
+.taller2-pasos { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
+.taller2-sub {
+  margin-top: 12px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 13px; line-height: 1.4;
+  color: rgba(255,0,30,0.7);
+}
+/* Riel horizontal: misma técnica ya afinada al píxel que .taller-tl-*
+   (rejilla de 5 columnas compartida entre las 4 filas, el filete de
+   grid-column 1/6 recortado a mitad de columna a cada lado para ir de
+   centro de icono a centro de icono). Solo cambian los nombres de
+   clase, para no heredar ningún ancho pensado para la caja de precios
+   de la versión anterior. */
+.taller2-rail { display: none; margin-top: 56px; }
+@media (min-width: 880px) {
+  .taller2-rail { display: block; max-width: 1032px; margin: 56px auto 0; }
+}
+.taller2-num { text-align: center; font-size: 16px; font-weight: 700; color: var(--red); }
+.taller2-fila { display: grid; grid-template-columns: repeat(5, 1fr); column-gap: 24px; }
+.taller2-fila:nth-child(2) { margin-top: 20px; }
+.taller2-fila:nth-child(3) { margin-top: 20px; }
+.taller2-fila:nth-child(4) { margin-top: 6px; }
+.taller2-linea {
+  grid-column: 1 / 6;
+  grid-row: 1;
+  align-self: center;
+  height: 1px;
+  background: var(--red);
+  margin: 0 calc(10% - 9.6px);
+}
+.taller2-ico {
+  grid-row: 1;
+  align-self: center;
+  justify-self: center;
+  width: 86px; height: 86px; border-radius: 50%;
+  background: var(--bg); border: 1px solid var(--red); color: var(--red);
+  display: flex; align-items: center; justify-content: center;
+}
+.taller2-ico svg { display: block; width: 54px; height: 54px; }
+.taller2-titulo {
+  align-self: center; text-align: center;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(17px, 1.3vw, 21px); line-height: 1.2; letter-spacing: -0.01em;
+}
+.taller2-desc {
+  align-self: center; justify-self: center; text-align: center;
+  max-width: 150px;
+  font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; line-height: 1.45;
+  text-wrap: balance;
+}
+/* Riel vertical en móvil: icono sobre filete, mismo patrón que el resto
+   de timelines de la web. */
+.taller2-movil { display: block; margin-top: 40px; }
+@media (min-width: 880px) { .taller2-movil { display: none; } }
+.taller2-paso-m { position: relative; display: flex; gap: 16px; align-items: flex-start; margin-bottom: 32px; }
+.taller2-paso-m:last-child { margin-bottom: 0; }
+.taller2-paso-m::before {
+  content: "";
+  position: absolute; left: 28px; top: 6px; bottom: -32px;
+  width: 1px; background: var(--red);
+}
+.taller2-paso-m:last-child::before { display: none; }
+.taller2-ico-m {
+  flex-shrink: 0; width: 56px; height: 56px; border-radius: 50%;
+  background: var(--bg); border: 1px solid var(--red); color: var(--red);
+  display: flex; align-items: center; justify-content: center; z-index: 1;
+}
+.taller2-ico-m svg { display: block; width: 34px; height: 34px; }
+.taller2-cuerpo-m { padding-top: 8px; }
+.taller2-cab-m { display: flex; align-items: baseline; gap: 10px; }
+.taller2-num-m { font-size: 16px; font-weight: 700; color: var(--red); }
+.taller2-titulo-m { font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+.taller2-desc-m { margin-top: 6px; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; line-height: 1.5; }
+
+/* Cita grande a sangre, invertida (fondo rojo, texto crema) — el mismo
+   rojo que ya lleva el footer de la web, así que no es un color nuevo,
+   solo un sitio nuevo donde usarlo. Es la ruptura más fuerte del
+   lenguaje "rojo sobre crema" de esta página: un respiro dramático a
+   media página, no una caja más. */
+.taller2-cita {
+  padding: 96px var(--gutter);
+  background: var(--red);
+  text-align: center;
+}
+.taller2-cita-grande {
+  margin: 0 auto;
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(32px, 5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--bg);
+}
+.taller2-cita-sub {
+  margin: 16px auto 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em;
+  color: rgba(255,250,243,0.7);
+}
+
+/* Lo esencial: cuatro datos sueltos, sin caja ni filete entre ellos —
+   ni rastro de la rejilla de tarifas de la versión anterior, a
+   propósito: aquí no hay precio que enseñar, solo lo práctico. */
+.taller2-esencial { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
+.taller2-esencial-grid {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+}
+@media (min-width: 880px) {
+  .taller2-esencial-grid { grid-template-columns: repeat(4, 1fr); }
+}
+.taller2-esencial-ico { color: var(--red); margin-bottom: 12px; }
+.taller2-esencial-ico svg { display: block; width: 28px; height: 28px; }
+.taller2-esencial-valor {
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(17px, 1.6vw, 21px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--red);
+}
+.taller2-esencial-nota {
+  margin-top: 40px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 13px;
+  color: rgba(255,0,30,0.7);
+}
+.taller2-esencial .btn { margin-top: 20px; }
+
+/* FAQ a ancho completo, una sola columna — sin la rejilla de dos
+   casillas de la versión anterior (aquí no hay Horarios al lado que
+   emparejar). Mismo acordeón compartido de siempre. */
+.taller2-faq { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
+.taller2-faq-toggle { margin-top: 32px; max-width: 720px; }
+.taller2-faq-toggle > summary { display: none; }
+
+/* Cierre simple, centrado, sin la rejilla de 2 columnas que antes
+   emparejaba este bloque con la caja de Preguntas frecuentes de al
+   lado (aquí el FAQ ya no está partido en dos columnas). */
+.taller2-cierre {
+  padding: 64px var(--gutter);
+  text-align: center;
+}
+.taller2-cierre .body { margin: 12px auto 0; max-width: 56ch; }
+.taller2-cierre .btn { margin: 24px auto 0; }
+
+@media (max-width: 879px) {
+  .taller2-foto-hero img { height: 68vw; }
+  .taller2-cita { padding: 64px var(--gutter); }
+  .taller2-esencial-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+}
+
