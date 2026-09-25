@@ -1350,20 +1350,34 @@
    ritmo estándar de la página (mismo padding y filete que .taller-tl/
    .taller-faq de antes) — ya no depende de caber en una casilla
    estrecha ni de anidarse dentro del bloque de FAQs.
-   Mismo ancho tope que .taller-grid y centrada igual: sin esto, esta
-   sección era la única que seguía a sangre (su padding-left de 32px
-   quedaba mucho más a la izquierda que el borde de la caja de
-   Horarios/FAQ en pantallas anchas) — con el mismo max-width y el mismo
-   padding de 32px por dentro, "¿Hablamos?" arranca exactamente donde
-   arranca el rótulo de la caja de encima. */
+   Alineada con la caja de Preguntas frecuentes en concreto (la segunda
+   columna de .taller-grid), no con Horarios ni con el conjunto: misma
+   rejilla de 2 columnas, mismo ancho tope y mismo gap que .taller-grid
+   (sin padding horizontal propio, para que las columnas midan
+   exactamente lo mismo en los dos sitios) y el contenido va en la
+   columna 2. .taller-faq-cierre añade el propio inset de una casilla
+   (1px de borde + el padding de turno) para arrancar en el mismo punto
+   que el rótulo "Preguntas frecuentes" de la caja de encima, no en el
+   borde de su columna — calc(1px + var(--gutter)) en vez de un número
+   suelto porque --gutter cambia en móvil (32px → 20px) y el inset de la
+   casilla cambia con él. En móvil, .taller-grid pasa a una sola columna
+   (Horarios y FAQ apilados a ancho completo) y esta rejilla hace lo
+   mismo, con el contenido en esa única columna. */
 .taller-cierre {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
   width: calc(100% - 2 * var(--gutter));
   max-width: calc(1032px + 2 * var(--gutter) + 2px);
   margin: 0 auto;
-  padding: 64px var(--gutter);
+  padding: 64px 0;
   border-bottom: 1px solid var(--line);
 }
-.taller-faq-cierre { max-width: 560px; }
+.taller-faq-cierre { grid-column: 2; max-width: 560px; padding-left: calc(1px + var(--gutter)); }
+@media (max-width: 879px) {
+  .taller-cierre { grid-template-columns: 1fr; }
+  .taller-faq-cierre { grid-column: 1; }
+}
 .taller-faq-cierre p { margin-top: 12px; }
 .taller-faq-cierre .btn { margin-top: 24px; }
 
