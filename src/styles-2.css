@@ -1429,10 +1429,17 @@
 /* [02] Tarifas: fuera de la caja del timeline, sin borde propio (las
    tres tarjetas ya llevan el suyo) — a sangre como .taller-grid, con el
    mismo padding lateral que trae .taller-casilla de fábrica, así no se
-   dobla el aire lateral. 32px arriba: con el propio padding-top de
-   .taller-casilla (36px) sumaba casi 100px de hueco antes de la primera
-   tarjeta, demasiado aire para lo que separa. */
+   dobla el aire lateral.
+   El aire de encima del bloque 1 (hero → caja, 36px/32px) tiene que ser
+   igual que el de debajo (caja → tarjetas): mismo margin-top que el
+   padding de .taller-tl-mitad a cada ancho, y sin el padding-top propio
+   de .taller-casilla — sinTitulo:true deja ese hueco vacío (sin rótulo
+   ni titular dentro), así que sumaba aire de más en vez de repartirlo. */
 .taller-tl-tarifas { margin: 32px calc(-1 * var(--gutter)) 0; }
+.taller-tl-tarifas .taller-casilla { padding-top: 0; }
+@media (min-width: 880px) {
+  .taller-tl-tarifas { margin-top: 36px; }
+}
 
 /* 1032px de contenido, no el ancho tope de la caja (calc(...+2*gutter+2px)
    en .taller-tl-grid): el riel vive dentro de esa caja, con el mismo
