@@ -1738,6 +1738,9 @@
   word-break: break-word;
   hyphens: auto;
 }
+/* Flecha solo en la única celda con página propia, mismo recurso que
+   .map-cell .t::after: la pone el CSS, no el marcado. */
+.ev-service.is-link .t::after { content: " →"; }
 
 .ev-contact {
   padding: 14vh var(--gutter) 8vh;

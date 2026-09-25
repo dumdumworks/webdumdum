@@ -217,10 +217,11 @@ ${seccion("06", t("Al frente", "At the helm"),
   <h2 class="h-1" style="margin-top:16px;max-width:20ch">${esc(t("Qué hacemos.", "What we do."))}</h2>
   <div class="ev-services-grid">
     ${[
-        { nombre: "Afterwork" },
-        { nombre: "Cocktails" },
-        // El \u00FAnico servicio con p\u00E1gina propia (taller de dumplings, con dossier y tarifas).
+        // El \u00FAnico servicio con p\u00E1gina propia (taller de dumplings, con dossier y tarifas):
+        // primero de la rejilla, con flecha en el t\u00EDtulo (ver .ev-service.is-link .t::after).
         { nombre: t("Talleres Team Building", "Team Building Workshops"), href: "/taller-team-building" },
+        { nombre: "Cocktails" },
+        { nombre: "Afterwork" },
         { nombre: "Workshops" },
         { nombre: t("Presenta\u00ADciones", "Launches") },
         { nombre: t("Alquiler de espacio", "Venue rental") },
