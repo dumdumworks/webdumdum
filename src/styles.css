@@ -1044,3 +1044,8 @@ img { display: block; max-width: 100%; }
     transition: none;
   }
 }
+
+/* Public first-party booking iframe, independent from DISH-specific spacing. */
+.reserve-modal .reserve-widget-wrap.reserve-widget-propio{margin-bottom:0;}
+.reserve-widget-propio iframe{display:block;height:640px;height:min(640px,75dvh);min-height:360px;border:0;background:#fff;}
+.reserve-widget-propio>a{display:block;margin:12px 0;font-size:14px;text-decoration:underline;}

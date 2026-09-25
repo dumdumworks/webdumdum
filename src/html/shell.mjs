@@ -7,6 +7,7 @@
 // ─────────────────────────────────────────────────────────────
 import { esc, idioma } from "./plantilla.mjs";
 import * as E from "./enlaces.mjs";
+import { configuracionReserva } from "./reservas-config.mjs";
 
 // Una página entera: cabecera, contenido y pie. `main` es el HTML propio de la
 // página; `ruta` la neutra (sin /en), para marcar el enlace activo.
@@ -125,7 +126,7 @@ export function modales(i, locales) {
     tarjeta({ ...attrs(l), "data-nombre": l.nombre }, l.nombre, esc(l.dir))).join("\n        ");
   // Datos que necesita la isla para montar el widget de DISH de cada local.
   const dish = {};
-  for (const l of L) dish[l.slug] = { nombre: l.nombre, eid: l.eid };
+  for (const l of L) dish[l.slug] = { nombre: l.nombre, eid: l.eid, reserva: configuracionReserva(l.slug) };
   const aviso = lang === "en"
     ? "If you book at <strong>3:30pm or 10:30pm</strong>, don't cut it too close: <strong>the kitchen closes at :39</strong> and we really want to feed you 😉"
     : "Si reservas a las <strong>15:30 o 22:30</strong>, no apures mucho con la hora, que <strong>a y 39 cerramos la cocina</strong> y os queremos dar de comer 😉";
