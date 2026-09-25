@@ -1057,7 +1057,11 @@
    [data-screen-label] para no afectar al mismo .ev-hero de otras
    páginas, que sí quedan alineadas a la izquierda en escritorio. */
 [data-screen-label="taller-team-building"] .ev-hero { text-align: center; }
-[data-screen-label="taller-team-building"] .ev-hero p { margin-left: auto; margin-right: auto; }
+/* 72ch, no los 56ch de fábrica: con el párrafo centrado, el de 56ch
+   partía en 4 líneas (la última con una sola palabra suelta) — 72ch le
+   cabe de sobra a las dos versiones (ES más largo, EN más corto) en 3
+   líneas parejas. Probado con getBoundingClientRect en las dos. */
+[data-screen-label="taller-team-building"] .ev-hero p { margin-left: auto; margin-right: auto; max-width: 72ch; }
 [data-screen-label="taller-team-building"] .ev-hero-row { justify-content: center; }
 
 /* .ev-hero-cta trae 40px/36px de margin-top de fábrica, sin relación
