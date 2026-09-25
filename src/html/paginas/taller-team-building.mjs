@@ -178,14 +178,16 @@ const railMovil = (i) => `<div class="taller-tl-movil">
 // opcional y el contenido, a una sola columna — no el .ev-split a medias
 // de seccion(). El alto de cada fila lo pone la rejilla CSS por su cuenta
 // (stretch): la casilla con más contenido de la fila manda, las demás se
-// adaptan solas.
-const casilla = (n, ico, rotulo, titulo, subtitulo, derecha) => `<div class="taller-casilla">
-    <div class="tiny muted">[${n}] ${esc(rotulo)}</div>
+// adaptan solas. sinTitulo (solo [02] Tarifas) se salta el rótulo y el
+// icono+titular: al fundirse visualmente con [01] en la misma caja, un
+// segundo titular ahí quedaba redundante.
+const casilla = (n, ico, rotulo, titulo, subtitulo, derecha, sinTitulo) => `<div class="taller-casilla">
+    ${sinTitulo ? "" : `<div class="tiny muted">[${n}] ${esc(rotulo)}</div>
     <div class="taller-casilla-cab">
       <div class="taller-casilla-ico">${icono(ico)}</div>
       <h3 class="taller-casilla-h">${titulo}</h3>
     </div>
-    ${subtitulo ? `<p class="taller-casilla-sub">${subtitulo}</p>\n    ` : ""}<div class="taller-casilla-body">
+    `}${subtitulo ? `<p class="taller-casilla-sub">${subtitulo}</p>\n    ` : ""}<div class="taller-casilla-body">
 ${derecha}
     </div>
   </div>`;
@@ -245,11 +247,6 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
   <div class="taller-tl-grid">
     <div class="taller-tl-mitad">
       <div class="taller-tl-head">
-        <div class="tiny muted">[01] ${esc(t("El taller", "The workshop"))}</div>
-        <div class="taller-casilla-cab">
-          <div class="taller-casilla-ico">${icono("aforo")}</div>
-          <h2 class="taller-casilla-h">${esc(t("Así funciona el taller.", "How the workshop works."))}</h2>
-        </div>
         <p class="taller-casilla-sub">${esc(t("De la masa al plato, en equipo.", "From dough to plate, as a team."))}</p>
       </div>
       ${railEscritorio(i)}
@@ -261,7 +258,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
         esc(t("A más gente, mejor precio.", "More people, better price.")),
         tarifasVisual(i, t(
           "* Consumos extra aparte. Talleres fuera del restaurante sujetos a disponibilidad.",
-          "* Extra consumption not included. Off-site workshops subject to availability.")))}
+          "* Extra consumption not included. Off-site workshops subject to availability.")), true)}
     </div>
   </div>
 </section>
