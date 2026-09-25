@@ -1329,6 +1329,14 @@
 @media (max-width: 879px) {
   .taller-grid { grid-template-columns: 1fr; }
   .taller-casilla { padding: 32px var(--gutter); }
+  /* En móvil el icono pasa al lado derecho, alineado con el borde del
+     contenido de debajo (subtítulo, timeline, lista…) en vez de ir
+     pegado a la izquierda antes del título. row-reverse conserva el
+     orden del HTML (icono primero, por su semántica de categoría) pero
+     lo pinta al final de la fila; space-between empuja el título al
+     borde izquierdo y el icono al derecho, cada uno a su tope, en vez
+     de los dos juntos en el centro. */
+  .taller-casilla-cab { flex-direction: row-reverse; justify-content: space-between; }
 }
 
 /* [05] Preguntas frecuentes: una casilla más de la rejilla de [03]-[05],
