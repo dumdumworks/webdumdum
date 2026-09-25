@@ -1482,12 +1482,18 @@
      getBoundingClientRect. */
   margin: 0 calc(10% - 9.6px);
 }
+/* Más grande que antes (72px → 86px): con el texto de debajo repartido
+   en dos líneas equilibradas (text-wrap:balance en .taller-tl-desc, ver
+   más abajo) el paso ya no se ve apretado, así que el icono puede crecer
+   sin descuadrar la fila — la fórmula de .taller-tl-linea no depende de
+   este tamaño, solo del número de columnas y su gap, así que la regla de
+   maquetación (5 columnas, filete centro a centro) no cambia. */
 .taller-tl-ico {
   grid-row: 1;
   align-self: center;
   justify-self: center;
-  width: 72px;
-  height: 72px;
+  width: 86px;
+  height: 86px;
   border-radius: 50%;
   background: var(--bg);
   border: 1px solid var(--red);
@@ -1496,7 +1502,7 @@
   align-items: center;
   justify-content: center;
 }
-.taller-tl-ico svg { display: block; width: 46px; height: 46px; }
+.taller-tl-ico svg { display: block; width: 54px; height: 54px; }
 /* Centrado con el icono de encima, no pegado al borde izquierdo de su
    columna — y centrado también verticalmente dentro de su fila: si el
    título de un paso ocupa dos líneas, la fila entera (rejilla) se estira
@@ -1518,7 +1524,12 @@
    nota al pie de cada paso, no como otro titular. Centrada igual que el
    título de encima, por el mismo motivo (icono → título → texto, los
    tres en el mismo eje). */
-.taller-tl-desc { align-self: center; text-align: center; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; line-height: 1.45; }
+/* text-wrap:balance (mismo recurso que .resumen-valor): en columnas tan
+   estrechas el texto envuelve a dos líneas casi siempre, y sin esto la
+   última se quedaba con una sola palabra suelta (viuda) en la mitad de
+   los pasos — el navegador reparte las palabras entre las dos líneas en
+   vez de dejar caer solo la última. */
+.taller-tl-desc { align-self: center; text-align: center; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; line-height: 1.45; text-wrap: balance; }
 .taller-tl-movil { display: none; }
 
 @media (max-width: 879px) {
@@ -1548,7 +1559,7 @@
   .taller-tl-titulo-m {
     font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: -0.01em;
   }
-  .taller-tl-desc-m { margin-top: 6px; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; line-height: 1.5; }
+  .taller-tl-desc-m { margin-top: 6px; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; line-height: 1.5; text-wrap: balance; }
 }
 
 /* Las tres cifras de Redes, en las celdas del resumen de la ficha de local
