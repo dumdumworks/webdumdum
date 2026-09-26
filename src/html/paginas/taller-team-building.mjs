@@ -154,6 +154,16 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
     <img src="img/espacio/02-barra-horizontal.jpg" alt="${esc(t("La cocina de DUM DUM Bernabéu, con el equipo trabajando en la barra.", "The DUM DUM Bernabéu kitchen, with the team working the counter."))}" loading="eager" decoding="async">
     <figcaption>${esc(t("Nuestra cocina, vuestra oficina de hoy.", "Our kitchen, your office for the day."))}</figcaption>
   </figure>
+  <div class="taller2-resena">
+    <div class="taller2-resena-estrellas" aria-hidden="true">★★★★★</div>
+    <p class="taller2-resena-texto">${esc(t(
+      "“Al menos de aquí hemos salido llevándonos mejor. No como la vez del paintball.”",
+      "“At least we came out of this one getting along better. Not like the paintball time.”"))}</p>
+    <p class="taller2-resena-autor">María Riquelme</p>
+    <p class="tiny muted taller2-resena-rol">${esc(t(
+      "Pseudónimo para ocultar el nombre de la de RRHH de un sitio",
+      "Pseudonym to hide the name of a certain HR manager"))}</p>
+  </div>
 </div>
 
 <section class="taller2-pasos">

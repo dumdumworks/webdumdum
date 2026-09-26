@@ -3314,7 +3314,8 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
     align-items: center;
     gap: 32px;
   }
-  [data-screen-label="taller-team-building"] .taller2-resena { justify-self: end; }
+  [data-screen-label="taller-team-building"] .taller2-hero-media > div.taller2-resena:first-of-type { justify-self: end; }
+  [data-screen-label="taller-team-building"] .taller2-hero-media > div.taller2-resena:last-of-type { justify-self: start; }
 }
 [data-screen-label="taller-team-building"] .taller2-foto-hero {
   margin-top: 0;
