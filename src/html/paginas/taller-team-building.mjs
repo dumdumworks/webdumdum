@@ -27,14 +27,14 @@ const PASOS = [
     "Te pones hasta arriba de harina, pero increíble momento porque la harina mancha igual al trainee que al CEO. Y eso iguala.",
     "You get covered head to toe in flour — but it's an incredible moment, because the flour stains the trainee the same as the CEO. And that levels things out."],
   ["dumpling", "A hacer dumplings", "Making the dumplings",
-    "a partir del tercero salen mejor. Igual, lo importante no es hacerlos bien todos, es decirle al compañero \"tranqui, lo harás mejor, ¿te ayudo?\" y cosas de esas en plan buen compañero.",
-    "from the third one on they come out better. Anyway, the important thing isn't making them all well, it's telling your teammate “relax, you'll do better, want some help?” and things like that, being a good teammate."],
+    "A partir del tercero salen mejor. Igual, lo importante no es hacerlos bien, sino decirle al compañero \"mira, hazlo así\" y cosas de esas en plan buen compañero.",
+    "From the third one on they come out better. Anyway, the important thing isn't making them all well, but telling your teammate “look, do it like this” and things like that, being a good teammate."],
   ["cocinar", "A cocinar", "Time to cook",
-    "Vapor, salsa, toppings y lo dejáis listo. Es guay porque aquí, de pronto, los jefes lo hacen peor y tú les dices \"se hace así\" y se callan la boca y te dan la razón.",
-    "Steam, sauce, toppings, and you're done. It's cool because here, suddenly, the bosses are worse at it than you and you tell them “it's done like this” and they shut up and admit you're right."],
+    "Vapor, salsa, toppings y listo. Es guay porque aquí puede que los jefes lo hagan peor y tú les enseñas y se callan la boca y te dan la razón.",
+    "Steam, sauce, toppings, and done. It's cool because here the bosses might do it worse and you show them and they shut up and admit you're right."],
   ["comer", "A comer", "Time to eat",
-    "os sentáis y compartís lo que habéis hecho. Os aplaudís porque lo habéis hecho increíble y la comida os sabe a gloria porque lo habéis hecho vosotros. FIN.",
-    "you sit down and share what you've made. You applaud each other because you did it incredibly, and the food tastes like glory because you made it yourselves. THE END."],
+    "Os sentáis y os coméis el resultado. Os aplaudís porque os lo currastéis y la comida os sabe a gloria porque lo habéis hecho vosotros. FIN.",
+    "You sit down and eat the result. You applaud each other because you busted your ass for it, and the food tastes like glory because you made it yourselves. THE END."],
 ];
 // Lo esencial, sin precio: [icono, etiqueta es/en, valor es/en].
 const ESENCIAL = [
