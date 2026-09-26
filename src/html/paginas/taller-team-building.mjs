@@ -179,11 +179,6 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   ${galeria(i, { fotos, ratio: "3 / 4", etiquetaHueco: t("Foto", "Photo"), raiz })}
 </section>
 
-<section class="taller2-cita">
-  <p class="taller2-cita-grande">${esc(t("El postureo se queda en la puerta.", "Leave the fake team spirit at the door."))}</p>
-  <p class="taller2-cita-sub">${esc(t("Aquí lo que cuenta es lo que hacéis con las manos.", "Here, what counts is what you do with your hands."))}</p>
-</section>
-
 <section class="taller2-esencial">
   <div class="tiny muted">${esc(t("Lo esencial", "The essentials"))}</div>
   <h2 class="h-1" style="margin-top:16px;max-width:16ch">${esc(t("Lo que necesitas saber.", "What you need to know."))}</h2>

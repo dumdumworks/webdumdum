@@ -3198,33 +3198,6 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 .taller2-titulo-m { font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
 .taller2-desc-m { margin-top: 6px; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; line-height: 1.5; }
 
-/* Cita grande a sangre, invertida (fondo rojo, texto crema) — el mismo
-   rojo que ya lleva el footer de la web, así que no es un color nuevo,
-   solo un sitio nuevo donde usarlo. Es la ruptura más fuerte del
-   lenguaje "rojo sobre crema" de esta página: un respiro dramático a
-   media página, no una caja más. */
-.taller2-cita {
-  padding: 96px var(--gutter);
-  background: var(--red);
-  text-align: center;
-}
-.taller2-cita-grande {
-  margin: 0 auto;
-  max-width: 18ch;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(32px, 5vw, 64px);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  color: var(--bg);
-}
-.taller2-cita-sub {
-  margin: 16px auto 0;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em;
-  color: rgba(255,250,243,0.7);
-}
-
 /* Lo esencial: cuatro datos sueltos, sin caja ni filete entre ellos —
    ni rastro de la rejilla de tarifas de la versión anterior, a
    propósito: aquí no hay precio que enseñar, solo lo práctico. */
@@ -3276,7 +3249,6 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 
 @media (max-width: 879px) {
   .taller2-foto-hero img { height: 68vw; }
-  .taller2-cita { padding: 64px var(--gutter); }
   .taller2-esencial-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
 }
 
@@ -3371,20 +3343,6 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 [data-screen-label="taller-team-building"] .taller2-riel > .taller2-ico:nth-child(6) { transform: rotate(-12deg) translateY(-9px); background: var(--paper); }
 [data-screen-label="taller-team-building"] .taller2-movil .taller2-paso-m:nth-child(odd) .taller2-ico-m { transform: rotate(-13deg); }
 [data-screen-label="taller-team-building"] .taller2-movil .taller2-paso-m:nth-child(even) .taller2-ico-m { transform: rotate(13deg); }
-
-/* Cita grande: un signo de comillas enorme detrás del rojo, y el
-   texto ligeramente girado, como escrito a mano en el margen. */
-[data-screen-label="taller-team-building"] .taller2-cita { position: relative; overflow: hidden; }
-[data-screen-label="taller-team-building"] .taller2-cita::before {
-  content: "\201C";
-  position: absolute; top: -60px; left: 50%;
-  transform: translateX(-50%) rotate(-4deg);
-  font-family: var(--font-display); font-weight: 700;
-  font-size: 220px; line-height: 1;
-  color: rgba(255,250,243,0.14);
-  pointer-events: none;
-}
-[data-screen-label="taller-team-building"] .taller2-cita-grande { position: relative; transform: rotate(-1.2deg); }
 
 /* Lo esencial: cuatro notas sueltas, cada una con su chincheta y
    su propio ángulo, no una rejilla perfecta de datos. */
