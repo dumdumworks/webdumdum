@@ -30,7 +30,7 @@ const PASOS = [
     "a partir del tercero salen mejor. Igual, lo importante no es hacerlos bien todos, es decirle al compañero \"tranqui, lo harás mejor, ¿te ayudo?\" y cosas de esas en plan buen compañero.",
     "from the third one on they come out better. Anyway, the important thing isn't making them all well, it's telling your teammate “relax, you'll do better, want some help?” and things like that, being a good teammate."],
   ["cocinar", "A cocinar", "Time to cook",
-    "Vapor, salsa, toppings y lo dejáis listo. Es guay porque aquí, de pronto, los jefes lo hacen peor y tú les dices \"se hace así\" y se calla la boca y te dan la razón.",
+    "Vapor, salsa, toppings y lo dejáis listo. Es guay porque aquí, de pronto, los jefes lo hacen peor y tú les dices \"se hace así\" y se callan la boca y te dan la razón.",
     "Steam, sauce, toppings, and you're done. It's cool because here, suddenly, the bosses are worse at it than you and you tell them “it's done like this” and they shut up and admit you're right."],
   ["comer", "A comer", "Time to eat",
     "os sentáis y compartís lo que habéis hecho. Os aplaudís porque lo habéis hecho increíble y la comida os sabe a gloria porque lo habéis hecho vosotros. FIN.",
