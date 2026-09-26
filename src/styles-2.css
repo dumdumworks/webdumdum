@@ -3372,25 +3372,6 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 [data-screen-label="taller-team-building"] .taller2-movil .taller2-paso-m:nth-child(odd) .taller2-ico-m { transform: rotate(-13deg); }
 [data-screen-label="taller-team-building"] .taller2-movil .taller2-paso-m:nth-child(even) .taller2-ico-m { transform: rotate(13deg); }
 
-/* Galería: fotos como Polaroids desordenadas sobre una mesa, no
-   una ficha de producto. Cada hueco gira y flota a su altura. */
-[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril {
-  padding: 22px 4px 28px;
-}
-[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-slot {
-  border: none;
-  border-radius: 0;
-  background: var(--paper);
-  padding: 10px 10px 28px;
-  box-shadow: 0 12px 22px rgba(26,26,26,0.16);
-}
-[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-slot img { border-radius: 0; }
-[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(1) { transform: rotate(-3deg); }
-[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(2) { transform: rotate(2.5deg) translateY(14px); }
-[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(3) { transform: rotate(-2deg) translateY(-8px); }
-[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(4) { transform: rotate(3deg) translateY(10px); }
-[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(5) { transform: rotate(-2.5deg) translateY(-6px); }
-
 /* Cita grande: un signo de comillas enorme detrás del rojo, y el
    texto ligeramente girado, como escrito a mano en el margen. */
 [data-screen-label="taller-team-building"] .taller2-cita { position: relative; overflow: hidden; }
