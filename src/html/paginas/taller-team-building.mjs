@@ -170,7 +170,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 
 <section class="taller2-pasos">
   <div class="tiny muted">${esc(t("Así va la cosa", "Here's how it goes"))}</div>
-  <h2 class="h-1" style="margin-top:16px;max-width:18ch">${esc(t("Esto es lo que va a pasar.", "Here's what's about to happen."))}</h2>
+  <h2 class="h-1" style="margin-top:16px;max-width:18ch">${esc(t("El taller.", "The workshop."))}<br>${esc(t("Paso por paso", "Step by step"))}</h2>
   <p class="taller2-sub">${esc(t("De la harina al plato, sin postureo.", "From flour to plate, no faking it."))}</p>
   ${railEscritorio(i)}
   ${railMovil(i)}
