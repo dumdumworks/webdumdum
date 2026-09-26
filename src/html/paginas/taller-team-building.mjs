@@ -152,7 +152,9 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   </div>
   <figure class="taller2-foto-hero">
     <img src="img/espacio/02-barra-horizontal.jpg" alt="${esc(t("La cocina de DUM DUM Bernabéu, con el equipo trabajando en la barra.", "The DUM DUM Bernabéu kitchen, with the team working the counter."))}" loading="eager" decoding="async">
-    <figcaption>${esc(t("Nuestra cocina, vuestra oficina de hoy.", "Our kitchen, your office for the day."))}</figcaption>
+    <figcaption>${esc(t(
+      "Estudios demuestran que la manera de mejorar tu relación con los de la oficina es metiéndoos en una cocina. El estudio lo hemos hecho nosotros, y cuando lo hemos leído nos ha parecido bien.",
+      "Studies show the way to improve your relationship with your officemates is getting into a kitchen together. We did the study ourselves, and when we read it, it seemed about right."))}</figcaption>
   </figure>
   <div class="taller2-resena">
     <div class="taller2-resena-estrellas" aria-hidden="true">★★★★★</div>
