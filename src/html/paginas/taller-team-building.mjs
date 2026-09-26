@@ -182,12 +182,8 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 <section class="taller2-esencial">
   <div class="tiny muted" style="text-align:center">${esc(t("Lo esencial", "The essentials"))}</div>
   <h2 class="h-1" style="margin:16px auto 0;max-width:16ch;text-align:center">${esc(t("Lo que necesitas saber.", "What you need to know."))}</h2>
-  <div class="taller2-esencial-grid">
-    ${ESENCIAL.map(([ico, esL, enL, esV, enV]) => `<div class="taller2-esencial-item">
-      <div class="taller2-esencial-ico">${icono(ico)}</div>
-      <div class="tiny muted">${esc(i.lang === "en" ? enL : esL)}</div>
-      <div class="taller2-esencial-valor">${esc(i.lang === "en" ? enV : esV)}</div>
-    </div>`).join("\n    ")}
+  <div class="taller-list" style="margin:32px auto 0">
+    ${ESENCIAL.map(([, esL, enL, esV, enV]) => `<div><b>${esc(i.lang === "en" ? enL : esL)}</b><span>${esc(i.lang === "en" ? enV : esV)}</span></div>`).join("\n    ")}
   </div>
   <p class="taller2-esencial-nota">${esc(t("¿El precio? Te lo damos en cuanto nos cuentes cuántos sois.", "The price? We'll give it to you the moment you tell us how many you are."))}</p>
   <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos" style="width:fit-content"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
