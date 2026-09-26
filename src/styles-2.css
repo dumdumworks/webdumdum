@@ -1099,8 +1099,8 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 40px 24px;
 }
-@media (min-width: 720px) {
-  .taller-list { grid-template-columns: repeat(4, 1fr); }
+@media (min-width: 880px) {
+  .taller-list { grid-template-columns: repeat(4, 1fr); max-width: 1032px; margin-left: auto; margin-right: auto; }
 }
 .taller-list > div {
   display: flex;
