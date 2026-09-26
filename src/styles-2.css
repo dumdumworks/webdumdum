@@ -1120,7 +1120,11 @@
   flex-shrink: 0;
   margin-bottom: 16px;
 }
-.taller-list-ico svg { display: block; width: 28px; height: 28px; }
+.taller-list-ico svg { display: block; width: 34px; height: 34px; }
+@media (min-width: 880px) {
+  .taller-list-ico { width: 86px; height: 86px; }
+  .taller-list-ico svg { width: 54px; height: 54px; }
+}
 .taller-list b { display: block; font-weight: 600; color: rgba(255,0,30,0.55); }
 .taller-list > div > div > span {
   display: block;
