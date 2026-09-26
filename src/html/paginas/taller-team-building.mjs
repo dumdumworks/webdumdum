@@ -126,7 +126,16 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 
   const main = `<div data-screen-label="taller-team-building">
 <section class="ev-hero">
-  <div class="taller2-nota-rotu"><span>${esc(t("un team building que no es un escape room!!", "a team building that's not an escape room!!"))}</span></div>
+  <div class="taller2-resena">
+    <div class="taller2-resena-estrellas" aria-hidden="true">★★★★★</div>
+    <p class="taller2-resena-texto">${esc(t(
+      "“Me gustó este team building porque por fin no era una escape room. Además luego me puse fino.”",
+      "“I liked this team building because it finally wasn't an escape room. Plus I stuffed my face afterwards.”"))}</p>
+    <p class="taller2-resena-autor">Juan García</p>
+    <p class="tiny muted taller2-resena-rol">${esc(t(
+      "Empleado ficticio para soltar factos que nadie se atreve a decir",
+      "Fictional employee, here to say the facts nobody else dares to"))}</p>
+  </div>
   <div class="tiny muted"><a href="${i.ruta("/eventos")}" class="link-hover">${esc(t("Eventos", "Events"))}</a> · ${esc(t("Talleres Team Building", "Team Building Workshops"))}</div>
   <h1 class="h-display" style="margin-top:16px">${esc(t("Con las manos", "Hands in the"))}<br>${esc(t("en la masa.", "dough. Literally."))}</h1>
   <div class="ev-hero-row" style="margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:32px">
@@ -200,12 +209,6 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 </section>
 </div>`;
 
-  // Única fuente aparte de JetBrains Mono en toda la web, y solo en esta
-  // página: la nota pegada con celo pide un rotulador de verdad, no
-  // Helvetica en cursiva. Va por precargas — no toca el <head> de
-  // ninguna otra ruta.
-  const precargas = '  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">';
-
   return {
     titulo: i.lang === "en" ? (s.te || s.t) : s.t,
     desc: i.lang === "en" ? (s.de || s.d) : s.d,
@@ -214,6 +217,5 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
       { nombre: t("Eventos", "Events"), ruta: "/eventos" },
       { nombre: t("Talleres Team Building", "Team Building Workshops"), ruta: RUTA },
     ]), jsonLd(i, url), faqLd(i)],
-    precargas,
   };
 }
