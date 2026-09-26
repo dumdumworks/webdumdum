@@ -3132,12 +3132,6 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
    que las transiciones entre secciones respiren igual en toda la
    página. */
 .taller2-pasos { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
-.taller2-sub {
-  margin-top: 12px;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 13px; line-height: 1.4;
-  color: rgba(255,0,30,0.7);
-}
 /* Riel horizontal: misma técnica ya afinada al píxel que .taller-tl-*
    (rejilla de 5 columnas compartida entre las 4 filas, el filete de
    grid-column 1/6 recortado a mitad de columna a cada lado para ir de
