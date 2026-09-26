@@ -1098,23 +1098,33 @@
    margin-top: .taller-casilla es flex, así que no colapsa con el
    margin-bottom del subtítulo de encima — poner los dos sumaba 48px de
    aire en vez de 24. */
-.taller-list { display: grid; grid-template-columns: 1fr; max-width: 480px; }
+.taller-list { display: grid; grid-template-columns: 1fr; max-width: 720px; }
 .taller-list > div {
   display: grid;
-  grid-template-columns: 160px 1fr;
+  grid-template-columns: 180px 1fr;
+  align-items: baseline;
   gap: 9px;
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-weight: 500;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0;
   text-transform: uppercase;
-  padding: 10px 0;
+  padding: 26px 0;
   border-top: 1px solid var(--line-soft);
 }
 .taller-list > div:last-child { border-bottom: 1px solid var(--line-soft); }
-.taller-list b { font-weight: 500; color: rgba(255,0,30,0.55); }
+.taller-list b { font-weight: 600; color: rgba(255,0,30,0.55); }
+.taller-list > div > span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--red);
+}
 @media (max-width: 480px) {
-  .taller-list > div { grid-template-columns: 1fr; gap: 2px; }
+  .taller-list > div { grid-template-columns: 1fr; gap: 6px; }
 }
 
 /* [04] Tarifas: tres cajas lado a lado, una por tramo, el más barato (más
