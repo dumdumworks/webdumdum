@@ -3458,13 +3458,14 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
   color: var(--ink);
 }
 [data-screen-label="taller-team-building"] .taller2-resena-autor {
-  margin-top: 10px;
+  margin-top: 18px;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 13px;
 }
 [data-screen-label="taller-team-building"] .taller2-resena-rol {
   margin-top: 2px;
+  font-size: 9px;
 }
 @media (min-width: 880px) {
   [data-screen-label="taller-team-building"] .taller2-resena {
