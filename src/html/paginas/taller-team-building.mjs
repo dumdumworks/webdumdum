@@ -21,20 +21,20 @@ const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
 // gente con la que normalmente solo compartes Slack.
 const PASOS = [
   ["equipo", "Equipos", "Teams",
-    "<strong>Os ponemos nosotros los equipos.</strong> Nada de eso de “hacemos los equipos nosotros” porque no: de hecho, os toca con quien más lejos tengáis.",
-    "<strong>We put the teams together.</strong> None of that “we'll sort our own teams” business — in fact, you get paired with whoever you're least close to."],
+    "Os ponemos por equipos. No hagáis la de “hacemos nosotros los equipos” porque no. De hecho, os vamos a poner con el que más lejos tengáis.",
+    "We put you in teams. Don't try the “we'll make our own teams” move, because no. In fact, we're going to put you with whoever you're most distant from."],
   ["masa", "La masa", "The dough",
-    "Harina, agua, sal. Se pesa, se mezcla, <strong>os ponéis hasta arriba de harina</strong> — y es un momentazo, porque mancha igual al trainee que al CEO. Eso iguala.",
-    "Flour, water, salt. You weigh it, you mix it, <strong>you end up covered in flour</strong> — and that's the best part, because it gets on the trainee and the CEO exactly the same. That levels things out."],
+    "harina, agua, sal. Se pesa, se mezcla, te pones hasta arriba de harina, pero increíble momento porque la harina mancha igual al trainee que al CEO. Y eso iguala.",
+    "flour, water, salt. It gets weighed, mixed, you get covered head to toe in flour — but it's an incredible moment, because the flour stains the trainee the same as the CEO. And that levels things out."],
   ["dumpling", "A hacer dumplings", "Making the dumplings",
-    "El primero sale mal. El segundo, mal pero un poco mejor. Al quinto ya os contratamos. Lo importante no es que os salgan bien, es decirle al de al lado <strong>“tranqui, el siguiente te sale mejor, ¿te ayudo?”</strong>",
-    "The first one comes out wrong. The second, wrong but a bit better. By the fifth, we'd hire you. The point isn't getting them right — it's telling the person next to you <strong>“don't worry, the next one'll be better, want a hand?”</strong>"],
+    "el primero sale mal. el segundo sale mal, pero un poco mejor, el quinto ya os contrataríamos. Lo importante no es hacerlos bien todos, es decirle al compañero “tranqui, lo harás mejor, ¿te ayudo?” y cosas de esas en plan buen compañero.",
+    "the first one comes out badly. the second one comes out badly too, but a little better, by the fifth we'd already hire you. The important thing isn't making them all well, it's telling your teammate “relax, you'll do better, want some help?” and things like that, being a good teammate."],
   ["cocinar", "A cocinar", "Time to cook",
-    "Al vapor, con su salsa, su toque final, y listos. Lo bueno es que aquí, de repente, <strong>el jefe lo hace peor que vosotros</strong> — y le podéis decir “se hace así” y se calla y os da la razón.",
-    "Steamed, sauced, finished off, done. The best part: suddenly <strong>the boss is worse at this than you are</strong> — so you get to say “it's done like this” and watch them nod along."],
+    "se ponen al vapor, se salsean, se topinean y lo dejáis listo. Es guay porque aquí, de pronto, los jefes lo hacen peor y tú le puedes decir “se hace así” y se calla el boquino y te da la razón.",
+    "they get steamed, sauced, finished off and you have them ready. It's cool because here, suddenly, the bosses do it worse and you can tell them “it's done like this” and they shut their mouth and admit you're right."],
   ["comer", "A comer", "Time to eat",
-    "Os sentáis a compartir lo que habéis hecho. <strong>Os aplaudís entre vosotros</strong> porque os ha quedado brutal, y sabe a gloria porque lo habéis hecho vosotros. Fin.",
-    "You sit down to share what you made. <strong>You applaud each other</strong> because it came out amazing, and it tastes incredible because you made it yourselves. The end."],
+    "os sentáis y compartís lo que habéis hecho. Os aplaudís porque lo habéis hecho increíble y la comida os sabe a gloria porque lo habéis hecho vosotros. FIN.",
+    "you sit down and share what you've made. You applaud each other because you did it incredibly, and the food tastes like glory because you made it yourselves. THE END."],
 ];
 // Lo esencial, sin precio: [icono, etiqueta es/en, valor es/en].
 const ESENCIAL = [
