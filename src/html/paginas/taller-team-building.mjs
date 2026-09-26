@@ -143,8 +143,8 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   <div class="taller2-resena">
     <div class="taller2-resena-estrellas" aria-hidden="true">★★★★★</div>
     <p class="taller2-resena-texto">${esc(t(
-      "“Me gustó este team building porque por fin no era una escape room. Además luego me puse fino.”",
-      "“I liked this team building because it finally wasn't an escape room. Plus I stuffed my face afterwards.”"))}</p>
+      "“Lo mejor del taller es que no es un escape room.”",
+      "“The best part of the workshop is that it's not an escape room.”"))}</p>
     <p class="taller2-resena-autor">Juan García</p>
     <p class="tiny muted taller2-resena-rol">${esc(t(
       "Empleado ficticio para soltar factos que nadie se atreve a decir",
