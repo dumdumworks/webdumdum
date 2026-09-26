@@ -20,21 +20,21 @@ const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
 // contado como lo que es: una tarde metiendo las manos en la masa con
 // gente con la que normalmente solo compartes Slack.
 const PASOS = [
-  ["equipo", "Bandos", "Sides",
-    "<strong>En cuanto llegáis</strong>, se acaban los cargos: aquí todo el mundo empieza igual, delantal incluido.",
-    "<strong>The second you arrive</strong>, job titles stop mattering — everyone starts equal, apron included."],
-  ["masa", "Harina por todas partes", "Flour everywhere",
-    "Amasáis <strong>con las manos</strong>, sin filtro que disimule la harina en el pelo.",
-    "You knead <strong>with your bare hands</strong> — no filter hides the flour in your hair."],
-  ["dumpling", "La guerra del dumpling", "The dumpling wars",
-    "Rellenar y cerrar uno bien es más difícil de lo que parece. Se van a reír de los vuestros. <strong>Ganad con humor</strong>.",
-    "Filling and sealing one properly is harder than it looks. Someone will laugh at yours. <strong>Win with humour</strong>."],
-  ["cocinar", "Al vapor, sin dramas", "Steamed, no drama",
-    "Los cocináis vosotros, con <strong>nuestro equipo cerca</strong> por si alguien intenta incendiar la cocina.",
-    "You cook them yourselves, with <strong>our team nearby</strong> in case someone tries to set the kitchen on fire."],
-  ["comer", "La parte buena", "The good part",
-    "Os sentáis a <strong>comeros lo que habéis hecho</strong>, torcidos o no. Spoiler: da igual, están buenísimos.",
-    "You sit down to <strong>eat what you made</strong>, wonky or not. Spoiler: doesn't matter, they're delicious."],
+  ["equipo", "Equipos", "Teams",
+    "<strong>Os ponemos nosotros los equipos.</strong> Nada de eso de “hacemos los equipos nosotros” porque no: de hecho, os toca con quien más lejos tengáis.",
+    "<strong>We put the teams together.</strong> None of that “we'll sort our own teams” business — in fact, you get paired with whoever you're least close to."],
+  ["masa", "La masa", "The dough",
+    "Harina, agua, sal. Se pesa, se mezcla, <strong>os ponéis hasta arriba de harina</strong> — y es un momentazo, porque mancha igual al trainee que al CEO. Eso iguala.",
+    "Flour, water, salt. You weigh it, you mix it, <strong>you end up covered in flour</strong> — and that's the best part, because it gets on the trainee and the CEO exactly the same. That levels things out."],
+  ["dumpling", "A hacer dumplings", "Making the dumplings",
+    "El primero sale mal. El segundo, mal pero un poco mejor. Al quinto ya os contratamos. Lo importante no es que os salgan bien, es decirle al de al lado <strong>“tranqui, el siguiente te sale mejor, ¿te ayudo?”</strong>",
+    "The first one comes out wrong. The second, wrong but a bit better. By the fifth, we'd hire you. The point isn't getting them right — it's telling the person next to you <strong>“don't worry, the next one'll be better, want a hand?”</strong>"],
+  ["cocinar", "A cocinar", "Time to cook",
+    "Al vapor, con su salsa, su toque final, y listos. Lo bueno es que aquí, de repente, <strong>el jefe lo hace peor que vosotros</strong> — y le podéis decir “se hace así” y se calla y os da la razón.",
+    "Steamed, sauced, finished off, done. The best part: suddenly <strong>the boss is worse at this than you are</strong> — so you get to say “it's done like this” and watch them nod along."],
+  ["comer", "A comer", "Time to eat",
+    "Os sentáis a compartir lo que habéis hecho. <strong>Os aplaudís entre vosotros</strong> porque os ha quedado brutal, y sabe a gloria porque lo habéis hecho vosotros. Fin.",
+    "You sit down to share what you made. <strong>You applaud each other</strong> because it came out amazing, and it tastes incredible because you made it yourselves. The end."],
 ];
 // Lo esencial, sin precio: [icono, etiqueta es/en, valor es/en].
 const ESENCIAL = [

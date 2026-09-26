@@ -3177,9 +3177,8 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 }
 .taller2-desc {
   align-self: center; justify-self: center; text-align: center;
-  max-width: 150px;
+  max-width: 176px;
   font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; line-height: 1.45;
-  text-wrap: balance;
 }
 /* Riel vertical en móvil: icono sobre filete, mismo patrón que el resto
    de timelines de la web. */
