@@ -14,6 +14,9 @@ import { galeria } from "../galeria.mjs";
 
 export const RUTA = "/taller-team-building";
 const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
+// Flechita dibujada a mano para las notas al margen (pase "carpeta de
+// adolescente"): un solo trazo curvo, sin más adorno.
+const FLECHA = `<svg class="taller2-flecha" viewBox="0 0 60 40" fill="none" aria-hidden="true"><path d="M4 6 Q10 26 34 30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M24 27 L34 30 L30 19" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 // [icono, titulo es/en, frase es/en] de cada paso — mismo proceso real
 // de siempre (equipos → masa → montaje → cocinado → degustación), pero
@@ -130,24 +133,28 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   <h1 class="h-display" style="margin-top:16px">${esc(t("Con las manos", "Hands in the"))}<br>${esc(t("en la masa.", "dough. Literally."))}</h1>
   <div class="ev-hero-row" style="margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:32px">
     <p class="body" style="font-size:18px;flex:1 1 420px;min-width:0;margin:0">${t(
-      "Nada de <strong>trust falls</strong> ni dinámicas incómodas con post-its. Aquí el team building es meteros de verdad en la cocina, <strong>pelearos por quién dobla mejor el dumpling</strong>, mancharlo todo un poco y sentaros después a <strong>comeros lo que habéis hecho</strong>. Dos horas en Bernabéu que se recuerdan más que la cena de Navidad.",
-      "No <strong>trust falls</strong>, no awkward icebreakers with sticky notes. Here, team building means getting into the kitchen for real, <strong>arguing over who folds a better dumpling</strong>, making a bit of a mess, then sitting down to <strong>eat what you made</strong>. Two hours at our Bernabéu spot that'll get remembered more than the Christmas dinner.")}</p>
+      "Nada de <strong class=\"taller2-tachado\">trust falls</strong> ni dinámicas incómodas con post-its. Aquí el team building es meteros de verdad en la cocina, <strong>pelearos por quién dobla mejor el dumpling</strong>, mancharlo todo un poco y sentaros después a <strong>comeros lo que habéis hecho</strong>. Dos horas en Bernabéu que se recuerdan más que la cena de Navidad.",
+      "No <strong class=\"taller2-tachado\">trust falls</strong>, no awkward icebreakers with sticky notes. Here, team building means getting into the kitchen for real, <strong>arguing over who folds a better dumpling</strong>, making a bit of a mess, then sitting down to <strong>eat what you made</strong>. Two hours at our Bernabéu spot that'll get remembered more than the Christmas dinner.")}</p>
   </div>
-  <div class="ev-hero-cta" style="display:flex;flex-wrap:wrap;gap:16px">
-    <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
-    <a class="btn" href="${esc(DOSSIER)}" target="_blank" rel="noreferrer"><span class="btn-label">${esc(t("Descargar dossier", "Download dossier"))}</span><span class="btn-arrow">↓</span></a>
+  <div class="taller2-cta-wrap">
+    <div class="ev-hero-cta" style="display:flex;flex-wrap:wrap;gap:16px">
+      <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
+      <a class="btn" href="${esc(DOSSIER)}" target="_blank" rel="noreferrer"><span class="btn-label">${esc(t("Descargar dossier", "Download dossier"))}</span><span class="btn-arrow">↓</span></a>
+    </div>
+    <span class="taller2-mano taller2-nota-cta">${esc(t("empezad aquí", "start here"))}${FLECHA}</span>
   </div>
 </section>
 
 <figure class="taller2-foto-hero">
   <img src="img/espacio/02-barra-horizontal.jpg" alt="${esc(t("La cocina de DUM DUM Bernabéu, con el equipo trabajando en la barra.", "The DUM DUM Bernabéu kitchen, with the team working the counter."))}" loading="eager" decoding="async">
+  <div class="taller2-sello taller2-sello-hero" aria-hidden="true">${esc(t("Hecho a mano", "Made by hand"))}</div>
   <figcaption>${esc(t("Nuestra cocina, vuestra oficina de hoy.", "Our kitchen, your office for the day."))}</figcaption>
 </figure>
 
 <section class="taller2-pasos">
   <div class="tiny muted">${esc(t("Así va la cosa", "Here's how it goes"))}</div>
   <h2 class="h-1" style="margin-top:16px;max-width:18ch">${esc(t("Esto es lo que va a pasar.", "Here's what's about to happen."))}</h2>
-  <p class="taller2-sub">${esc(t("De la harina al plato, sin postureo.", "From flour to plate, no faking it."))}</p>
+  <p class="taller2-sub">${esc(t("De la harina al plato, sin postureo.", "From flour to plate, no faking it."))} <span class="taller2-mano taller2-nota-pasos">${esc(t("(ojo con la harina)", "(watch the flour)"))}</span></p>
   ${railEscritorio(i)}
   ${railMovil(i)}
 </section>
@@ -160,6 +167,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 <section class="taller2-cita">
   <p class="taller2-cita-grande">${esc(t("El postureo se queda en la puerta.", "Leave the fake team spirit at the door."))}</p>
   <p class="taller2-cita-sub">${esc(t("Aquí lo que cuenta es lo que hacéis con las manos.", "Here, what counts is what you do with your hands."))}</p>
+  <span class="taller2-mano taller2-nota-cita">${esc(t("va en serio", "we mean it"))}</span>
 </section>
 
 <section class="taller2-esencial">
@@ -199,6 +207,12 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 </section>
 </div>`;
 
+  // Única fuente aparte de JetBrains Mono en toda la web, y solo en esta
+  // página: el pase "carpeta de adolescente" pide notas escritas a mano de
+  // verdad, y Helvetica en cursiva no cuela. Va por precargas — no toca el
+  // <head> de ninguna otra ruta.
+  const precargas = '  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet">';
+
   return {
     titulo: i.lang === "en" ? (s.te || s.t) : s.t,
     desc: i.lang === "en" ? (s.de || s.d) : s.d,
@@ -207,5 +221,6 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
       { nombre: t("Eventos", "Events"), ruta: "/eventos" },
       { nombre: t("Talleres Team Building", "Team Building Workshops"), ruta: RUTA },
     ]), jsonLd(i, url), faqLd(i)],
+    precargas,
   };
 }

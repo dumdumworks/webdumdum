@@ -3413,3 +3413,142 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 [data-screen-label="taller-team-building"] .taller2-esencial-grid > .taller2-esencial-item:nth-child(3) { transform: rotate(3deg) translateY(-8px); }
 [data-screen-label="taller-team-building"] .taller2-esencial-grid > .taller2-esencial-item:nth-child(4) { transform: rotate(-5deg); }
 
+/* ─────────────────────────────────────────────────────────────
+   EXPERIMENTO — segundo pase "carpeta de adolescente": no solo
+   girar lo que ya había, sino meter materiales distintos, como en
+   un collage de verdad — notas a boli, una flecha, sellos de
+   tampón, una palabra tachada, recortes con el borde roto y un
+   marco hecho a mano. Cada pieza es de un tipo y no se repite dos
+   veces igual. Única página de la web con la fuente Caveat
+   (cargada por precargas, solo en esta ruta); todo lo demás sigue
+   en Helvetica/JetBrains Mono de siempre. */
+[data-screen-label="taller-team-building"] .taller2-mano {
+  font-family: "Caveat", "Helvetica Neue", cursive;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--red);
+  white-space: nowrap;
+}
+[data-screen-label="taller-team-building"] .taller2-flecha {
+  display: inline-block;
+  width: 34px; height: 22px;
+  margin-left: 2px;
+  color: var(--red);
+  vertical-align: middle;
+}
+
+/* Palabra tachada a boli: la manera más rápida de decir "esto no"
+   sin escribir una frase más. */
+[data-screen-label="taller-team-building"] .taller2-tachado {
+  text-decoration: line-through wavy var(--red);
+  text-decoration-thickness: 2px;
+}
+
+/* Nota junto al CTA del hero: un "empezad aquí" a boli con su
+   flecha, apuntando a los dos botones sin señalar a uno solo. */
+[data-screen-label="taller-team-building"] .taller2-cta-wrap { position: relative; }
+[data-screen-label="taller-team-building"] .taller2-nota-cta {
+  position: absolute;
+  top: -30px; left: 4px;
+  display: inline-flex; align-items: center;
+  transform: rotate(-7deg);
+}
+
+/* Sellos de tampón: doble filete, mayúsculas separadas, tinta al
+   70% — el aspecto de un sello de verdad, no una etiqueta. */
+[data-screen-label="taller-team-building"] .taller2-sello {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px;
+  border: 2px solid rgba(255,0,30,0.75);
+  outline: 1px solid rgba(255,0,30,0.75);
+  outline-offset: 3px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,0,30,0.75);
+  white-space: nowrap;
+  pointer-events: none;
+}
+[data-screen-label="taller-team-building"] .taller2-sello-hero {
+  position: absolute;
+  top: 18px; right: 18px;
+  transform: rotate(8deg);
+  background: rgba(251,250,246,0.9);
+}
+
+/* Nota junto al subtítulo del riel: comentario al margen, no una
+   frase más del cuerpo de texto. */
+[data-screen-label="taller-team-building"] .taller2-nota-pasos {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 19px;
+  transform: rotate(-3deg);
+  white-space: normal;
+}
+
+/* Nota bajo la cita roja: un apunte corto, en blanco sobre rojo. */
+[data-screen-label="taller-team-building"] .taller2-nota-cita {
+  display: inline-block;
+  margin-top: 10px;
+  color: rgba(255,250,243,0.85);
+  transform: rotate(-4deg);
+}
+
+/* Galería: cinco fotos, cinco formatos — Polaroid, recorte de
+   revista con el borde roto, nota con dos trozos de celo, marco
+   irregular como recortado a tijera, y una Polaroid con su sello.
+   Nada se repite dos veces igual. */
+[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(2) {
+  border-radius: 0;
+  border: 4px solid var(--paper);
+  padding: 0;
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% 92%, 92% 96%, 84% 91%, 76% 97%, 68% 92%,
+    60% 96%, 52% 91%, 44% 97%, 36% 92%, 28% 96%, 20% 91%, 12% 97%,
+    4% 92%, 0% 96%
+  );
+}
+[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(3) {
+  overflow: visible;
+  border-radius: 0;
+  border: none;
+  background: var(--paper);
+  padding: 12px;
+  box-shadow: 0 12px 22px rgba(26,26,26,0.16);
+}
+[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(3)::before,
+[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(3)::after {
+  content: "";
+  position: absolute; top: -8px;
+  width: 64px; height: 24px;
+  background: rgba(170,175,163,0.55);
+  border: 1px solid rgba(26,26,26,0.08);
+  z-index: 1;
+}
+[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(3)::before { left: 8px; transform: rotate(-6deg); }
+[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(3)::after { right: 8px; transform: rotate(5deg); }
+[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(4) {
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  border: 3px solid var(--red);
+  padding: 0;
+}
+[data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(5)::after {
+  content: "100% MASA";
+  position: absolute; bottom: 6px; right: 8px;
+  padding: 4px 8px;
+  border: 1px solid rgba(255,0,30,0.75);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: rgba(255,0,30,0.8);
+  background: rgba(251,250,246,0.85);
+  transform: rotate(-5deg);
+}
+html[lang="en"] [data-screen-label="taller-team-building"] .taller-galeria .ev-slider-carril .ev-slider-slot:nth-child(5)::after {
+  content: "100% DOUGH";
+}
+
