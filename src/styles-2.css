@@ -3413,3 +3413,43 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 [data-screen-label="taller-team-building"] .taller2-esencial-grid > .taller2-esencial-item:nth-child(3) { transform: rotate(3deg) translateY(-8px); }
 [data-screen-label="taller-team-building"] .taller2-esencial-grid > .taller2-esencial-item:nth-child(4) { transform: rotate(-5deg); }
 
+/* Nota pegada con celo en el hero: un post-it de verdad, escrito a
+   rotulador (única fuente aparte de JetBrains Mono en toda la web, y
+   solo en esta página, cargada por precargas). En móvil se queda en
+   el flujo, arriba del todo, como pegada encima del artículo; en
+   escritorio flota en la esquina, sin robarle sitio al titular. */
+[data-screen-label="taller-team-building"] .ev-hero { position: relative; }
+[data-screen-label="taller-team-building"] .taller2-nota-rotu {
+  position: relative;
+  max-width: 230px;
+  margin: 0 auto 32px;
+  padding: 18px 18px 14px;
+  background: var(--paper);
+  box-shadow: 0 10px 20px rgba(26,26,26,0.14);
+  transform: rotate(-3deg);
+}
+[data-screen-label="taller-team-building"] .taller2-nota-rotu::before {
+  content: "";
+  position: absolute; top: -14px; left: 50%;
+  width: 84px; height: 28px;
+  background: rgba(170,175,163,0.55);
+  border: 1px solid rgba(26,26,26,0.08);
+  transform: translateX(-50%) rotate(-5deg);
+}
+[data-screen-label="taller-team-building"] .taller2-nota-rotu span {
+  display: block;
+  font-family: "Permanent Marker", "Helvetica Neue", cursive;
+  font-size: 21px;
+  line-height: 1.3;
+  color: var(--red);
+  text-align: center;
+}
+@media (min-width: 880px) {
+  [data-screen-label="taller-team-building"] .taller2-nota-rotu {
+    position: absolute;
+    top: 4px; right: var(--gutter);
+    margin: 0;
+    transform: rotate(5deg);
+  }
+}
+
