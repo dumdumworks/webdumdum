@@ -3430,29 +3430,15 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 [data-screen-label="taller-team-building"] .taller2-esencial-grid > .taller2-esencial-item:nth-child(3) { transform: rotate(3deg) translateY(-8px); }
 [data-screen-label="taller-team-building"] .taller2-esencial-grid > .taller2-esencial-item:nth-child(4) { transform: rotate(-5deg); }
 
-/* Reseña de pega pegada con celo: una "opinión" con sus cinco
-   estrellas y su firma, de un empleado que la propia firma dice que
-   no existe — el chiste está en el crédito, no hace falta fingir
-   nada más. Papel y celo, no rotulador: es un recorte impreso, no
-   una nota a mano. Vive junto a la foto del hero, dentro de
-   .taller2-hero-media: apilada encima en móvil, a su izquierda en
-   escritorio. */
+/* Reseña de pega: una "opinión" con sus cinco estrellas y su firma,
+   de un empleado que la propia firma dice que no existe — el chiste
+   está en el crédito, no hace falta fingir nada más ni disfrazarla
+   de recorte de papel. Texto normal, sin tarjeta. Vive junto a la
+   foto del hero, dentro de .taller2-hero-media: apilada encima en
+   móvil, a su izquierda en escritorio. */
 [data-screen-label="taller-team-building"] .taller2-resena {
-  position: relative;
   max-width: 220px;
   margin: 0 auto 32px;
-  padding: 16px 18px 14px;
-  background: var(--paper);
-  box-shadow: 0 10px 20px rgba(26,26,26,0.14);
-  transform: rotate(-2deg);
-}
-[data-screen-label="taller-team-building"] .taller2-resena::before {
-  content: "";
-  position: absolute; top: -14px; left: 50%;
-  width: 84px; height: 28px;
-  background: rgba(170,175,163,0.55);
-  border: 1px solid rgba(26,26,26,0.08);
-  transform: translateX(-50%) rotate(-5deg);
 }
 [data-screen-label="taller-team-building"] .taller2-resena-estrellas {
   font-size: 13px;
@@ -3480,7 +3466,6 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
   [data-screen-label="taller-team-building"] .taller2-resena {
     flex: 0 0 230px;
     margin: 0;
-    transform: rotate(-3deg);
   }
 }
 
