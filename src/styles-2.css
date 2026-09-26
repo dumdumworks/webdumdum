@@ -1098,23 +1098,32 @@
    margin-top: .taller-casilla es flex, así que no colapsa con el
    margin-bottom del subtítulo de encima — poner los dos sumaba 48px de
    aire en vez de 24. */
-.taller-list { display: grid; grid-template-columns: 1fr; max-width: 720px; }
+.taller-list { display: grid; grid-template-columns: 1fr; max-width: 640px; }
 .taller-list > div {
   display: grid;
-  grid-template-columns: 180px 1fr;
-  align-items: baseline;
-  gap: 9px;
+  grid-template-columns: 64px 1fr;
+  align-items: center;
+  gap: 20px;
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-weight: 500;
   font-size: 13px;
   letter-spacing: 0;
   text-transform: uppercase;
-  padding: 26px 0;
+  padding: 22px 0;
   border-top: 1px solid var(--line-soft);
 }
 .taller-list > div:last-child { border-bottom: 1px solid var(--line-soft); }
-.taller-list b { font-weight: 600; color: rgba(255,0,30,0.55); }
-.taller-list > div > span {
+.taller-list-ico {
+  display: flex; align-items: center; justify-content: center;
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--red); color: var(--bg);
+  flex-shrink: 0;
+}
+.taller-list-ico svg { display: block; width: 32px; height: 32px; }
+.taller-list b { display: block; font-weight: 600; color: rgba(255,0,30,0.55); }
+.taller-list > div > div > span {
+  display: block;
+  margin-top: 4px;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(20px, 2.2vw, 28px);
@@ -1124,7 +1133,9 @@
   color: var(--red);
 }
 @media (max-width: 480px) {
-  .taller-list > div { grid-template-columns: 1fr; gap: 6px; }
+  .taller-list > div { grid-template-columns: 48px 1fr; gap: 14px; }
+  .taller-list-ico { width: 48px; height: 48px; }
+  .taller-list-ico svg { width: 24px; height: 24px; }
 }
 
 /* [04] Tarifas: tres cajas lado a lado, una por tramo, el más barato (más
