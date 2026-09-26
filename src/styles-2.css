@@ -3212,7 +3212,7 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
   .taller2-esencial-grid { grid-template-columns: repeat(4, 1fr); }
 }
 .taller2-esencial-ico { color: var(--red); margin-bottom: 12px; }
-.taller2-esencial-ico svg { display: block; width: 28px; height: 28px; }
+.taller2-esencial-ico svg { display: block; width: 40px; height: 40px; }
 .taller2-esencial-valor {
   margin-top: 6px;
   font-family: var(--font-display);
@@ -3360,10 +3360,6 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
   transform: translateX(-50%);
   box-shadow: 0 1px 2px rgba(26,26,26,0.3);
 }
-[data-screen-label="taller-team-building"] .taller2-esencial-grid > .taller2-esencial-item:nth-child(1) { transform: rotate(-4deg); }
-[data-screen-label="taller-team-building"] .taller2-esencial-grid > .taller2-esencial-item:nth-child(2) { transform: rotate(3deg) translateY(10px); }
-[data-screen-label="taller-team-building"] .taller2-esencial-grid > .taller2-esencial-item:nth-child(3) { transform: rotate(3deg) translateY(-8px); }
-[data-screen-label="taller-team-building"] .taller2-esencial-grid > .taller2-esencial-item:nth-child(4) { transform: rotate(-5deg); }
 
 /* Reseña de pega: una "opinión" con sus cinco estrellas y su firma,
    de un empleado que la propia firma dice que no existe — el chiste
