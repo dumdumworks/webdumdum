@@ -180,8 +180,8 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 </section>
 
 <section class="taller2-esencial">
-  <div class="tiny muted">${esc(t("Lo esencial", "The essentials"))}</div>
-  <h2 class="h-1" style="margin-top:16px;max-width:16ch">${esc(t("Lo que necesitas saber.", "What you need to know."))}</h2>
+  <div class="tiny muted" style="text-align:center">${esc(t("Lo esencial", "The essentials"))}</div>
+  <h2 class="h-1" style="margin:16px auto 0;max-width:16ch;text-align:center">${esc(t("Lo que necesitas saber.", "What you need to know."))}</h2>
   <div class="taller2-esencial-grid">
     ${ESENCIAL.map(([ico, esL, enL, esV, enV]) => `<div class="taller2-esencial-item">
       <div class="taller2-esencial-ico">${icono(ico)}</div>
