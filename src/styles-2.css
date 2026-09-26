@@ -3297,11 +3297,25 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
    selector de página delante, para ganar el empate de
    especificidad sin usar !important en ningún sitio. */
 
-/* Foto del hero: de foto a sangre a Polaroid pegada con celo,
-   ligeramente girada y montada sobre la sección siguiente. */
+/* Foto del hero + reseña: de foto a sangre a Polaroid pegada con celo,
+   ligeramente girada y montada sobre la sección siguiente, con la
+   reseña de mentira a su izquierda. En móvil son dos bloques
+   apilados (la reseña ya trae su propio margen); en escritorio,
+   una fila con la pareja centrada. */
+[data-screen-label="taller-team-building"] .taller2-hero-media {
+  margin-bottom: -24px;
+}
+@media (min-width: 880px) {
+  [data-screen-label="taller-team-building"] .taller2-hero-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+  }
+}
 [data-screen-label="taller-team-building"] .taller2-foto-hero {
   margin-top: 0;
-  margin-bottom: -24px;
+  margin-bottom: 0;
   margin-left: var(--gutter);
   margin-right: var(--gutter);
   max-width: 640px;
@@ -3312,7 +3326,10 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
   z-index: 2;
 }
 @media (min-width: 880px) {
-  [data-screen-label="taller-team-building"] .taller2-foto-hero { margin-left: auto; margin-right: auto; }
+  [data-screen-label="taller-team-building"] .taller2-foto-hero {
+    margin-left: 0; margin-right: 0;
+    flex: 1 1 auto;
+  }
 }
 [data-screen-label="taller-team-building"] .taller2-foto-hero img {
   height: 56vw; max-height: 420px; min-height: 200px;
@@ -3413,14 +3430,13 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 [data-screen-label="taller-team-building"] .taller2-esencial-grid > .taller2-esencial-item:nth-child(3) { transform: rotate(3deg) translateY(-8px); }
 [data-screen-label="taller-team-building"] .taller2-esencial-grid > .taller2-esencial-item:nth-child(4) { transform: rotate(-5deg); }
 
-/* Reseña de pega pegada con celo en el hero: una "opinión" con sus
-   cinco estrellas y su firma, de un empleado que la propia firma dice
-   que no existe — el chiste está en el crédito, no hace falta
-   fingir nada más. Papel y celo, no rotulador: es un recorte
-   impreso, no una nota a mano. En móvil se queda en el flujo, arriba
-   del todo; en escritorio flota en la esquina, sin robarle sitio al
-   titular. */
-[data-screen-label="taller-team-building"] .ev-hero { position: relative; }
+/* Reseña de pega pegada con celo: una "opinión" con sus cinco
+   estrellas y su firma, de un empleado que la propia firma dice que
+   no existe — el chiste está en el crédito, no hace falta fingir
+   nada más. Papel y celo, no rotulador: es un recorte impreso, no
+   una nota a mano. Vive junto a la foto del hero, dentro de
+   .taller2-hero-media: apilada encima en móvil, a su izquierda en
+   escritorio. */
 [data-screen-label="taller-team-building"] .taller2-resena {
   position: relative;
   max-width: 220px;
@@ -3462,14 +3478,9 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 }
 @media (min-width: 880px) {
   [data-screen-label="taller-team-building"] .taller2-resena {
-    position: absolute;
-    top: 4px; right: var(--gutter);
+    flex: 0 0 230px;
     margin: 0;
-    transform: rotate(4deg);
+    transform: rotate(-3deg);
   }
-}
-@media (min-width: 880px) and (max-width: 1279px) {
-  [data-screen-label="taller-team-building"] .taller2-resena { max-width: 190px; padding: 14px 16px 12px; }
-  [data-screen-label="taller-team-building"] .taller2-resena-texto { font-size: 12px; }
 }
 
