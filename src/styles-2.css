@@ -1137,6 +1137,17 @@
   text-transform: none;
   color: var(--red);
 }
+.taller-list-sub {
+  margin-top: 10px;
+  max-width: 220px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.45;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+}
 
 /* [04] Tarifas: tres cajas lado a lado, una por tramo, el más barato (más
    gente) primero — es el foco de venta, no hay que llegar al final para
