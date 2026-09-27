@@ -10,7 +10,7 @@
 import { esc, ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
 import { icono } from "./local.mjs";
-import { galeria } from "../galeria.mjs";
+import { srcset } from "../imagenes.mjs";
 
 export const RUTA = "/taller-team-building";
 const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
@@ -94,6 +94,28 @@ const railMovil = (i) => `<div class="taller2-movil">
     </div>`).join("\n    ")}
   </div>`;
 
+// Un dato de "Lo esencial" (icono + etiqueta + valor, con subtítulo opcional):
+// vive en el hueco que deja la foto de al lado en el zigzag.
+const datoZigzag = (i, [ico, esL, enL, esV, enV, esSub, enSub]) => `<div class="taller-zigzag-dato">
+      <span class="taller-list-ico">${icono(ico)}</span>
+      <div>
+        <b>${esc(i.lang === "en" ? enL : esL)}</b>
+        <span>${esc(i.lang === "en" ? enV : esV)}</span>
+        ${esSub ? `<p class="taller-list-sub">${esc(i.lang === "en" ? enSub : esSub)}</p>` : ""}
+      </div>
+    </div>`;
+
+// Zigzag de fotos: cada foto pegada a un lado, alternando, con el dato de
+// "Lo esencial" correspondiente en el aire que deja al otro lado. Cinco
+// fotos, cuatro datos — la última foto se queda sola, sin pareja.
+const zigzag = (i, { fotos, raiz }) => fotos.map((foto, idx) => {
+  const ss = srcset(raiz, foto.src);
+  const sizes = "(max-width: 879px) 100vw, 480px";
+  const fotoHtml = `<figure class="taller-zigzag-foto"><img src="${esc(foto.src)}"${ss ? ` srcset="${esc(ss)}" sizes="${esc(sizes)}"` : ""} alt="" style="object-position:${esc(foto.pos || "50% 50%")}" loading="lazy" decoding="async"></figure>`;
+  const dato = ESENCIAL[idx] ? datoZigzag(i, ESENCIAL[idx]) : "";
+  return `<div class="taller-zigzag-fila">${fotoHtml}${dato}</div>`;
+}).join("\n    ");
+
 function jsonLd(i, url) {
   const { t } = i;
   return {
@@ -176,16 +198,11 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
   ${railMovil(i)}
 </section>
 
-<section class="taller-galeria">
-  <div class="tiny muted" style="margin:0 var(--gutter) 16px">${esc(t("Así es el sitio", "This is the place"))}</div>
-  ${galeria(i, { fotos, ratio: "3 / 4", etiquetaHueco: t("Foto", "Photo"), raiz })}
-</section>
-
 <section class="taller2-esencial">
   <div class="tiny muted" style="text-align:center">${esc(t("Lo esencial", "The essentials"))}</div>
   <h2 class="h-1" style="margin:16px auto 0;max-width:16ch;text-align:center">${esc(t("Lo que necesitas saber.", "What you need to know."))}</h2>
-  <div class="taller-list" style="margin:32px auto 0">
-    ${ESENCIAL.map(([ico, esL, enL, esV, enV, esSub, enSub]) => `<div><span class="taller-list-ico">${icono(ico)}</span><div><b>${esc(i.lang === "en" ? enL : esL)}</b><span>${esc(i.lang === "en" ? enV : esV)}</span>${esSub ? `<p class="taller-list-sub">${esc(i.lang === "en" ? enSub : esSub)}</p>` : ""}</div></div>`).join("\n    ")}
+  <div class="taller-zigzag-list">
+    ${zigzag(i, { fotos, raiz })}
   </div>
   <p class="taller2-esencial-nota">${esc(t("¿El precio? Te lo damos en cuanto nos cuentes cuántos sois.", "The price? We'll give it to you the moment you tell us how many you are."))}</p>
   <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos" style="width:fit-content"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>

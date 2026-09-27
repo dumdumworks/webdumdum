@@ -1091,18 +1091,34 @@
   [data-screen-label="taller-team-building"] .ev-hero-cta .btn { width: 100%; justify-content: center; }
 }
 
-/* Cuatro datos en fila (/taller-team-building), no una lista: cada uno
-   con su icono en pastilla, su etiqueta y su valor, uno al lado del
-   otro — sin caja ni filete, solo el aire del gap entre columnas. */
-.taller-list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 40px 24px;
+/* Zigzag de fotos + datos (/taller-team-building): cada foto pegada a un
+   lado, alternando con .nth-child(even), y el dato de "Lo esencial" (icono,
+   etiqueta, valor) en el aire que deja al otro lado. La última foto, sin
+   dato emparejado, se queda sola. */
+.taller-zigzag-list {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+  margin-top: 40px;
+}
+.taller-zigzag-fila {
+  display: flex;
+  align-items: center;
+  gap: 40px;
 }
 @media (min-width: 880px) {
-  .taller-list { grid-template-columns: repeat(4, 1fr); max-width: 1032px; margin-left: auto; margin-right: auto; }
+  .taller-zigzag-fila:nth-child(even) { flex-direction: row-reverse; }
 }
-.taller-list > div {
+.taller-zigzag-foto {
+  flex: 1 1 0;
+  max-width: 480px;
+  aspect-ratio: 3 / 4;
+  margin: 0;
+  overflow: hidden;
+}
+.taller-zigzag-foto img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.taller-zigzag-dato {
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1112,6 +1128,10 @@
   font-size: 13px;
   letter-spacing: 0;
   text-transform: uppercase;
+}
+@media (max-width: 879px) {
+  .taller-zigzag-fila { flex-direction: column; }
+  .taller-zigzag-foto { flex: 0 0 auto; width: 100%; max-width: 100%; }
 }
 .taller-list-ico {
   display: flex; align-items: center; justify-content: center;
@@ -1125,8 +1145,8 @@
   .taller-list-ico { width: 86px; height: 86px; }
   .taller-list-ico svg { width: 54px; height: 54px; }
 }
-.taller-list b { display: block; font-weight: 600; color: rgba(255,0,30,0.55); }
-.taller-list > div > div > span {
+.taller-zigzag-dato b { display: block; font-weight: 600; color: rgba(255,0,30,0.55); }
+.taller-zigzag-dato > div > span {
   display: block;
   margin-top: 6px;
   font-family: var(--font-display);
@@ -1139,7 +1159,7 @@
 }
 .taller-list-sub {
   margin-top: 10px;
-  max-width: 220px;
+  max-width: 320px;
   font-family: var(--font-display);
   font-weight: 400;
   font-size: 14px;
@@ -1313,17 +1333,6 @@
   color: rgba(255,0,30,0.55);
 }
 .taller-tarifas-pie .taller-casilla-nota { margin-top: 4px; padding-top: 0; min-height: 0; }
-
-/* Galería a ancho completo entre [01] El taller y la rejilla — el mismo
-   componente y el mismo aire que la de la ficha de local (.local-galeria,
-   ver ahí), no confinada a una casilla estrecha como antes. */
-.taller-galeria {
-  padding: 28px 0 40px;
-  margin: 0 var(--gutter);
-  border-bottom: 1px solid var(--line);
-}
-.taller-galeria .ev-slider { margin-top: 0; }
-.taller-galeria .ev-slider-ctrls { margin-left: auto; }
 
 /* Rejilla de [03]-[04] (Horarios, FAQ): 2 columnas × 1 fila, no
    secciones apiladas a ancho completo. La fila estira las 2 casillas al
