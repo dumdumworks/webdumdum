@@ -200,7 +200,6 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, galerias, raiz }
 
 <section class="taller2-esencial">
   <div class="tiny muted" style="text-align:center">${esc(t("Lo esencial", "The essentials"))}</div>
-  <h2 class="h-1" style="margin:16px auto 0;max-width:16ch;text-align:center">${esc(t("Lo que necesitas saber.", "What you need to know."))}</h2>
   <div class="taller-zigzag-list">
     ${zigzag(i, { fotos, raiz })}
   </div>
