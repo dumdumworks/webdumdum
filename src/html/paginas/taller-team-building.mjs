@@ -378,8 +378,13 @@ function faqLd(i) {
 // corona de laurel y el filete; el texto es HTML de verdad encima —
 // Oswald para el titular, Times New Roman para la coletilla — así se
 // puede cambiar sin tocar el SVG y lo lee un lector de pantalla.
+// "?v=" para forzar la caché (Cloudflare cachea las imágenes 4h por nombre;
+// sin versión, quien haya cargado la página antes de un cambio en el SVG
+// se queda viendo la corona vieja hasta que expire). Subir el número cada
+// vez que se retoque alguno de los dos SVG.
+const SELLO_V = 2;
 const sello = (lado, archivo, w, h, titulo, sub) => `<div class="taller2-sello-wrap taller2-sello-wrap--${lado}">
-      <img class="taller2-sello" src="img/logos/${archivo}" alt="" width="${w}" height="${h}" loading="lazy" decoding="async">
+      <img class="taller2-sello" src="img/logos/${archivo}?v=${SELLO_V}" alt="" width="${w}" height="${h}" loading="lazy" decoding="async">
       <p class="taller2-sello-titulo">${titulo.join("<br>")}</p>
       <p class="taller2-sello-sub">${sub.map(esc).join("<br>")}</p>
     </div>`;
