@@ -64,6 +64,10 @@ const lineasSpans = (lineas) => lineas.map((l, idx) => `<span class="tz-l${idx}"
 // palabra clave de la frase, en negrita — el texto en sí no cambia ni una
 // letra, solo se marca dónde empieza y acaba el <strong>.
 const resaltar = ([antes, clave, despues]) => `${esc(antes)}<strong>${esc(clave)}</strong>${esc(despues)}`;
+// Palabra en peso normal dentro de un titular en negrita (los sellos: "2026",
+// "TALLER" y "DE" van en Oswald regular, no en el 700 del resto de la
+// palabra — así estaba en el dibujo original de Yerai).
+const reg = (s) => `<span class="taller2-sello-reg">${esc(s)}</span>`;
 
 // RESERVADO — Yerai ha pedido guardar este copy (titular + párrafo de
 // Grupo, Dónde y Carta) para reutilizarlo más adelante en otro sitio de la
@@ -81,9 +85,11 @@ const GRUPO_DESC = {
   es: ["Esa franja es la óptima, pero también lo hemos hecho con ", "grupos más grandes", " y la cosa es organizarse. Si tu grupo es de más gente, cuéntanos."],
   en: ["That range is the optimal one, but we've also done it with ", "bigger groups", " — it's just a matter of organising. If your group is bigger, let us know."],
 };
-const grupoTexto = (i) => `<div class="taller-zigzag-titular-cont">
-      <div class="taller-zigzag-horas taller-zigzag-horas--grupo-${i.lang}">${lineasSpans(GRUPO_LINEAS[i.lang])}</div>
-      <p class="body taller-zigzag-horas-desc">${resaltar(GRUPO_DESC[i.lang])}</p>
+const grupoTexto = (i) => `<div class="taller-zigzag-col">
+      <div class="taller-zigzag-titular-cont">
+        <div class="taller-zigzag-horas taller-zigzag-horas--grupo-${i.lang}">${lineasSpans(GRUPO_LINEAS[i.lang])}</div>
+        <p class="body taller-zigzag-horas-desc">${resaltar(GRUPO_DESC[i.lang])}</p>
+      </div>
     </div>`;
 
 // El "Dónde" ("Solo en Dum Dum de Bernabéu"): la foto cae a la izquierda
@@ -97,9 +103,11 @@ const DONDE_DESC = {
   es: ["Lo hacemos solo en este restaurante porque es el grande, el que tiene la ", "cocina integrada", ", el que os hace sentir un poco como en The Bear, el que queda mejor en las fotos y en el que vais a estar a gusto, que es lo importante."],
   en: ["We only do it in this restaurant because it's the big one, the one with the ", "open kitchen", ", the one that makes you feel a bit like you're in The Bear, the one that looks best in photos, and the one where you'll be comfortable — which is what matters."],
 };
-const dondeTexto = (i) => `<div class="taller-zigzag-titular-cont">
-      <div class="taller-zigzag-horas taller-zigzag-horas--donde-${i.lang}">${lineasSpans(DONDE_LINEAS[i.lang])}</div>
-      <p class="body taller-zigzag-horas-desc">${resaltar(DONDE_DESC[i.lang])}</p>
+const dondeTexto = (i) => `<div class="taller-zigzag-col">
+      <div class="taller-zigzag-titular-cont">
+        <div class="taller-zigzag-horas taller-zigzag-horas--donde-${i.lang}">${lineasSpans(DONDE_LINEAS[i.lang])}</div>
+        <p class="body taller-zigzag-horas-desc">${resaltar(DONDE_DESC[i.lang])}</p>
+      </div>
     </div>`;
 
 // "Incluye" ("Degusta de toda la carta"), misma lógica que "grupos de...":
@@ -113,9 +121,11 @@ const CARTA_DESC = {
   es: ["Una vez hayáis cocinado, se prueba ", "todo lo que haya en carta", " en el restaurante. Incluye un entrante a compartir, una bebida, una cata de todos los dumplings de la carta y un postre. Que os ponéis finos, vaya."],
   en: ["Once you're done cooking, you get to taste ", "everything on the menu", " at the restaurant. It includes a starter to share, a drink, a tasting of every dumpling on the menu, and a dessert. You'll be properly spoiled, honestly."],
 };
-const cartaTexto = (i) => `<div class="taller-zigzag-titular-cont">
-      <div class="taller-zigzag-horas taller-zigzag-horas--carta-${i.lang}">${lineasSpans(CARTA_LINEAS[i.lang])}</div>
-      <p class="body taller-zigzag-horas-desc">${resaltar(CARTA_DESC[i.lang])}</p>
+const cartaTexto = (i) => `<div class="taller-zigzag-col">
+      <div class="taller-zigzag-titular-cont">
+        <div class="taller-zigzag-horas taller-zigzag-horas--carta-${i.lang}">${lineasSpans(CARTA_LINEAS[i.lang])}</div>
+        <p class="body taller-zigzag-horas-desc">${resaltar(CARTA_DESC[i.lang])}</p>
+      </div>
     </div>`;
 
 // Datos esenciales (Grupo, Dónde, Carta, Duración) bajo el timeline, en una
@@ -262,13 +272,15 @@ const resenaPaso = (i, idx) => {
 };
 const pasoTexto = (i, idx) => {
   const [, , esC, enC] = PASOS[idx];
-  return `<div class="taller-zigzag-titular-cont">
-      <div class="timeline-num-fila">
-        <span class="timeline-num">${idx + 1}.</span>
-        <span class="hr timeline-num-linea" aria-hidden="true"></span>
+  return `<div class="taller-zigzag-col">
+      <div class="taller-zigzag-titular-cont">
+        <div class="timeline-num-fila">
+          <span class="timeline-num">${idx + 1}.</span>
+          <span class="hr timeline-num-linea" aria-hidden="true"></span>
+        </div>
+        <div class="taller-zigzag-horas taller-zigzag-horas--paso-${i.lang}${idx === 2 && i.lang === "es" ? " taller-zigzag-horas--dumplings-mobile" : ""}">${lineasSpans(PASO_LINEAS[i.lang][idx])}</div>
+        <p class="body taller-zigzag-horas-desc">${esc(i.lang === "en" ? enC : esC)}</p>
       </div>
-      <div class="taller-zigzag-horas taller-zigzag-horas--paso-${i.lang}">${lineasSpans(PASO_LINEAS[i.lang][idx])}</div>
-      <p class="body taller-zigzag-horas-desc">${esc(i.lang === "en" ? enC : esC)}</p>
       ${resenaPaso(i, idx)}
     </div>`;
 };
@@ -362,10 +374,15 @@ function faqLd(i) {
 }
 
 // Sellos de "laurel de festival de cine" (Official Selection) a los lados
-// de la foto del hero, en broma: dos SVG ya maquetados por Yerai (texto
-// vectorizado en Illustrator, no HTML) — el año queda fijo en el dibujo,
-// no se recalcula solo; para cambiarlo hay que regenerar el SVG.
-const sello = (lado, archivo, w, h, alt) => `<img class="taller2-sello taller2-sello--${lado}" src="img/logos/${archivo}" alt="${esc(alt)}" width="${w}" height="${h}" loading="lazy" decoding="async">`;
+// de la foto del hero, en broma: el SVG (dibujo de Yerai) trae solo la
+// corona de laurel y el filete; el texto es HTML de verdad encima —
+// Oswald para el titular, Times New Roman para la coletilla — así se
+// puede cambiar sin tocar el SVG y lo lee un lector de pantalla.
+const sello = (lado, archivo, w, h, titulo, sub) => `<div class="taller2-sello-wrap taller2-sello-wrap--${lado}">
+      <img class="taller2-sello" src="img/logos/${archivo}" alt="" width="${w}" height="${h}" loading="lazy" decoding="async">
+      <p class="taller2-sello-titulo">${titulo.join("<br>")}</p>
+      <p class="taller2-sello-sub">${sub.map(esc).join("<br>")}</p>
+    </div>`;
 
 export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
   const { t } = i;
@@ -375,11 +392,11 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
   const main = `<div data-screen-label="taller-team-building">
 <section class="ev-hero">
   <div class="tiny muted"><a href="${i.ruta("/eventos")}" class="link-hover">${esc(t("Eventos", "Events"))}</a> · ${esc(t("Talleres Team Building", "Team Building Workshops"))}</div>
-  <h1 class="h-display" style="margin-top:16px">${esc(t("Con las manos", "Hands in the"))}<br>${esc(t("en la masa.", "dough. Literally."))}</h1>
+  <h1 class="h-display" style="margin-top:16px">${esc(t("Un team building", "A team building"))}<br>${esc(t("que se come", "you can eat"))}</h1>
   <div class="ev-hero-row" style="margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:32px">
     <p class="body" style="font-size:18px;flex:1 1 420px;min-width:0;margin:0">${t(
-      "Lo de tirarse de espaldas y esperar a que te cojan tus compañeros puede llegar a estar bien, pero eso luego no te lo puedes comer. Tampoco te puedes comer los post-its del juego ese de ponérselos en la frente con palabras. Y tampoco se puede hacer un dumpling con bolas de paintball. Sin embargo, en el taller de dumplings de DUM DUM™, cocinas en equipos, aprendes a hacer cosas y lo mejor es que, luego, te lo comes. Planazo, la verdad.",
-      "Falling backwards and waiting for your workmates to catch you can be alright, but you can't eat that afterwards. You can't eat the post-its from that game where you stick words on your forehead either. And you can't make a dumpling out of paintball pellets. However, at DUM DUM™'s dumpling workshop, you cook in teams, you learn to make things, and the best part is that, afterwards, you eat it. What a plan, honestly.")}</p>
+      "Lo de <strong>tirarse de espaldas</strong> y esperar a que te cojan tus compañeros puede llegar a estar bien, pero eso luego <strong>no te lo puedes comer</strong>. Tampoco <strong>te puedes comer los post-its</strong> del juego ese de ponérselos en la frente con palabras. Y <strong>tampoco se puede hacer un dumpling con bolas de paintball</strong>. Sin embargo, <strong>en el taller de dumplings de DUM DUM™</strong>, cocinas en equipos, aprendes a hacer cosas y lo mejor es que, luego, te lo comes. <strong>Planazo, la verdad</strong>.",
+      "<strong>Falling backwards</strong> and waiting for your workmates to catch you can be alright, but <strong>you can't eat that</strong> afterwards. <strong>You can't eat the post-its</strong> from that game where you stick words on your forehead either. And <strong>you can't make a dumpling out of paintball pellets</strong>. However, <strong>at DUM DUM™'s dumpling workshop</strong>, you cook in teams, you learn to make things, and the best part is that, afterwards, you eat it. <strong>What a plan, honestly</strong>.")}</p>
   </div>
   <div class="ev-hero-cta">
     <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
@@ -388,14 +405,18 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
 </section>
 
 <div class="taller2-hero-media">
-  ${sello("izq", "sello-mejor-team-building.svg", 260, 166, "Mejor team building 2026, según nuestra madre. Es la mejor.")}
+  ${sello("izq", "sello-mejor-team-building.svg", 260, 166,
+    t([esc("MEJOR TEAM"), `${esc("BUILDING ")}${reg("2026")}`], [esc("BEST TEAM"), `${esc("BUILDING ")}${reg("2026")}`]),
+    t(["SEGÚN NUESTRA MADRE", "QUE ES LA MEJOR"], ["ACCORDING TO OUR MOM", "WHO IS THE BEST"]))}
   <figure class="taller2-foto-hero">
     <img src="img/espacio/02-barra-horizontal.jpg" alt="${esc(t("La cocina de DUM DUM Bernabéu, con el equipo trabajando en la barra.", "The DUM DUM Bernabéu kitchen, with the team working the counter."))}" loading="eager" decoding="async">
     <figcaption>${esc(t(
       "Estudios demuestran que la manera de mejorar tu relación con los de la oficina es metiéndoos en una cocina. El estudio lo hemos hecho nosotros, y cuando lo hemos leído nos ha parecido bien.",
       "Studies show the way to improve your relationship with your officemates is getting into a kitchen together. We did the study ourselves, and when we read it, it seemed about right."))}</figcaption>
   </figure>
-  ${sello("der", "sello-top1-dumplings.svg", 260, 146, "Top 1. Taller de dumplings. Somos los primeros de una lista de uno. Gege.")}
+  ${sello("der", "sello-top1-dumplings.svg", 260, 146,
+    t([`${esc("TOP 1 ")}${reg("TALLER")}`, `${reg("DE")}${esc(" DUMPLINGS")}`], [`${esc("TOP 1 ")}${reg("WORKSHOP")}`, `${reg("FOR")}${esc(" DUMPLINGS")}`]),
+    t(["EN LA LISTA SOLO ESTAMOS", "NOSOTROS. JEJE."], ["WE'RE THE ONLY ONES", "ON THE LIST. HEH."]))}
 </div>
 
 <section class="taller2-esencial">

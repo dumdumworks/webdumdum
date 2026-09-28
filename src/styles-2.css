@@ -1057,11 +1057,11 @@
    [data-screen-label] para no afectar al mismo .ev-hero de otras
    páginas, que sí quedan alineadas a la izquierda en escritorio. */
 [data-screen-label="taller-team-building"] .ev-hero { text-align: center; }
-/* 72ch, no los 56ch de fábrica: con el párrafo centrado, el de 56ch
-   partía en 4 líneas (la última con una sola palabra suelta) — 72ch le
-   cabe de sobra a las dos versiones (ES más largo, EN más corto) en 3
-   líneas parejas. Probado con getBoundingClientRect en las dos. */
-[data-screen-label="taller-team-building"] .ev-hero p { margin-left: auto; margin-right: auto; max-width: 72ch; }
+/* 100ch, no los 72ch de antes: con las palabras clave en negrita (más
+   anchas que el resto), el párrafo pasó de 3 a 6 líneas dentro de los
+   mismos 72ch — más ancho para volver a las 4 líneas parejas que pide
+   Yerai. Probado con getBoundingClientRect en las dos versiones. */
+[data-screen-label="taller-team-building"] .ev-hero p { margin-left: auto; margin-right: auto; max-width: 100ch; }
 [data-screen-label="taller-team-building"] .ev-hero-row { justify-content: center; }
 
 /* .ev-hero-cta trae 40px/36px de margin-top de fábrica, sin relación
@@ -1173,6 +1173,24 @@
 .taller2-titulo-hero--es .taller2-titulo-hero-peque { font-size: 6.93cqw; top: 26.94cqw; right: 0.4cqw; }
 .taller2-titulo-hero--en .taller2-titulo-hero-grande { font-size: 22.1cqw; transform: translate(0, 3.4cqw); }
 .taller2-titulo-hero--en .taller2-titulo-hero-peque { font-size: 6.98cqw; top: 45.87cqw; }
+/* "EL TALLER" en dos líneas SOLO en móvil (pedido de Yerai): en escritorio,
+   a este tamaño tan grande, "EL TALLER" cabe de sobra en una línea — partirlo
+   ahí no ganaría nada. En móvil, en cambio, antes tenían que repartirse el
+   ancho del bloque entre las dos palabras; separadas, "TALLER" (la más
+   ancha) puede reclamar ella sola ese mismo ancho, así el conjunto crece
+   mucho más que "EL TALLER" junto. Mismo truco que "LOS DUM-/PLINGS" más
+   abajo: width:min-content deja que el único espacio sea el único punto de
+   corte posible. Un solo font-size para las dos líneas (como en inglés,
+   "THE"/"WORKSHOP"): "EL" no se estira a todo el ancho, se queda corto y
+   pegado a la izquierda. */
+@media (max-width: 879px) {
+  .taller2-titulo-hero--es .taller2-titulo-hero-grande {
+    white-space: normal;
+    width: min-content;
+    font-size: 35.85cqw;
+  }
+  .taller2-titulo-hero--es .taller2-titulo-hero-peque { top: 70.1cqw; }
+}
 .taller-zigzag-fila {
   display: flex;
   align-items: center;
@@ -1199,6 +1217,35 @@
 @media (max-width: 879px) {
   .taller-zigzag-fila { flex-direction: column; }
   .taller-zigzag-foto { flex: 0 0 auto; width: 100%; max-width: 100%; }
+  /* La foto de cada paso va ENTRE el párrafo y la reseña (pedido de
+     Yerai), no al final de todo. .taller-zigzag-col se "abre" con
+     display:contents: dentro solo tiene a .taller-zigzag-titular-cont
+     (número + título + párrafo) y a la reseña, hermanos ahora — al
+     abrirse, esos dos hermanos pasan a competir por el order en la
+     MISMA fila flex que la foto, así se puede meter la foto justo entre
+     medias. El container query del titular (en .taller-zigzag-
+     titular-cont, no en .taller-zigzag-col) no se entera: es una
+     propiedad del hijo, no del padre que se abre. */
+  .taller-zigzag-fila--paso .taller-zigzag-col { display: contents; }
+  .taller-zigzag-fila--paso .taller-zigzag-titular-cont { order: 0; }
+  .taller-zigzag-fila--paso .taller-zigzag-foto { order: 1; }
+  .taller-zigzag-fila--paso .taller2-resena--paso { order: 2; }
+  /* Párrafo→foto y foto→reseña: el gap de 40px de la fila ya separa estos
+     tres bloques ahora que son hermanos (ver arriba) — los márgenes de
+     32px (párrafo) y 72px (reseña), pensados para el escritorio, donde la
+     reseña cuelga justo debajo del párrafo en la misma columna, se sumaban
+     al gap y dejaban demasiado aire en móvil. */
+  .taller-zigzag-fila--paso .taller-zigzag-horas-desc { margin-bottom: 0; }
+  .taller-zigzag-fila--paso .taller-zigzag-col .taller2-resena.taller2-resena--paso { margin-top: 0; }
+  /* "LOS DUM-PLINGS" en tres líneas en vez de dos, solo en móvil (en
+     escritorio, a un tamaño mucho mayor, "LOS DUM-" cabe de sobra en una
+     línea): width:min-content deja que el propio texto decida su ancho
+     mínimo con el espacio como único punto de corte posible, así parte
+     justo entre "LOS" y "DUM-" sin medir nada a mano. */
+  .taller-zigzag-horas--dumplings-mobile .tz-l0 {
+    white-space: normal;
+    width: min-content;
+  }
 }
 .taller-zigzag-horas {
   /* -0.1em: con este line-height, el asendente de Oswald deja ~un 10% del
@@ -1233,10 +1280,20 @@
 /* Carta: el titular y su párrafo van pegados abajo, alineados con el
    final de la foto de la derecha, en vez de arriba como el resto. */
 .taller-zigzag-fila--abajo { align-items: flex-end; }
-.taller-zigzag-titular-cont {
-  container-type: inline-size;
+/* .taller-zigzag-col es la columna de texto de verdad dentro de la fila
+   (el flex item de 480px); .taller-zigzag-titular-cont, DENTRO de ella,
+   solo pone el contexto de container query para el titular gigante en
+   cqw — antes eran la misma caja, pero para poder meter la foto ENTRE el
+   párrafo y la reseña en móvil (ver más abajo) la reseña tiene que ser
+   hermana de .taller-zigzag-titular-cont, no estar dentro: así .taller-
+   zigzag-col puede "abrirse" con display:contents en móvil sin tocar el
+   container query, que sigue viviendo en .taller-zigzag-titular-cont. */
+.taller-zigzag-col {
   flex: 1 1 0;
   max-width: 480px;
+}
+.taller-zigzag-titular-cont {
+  container-type: inline-size;
 }
 .taller-zigzag-horas--grupo-es,
 .taller-zigzag-horas--grupo-en,
@@ -1246,7 +1303,7 @@
 }
 @media (max-width: 879px) {
   .taller-zigzag-fila--grande { align-items: stretch; }
-  .taller-zigzag-titular-cont { max-width: 100%; }
+  .taller-zigzag-col { max-width: 100%; }
   .taller-zigzag-horas--grupo-es,
   .taller-zigzag-horas--grupo-en,
   .taller-zigzag-horas--carta-es,
@@ -1371,32 +1428,32 @@
    o triple clase a propósito: las reglas del hero pesan igual (atributo +
    clase) y, si no se sube la especificidad, gana la que caiga después en
    el archivo. */
-.taller-zigzag-titular-cont .taller2-resena.taller2-resena--paso {
+.taller-zigzag-col .taller2-resena.taller2-resena--paso {
   max-width: 400px;
   margin: 72px 0 0;
   text-align: left;
 }
-.taller-zigzag-fila--rev .taller-zigzag-titular-cont .taller2-resena--paso {
+.taller-zigzag-fila--rev .taller-zigzag-col .taller2-resena--paso {
   margin-left: auto;
   text-align: right;
 }
-.taller-zigzag-titular-cont .taller2-resena--paso .taller2-resena-estrellas { font-size: 12px; }
-.taller-zigzag-titular-cont .taller2-resena--paso .taller2-resena-texto { font-size: 14px; }
-.taller-zigzag-titular-cont .taller2-resena--paso .taller2-resena-autor { font-size: 11px; margin-top: 14px; }
+.taller-zigzag-col .taller2-resena--paso .taller2-resena-estrellas { font-size: 12px; }
+.taller-zigzag-col .taller2-resena--paso .taller2-resena-texto { font-size: 14px; }
+.taller-zigzag-col .taller2-resena--paso .taller2-resena-autor { font-size: 11px; margin-top: 14px; }
 /* Su propio ancho, más estrecho que el resto (220px, no los 400px del
    bloque): a la anchura completa entraba en una sola línea. */
-.taller-zigzag-titular-cont .taller2-resena--paso .taller2-resena-rol { font-size: 8px; max-width: 220px; }
-.taller-zigzag-fila--rev .taller-zigzag-titular-cont .taller2-resena--paso .taller2-resena-rol { margin-left: auto; }
+.taller-zigzag-col .taller2-resena--paso .taller2-resena-rol { font-size: 8px; max-width: 220px; }
+.taller-zigzag-fila--rev .taller-zigzag-col .taller2-resena--paso .taller2-resena-rol { margin-left: auto; }
 /* En móvil, todas las reseñas a la derecha (pedido de Yerai) — en fila sin
    --rev venían a la izquierda de fábrica; aquí se igualan las dos. Después
    de las reglas de arriba en el archivo a propósito, para ganarles con la
    misma especificidad (ver nota de más arriba). */
 @media (max-width: 879px) {
-  .taller-zigzag-titular-cont .taller2-resena.taller2-resena--paso {
+  .taller-zigzag-col .taller2-resena.taller2-resena--paso {
     margin-left: auto;
     text-align: right;
   }
-  .taller-zigzag-titular-cont .taller2-resena.taller2-resena--paso .taller2-resena-rol {
+  .taller-zigzag-col .taller2-resena.taller2-resena--paso .taller2-resena-rol {
     margin-left: auto;
   }
 }
@@ -1404,12 +1461,12 @@
    mucho menos aire libre en la foto antes de que la reseña se salga por
    abajo — se aprieta el párrafo y la propia reseña para que quepa. Cuatro
    clases a propósito, mismo motivo que arriba: hay que ganar también a
-   .taller-zigzag-titular-cont .taller2-resena.taller2-resena--paso (tres). */
+   .taller-zigzag-col .taller2-resena.taller2-resena--paso (tres). */
 .taller-zigzag-fila--compacta .taller-zigzag-horas-desc { margin-bottom: 8px; }
-.taller-zigzag-fila--compacta .taller-zigzag-titular-cont .taller2-resena.taller2-resena--paso { margin-top: 0; }
-.taller-zigzag-fila--compacta .taller-zigzag-titular-cont .taller2-resena--paso .taller2-resena-texto { margin-top: 2px; }
-.taller-zigzag-fila--compacta .taller-zigzag-titular-cont .taller2-resena--paso .taller2-resena-autor { margin-top: 6px; }
-.taller-zigzag-fila--compacta .taller-zigzag-titular-cont .taller2-resena--paso .taller2-resena-rol { margin-top: 1px; }
+.taller-zigzag-fila--compacta .taller-zigzag-col .taller2-resena.taller2-resena--paso { margin-top: 0; }
+.taller-zigzag-fila--compacta .taller-zigzag-col .taller2-resena--paso .taller2-resena-texto { margin-top: 2px; }
+.taller-zigzag-fila--compacta .taller-zigzag-col .taller2-resena--paso .taller2-resena-autor { margin-top: 6px; }
+.taller-zigzag-fila--compacta .taller-zigzag-col .taller2-resena--paso .taller2-resena-rol { margin-top: 1px; }
 
 /* Filete que separa el timeline (arriba) de los datos esenciales (abajo):
    mismo .hr de 1px de siempre, recortado al ancho del bloque (1032px, igual
@@ -3509,8 +3566,12 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
    los datos (.taller2-datos-filete), no el border-bottom de fábrica que
    iba a sangre de un lado a otro de la pantalla — con los dos anchos
    distintos, uno se veía "flotando" más ancho que el resto de la
-   retícula. Sustituye al padding-bottom de la sección (ver arriba). */
-.taller2-esencial-filete { max-width: 1032px; margin: 56px auto 64px; }
+   retícula. Sustituye al padding-bottom de la sección (ver arriba).
+   Margen simétrico (56px arriba y abajo): el mismo aire de "Pedir
+   presupuesto" al filete que del filete a "Preguntas frecuentes" (el
+   padding-top del bloque FAQ, justo debajo, se queda a 0 para que el único
+   aire de ese lado sea este margen). */
+.taller2-esencial-filete { max-width: 1032px; margin: 56px auto; }
 
 /* FAQ, una sola columna — sin la rejilla de dos casillas de la versión
    anterior (aquí no hay Horarios al lado que emparejar). Centrado de
@@ -3526,7 +3587,7 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
    sin margin:auto — quedaba pegada a la izquierda DENTRO de la caja de
    720px ya centrada, así que lo que se veía no estaba centrado aunque la
    caja que lo contenía sí. Se centra también ella aquí. */
-.taller2-faq { padding: 64px var(--gutter); }
+.taller2-faq { padding: 0 var(--gutter) 64px; }
 .taller2-faq-col { max-width: 1032px; margin: 0 auto; text-align: center; }
 .taller2-faq-col h2 { margin-left: auto; margin-right: auto; }
 .taller2-faq-toggle { margin: 32px auto 0; max-width: 720px; text-align: left; }
@@ -3535,6 +3596,11 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 
 @media (max-width: 879px) {
   .taller2-foto-hero img { height: 68vw; }
+  /* Menos aire en móvil (56px es mucho en una pantalla pequeña): mismo
+     truco que en escritorio, mitad margen del filete y mitad padding del
+     FAQ, para que los dos aires seguir midiendo lo mismo (48px). */
+  .taller2-esencial-filete { margin-top: 48px; margin-bottom: 24px; }
+  .taller2-faq { padding-top: 24px; }
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -3565,10 +3631,54 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
     align-items: center;
     gap: 32px;
   }
-  [data-screen-label="taller-team-building"] .taller2-sello--izq { justify-self: end; }
-  [data-screen-label="taller-team-building"] .taller2-sello--der { justify-self: start; }
+  [data-screen-label="taller-team-building"] .taller2-sello-wrap--izq { justify-self: end; }
+  [data-screen-label="taller-team-building"] .taller2-sello-wrap--der { justify-self: start; }
 }
-[data-screen-label="taller-team-building"] .taller2-sello { display: block; width: 100%; max-width: 270px; height: auto; }
+/* Sellos: antes el texto venía vectorizado dentro del SVG (dibujo de
+   Yerai en Illustrator); ahora el SVG solo trae la corona de laurel + el
+   filete (recortado del original), y el texto es HTML de verdad —
+   Oswald para el titular, Times New Roman para la coletilla de abajo —
+   encima, en un contenedor con container-type para que escale con el
+   propio SVG (fluido, 100% hasta 270px, igual que antes). Posiciones y
+   tamaños medidos con getBBox() sobre el SVG original y convertidos a
+   cqw (base: el ancho del contenedor, tanto para X como para Y — igual
+   truco que .taller2-titulo-hero-peque más arriba). */
+[data-screen-label="taller-team-building"] .taller2-sello-wrap {
+  position: relative;
+  container-type: inline-size;
+  width: 100%;
+  max-width: 270px;
+}
+[data-screen-label="taller-team-building"] .taller2-sello { display: block; width: 100%; height: auto; }
+[data-screen-label="taller-team-building"] .taller2-sello-titulo,
+[data-screen-label="taller-team-building"] .taller2-sello-sub {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  width: max-content;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--red);
+  white-space: nowrap;
+}
+[data-screen-label="taller-team-building"] .taller2-sello-titulo {
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  line-height: 0.94;
+  letter-spacing: -0.085em;
+}
+/* "2026", "TALLER" y "DE" en el dibujo original van en Oswald regular, no
+   en el 700 del resto — mismo tamaño y línea, solo cambia el peso. */
+[data-screen-label="taller-team-building"] .taller2-sello-reg { font-weight: 400; }
+[data-screen-label="taller-team-building"] .taller2-sello-sub {
+  font-family: "Times New Roman", Times, serif;
+  line-height: 1.2;
+}
+[data-screen-label="taller-team-building"] .taller2-sello-wrap--izq .taller2-sello-titulo { top: 14.7cqw; font-size: 12.3cqw; }
+[data-screen-label="taller-team-building"] .taller2-sello-wrap--izq .taller2-sello-sub { top: 42.71cqw; font-size: 4cqw; }
+[data-screen-label="taller-team-building"] .taller2-sello-wrap--der .taller2-sello-titulo { top: 11.5cqw; font-size: 12.5cqw; }
+[data-screen-label="taller-team-building"] .taller2-sello-wrap--der .taller2-sello-sub { top: 38.87cqw; font-size: 3.85cqw; }
 [data-screen-label="taller-team-building"] .taller2-foto-hero {
   margin-top: 0;
   margin-bottom: 0;
