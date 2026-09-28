@@ -24,34 +24,34 @@ const PASOS = [
     "Os ponemos por equipos. No hagáis la de \"hacemos nosotros los equipos\" porque no. De hecho, os vamos a poner con el que más lejos tengáis.",
     "We put you in teams. Don't try the “we'll make our own teams” move, because no. In fact, we're going to put you with whoever you're most distant from."],
   ["A hacer masa", "Making the dough",
-    "Te pones hasta arriba de harina, pero increíble momento porque la harina mancha igual al trainee que al CEO. Y eso iguala.",
+    "Te pones hasta arriba de harina, pero increíble momento porque la harina mancha igual al trainee que al CEO. Y eso iguala.",
     "You get covered head to toe in flour — but it's an incredible moment, because the flour stains the trainee the same as the CEO. And that levels things out."],
   ["A hacer dumplings", "Making the dumplings",
-    "A partir del tercero salen mejor. Igual, lo importante no es hacerlos bien sino poder hacerlos mal y no sentir que te van a despedir.",
+    "A partir del tercero salen mejor. Igual, lo importante no es hacerlos bien sino poder hacerlos mal y no sentir que te van a despedir.",
     "From the third one on they come out better. Anyway, the important thing isn't making them well but being able to make them badly and not feel like you're getting fired."],
   ["A cocinar", "Time to cook",
-    "Vapor, salsa, toppings y listo. Es guay porque aquí puede que los jefes lo hagan peor y tú les enseñas y se callan la boca y te dan la razón.",
+    "Vapor, salsa, toppings y listo. Es guay porque aquí puede que los jefes lo hagan peor y tú les enseñas y se callan la boca y te dan la razón.",
     "Steam, sauce, toppings, and done. It's cool because here the bosses might do it worse and you show them and they shut up and admit you're right."],
   ["A comer", "Time to eat",
     "Os sentáis y os coméis el resultado. Os aplaudís porque os lo currastéis y la comida os sabe a gloria porque lo habéis hecho vosotros. FIN.",
-    "You sit down and eat the result. You applaud each other because you busted your ass for it, and the food tastes like glory because you made it yourselves. THE END."],
+    "You sit down and eat the result. You applaud each other because you busted your ass for it, and the food tastes like glory because you made it yourselves. THE END."],
 ];
 const FAQ = [
-  { q: ["¿Para cuántas personas es el team building?", "How many people is the team building for?"],
-    a: ["Desde grupos pequeños hasta más de 30 personas. A partir de ahí, consúltanos directamente.",
-      "From small groups up to 30+ people. Above that, just get in touch directly."] },
-  { q: ["¿Cuánto dura el taller?", "How long does the workshop last?"],
+  { q: ["¿Para cuántas personas es el team building?", "How many people is the team building for?"],
+    a: ["Desde grupos pequeños hasta más de 30 personas. A partir de ahí, consúltanos directamente.",
+      "From small groups up to 30+ people. Above that, just get in touch directly."] },
+  { q: ["¿Cuánto dura la experiencia?", "How long does the experience last?"],
     a: ["Entre 2 y 2,5 horas: bienvenida, una hora y cuarto de taller y otra hora y cuarto de comida. Se puede alargar bajo consulta.",
       "Between 2 and 2.5 hours: welcome, an hour and 15 minutes of workshop, and another hour and 15 minutes of food. Can run longer on request."] },
   { q: ["¿Qué incluye?", "What's included?"],
-    a: ["Un entrante a compartir, toda la carta de dumplings por persona, una bebida y un mochi de postre.",
-      "A starter to share, the whole dumpling menu per person, one drink and a mochi for dessert."] },
+    a: ["El taller completo, y una degustación que incluye un entrante a compartir, toda la carta de dumplings por persona, una bebida y un mochi de postre.",
+      "The full workshop, plus a tasting that includes a starter to share, the whole dumpling menu per person, one drink and a mochi for dessert."] },
   { q: ["¿Y si se nos quema todo?", "What if we burn everything?"],
-    a: ["Para eso está nuestro equipo al lado: para que no pase o, si pasa, reíros y seguir amasando.",
-      "That's what our team's there for — so it doesn't happen, or if it does, you laugh it off and keep kneading."] },
-  { q: ["¿Podéis adaptar el taller a otro tipo de evento?", "Can you adapt the workshop for a different kind of event?"],
+    a: ["Para eso está equipo, para que no pase nada. Y si pasa, pues risas. Lo que sea menos dramas.",
+      "That's what the team's there for, so nothing goes wrong. And if it does, well, laughs. Anything but drama."] },
+  { q: ["¿Podéis adaptar el taller a otro tipo de evento?", "Can you adapt the workshop for a different kind of event?"],
     a: ["Sí: el espacio, la carta y el formato se adaptan al tipo de evento. Cumpleaños, despedidas, presentaciones… cuéntanos qué necesitas y le buscamos forma.",
-      "Yes: the space, the menu and the format all adapt to the type of event. Birthdays, leaving dos, launches… tell us what you need and we'll make it work."] },
+      "Yes: the space, the menu and the format all adapt to the type of event. Birthdays, leaving dos, launches… tell us what you need and we'll make it work."] },
 ];
 
 // Cada línea de un titular es un <span> propio (no texto separado por
@@ -78,8 +78,8 @@ const GRUPO_LINEAS = {
   en: ["GROUPS", "FROM 6", "TO 30", "PEOPLE"],
 };
 const GRUPO_DESC = {
-  es: ["Esa franja es la óptima, pero también lo hemos hecho con ", "grupos más grandes", " y la cosa es organizarse. Si tu grupo es de más gente, cuéntanos."],
-  en: ["That range is the optimal one, but we've also done it with ", "bigger groups", " — it's just a matter of organising. If your group is bigger, let us know."],
+  es: ["Esa franja es la óptima, pero también lo hemos hecho con ", "grupos más grandes", " y la cosa es organizarse. Si tu grupo es de más gente, cuéntanos."],
+  en: ["That range is the optimal one, but we've also done it with ", "bigger groups", " — it's just a matter of organising. If your group is bigger, let us know."],
 };
 const grupoTexto = (i) => `<div class="taller-zigzag-titular-cont">
       <div class="taller-zigzag-horas taller-zigzag-horas--grupo-${i.lang}">${lineasSpans(GRUPO_LINEAS[i.lang])}</div>
@@ -94,8 +94,8 @@ const DONDE_LINEAS = {
   en: ["ONLY AT", "DUM DUM", "BERNABÉU"],
 };
 const DONDE_DESC = {
-  es: ["Lo hacemos solo en este restaurante porque es el grande, el que tiene la ", "cocina integrada", ", el que os hace sentir un poco como en The Bear, el que queda mejor en las fotos y en el que vais a estar a gusto, que es lo importante."],
-  en: ["We only do it in this restaurant because it's the big one, the one with the ", "open kitchen", ", the one that makes you feel a bit like you're in The Bear, the one that looks best in photos, and the one where you'll be comfortable — which is what matters."],
+  es: ["Lo hacemos solo en este restaurante porque es el grande, el que tiene la ", "cocina integrada", ", el que os hace sentir un poco como en The Bear, el que queda mejor en las fotos y en el que vais a estar a gusto, que es lo importante."],
+  en: ["We only do it in this restaurant because it's the big one, the one with the ", "open kitchen", ", the one that makes you feel a bit like you're in The Bear, the one that looks best in photos, and the one where you'll be comfortable — which is what matters."],
 };
 const dondeTexto = (i) => `<div class="taller-zigzag-titular-cont">
       <div class="taller-zigzag-horas taller-zigzag-horas--donde-${i.lang}">${lineasSpans(DONDE_LINEAS[i.lang])}</div>
@@ -110,8 +110,8 @@ const CARTA_LINEAS = {
   en: ["TASTING", "THE WHOLE", "MENU"],
 };
 const CARTA_DESC = {
-  es: ["Una vez hayáis cocinado, se prueba ", "todo lo que haya en carta", " en el restaurante. Incluye un entrante a compartir, una bebida, una cata de todos los dumplings de la carta y un postre. Que os ponéis finos, vaya."],
-  en: ["Once you're done cooking, you get to taste ", "everything on the menu", " at the restaurant. It includes a starter to share, a drink, a tasting of every dumpling on the menu, and a dessert. You'll be properly spoiled, honestly."],
+  es: ["Una vez hayáis cocinado, se prueba ", "todo lo que haya en carta", " en el restaurante. Incluye un entrante a compartir, una bebida, una cata de todos los dumplings de la carta y un postre. Que os ponéis finos, vaya."],
+  en: ["Once you're done cooking, you get to taste ", "everything on the menu", " at the restaurant. It includes a starter to share, a drink, a tasting of every dumpling on the menu, and a dessert. You'll be properly spoiled, honestly."],
 };
 const cartaTexto = (i) => `<div class="taller-zigzag-titular-cont">
       <div class="taller-zigzag-horas taller-zigzag-horas--carta-${i.lang}">${lineasSpans(CARTA_LINEAS[i.lang])}</div>
@@ -127,24 +127,24 @@ const DATOS_ESENCIALES = [
     ico: "aforo",
     titulo: { es: ["GRUPOS", "DE 6 A 30"], en: ["GROUPS", "OF 6 TO 30"] },
     desc: {
-      es: "Esa franja es la óptima, pero también lo hemos hecho con grupos más grandes y la cosa es organizarse. Si tu grupo es de más gente, cuéntanos.",
-      en: "That range is the optimal one, but we've also done it with bigger groups — it's just a matter of organising. If your group is bigger, let us know.",
+      es: "Esa franja es la óptima, pero también lo hemos hecho con grupos más grandes y la cosa es organizarse. Si tu grupo es de más gente, cuéntanos.",
+      en: "That range is the optimal one, but we've also done it with bigger groups — it's just a matter of organising. If your group is bigger, let us know.",
     },
   },
   {
     ico: "pin",
     titulo: { es: ["SOLO EN", "BERNABÉU"], en: ["ONLY AT", "BERNABÉU"] },
     desc: {
-      es: "Lo hacemos solo aquí porque es el grande, el que tiene la cocina integrada, el que os hace sentir un poco como en The Bear, el que queda mejor en las fotos y en el que vais a estar a gusto, que es lo importante.",
-      en: "We only do it here because it's the big one, the one with the open kitchen, the one that makes you feel a bit like you're in The Bear, the one that looks best in photos, and the one where you'll be comfortable — which is what matters.",
+      es: "Lo hacemos solo aquí porque es el grande, el que tiene la cocina integrada, el que os hace sentir un poco como en The Bear, el que queda mejor en las fotos y en el que vais a estar a gusto, que es lo importante.",
+      en: "We only do it here because it's the big one, the one with the open kitchen, the one that makes you feel a bit like you're in The Bear, the one that looks best in photos, and the one where you'll be comfortable — which is what matters.",
     },
   },
   {
     ico: "dumpling",
     titulo: { es: ["DEGUSTA TODA", "LA CARTA"], en: ["TASTE THE", "WHOLE MENU"] },
     desc: {
-      es: "Una vez hayáis cocinado, se prueba todo lo que haya en carta en el restaurante. Incluye un entrante a compartir, una bebida, una cata de todos los dumplings de la carta y un postre. Que os ponéis finos, vaya.",
-      en: "Once you're done cooking, you get to taste everything on the menu at the restaurant. It includes a starter to share, a drink, a tasting of every dumpling on the menu, and a dessert. You'll be properly spoiled, honestly.",
+      es: "Una vez hayáis cocinado, se prueba todo lo que haya en carta en el restaurante. Incluye un entrante a compartir, una bebida, una cata de todos los dumplings de la carta y un postre. Que os ponéis finos, vaya.",
+      en: "Once you're done cooking, you get to taste everything on the menu at the restaurant. It includes a starter to share, a drink, a tasting of every dumpling on the menu, and a dessert. You'll be properly spoiled, honestly.",
     },
   },
   {
@@ -152,7 +152,7 @@ const DATOS_ESENCIALES = [
     titulo: { es: ["UN PAR", "DE HORITAS"], en: ["A COUPLE", "OF HOURS"] },
     desc: {
       es: "La experiencia está pensada para que en 2 - 2,5 horas os dé tiempo a terminar el taller y a comer. Todo ágil, sin parones, dinámico y preparado para que nadie se aburra. Cortio. Al pie.",
-      en: "The experience is designed so that in 2 - 2.5 hours you have time to finish the workshop and eat. All fast-paced, no downtime, dynamic, and built so nobody gets bored. Short. Sweet.",
+      en: "The experience is designed so that in 2 - 2.5 hours you have time to finish the workshop and eat. All fast-paced, no downtime, dynamic, and built so nobody gets bored. Short. Sweet.",
     },
   },
 ];
@@ -173,17 +173,22 @@ const fotoFigura = (foto, raiz) => {
 
 // Timeline en zigzag (sustituye al bloque de arriba, de momento solo en
 // escritorio): mismo copy que el riel horizontal de "El taller, paso por
-// paso" (PASOS), en las fotos placeholder a la espera de fotos reales.
-// Solo se decide aquí dónde parte cada título en líneas — mismo cqw que
-// "Grupos"/"Dónde"/"Carta", sin retocar tamaños.
+// paso" (PASOS). Solo se decide aquí dónde parte cada título en líneas —
+// mismo cqw que "Grupos"/"Dónde"/"Carta", sin retocar tamaños.
 const PASO_LINEAS = {
   es: [["EQUIPOS"], ["LA", "MASA"], ["LOS DUM-", "PLINGS"], ["COCI-", "NAMOS"], ["TODOS A", "COMER!"]],
   en: [["TEAMS"], ["MAKING THE", "DOUGH"], ["MAKING THE", "DUMPLINGS"], ["TIME TO", "COOK"], ["TIME TO", "EAT"]],
 };
-// Placeholder de foto: mismo patrón a rayas + etiqueta mono que ya usamos
-// en los huecos de las galerías (.ev-slider-ph), a la espera de la foto
-// real de cada paso.
-const fotoPlaceholder = (n) => `<figure class="taller-zigzag-foto taller-zigzag-foto--ph"><div class="taller-zigzag-ph"><span>[ FOTO · ${esc(String(n).padStart(2, "0"))} ]</span></div></figure>`;
+// Foto real de cada paso (encargo de Yerai), en el mismo orden que PASOS.
+// Las cinco vienen ya a 3:4 (1000x1333) — el mismo ratio del hueco
+// (.taller-zigzag-foto), así que no hace falta recortar con object-position.
+const FOTO_PASO = [
+  { src: "img/taller/01-equipos.jpg" },
+  { src: "img/taller/02-masa.jpg" },
+  { src: "img/taller/03-dumplings.jpg" },
+  { src: "img/taller/04-cocinar.jpg" },
+  { src: "img/taller/05-comer.jpg" },
+];
 // Reseñas de pega en el aire que dejan los párrafos cortos (la foto mide
 // 640px, el párrafo mucho menos): mismo componente y broma de las dos
 // reseñas del hero (.taller2-resena — empleado ficticio, cita entre
@@ -216,12 +221,12 @@ const RESENAS_PASO = {
   },
   2: {
     es: {
-      texto: "“Llevaba años preguntándome si el de contabilidad no era aquel tío majete que conocí en aquel coffee shop de Amsterdam. Cuando le vi cerrando dumplings desaparecieron todas mis dudas.”",
+      texto: "“Llevaba años preguntándome si el de contabilidad no era aquel tío majete que conocí en aquel coffee shop de Amsterdam. Cuando le vi cerrando dumplings desaparecieron todas mis dudas.”",
       autor: "Pablo Gómez",
       rol: "growth manager en la empresa. y en su jardín hidropónico.",
     },
     en: {
-      texto: "“I'd spent years wondering whether the guy from accounting was that nice bloke I met at a coffee shop in Amsterdam. The moment I saw him folding dumplings, all my doubts disappeared.”",
+      texto: "“I'd spent years wondering whether the guy from accounting was that nice bloke I met at a coffee shop in Amsterdam. The moment I saw him folding dumplings, all my doubts disappeared.”",
       autor: "Pablo Gómez",
       rol: "growth manager at the company. and in his hydroponic garden.",
     },
@@ -236,7 +241,7 @@ const RESENAS_PASO = {
       rol: "Empleado ficticio para soltar factos que nadie se atreve a decir",
     },
     en: {
-      texto: "“The best part of the workshop is that it's not an escape room. We already do enough escaping at 6:30pm.”",
+      texto: "“The best part of the workshop is that it's not an escape room. We already do enough escaping at 6:30pm.”",
       autor: "Juan García",
       rol: "Fictional employee, here to say the facts nobody else dares to",
     },
@@ -271,12 +276,24 @@ const pasoTexto = (i, idx) => {
 // zigzag) y entra en ella. Los dos centros son fijos (480px de foto + 40px
 // de hueco, igual que el resto del bloque), así que no hace falta medir
 // nada por fila.
-const conector = (deIzqADer) => `<div class="timeline-conector ${deIzqADer ? "timeline-conector--izq-der" : "timeline-conector--der-izq"}" aria-hidden="true">
-      <span class="timeline-conector-v timeline-conector-v1"></span>
-      <span class="timeline-conector-h"></span>
-      <span class="timeline-conector-v timeline-conector-v2"></span>
-      <span class="timeline-conector-flecha">↓</span>
+// Un solo trazo SVG (antes tres <span> con background + un carácter "↓"):
+// con CSS, el filete horizontal caía en un píxel fraccionario (herencia del
+// alto de la foto, que no es un entero exacto) y salía más grueso y borroso
+// que los verticales — un rectángulo de 1px de alto se difumina distinto
+// según en qué mitad de píxel caiga, y ahí caía peor. Un trazo vectorial no
+// tiene ese problema: se antialiasa igual en horizontal y en vertical pase
+// lo que pase. La flecha, ahora una "v" del mismo trazo, no un carácter de
+// fuente aparte — así no hay una costura entre el grosor de la línea y el
+// grosor de la tipografía justo donde se tocan.
+const conector = (deIzqADer) => {
+  const [x1, x2] = deIzqADer ? [240, 760] : [760, 240];
+  return `<div class="timeline-conector" aria-hidden="true">
+      <svg viewBox="0 0 1032 64" focusable="false">
+        <path d="M${x1} 0 V32 H${x2} V56"/>
+        <polyline points="${x2 - 5},51 ${x2},56 ${x2 + 5},51" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </div>`;
+};
 
 // Alterna de lado con --rev, igual que el bloque de arriba: impares con la
 // foto a la derecha, pares con la foto a la izquierda — mismo criterio que
@@ -304,13 +321,13 @@ const tituloTimeline = (i) => {
     </div>`;
 };
 
-const timeline = (i) => PASOS.map((_, idx) => {
+const timeline = (i, raiz) => PASOS.map((_, idx) => {
   const rev = idx % 2 === 0;
   // Con un titular de 3 líneas queda menos aire libre en la foto: la fila
   // entera va más compacta (párrafo y reseña) para que no se salga.
   const compacta = PASO_LINEAS[i.lang][idx].length >= 3;
   const fila = `<div class="taller-zigzag-fila taller-zigzag-fila--grande taller-zigzag-fila--paso${rev ? " taller-zigzag-fila--rev" : ""}${compacta ? " taller-zigzag-fila--compacta" : ""}">
-      ${fotoPlaceholder(idx + 1)}
+      ${fotoFigura(FOTO_PASO[idx], raiz)}
       ${pasoTexto(i, idx)}
     </div>`;
   return idx === 0 ? fila : conector(rev) + fila;
@@ -348,7 +365,7 @@ function faqLd(i) {
 // no se recalcula solo; para cambiarlo hay que regenerar el SVG.
 const sello = (lado, archivo, w, h, alt) => `<img class="taller2-sello taller2-sello--${lado}" src="img/logos/${archivo}" alt="${esc(alt)}" width="${w}" height="${h}" loading="lazy" decoding="async">`;
 
-export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
+export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
   const { t } = i;
   const s = seo.find((r) => r.p === RUTA);
   const url = ORIGIN + i.ruta(RUTA);
@@ -359,8 +376,8 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
   <h1 class="h-display" style="margin-top:16px">${esc(t("Con las manos", "Hands in the"))}<br>${esc(t("en la masa.", "dough. Literally."))}</h1>
   <div class="ev-hero-row" style="margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:32px">
     <p class="body" style="font-size:18px;flex:1 1 420px;min-width:0;margin:0">${t(
-      "Lo de tirarse de espaldas y esperar a que te cojan tus compañeros puede llegar a estar bien, pero eso luego no te lo puedes comer. Tampoco te puedes comer los post-its del juego ese de ponérselos en la frente con palabras. Y tampoco se puede hacer un dumpling con bolas de paintball. Sin embargo, en el taller de dumplings de DUM DUM™, cocinas en equipos, aprendes a hacer cosas y lo mejor es que, luego, te lo comes. Planazo, la verdad.",
-      "Falling backwards and waiting for your workmates to catch you can be alright, but you can't eat that afterwards. You can't eat the post-its from that game where you stick words on your forehead either. And you can't make a dumpling out of paintball pellets. However, at DUM DUM™'s dumpling workshop, you cook in teams, you learn to make things, and the best part is that, afterwards, you eat it. What a plan, honestly.")}</p>
+      "Lo de tirarse de espaldas y esperar a que te cojan tus compañeros puede llegar a estar bien, pero eso luego no te lo puedes comer. Tampoco te puedes comer los post-its del juego ese de ponérselos en la frente con palabras. Y tampoco se puede hacer un dumpling con bolas de paintball. Sin embargo, en el taller de dumplings de DUM DUM™, cocinas en equipos, aprendes a hacer cosas y lo mejor es que, luego, te lo comes. Planazo, la verdad.",
+      "Falling backwards and waiting for your workmates to catch you can be alright, but you can't eat that afterwards. You can't eat the post-its from that game where you stick words on your forehead either. And you can't make a dumpling out of paintball pellets. However, at DUM DUM™'s dumpling workshop, you cook in teams, you learn to make things, and the best part is that, afterwards, you eat it. What a plan, honestly.")}</p>
   </div>
   <div class="ev-hero-cta">
     <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
@@ -383,7 +400,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
   <div class="tiny muted" style="text-align:center">${esc(t("Lo esencial", "The essentials"))}</div>
   ${tituloTimeline(i)}
   <div class="taller-zigzag-list taller-zigzag-list--paso">
-    ${timeline(i)}
+    ${timeline(i, raiz)}
   </div>
   <div class="hr taller2-datos-filete" aria-hidden="true"></div>
   ${datosEsenciales(i)}
@@ -391,12 +408,13 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal }) {
     <p class="taller2-esencial-nota">${esc(t("¿El precio? Te lo damos en cuanto nos cuentes cuántos sois.", "The price? We'll give it to you the moment you tell us how many you are."))}</p>
     <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
   </div>
+  <div class="hr taller2-esencial-filete" aria-hidden="true"></div>
 </section>
 
 <section class="taller2-faq">
   <div class="taller2-faq-col">
     <div class="tiny muted">${esc(t("Preguntas frecuentes", "FAQ"))}</div>
-    <h2 class="h-1" style="margin-top:16px;max-width:18ch">${esc(t("Lo que más nos preguntáis.", "What you ask us most."))}</h2>
+    <h2 class="h-1" style="margin-top:16px;max-width:18ch">${esc(t("Lo que más nos preguntáis.", "What you ask us most."))}</h2>
     <details class="faq-toggle taller2-faq-toggle" open>
       <summary class="big">${esc(t("Preguntas frecuentes", "FAQ"))}<span class="faq-ico" aria-hidden="true"></span></summary>
       <div class="faq-list">

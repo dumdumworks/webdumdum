@@ -1264,8 +1264,13 @@
 .taller-zigzag-horas--paso-es { font-size: 27.85cqw; }
 .taller-zigzag-horas--grupo-en,
 .taller-zigzag-horas--donde-en,
-.taller-zigzag-horas--carta-en,
-.taller-zigzag-horas--paso-en { font-size: 24.7cqw; }
+.taller-zigzag-horas--carta-en { font-size: 24.7cqw; }
+/* --paso-en aparte y más pequeño que el resto: a 24.7cqw "MAKING THE"
+   medía 596px en una columna de 480px (116px por fuera, no un "sobresale
+   un poco" tolerable) — con fotos reales ya puestas, se ve clarísimo.
+   19cqw dejaba a "MAKING THE" y "DUMPLINGS" dentro de la columna, con
+   margen, medido con getBoundingClientRect. */
+.taller-zigzag-horas--paso-en { font-size: 19cqw; }
 /* En móvil, todo se apila en una sola columna: tras el párrafo de un
    bloque "grande" viene el gap de fila (56px) + el margin-bottom del
    párrafo (32px) antes de la foto del bloque siguiente — 88px, muy por
@@ -1328,46 +1333,35 @@
    para poder meter dentro el filete que baja de una foto, salta al centro
    de la siguiente (lado contrario, por el zigzag) y entra en ella con una
    flecha — los mismos 480px de foto + 40px de hueco de todo el bloque, así
-   que los dos centros de columna (240px / 760px) son fijos. Solo
-   escritorio de momento: en móvil las fotos van apiladas a ancho completo
-   y este conector en diagonal no tiene sentido. */
+   que los dos centros de columna (240px / 760px) son fijos en el viewBox
+   del SVG. Solo escritorio de momento: en móvil las fotos van apiladas a
+   ancho completo y este conector en diagonal no tiene sentido.
+   Un trazo (path) en vez de tres cajas + un carácter de fuente: ver el
+   porqué en el comentario de conector() en taller-team-building.mjs. El
+   trazo para 8px antes del final (56 de 64) para no tocar la foto de
+   abajo. */
 @media (min-width: 880px) {
   .taller-zigzag-list--paso { gap: 0; }
   .timeline-conector { position: relative; height: 64px; }
-  .timeline-conector-v { position: absolute; width: 1px; background: var(--line); }
-  .timeline-conector-v1 { top: 0; height: 32px; }
-  .timeline-conector-v2 { top: 32px; height: 32px; }
-  .timeline-conector-h { position: absolute; top: 32px; height: 1px; width: 520px; background: var(--line); }
-  .timeline-conector-flecha {
-    position: absolute; top: 64px; transform: translate(-50%, -100%);
-    font-family: var(--font-display); font-weight: 600; font-size: 20px; line-height: 1;
-    color: var(--red);
+  .timeline-conector svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: var(--red);
+    stroke-width: 1px;
   }
-  .timeline-conector--izq-der .timeline-conector-v1 { left: 240px; }
-  .timeline-conector--izq-der .timeline-conector-h { left: 240px; }
-  .timeline-conector--izq-der .timeline-conector-v2,
-  .timeline-conector--izq-der .timeline-conector-flecha { left: 760px; }
-  .timeline-conector--der-izq .timeline-conector-v1 { left: 760px; }
-  .timeline-conector--der-izq .timeline-conector-h { left: 240px; }
-  .timeline-conector--der-izq .timeline-conector-v2,
-  .timeline-conector--der-izq .timeline-conector-flecha { left: 240px; }
+  /* non-scaling-stroke no hereda (a diferencia de stroke/fill): sin esto,
+     si el ancho real de la fila no es exactamente 1032px (el del viewBox),
+     el trazo se escalaría con el resto del dibujo en vez de quedarse en
+     1px de verdad. */
+  .timeline-conector svg path,
+  .timeline-conector svg polyline {
+    vector-effect: non-scaling-stroke;
+  }
 }
 @media (max-width: 879px) {
   .timeline-conector { display: none; }
-}
-/* Mismo hueco a rayas + etiqueta mono que los huecos de foto de las
-   galerías (.ev-slider-ph), reutilizado aquí para las fotos que aún no
-   tenemos. */
-.taller-zigzag-foto--ph { position: relative; background: var(--paper); }
-.taller-zigzag-ph {
-  position: absolute; inset: 0;
-  background-image: repeating-linear-gradient(45deg, rgba(255,0,30,0.06) 0 6px, transparent 6px 14px);
-  display: flex; align-items: flex-end; padding: 12px;
-}
-.taller-zigzag-ph span {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-weight: 500; font-size: 11px; text-transform: uppercase;
-  color: rgba(255,0,30,0.55);
 }
 /* Reseña de "Equipos": mismo componente del hero (.taller2-resena), pero
    más pequeña y pegada al mismo borde que el titular y el párrafo de
@@ -1393,6 +1387,19 @@
    bloque): a la anchura completa entraba en una sola línea. */
 .taller-zigzag-titular-cont .taller2-resena--paso .taller2-resena-rol { font-size: 8px; max-width: 220px; }
 .taller-zigzag-fila--rev .taller-zigzag-titular-cont .taller2-resena--paso .taller2-resena-rol { margin-left: auto; }
+/* En móvil, todas las reseñas a la derecha (pedido de Yerai) — en fila sin
+   --rev venían a la izquierda de fábrica; aquí se igualan las dos. Después
+   de las reglas de arriba en el archivo a propósito, para ganarles con la
+   misma especificidad (ver nota de más arriba). */
+@media (max-width: 879px) {
+  .taller-zigzag-titular-cont .taller2-resena.taller2-resena--paso {
+    margin-left: auto;
+    text-align: right;
+  }
+  .taller-zigzag-titular-cont .taller2-resena.taller2-resena--paso .taller2-resena-rol {
+    margin-left: auto;
+  }
+}
 /* Fila "compacta" (titular de 3 líneas, p. ej. "Hacer/Dum/Plings"): queda
    mucho menos aire libre en la foto antes de que la reseña se salga por
    abajo — se aprieta el párrafo y la propia reseña para que quepa. Cuatro
@@ -1407,8 +1414,30 @@
 /* Filete que separa el timeline (arriba) de los datos esenciales (abajo):
    mismo .hr de 1px de siempre, recortado al ancho del bloque (1032px, igual
    que .taller-zigzag-list y .taller2-datos) para que sus bordes alineen con
-   las columnas de ambos lados en vez de ir a sangre. */
+   las columnas de ambos lados en vez de ir a sangre.
+   El último paso ("Todos a comer") va en fila --rev (foto a la derecha),
+   y esa fila deja 32px de sobra sin usar en su borde derecho — la foto y el
+   texto topan los dos con su max-width (480+480+40 de 1032) antes de llegar
+   al borde, y justify-content:flex-end manda ese sobrante hacia la derecha
+   (ver nota en .taller-zigzag-fila--rev). El filete, a sangre completa de
+   1032px, quedaba por tanto más ancho que la foto de encima. padding-right
+   + background-clip recortan el trazo visible a esos mismos 1000px sin
+   mover el borde izquierdo (que sí coincide con el resto de la retícula) ni
+   tocar el layout de la fila, que ya está pixel a pixel calibrado con los
+   titulares gigantes. Solo en escritorio: en móvil no hay filas --rev que
+   generen este sobrante (todo va apilado a ancho completo). */
 .taller2-datos-filete { max-width: 1032px; margin: 56px auto 0; }
+@media (min-width: 880px) {
+  /* Doble clase a propósito: .hr fija su propio "background" en el shorthand
+     (styles.css, que se concatena después y gana en un empate de
+     especificidad) — con una sola clase, ese shorthand resetea
+     background-clip de vuelta a border-box y el recorte no se ve. */
+  .taller2-datos-filete.hr,
+  .taller2-esencial-filete.hr {
+    padding-right: 32px;
+    background-clip: content-box;
+  }
+}
 
 /* Datos esenciales (Grupo, Dónde, Carta, Duración) bajo el timeline: dato
    suelto con icono — sin caja, como pide el resto de esta página — en una
@@ -3468,7 +3497,7 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 /* Lo esencial: cuatro datos sueltos, sin caja ni filete entre ellos —
    ni rastro de la rejilla de tarifas de la versión anterior, a
    propósito: aquí no hay precio que enseñar, solo lo práctico. */
-.taller2-esencial { padding: 64px var(--gutter); border-bottom: 1px solid var(--line); }
+.taller2-esencial { padding: 64px var(--gutter) 0; }
 .taller2-esencial-nota {
   margin-top: 40px;
   font-family: "JetBrains Mono", ui-monospace, monospace;
@@ -3476,6 +3505,12 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
   color: rgba(255,0,30,0.7);
 }
 .taller2-esencial .btn { margin-top: 20px; }
+/* Cierre de la sección: mismo filete de 1032px que separa el timeline de
+   los datos (.taller2-datos-filete), no el border-bottom de fábrica que
+   iba a sangre de un lado a otro de la pantalla — con los dos anchos
+   distintos, uno se veía "flotando" más ancho que el resto de la
+   retícula. Sustituye al padding-bottom de la sección (ver arriba). */
+.taller2-esencial-filete { max-width: 1032px; margin: 56px auto 64px; }
 
 /* FAQ, una sola columna — sin la rejilla de dos casillas de la versión
    anterior (aquí no hay Horarios al lado que emparejar). Centrado de
