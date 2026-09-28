@@ -98,7 +98,7 @@ function escribirPaginaHtml(render, ruta, lang, rutasEn) {
   });
   // Ninguna imagen de la página puede faltar (img/ se copia entero a dist/ en el paso 7).
   const faltan = [...html.matchAll(/(?:src|srcset|data-src|data-srcset)="([^"]+)"/g)]
-    .flatMap((m) => m[1].split(",").map((s) => s.trim().split(" ")[0]))
+    .flatMap((m) => m[1].split(",").map((s) => s.trim().split(" ")[0].split("?")[0]))
     .filter((u) => u.startsWith("img/") && !fs.existsSync(path.join(ROOT, u)));
   if (faltan.length) throw new Error("Imágenes que faltan en " + ruta + ":\n  " + faltan.join("\n  "));
   const file = path.join(DIST, archivoDe(ruta, lang));
