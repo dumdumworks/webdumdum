@@ -120,46 +120,48 @@ const cartaTexto = (i) => `<div class="taller-zigzag-titular-cont">
 
 // Datos esenciales (Grupo, Dónde, Carta, Duración) bajo el timeline, en una
 // retícula de 2x2 — copy propio de este bloque, no el reservado de más
-// arriba: aquí los titulares van a dos líneas cortas y el párrafo va sin
-// negrita. Copy literal de Yerai (boceto pasado tal cual, sin parafrasear).
+// arriba: aquí los titulares van a dos líneas cortas. El párrafo lleva su
+// palabra clave en negrita (mismo patrón [antes, clave, después] +
+// resaltar() de arriba) — Grupo, Dónde y Carta repiten la misma clave que
+// ya tenía el copy reservado; en Duración, la cifra.
 const DATOS_ESENCIALES = [
   {
     ico: "aforo",
     titulo: { es: ["GRUPOS", "DE 6 A 30"], en: ["GROUPS", "OF 6 TO 30"] },
     desc: {
-      es: "Esa franja es la óptima, pero también lo hemos hecho con grupos más grandes y la cosa es organizarse. Si tu grupo es de más gente, cuéntanos.",
-      en: "That range is the optimal one, but we've also done it with bigger groups — it's just a matter of organising. If your group is bigger, let us know.",
+      es: ["Esa franja es la óptima, pero también lo hemos hecho con ", "grupos más grandes", " y la cosa es organizarse. Si tu grupo es de más gente, cuéntanos."],
+      en: ["That range is the optimal one, but we've also done it with ", "bigger groups", " — it's just a matter of organising. If your group is bigger, let us know."],
     },
   },
   {
     ico: "pin",
     titulo: { es: ["SOLO EN", "BERNABÉU"], en: ["ONLY AT", "BERNABÉU"] },
     desc: {
-      es: "Lo hacemos solo aquí porque es el grande, el que tiene la cocina integrada, el que os hace sentir un poco como en The Bear, el que queda mejor en las fotos y en el que vais a estar a gusto, que es lo importante.",
-      en: "We only do it here because it's the big one, the one with the open kitchen, the one that makes you feel a bit like you're in The Bear, the one that looks best in photos, and the one where you'll be comfortable — which is what matters.",
+      es: ["Lo hacemos solo aquí porque es el grande, el que tiene la ", "cocina integrada", ", el que os hace sentir un poco como en The Bear, el que queda mejor en las fotos y en el que vais a estar a gusto, que es lo importante."],
+      en: ["We only do it here because it's the big one, the one with the ", "open kitchen", ", the one that makes you feel a bit like you're in The Bear, the one that looks best in photos, and the one where you'll be comfortable — which is what matters."],
     },
   },
   {
     ico: "dumpling",
     titulo: { es: ["DEGUSTA TODA", "LA CARTA"], en: ["TASTE THE", "WHOLE MENU"] },
     desc: {
-      es: "Una vez hayáis cocinado, se prueba todo lo que haya en carta en el restaurante. Incluye un entrante a compartir, una bebida, una cata de todos los dumplings de la carta y un postre. Que os ponéis finos, vaya.",
-      en: "Once you're done cooking, you get to taste everything on the menu at the restaurant. It includes a starter to share, a drink, a tasting of every dumpling on the menu, and a dessert. You'll be properly spoiled, honestly.",
+      es: ["Una vez hayáis cocinado, se prueba ", "todo lo que haya en carta", " en el restaurante. Incluye un entrante a compartir, una bebida, una cata de todos los dumplings de la carta y un postre. Que os ponéis finos, vaya."],
+      en: ["Once you're done cooking, you get to taste ", "everything on the menu", " at the restaurant. It includes a starter to share, a drink, a tasting of every dumpling on the menu, and a dessert. You'll be properly spoiled, honestly."],
     },
   },
   {
     ico: "hora",
     titulo: { es: ["UN PAR", "DE HORITAS"], en: ["A COUPLE", "OF HOURS"] },
     desc: {
-      es: "La experiencia está pensada para que en 2 - 2,5 horas os dé tiempo a terminar el taller y a comer. Todo ágil, sin parones, dinámico y preparado para que nadie se aburra. Cortio. Al pie.",
-      en: "The experience is designed so that in 2 - 2.5 hours you have time to finish the workshop and eat. All fast-paced, no downtime, dynamic, and built so nobody gets bored. Short. Sweet.",
+      es: ["La experiencia está pensada para que en ", "2 - 2,5 horas", " os dé tiempo a terminar el taller y a comer. Todo ágil, sin parones, dinámico y preparado para que nadie se aburra. Cortio. Al pie."],
+      en: ["The experience is designed so that in ", "2 - 2.5 hours", " you have time to finish the workshop and eat. All fast-paced, no downtime, dynamic, and built so nobody gets bored. Short. Sweet."],
     },
   },
 ];
 const datoEsencial = (i, { ico, titulo, desc }) => `<div class="taller2-dato">
       <span class="taller2-dato-ico">${icono(ico)}</span>
       <div class="taller2-dato-titulo">${lineasSpans(titulo[i.lang])}</div>
-      <p class="body taller2-dato-desc">${esc(desc[i.lang])}</p>
+      <p class="body taller2-dato-desc">${resaltar(desc[i.lang])}</p>
     </div>`;
 const datosEsenciales = (i) => `<div class="taller2-datos">
     ${DATOS_ESENCIALES.map((d) => datoEsencial(i, d)).join("\n    ")}
