@@ -85,8 +85,8 @@ export const LOCALES = {
       en: "We had a growth spurt in **'26**. We grew. / **And so did the restaurant.**"
     },
     historia: {
-      es: "Chamberí nos trajo hasta Tetuán y Tetuán nos ayudó a crecer. Más tamaño, sí, pero misma esencia y mismas formas, que es como mejor se crece.\n\nLa cocina y el restaurante no se separan y está guay. Se nos ve y se os ve. Mola. Mola porque vivimos lo mismo a la vez y nos dais el mejor feedback, que es vuestra cara.\n\n**Ambiente único. Lugar precioso. Gente top.**",
-      en: "Chamberí brought us to Tetuán, and Tetuán helped us grow. Bigger, yes, but the same spirit and the same manners, which is the best way to grow.\n\nThe kitchen and the dining room aren't separated, and that's great. We see you and you see us. It's the best. The best because we go through the same thing at the same time, and you give us the finest feedback there is: your face.\n\n**Unique atmosphere. Beautiful place. Top people.**"
+      es: "Chamberí nos trajo hasta Tetuán y Tetuán nos ayudó a crecer. Más tamaño, sí, pero misma esencia y mismas formas, que es como mejor se crece.\n\nLa cocina y el restaurante no se separan y está guay. Se nos ve y se os ve. Mola. Mola porque vivimos lo mismo a la vez y nos dais el mejor feedback, que es vuestra cara. Por eso es aquí donde hacemos los {{eventos}} y los {{talleres}}.\n\n**Ambiente único. Lugar precioso. Gente top.**",
+      en: "Chamberí brought us to Tetuán, and Tetuán helped us grow. Bigger, yes, but the same spirit and the same manners, which is the best way to grow.\n\nThe kitchen and the dining room aren't separated, and that's great. We see you and you see us. It's the best. The best because we go through the same thing at the same time, and you give us the finest feedback there is: your face. That's why this is where we host our {{eventos}} and our {{talleres}}.\n\n**Unique atmosphere. Beautiful place. Top people.**"
     }
   }
 };
