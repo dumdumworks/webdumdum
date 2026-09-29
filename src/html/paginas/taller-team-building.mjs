@@ -246,7 +246,7 @@ const RESENAS_PASO = {
   },
   1: {
     es: {
-      texto: "“Le dije a mi jefe que ya que estábamos estirando masa podía, también, estirarse un poco con la pasta. Me dijo: la frase está bien pillada pero no te flipes. Nos reímos sin mirarnos. Desde entonces nos saludamos en el ascensor.”",
+      texto: "“Le dije a mi jefe que ya que estábamos estirando masa podía también estirarse un poco con la pasta. Me dijo: la frase está bien pillada pero no te flipes. Nos reímos sin mirarnos. Desde entonces nos saludamos en el ascensor.”",
       autor: "Marina Nogales",
       rol: "Es la hija del jefe pero en la oficina no lo sabe nadie. Ni si quiera el jefe.",
     },
@@ -274,12 +274,12 @@ const RESENAS_PASO = {
   3: {
     es: {
       texto: "“Lo mejor del taller es que no es un escape room. Bastante tenemos con escapar a las 18.30.”",
-      autor: "Juan García",
-      rol: "Empleado ficticio para soltar factos que nadie se atreve a decir",
+      autor: "Juana García",
+      rol: "Empleada ficticia para soltar factos que nadie se atreve a decir",
     },
     en: {
       texto: "“The best part of the workshop is that it's not an escape room. We already do enough escaping at 6:30pm.”",
-      autor: "Juan García",
+      autor: "Juana García",
       rol: "Fictional employee, here to say the facts nobody else dares to",
     },
   },
