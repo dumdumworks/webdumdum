@@ -125,6 +125,7 @@ export function eventos(i, { locales, seo, ldGlobal, eventos: ev, galerias, cart
   </div>
   <div class="ev-hero-cta">
     <a class="btn" href="${esc(dossier)}" target="_blank" rel="noreferrer"><span class="btn-label">${esc(t("Descargar dossier con tarifas", "Download dossier with rates"))}</span><span class="btn-arrow">↓</span></a>
+    <a class="btn" href="#ev-servicio-taller" data-ir-servicio><span class="btn-label">${esc(t("Elige tu tipo de evento", "Choose your event type"))}</span><span class="btn-arrow">↓</span></a>
   </div>
 </section>
 
@@ -227,8 +228,10 @@ ${seccion("06", t("Al frente", "At the helm"),
         { nombre: t("Alquiler de espacio", "Venue rental") },
       ].map(({ nombre, href }, n) => {
         const dentro = `<div class="n">[${String(n + 1).padStart(2, "0")}]</div><div class="t">${esc(nombre)}</div>`;
+        // id solo en el primero (el team building, con página propia): es el
+        // destino del botón "Elige tu tipo de evento" del hero, ver data-ir-servicio.
         return href
-          ? `<a class="ev-service is-link" href="${i.ruta(href)}">${dentro}</a>`
+          ? `<a class="ev-service is-link"${n === 0 ? ' id="ev-servicio-taller"' : ""} href="${i.ruta(href)}">${dentro}</a>`
           : `<div class="ev-service">${dentro}</div>`;
       }).join("\n    ")}
   </div>
