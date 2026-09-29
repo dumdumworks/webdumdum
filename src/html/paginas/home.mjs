@@ -33,11 +33,11 @@ export function home(i, { locales, seo, ldGlobal, carta }) {
         <div>${esc(t("TODOS LOS DÍAS", "EVERY DAY"))}</div>
         <div>13.00 – 15.39 &amp; 20.00 – 22.39</div>
       </div>
-      <h1 class="hero-logo" aria-label="DUM DUM™ · Dumplings &amp; Desobediencia">
-        <svg viewBox="-3 -25 456 410" aria-hidden="true">
-          <text x="7.14" y="174.91" class="wordmark-line">DUM</text>
-          <text x="7.14" y="335.69" class="wordmark-line">DUM</text>
-          <text x="412.87" y="193.11" class="wordmark-tm">TM</text>
+      <h1 class="hero-logo">
+        <svg viewBox="-3 -25 456 410">
+          <text x="7.14" y="174.91" class="wordmark-line">DUM </text>
+          <text x="7.14" y="335.69" class="wordmark-line">DUM </text>
+          <text x="412.87" y="193.11" class="wordmark-tm">TM </text>
           <text x="15.84" y="378.27" class="wordmark-claim">DUMPLINGS &amp; DESOBEDIENCIA</text>
         </svg>
       </h1>
