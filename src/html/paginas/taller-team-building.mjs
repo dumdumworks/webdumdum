@@ -59,8 +59,8 @@ const FAQ = [
     a: ["Sí. Es exactamente el mismo taller, adaptado a empresas: departamentos enteros, onboardings, celebraciones de equipo… Cuéntanos cuántos sois y para qué es, y lo organizamos.",
       "Yes. It's the same workshop, adapted for companies: whole departments, onboardings, team celebrations… Tell us how many you are and what it's for, and we'll set it up."] },
   { q: ["¿Dónde se hace el taller?", "Where does the workshop take place?"],
-    a: ["En DUM DUM Bernabéu, en Infanta Mercedes 17 (Madrid): a cinco minutos andando del Santiago Bernabéu y de AZCA.",
-      "At DUM DUM Bernabéu, on Infanta Mercedes 17 (Madrid): a five-minute walk from the Santiago Bernabéu and from AZCA."] },
+    a: ["En {{bernabeu}}, en Infanta Mercedes 17 (Madrid): a cinco minutos andando del Santiago Bernabéu y de AZCA.",
+      "At {{bernabeu}}, on Infanta Mercedes 17 (Madrid): a five-minute walk from the Santiago Bernabéu and from AZCA."] },
   { q: ["¿Se puede llevar la experiencia fuera del restaurante?", "Can the experience be taken outside the restaurant?"],
     a: ["Se puede. Consúltanos y adecuamos la experiencia en función del lugar al que vayamos.",
       "It can. Get in touch and we'll adapt the experience to wherever we're headed."] },
@@ -158,6 +158,7 @@ const DATOS_ESENCIALES = [
   {
     ico: "pin",
     titulo: { es: ["SOLO EN", "BERNABÉU"], en: ["ONLY AT", "BERNABÉU"] },
+    enlaceUltimaLinea: (i) => i.ruta("/locales/bernabeu"),
     desc: {
       es: ["Lo hacemos solo aquí porque es el grande, el que tiene la ", "cocina integrada", ", el que os hace sentir un poco como en The Bear, el que queda mejor en las fotos y en el que vais a estar a gusto, que es lo importante."],
       en: ["We only do it here because it's the big one, the one with the ", "open kitchen", ", the one that makes you feel a bit like you're in The Bear, the one that looks best in photos, and the one where you'll be comfortable — which is what matters."],
@@ -180,11 +181,23 @@ const DATOS_ESENCIALES = [
     },
   },
 ];
-const datoEsencial = (i, { ico, titulo, desc }) => `<div class="taller2-dato">
+// Cuando el dato lleva "enlaceUltimaLinea", esa última línea del titular
+// (p. ej. "BERNABÉU") se enlaza a esa ruta — el resto de líneas siguen igual
+// que lineasSpans(). Subrayado (no solo :hover) porque --ink es --red: el
+// titular ya es rojo, así que el :hover de .link-hover no se nota.
+const datoEsencial = (i, { ico, titulo, desc, enlaceUltimaLinea }) => {
+  const lineas = titulo[i.lang];
+  const spans = enlaceUltimaLinea
+    ? lineas.map((l, idx) => idx === lineas.length - 1
+        ? `<span class="tz-l${idx}"><a href="${enlaceUltimaLinea(i)}" class="link-hover link-underline">${esc(l)}</a></span>`
+        : `<span class="tz-l${idx}">${esc(l)}</span>`).join("")
+    : lineasSpans(lineas);
+  return `<div class="taller2-dato">
       <span class="taller2-dato-ico">${icono(ico)}</span>
-      <div class="taller2-dato-titulo">${lineasSpans(titulo[i.lang])}</div>
+      <div class="taller2-dato-titulo">${spans}</div>
       <p class="body taller2-dato-desc">${resaltar(desc[i.lang])}</p>
     </div>`;
+};
 const datosEsenciales = (i) => `<div class="taller2-datos">
     ${DATOS_ESENCIALES.map((d) => datoEsencial(i, d)).join("\n    ")}
   </div>`;
@@ -380,7 +393,7 @@ function faqLd(i) {
     mainEntity: FAQ.map(({ q, a }) => ({
       "@type": "Question",
       name: i.lang === "en" ? q[1] : q[0],
-      acceptedAnswer: { "@type": "Answer", text: i.lang === "en" ? a[1] : a[0] },
+      acceptedAnswer: { "@type": "Answer", text: (i.lang === "en" ? a[1] : a[0]).replace("{{bernabeu}}", "DUM DUM Bernabéu") },
     })),
   };
 }
@@ -460,7 +473,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
       <div class="faq-list">
         ${FAQ.map(({ q, a }) => `      <details class="faq-item">
         <summary>${esc(i.lang === "en" ? q[1] : q[0])}<span class="faq-ico" aria-hidden="true"></span></summary>
-        <p class="body">${esc(i.lang === "en" ? a[1] : a[0])}</p>
+        <p class="body">${esc(i.lang === "en" ? a[1] : a[0]).replace("{{bernabeu}}", `<a href="${i.ruta("/locales/bernabeu")}" class="link-hover">DUM DUM Bernabéu</a>`)}</p>
       </details>`).join("\n")}
       </div>
     </details>
