@@ -32,6 +32,21 @@ export function archivoDe(p, lang) {
   return lang === "en" ? "en/" + base : base;
 }
 
+// JSON-LD del Restaurant global (ld-global.json) en inglés: solo texto libre
+// (description, servesCuisine), nunca nombres propios, direcciones, teléfonos
+// ni URLs — esos son datos, no copy, y son los mismos en los dos idiomas.
+// Los campos "_en" viven en el propio JSON, mismo patrón que eventos.json.
+export function ldGlobalIdioma(i, ldGlobal) {
+  if (i.lang !== "en") return ldGlobal;
+  const en = (obj, campo) => obj[campo + "_en"] || obj[campo];
+  return {
+    ...ldGlobal,
+    description: en(ldGlobal, "description"),
+    servesCuisine: en(ldGlobal, "servesCuisine"),
+    department: (ldGlobal.department || []).map((d) => ({ ...d, servesCuisine: en(d, "servesCuisine") })),
+  };
+}
+
 // BreadcrumbList (schema.org): Inicio + los tramos que se le pasen, cada uno
 // {nombre, ruta}. Se combina con el resto del JSON-LD de la página pasando un
 // array a "ld" (ver documento()). Siempre parte de "/", no hace falta pasarlo.

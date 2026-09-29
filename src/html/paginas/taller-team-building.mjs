@@ -7,7 +7,7 @@
 // lenguaje visual del resto de la web (cajas con filete, rótulos
 // numerados): aquí no hay ninguna caja, todo respira a sangre.
 // ─────────────────────────────────────────────────────────────
-import { esc, ORIGIN, breadcrumbLd } from "../plantilla.mjs";
+import { esc, ORIGIN, breadcrumbLd, ldGlobalIdioma } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
 import { srcset } from "../imagenes.mjs";
 import { icono } from "./local.mjs";
@@ -485,7 +485,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
     titulo: i.lang === "en" ? (s.te || s.t) : s.t,
     desc: i.lang === "en" ? (s.de || s.d) : s.d,
     cuerpo: esqueleto(i, RUTA, locales, main),
-    ld: [ldGlobal, breadcrumbLd(i, [
+    ld: [ldGlobalIdioma(i, ldGlobal), breadcrumbLd(i, [
       { nombre: t("Eventos", "Events"), ruta: "/eventos" },
       { nombre: t("Talleres Team Building", "Team Building Workshops"), ruta: RUTA },
     ]), jsonLd(i, url), faqLd(i)],
