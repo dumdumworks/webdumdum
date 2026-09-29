@@ -37,9 +37,9 @@ const PASOS = [
     "You sit down and eat the result. You applaud each other because you busted your ass for it, and the food tastes like glory because you made it yourselves. THE END."],
 ];
 const FAQ = [
-  { q: ["¿Para cuántas personas es el team building?", "How many people is the team building for?"],
-    a: ["Desde grupos de 6 personas hasta 30. A partir de esa cifra, consúltanos y vemos cómo adecuar la propuesta.",
-      "From groups of 6 up to 30. Beyond that, get in touch and we will see how to adapt the offer."] },
+  { q: ["¿Puedo hacer el taller con mi pareja?", "Can I do the workshop with my partner?"],
+    a: ["El taller está diseñado para empezar en grupos de 6 personas. Así que sí, siempre y cuando se apunten al plan 4 personas más.",
+      "The workshop is designed to start with groups of 6. So yes, as long as 4 more people join the plan."] },
   { q: ["¿Cuánto dura la experiencia?", "How long does the experience last?"],
     a: ["Entre 2 y 2,5 horas: bienvenida, una hora y cuarto de taller y otra hora y cuarto de comida. Se puede alargar bajo consulta.",
       "Between 2 and 2.5 hours: welcome, an hour and 15 minutes of workshop, and another hour and 15 minutes of food. Can run longer on request."] },
