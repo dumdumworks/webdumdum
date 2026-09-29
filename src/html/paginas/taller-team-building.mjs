@@ -38,8 +38,8 @@ const PASOS = [
 ];
 const FAQ = [
   { q: ["¿Para cuántas personas es el team building?", "How many people is the team building for?"],
-    a: ["Desde grupos pequeños hasta más de 30 personas. A partir de ahí, consúltanos directamente.",
-      "From small groups up to 30+ people. Above that, just get in touch directly."] },
+    a: ["Desde grupos de 6 personas hasta 30. A partir de esa cifra, consúltanos y vemos cómo adecuar la propuesta.",
+      "From groups of 6 up to 30. Beyond that, get in touch and we will see how to adapt the offer."] },
   { q: ["¿Cuánto dura la experiencia?", "How long does the experience last?"],
     a: ["Entre 2 y 2,5 horas: bienvenida, una hora y cuarto de taller y otra hora y cuarto de comida. Se puede alargar bajo consulta.",
       "Between 2 and 2.5 hours: welcome, an hour and 15 minutes of workshop, and another hour and 15 minutes of food. Can run longer on request."] },
@@ -52,6 +52,9 @@ const FAQ = [
   { q: ["¿Podéis adaptar el taller a otro tipo de evento?", "Can you adapt the workshop for a different kind of event?"],
     a: ["Sí: el espacio, la carta y el formato se adaptan al tipo de evento. Cumpleaños, despedidas, presentaciones… cuéntanos qué necesitas y le buscamos forma.",
       "Yes: the space, the menu and the format all adapt to the type of event. Birthdays, leaving dos, launches… tell us what you need and we'll make it work."] },
+  { q: ["¿Se puede llevar la experiencia fuera del restaurante?", "Can the experience be taken outside the restaurant?"],
+    a: ["Se puede. Consúltanos y adecuamos la experiencia en función del lugar al que vayamos.",
+      "It can. Get in touch and we'll adapt the experience to wherever we're headed."] },
 ];
 
 // Cada línea de un titular es un <span> propio (no texto separado por
