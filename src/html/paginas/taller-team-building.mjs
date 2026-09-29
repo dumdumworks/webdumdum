@@ -408,8 +408,8 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
 
   const main = `<div data-screen-label="taller-team-building">
 <section class="ev-hero">
-  <div class="tiny muted"><a href="${i.ruta("/eventos")}" class="link-hover">${esc(t("Eventos", "Events"))}</a> · ${esc(t("Talleres Team Building", "Team Building Workshops"))}</div>
-  <h1 class="h-display" style="margin-top:16px">${esc(t("Un team building", "A team building"))}<br>${esc(t("que se come", "you can eat"))}</h1>
+  <h1 class="tiny muted">${esc(t("Taller de dumplings · Team building para empresas y grupos en Madrid", "Dumpling workshop · Team building for companies and groups in Madrid"))}</h1>
+  <h2 class="h-display" style="margin-top:16px">${esc(t("Un team building", "A team building"))}<br>${esc(t("que se come", "you can eat"))}</h2>
   <div class="ev-hero-row" style="margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:32px">
     <p class="body" style="font-size:18px;flex:1 1 420px;min-width:0;margin:0">${t(
       "Lo de <strong>tirarse de espaldas</strong> y esperar a que te cojan tus compañeros puede llegar a estar bien, pero eso luego <strong>no te lo puedes comer</strong>. Tampoco <strong>te puedes comer los post-its</strong> del juego ese de ponérselos en la frente con palabras. Y <strong>tampoco se puede hacer un dumpling con bolas de paintball</strong>. Sin embargo, <strong>en el taller de dumplings de DUM DUM™</strong>, cocinas en equipos, aprendes a hacer cosas y lo mejor es que, luego, te lo comes. <strong>Planazo, la verdad</strong>.",
