@@ -4,14 +4,14 @@
 // ─────────────────────────────────────────────────────────────
 export const ROUTES_SEO = [
   { p: "/",         t: "DUM DUM\u2122 \u2014 Dumplings & Desobediencia",
-    d: "Desobedecer es un derecho y una obligaci\u00f3n. Los dumplings m\u00e1s diferentes y mejor valorados de Espa\u00f1a. Abiertos todos los d\u00edas. Para tomar, para recoger y a domicilio.",
+    d: "Los dumplings m\u00e1s diferentes y mejor valorados de Espa\u00f1a. Abiertos todos los d\u00edas. Para tomar, para recoger y a domicilio.",
     te: "DUM DUM\u2122 \u2014 Dumplings & Disobedience",
-    de: "Disobeying is a right and a duty. The most different and best-rated dumplings in Spain. Open every day. Eat in, take away or delivery." },
+    de: "The most different and best-rated dumplings in Spain. Open every day. Eat in, take away or delivery." },
   // Sin "d"/"de": la descripci\u00f3n de /menu se arma en menu.mjs con la cifra
   // real de la carta viva (para que nunca diga un n\u00famero de dumplings que ya
   // no es verdad).
-  { p: "/menu",     t: "DUM DUM\u2122 \u2014 La carta",
-    te: "DUM DUM\u2122 \u2014 The menu" },
+  { p: "/menu",     t: "La carta de Dumplings de DUM DUM",
+    te: "DUM DUM's Dumpling Menu" },
   { p: "/locales",  t: "DUM DUM\u2122 \u2014 Locales y reservas",
     d: "Puedes reservar en Chamber\u00ed o en Bernab\u00e9u. O en ambos :).",
     te: "DUM DUM\u2122 \u2014 Locations and bookings",
@@ -26,7 +26,7 @@ export const ROUTES_SEO = [
     d: "El segundo local de DUM DUM\u2122, en Infanta Mercedes 17 (Madrid), a cinco minutos del Santiago Bernab\u00e9u. Dumplings de autor en un espacio di\u00e1fano con cocina abierta.",
     te: "DUM DUM\u2122 Bernab\u00e9u \u2014 Dumplings on Infanta Mercedes, Madrid",
     de: "DUM DUM\u2122's second spot, at Infanta Mercedes 17 (Madrid), five minutes from the Santiago Bernab\u00e9u. Signature dumplings in an open-plan space with an open kitchen." },
-  { p: "/eventos",  t: "DUM DUM\u2122 \u2014 Eventos",
+  { p: "/eventos",  t: "DUM DUM\u2122 \u2014 Eventos en Madrid",
     d: "Espacios cool para eventos en Madrid.",
     te: "DUM DUM\u2122 \u2014 Events",
     de: "Cool spaces for events in Madrid." },
