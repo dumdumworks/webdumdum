@@ -946,8 +946,20 @@
 .ev-hero p { max-width: 56ch; }
 /* El botón del dossier: a la izquierda en escritorio, con el mismo aire que
    separa el titular del párrafo. En móvil va centrado (todo el hero lo está) y
-   con el aire de arriba igual al de abajo, el del propio hero (ver el 879). */
-.ev-hero-cta { margin-top: 40px; display: flex; justify-content: flex-start; }
+   con el aire de arriba igual al de abajo, el del propio hero (ver el 879).
+   Los dos botones a la MISMA anchura (pedido de Yerai): miden muy distinto y
+   con el width:fit-content de .btn de fábrica salían dos pastillas dispares.
+   En vez de fijar un ancho a mano (que se rompería en inglés, más largo),
+   grid con dos columnas 1fr: con el contenedor a su propio ancho
+   (inline-grid, no estirado a todo el hero), el algoritmo de grid iguala las
+   columnas al contenido MÁS ANCHO de las dos — y como los grid items se
+   estiran a su columna por defecto (justify-items: stretch), el botón corto
+   crece hasta igualar al largo solo. */
+.ev-hero-cta { margin-top: 40px; display: inline-grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+/* El botón corto, al estirarse a la columna del largo, dejaría su etiqueta
+   pegada a la izquierda con hueco vacío a la derecha (.btn no centra su
+   contenido por defecto, solo lo necesita cuando mide más que su texto). */
+.ev-hero-cta .btn { justify-content: center; }
 .ev-hero-meta {
   margin-top: 48px;
   display: grid;
@@ -1064,44 +1076,17 @@
 [data-screen-label="taller-team-building"] .ev-hero p { margin-left: auto; margin-right: auto; max-width: 100ch; }
 [data-screen-label="taller-team-building"] .ev-hero-row { justify-content: center; }
 
-/* .ev-hero-cta trae 40px/36px de margin-top de fábrica, sin relación
-   con el aire de después (36px/32px hasta la caja de [01], la misma
-   escala que separa el resto de bloques de la página) — quedaba un
-   poco más apretado el hueco de después de los botones que el de
-   antes. Se igualan los dos a esa misma escala. Escrito con
-   [data-screen-label] para no afectar al mismo .ev-hero-cta de otras
-   páginas.
-   Los dos botones a la MISMA anchura (pedido de Yerai): "Pedir
-   presupuesto" y "Descargar dossier" miden muy distinto y con el
-   width:fit-content de .btn de fábrica salían dos pastillas dispares.
-   En vez de fijar un ancho a mano (que se rompería en inglés, más
-   largo), grid con dos columnas 1fr: con el contenedor a su propio
-   ancho (inline-grid, no estirado a todo el hero), el algoritmo de
-   grid iguala las columnas al contenido MÁS ANCHO de las dos — y como
-   los grid items se estiran a su columna por defecto (justify-items:
-   stretch), el botón corto crece hasta igualar al largo solo. Centrado
-   por el text-align:center de .ev-hero (arriba), al ser inline-grid un
-   elemento de tipo inline. */
-[data-screen-label="taller-team-building"] .ev-hero-cta {
-  display: inline-grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  margin-top: 36px;
-}
-/* El botón corto, al estirarse a la columna del largo, dejaría su
-   etiqueta pegada a la izquierda con hueco vacío a la derecha (.btn no
-   centra su contenido por defecto, solo lo necesita cuando mide más
-   que su texto). */
-[data-screen-label="taller-team-building"] .ev-hero-cta .btn { justify-content: center; }
+/* .ev-hero-cta trae 40px/36px de margin-top de fábrica (ver más arriba, la
+   regla base) — en esta página, sin relación con el aire de después
+   (36px/32px hasta la caja de [01], la misma escala que separa el resto de
+   bloques de la página), quedaba un poco más apretado el hueco de después
+   de los botones que el de antes. Se igualan los dos a esa misma escala
+   (el ancho igual de los dos botones y su centrado ya los pone la regla
+   base + el text-align:center de .ev-hero de arriba, compartidos con
+   /eventos). */
+[data-screen-label="taller-team-building"] .ev-hero-cta { margin-top: 36px; }
 @media (max-width: 879px) {
-  /* En móvil, una sola columna a todo el ancho: dos columnas 1fr aquí
-     dejarían los botones demasiado estrechos para su texto. */
-  [data-screen-label="taller-team-building"] .ev-hero-cta {
-    display: grid;
-    grid-template-columns: 1fr;
-    width: 100%;
-    margin-top: 32px;
-  }
+  [data-screen-label="taller-team-building"] .ev-hero-cta { margin-top: 32px; }
 }
 
 /* Zigzag de fotos + titulares (/taller-team-building): cada foto pegada a
@@ -2141,6 +2126,7 @@
   border-left: 1px solid var(--line);
 }
 .ev-service {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -2183,6 +2169,48 @@
 /* Flecha solo en la única celda con página propia, mismo recurso que
    .map-cell .t::after: la pone el CSS, no el marcado. */
 .ev-service.is-link .t::after { content: " →"; }
+/* Resalto al llegar desde "Elige tu tipo de evento" (ver data-ir-servicio,
+   src/islas/eventos.js): un parpadeo a rojo, distinto de la inversión a
+   tinta del :hover, para que quede claro que se puede pulsar sin
+   confundirlo con el estado normal de encima. Va en una capa propia
+   (::after), no en el "background" de .ev-service: ese lo pisa también el
+   :hover/:hover.is-link, y animar la misma propiedad que .is-link:hover
+   pelea con ella si el cursor ya está encima al llegar el scroll — el
+   primer fotograma de la animación (background:transparent) "gana" un
+   instante y se ve como un parpadeo antes del rojo. Con la capa aparte,
+   el :hover no la toca nunca. */
+@keyframes evServicioFlashCapa {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+@keyframes evServicioFlashN {
+  0%, 100% { color: rgba(255,0,30,0.55); }
+  50% { color: rgba(255,255,255,0.7); }
+}
+@keyframes evServicioFlashT {
+  0%, 100% { color: inherit; }
+  50% { color: #fff; }
+}
+.ev-service.is-flash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--red);
+  pointer-events: none;
+  animation: evServicioFlashCapa 1.8s ease-in-out;
+}
+.ev-service.is-flash .n,
+.ev-service.is-flash .t {
+  position: relative;
+  z-index: 1;
+}
+.ev-service.is-flash .n { animation: evServicioFlashN 1.8s ease-in-out; }
+.ev-service.is-flash .t { animation: evServicioFlashT 1.8s ease-in-out; }
+@media (prefers-reduced-motion: reduce) {
+  .ev-service.is-flash::after,
+  .ev-service.is-flash .n,
+  .ev-service.is-flash .t { animation-duration: .01ms; animation-iteration-count: 1; }
+}
 
 .ev-contact {
   padding: 14vh var(--gutter) 8vh;
@@ -2267,7 +2295,7 @@
   }
   .ev-hero p { margin-left: auto; margin-right: auto; }
   .ev-hero-row { justify-content: center; }
-  .ev-hero-cta { justify-content: center; margin-top: 36px; }
+  .ev-hero-cta { display: grid; grid-template-columns: 1fr; width: 100%; margin-top: 36px; }
   .ev-hero-meta {
     grid-template-columns: 1fr 1fr 1fr;
     margin-top: 28px;
