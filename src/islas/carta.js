@@ -11,8 +11,15 @@ export function carta() {
   if (!raiz) return;
   alergenos(raiz);
   relevoFlotante(raiz);
+  // Scroll nativo, no desplazarA(): en una carta larga (con todas sus fotos
+  // de plato) el recorrido hasta arriba puede ser largo, y el mismo
+  // trompicón que se dio en /eventos (ver src/islas/eventos.js) podía darse
+  // aquí — el scroll nativo no depende del hilo principal para animarse.
   const arriba = $("[data-arriba]", raiz);
-  if (arriba) arriba.addEventListener("click", () => desplazarA(0, 900));
+  if (arriba) arriba.addEventListener("click", () => {
+    const reducido = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reducido ? "auto" : "smooth" });
+  });
   fotos(raiz);
 }
 
