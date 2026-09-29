@@ -581,6 +581,18 @@ img { display: block; max-width: 100%; }
 }
 
 /* ---------- Hover / interactions ---------- */
+/* Anillo de foco (navegación por teclado/lector de pantalla, no al hacer
+   clic con ratón: :focus-visible). Doble anillo —uno claro pegado al
+   elemento, uno rojo un poco más fuera— porque un solo color no se ve en
+   todos los fondos de la web: sobre crema se ve el rojo; sobre el rojo
+   sólido del footer o de un .btn.red se ve el claro; sobre la topbar oscura
+   se ven los dos. outline (no solo box-shadow) para que Windows/forced-
+   colors siga pudiendo dibujar su propio foco por encima si hace falta. */
+:focus-visible {
+  outline: 2px solid var(--bg);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--red);
+}
 .link-hover { transition: color .2s ease; }
 .link-hover:hover { color: var(--red); }
 
