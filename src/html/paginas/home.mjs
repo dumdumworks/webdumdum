@@ -86,7 +86,7 @@ ${[
     celda("02", t("A domicilio", "Delivery"), t("NI TE MUEVAS", "DON'T EVEN MOVE"), 'href="#" data-pide="domicilio"'),
     celda("03", "Take Away", t("PIDE ONLINE", "ORDER ONLINE"), `href="${E.TAKEAWAY_URL}" target="_blank" rel="noreferrer"`),
     celda("04", t("Locales", "Locations"), "CHAMBERÍ #015 + BERNABÉU #020", `href="${i.ruta("/locales")}"`),
-    celda("05", t("Eventos", "Events"), t("AFTER WORKS · CUMPLES · DIVORCIOS?", "AFTER WORKS · BIRTHDAYS · DIVORCES?"), `href="${i.ruta("/eventos")}"`),
+    celda("05", t("Eventos", "Events"), t("TALLERES · CUMPLES · DIVORCIOS?", "WORKSHOPS · BIRTHDAYS · DIVORCES?"), `href="${i.ruta("/eventos")}"`),
     celda("06", t("Contacto", "Contact"), t("SALÚDAME SIEMPRE", "SAY HI ANYTIME"), `href="${i.ruta("/contacto")}"`),
     celda("07", "Instagram", "@DUMDUM.PLINGS", `href="${E.INSTAGRAM_URL}" target="_blank" rel="noreferrer"`),
     celda("08", "DD*Radio", "SPOTIFY", `href="${E.SPOTIFY_URL}" target="_blank" rel="noreferrer"`),
