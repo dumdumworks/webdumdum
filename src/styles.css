@@ -984,9 +984,12 @@ img { display: block; max-width: 100%; }
   font-size:12px; line-height:1; letter-spacing:0.02em;
   text-transform:uppercase; white-space:nowrap;
 }
-/* nombre de plato: más pequeño para armonizar con los alérgenos */
+/* nombre de plato: más pequeño para armonizar con los alérgenos. Es un
+   <th scope="row"> (antes <td>) para que un lector de pantalla asocie cada
+   fila con su plato; font-weight normal porque el <th> del navegador es
+   bold por defecto y aquí no debe notarse el cambio de etiqueta. */
 .alerg-td-name{
-  text-align:left; vertical-align:middle;
+  text-align:left; vertical-align:middle; font-weight:normal;
   font-family:var(--font-display); font-size:13px; color:var(--red);
   white-space:nowrap; padding:10px 12px;
 }

@@ -3,7 +3,7 @@
 // nueve celdas y el pie de especificaciones. Es el componente Home de
 // pages.jsx con las mismas clases. Lógica en islas/home.js (bajar, toast).
 // ─────────────────────────────────────────────────────────────
-import { esc } from "../plantilla.mjs";
+import { esc, ldGlobalIdioma } from "../plantilla.mjs";
 import { esqueleto, specFoot } from "../shell.mjs";
 import { mesEnCurso, dumplingsDisponibles, numeroALetra, mayuscInicial } from "../carta.mjs";
 import * as E from "../enlaces.mjs";
@@ -118,7 +118,7 @@ ${specFoot([
     titulo: i.lang === "en" ? (s.te || s.t) : s.t,
     desc: i.lang === "en" ? (s.de || s.d) : s.d,
     cuerpo: esqueleto(i, RUTA, locales, main),
-    ld: ldGlobal,
+    ld: ldGlobalIdioma(i, ldGlobal),
     precargas,
   };
 }

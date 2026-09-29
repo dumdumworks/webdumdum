@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────
 // CONTACTO (/contacto). Es el componente Contacto de pages.jsx.
 // ─────────────────────────────────────────────────────────────
-import { esc, breadcrumbLd } from "../plantilla.mjs";
+import { esc, breadcrumbLd, ldGlobalIdioma } from "../plantilla.mjs";
 import { esqueleto, specFoot } from "../shell.mjs";
 import * as E from "../enlaces.mjs";
 
@@ -157,6 +157,6 @@ ${specFoot([
     titulo: i.lang === "en" ? (s.te || s.t) : s.t,
     desc: i.lang === "en" ? (s.de || s.d) : s.d,
     cuerpo: esqueleto(i, RUTA, locales, main),
-    ld: [ldGlobal, breadcrumbLd(i, [{ nombre: t("Contacto", "Contact"), ruta: RUTA }]), faqLd(i)],
+    ld: [ldGlobalIdioma(i, ldGlobal), breadcrumbLd(i, [{ nombre: t("Contacto", "Contact"), ruta: RUTA }]), faqLd(i)],
   };
 }

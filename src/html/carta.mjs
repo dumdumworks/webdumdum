@@ -204,9 +204,12 @@ function ventanaAlergenos(i, platos) {
         <div class="alerg-table-full"><div class="alerg-table-wrap">
           <table class="alerg-table">
             <colgroup><col class="alerg-col-plato">${ALERGENOS.map(() => '<col class="alerg-col-al">').join("")}</colgroup>
-            <thead><tr><th class="alerg-namecol"></th>${ALERGENOS.map((a) => `<th class="alerg-al"><div class="alerg-vhead"><span>${esc(a.id === "frutos_cascara" ? t("Fr. de cáscara", "Tree nuts") : al(a))}</span></div></th>`).join("")}</tr></thead>
+            <thead><tr><th class="alerg-namecol"></th>${ALERGENOS.map((a) => `<th scope="col" class="alerg-al"><div class="alerg-vhead"><span>${esc(a.id === "frutos_cascara" ? t("Fr. de cáscara", "Tree nuts") : al(a))}</span></div></th>`).join("")}</tr></thead>
             <tbody>
-              ${platos.map((p) => `<tr><td class="alerg-td-name">${esc(p.name)}</td>${ALERGENOS.map((a) => `<td class="alerg-td-dot">${p.alergenos.includes(a.id) ? '<span class="alerg-mark"></span>' : ""}</td>`).join("")}</tr>`).join("\n              ")}
+              ${platos.map((p) => `<tr><th scope="row" class="alerg-td-name">${esc(p.name)}</th>${ALERGENOS.map((a) => {
+                const contiene = p.alergenos.includes(a.id);
+                return `<td class="alerg-td-dot"${contiene ? ` aria-label="${esc(t("Contiene", "Contains") + " " + al(a))}"` : ""}>${contiene ? '<span class="alerg-mark"></span>' : ""}</td>`;
+              }).join("")}</tr>`).join("\n              ")}
             </tbody>
           </table>
         </div></div>

@@ -3,10 +3,16 @@
   "@type": "Restaurant",
   "name": "DUM DUM",
   "description": "Dumplings & Desobediencia en Madrid.",
+  "description_en": "Dumplings & Disobedience in Madrid.",
   "servesCuisine": [
     "Dumplings",
     "Asiática",
     "Fusión"
+  ],
+  "servesCuisine_en": [
+    "Dumplings",
+    "Asian",
+    "Fusion"
   ],
   "priceRange": "€€",
   "url": "https://dum-dum.es/",
@@ -32,6 +38,11 @@
         "Dumplings",
         "Asiática",
         "Fusión"
+      ],
+      "servesCuisine_en": [
+        "Dumplings",
+        "Asian",
+        "Fusion"
       ],
       "telephone": "+34624560181",
       "openingHoursSpecification": [
@@ -79,6 +90,11 @@
         "Dumplings",
         "Asiática",
         "Fusión"
+      ],
+      "servesCuisine_en": [
+        "Dumplings",
+        "Asian",
+        "Fusion"
       ],
       "telephone": "+34614167317",
       "openingHoursSpecification": [
