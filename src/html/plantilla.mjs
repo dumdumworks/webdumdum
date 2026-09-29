@@ -114,7 +114,13 @@ export function documento({ i, ruta, titulo, desc, cuerpo, ld, analitica, css, i
 ${bloquesLd ? bloquesLd + "\n" : ""}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+  <!-- JetBrains Mono va en todas las páginas (topbar, UI, precios). Oswald
+       solo la usa /taller-team-building (titulares del zigzag): pedirla en
+       el resto —sobre todo /menu, con 2/3 del tráfico y casi todo móvil—
+       era descargar y parsear una fuente que nunca se pinta. -->
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600${
+    ruta === "/taller-team-building" ? "&family=Oswald:wght@400;700" : ""
+  }&display=swap" rel="stylesheet">
 ${precargas || ""}
   <link rel="stylesheet" href="/${css}">
   <script src="/${islas}" defer></script>
