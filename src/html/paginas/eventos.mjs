@@ -120,8 +120,10 @@ export function eventos(i, { locales, seo, ldGlobal, eventos: ev, galerias, cart
   <h1 class="h-display" style="margin-top:16px">${eh("hero_title", esc(t("Un sitio cool", "A cool place")), esc(t("para eventos cool.", "for cool events.")))}</h1>
   <div class="ev-hero-row" style="margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:32px">
     <p class="body" style="font-size:18px;flex:1 1 420px;min-width:0;margin:0">${eb("hero_body", lang === "en"
-      ? "A 5-minute walk from Santiago Bernabéu, designed by <strong>Nota Estudio</strong>. 55 m² open-plan, open kitchen, up to 40 seated or 60 standing, a powerful sound system and considered lighting. A place worthy of your event."
-      : "A 5 minutos del Santiago Bernabéu y diseñado por <strong>Nota Estudio</strong>. 55 m² diáfanos, cocina abierta, hasta 40 personas sentadas o 60 de pie, equipo de sonido potente y luz pensada. Un sitio a la altura de tu evento.")}</p>
+      ? "A {{bernabeu}}, designed by <strong>Nota Estudio</strong>. 55 m² open-plan, open kitchen, up to 40 seated or 60 standing, a powerful sound system and considered lighting. A place ready for afterworks, presentations and {{taller}}."
+      : "A {{bernabeu}} y diseñado por <strong>Nota Estudio</strong>. 55 m² diáfanos, cocina abierta, hasta 40 personas sentadas o 60 de pie, equipo de sonido potente y luz pensada. Un sitio preparado para afterworks, presentaciones y {{taller}}.")
+      .replace("{{bernabeu}}", `<a href="${i.ruta("/locales/bernabeu")}" class="link-hover link-underline"><strong>${t("5 minutos del Santiago Bernabéu", "5-minute walk from Santiago Bernabéu")}</strong></a>`)
+      .replace("{{taller}}", `<a href="${i.ruta("/taller-team-building")}" class="link-hover link-underline">${t("talleres de team building", "team building workshops")}</a>`)}</p>
   </div>
   <div class="ev-hero-cta">
     <a class="btn" href="${esc(dossier)}" target="_blank" rel="noreferrer"><span class="btn-label">${esc(t("Descargar dossier con tarifas", "Download dossier with rates"))}</span><span class="btn-arrow">↓</span></a>

@@ -115,7 +115,9 @@ export function local(slug) {
 
 <section class="local-cuerpo">
   <div class="local-historia">
-${mdParas(tx(L.historia), "body")}
+${mdParas(tx(L.historia), "body")
+    .replace("{{eventos}}", `<a href="${i.ruta("/eventos")}" class="link-hover link-underline">${t("eventos", "events")}</a>`)
+    .replace("{{talleres}}", `<a href="${i.ruta("/taller-team-building")}" class="link-hover link-underline">${t("talleres", "workshops")}</a>`)}
   </div>
   ${datoDestacado("pin", t("Dirección", "Address"), L.dirLineas, "Madrid " + L.cp)}
   ${datoDestacado("metro", t("Metro", "Metro"), metroLineas, tx(L.metroTiempo))}

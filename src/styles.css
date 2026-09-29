@@ -594,6 +594,13 @@ img { display: block; max-width: 100%; }
   box-shadow: 0 0 0 4px var(--red);
 }
 .link-hover { transition: color .2s ease; }
+/* Enlace subrayado, para cuando el texto alrededor ya es rojo (--ink y --red
+   son el mismo color aquí): el :hover de .link-hover no se nota si el texto
+   ya era rojo antes de pasar el ratón, y en táctil no hay :hover que lo
+   revele. El subrayado sí se distingue en cualquier color de texto y de
+   fondo, y no depende de pasar el ratón. */
+.link-underline { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.link-underline:hover { text-decoration-thickness: 1.5px; }
 .link-hover:hover { color: var(--red); }
 
 .btn {
