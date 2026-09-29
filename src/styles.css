@@ -1040,7 +1040,7 @@ img { display: block; max-width: 100%; }
 @media (hover: none) {
   .btn, .btn-inline, .btn-call, .btn-maps, .topbar-reservar, .topbar-pide,
   .pide-card, .link-hover, .lb-close, .lb-nav, .ev-service, .ev-slider-btn,
-  .ev-slider-cta, .ev-contact .big, .contact a.big, .contact summary.big {
+  .ev-slider-cta, .contact a.big, .contact summary.big {
     transition: none;
   }
 }
