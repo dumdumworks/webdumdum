@@ -87,6 +87,22 @@ body {
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
 img { display: block; max-width: 100%; }
+/* Texto real pero invisible en pantalla: para cuando hay un elemento
+   decorativo (el SVG del logo) que ya muestra el contenido visualmente,
+   pero un lector de pantalla o un extractor de texto necesita encontrarlo
+   como texto de HTML normal, no dentro de un <svg> — muchas herramientas
+   de lectura ignoran el contenido de cualquier <svg>, tenga <text> o no. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 /* ---------- Type tokens ---------- */
 .mono { font-family: var(--font-mono); text-transform: uppercase; font-feature-settings: "ss01" on; letter-spacing: 0; font-weight: 600; }
