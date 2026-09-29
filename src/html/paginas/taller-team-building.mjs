@@ -46,12 +46,21 @@ const FAQ = [
   { q: ["¿Qué incluye?", "What's included?"],
     a: ["El taller completo, y una degustación que incluye un entrante a compartir, toda la carta de dumplings por persona, una bebida y un mochi de postre.",
       "The full workshop, plus a tasting that includes a starter to share, the whole dumpling menu per person, one drink and a mochi for dessert."] },
+  { q: ["¿Se puede adaptar a alergias o vegetarianos?", "Can it be adapted for allergies or vegetarians?"],
+    a: ["Sí. La carta tiene opciones vegetarianas y cada plato lleva marcados sus alérgenos — nos cuentas las restricciones del grupo antes del taller y lo dejamos todo listo.",
+      "Yes. The menu has vegetarian options and every dish lists its allergens — tell us the group's restrictions before the workshop and we'll have it all sorted."] },
   { q: ["¿Y si se nos quema todo?", "What if we burn everything?"],
     a: ["Para eso está equipo, para que no pase nada. Y si pasa, pues risas. Lo que sea menos dramas.",
       "That's what the team's there for, so nothing goes wrong. And if it does, well, laughs. Anything but drama."] },
   { q: ["¿Podéis adaptar el taller a otro tipo de evento?", "Can you adapt the workshop for a different kind of event?"],
     a: ["Sí: el espacio, la carta y el formato se adaptan al tipo de evento. Cumpleaños, despedidas, presentaciones… cuéntanos qué necesitas y le buscamos forma.",
       "Yes: the space, the menu and the format all adapt to the type of event. Birthdays, leaving dos, launches… tell us what you need and we'll make it work."] },
+  { q: ["¿Hacéis talleres de dumplings para empresas?", "Do you run dumpling workshops for companies?"],
+    a: ["Sí. Es exactamente el mismo taller, adaptado a empresas: departamentos enteros, onboardings, celebraciones de equipo… Cuéntanos cuántos sois y para qué es, y lo organizamos.",
+      "Yes. It's the same workshop, adapted for companies: whole departments, onboardings, team celebrations… Tell us how many you are and what it's for, and we'll set it up."] },
+  { q: ["¿Dónde se hace el taller?", "Where does the workshop take place?"],
+    a: ["En DUM DUM Bernabéu, en Infanta Mercedes 17 (Madrid): a cinco minutos andando del Santiago Bernabéu y de AZCA.",
+      "At DUM DUM Bernabéu, on Infanta Mercedes 17 (Madrid): a five-minute walk from the Santiago Bernabéu and from AZCA."] },
   { q: ["¿Se puede llevar la experiencia fuera del restaurante?", "Can the experience be taken outside the restaurant?"],
     a: ["Se puede. Consúltanos y adecuamos la experiencia en función del lugar al que vayamos.",
       "It can. Get in touch and we'll adapt the experience to wherever we're headed."] },
@@ -399,8 +408,8 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
 
   const main = `<div data-screen-label="taller-team-building">
 <section class="ev-hero">
-  <div class="tiny muted"><a href="${i.ruta("/eventos")}" class="link-hover">${esc(t("Eventos", "Events"))}</a> · ${esc(t("Talleres Team Building", "Team Building Workshops"))}</div>
-  <h1 class="h-display" style="margin-top:16px">${esc(t("Un team building", "A team building"))}<br>${esc(t("que se come", "you can eat"))}</h1>
+  <h1 class="tiny muted">${esc(t("Taller de dumplings · Team building para empresas y grupos en Madrid", "Dumpling workshop · Team building for companies and groups in Madrid"))}</h1>
+  <h2 class="h-display" style="margin-top:16px">${esc(t("Un team building", "A team building"))}<br>${esc(t("que se come", "you can eat"))}</h2>
   <div class="ev-hero-row" style="margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:32px">
     <p class="body" style="font-size:18px;flex:1 1 420px;min-width:0;margin:0">${t(
       "Lo de <strong>tirarse de espaldas</strong> y esperar a que te cojan tus compañeros puede llegar a estar bien, pero eso luego <strong>no te lo puedes comer</strong>. Tampoco <strong>te puedes comer los post-its</strong> del juego ese de ponérselos en la frente con palabras. Y <strong>tampoco se puede hacer un dumpling con bolas de paintball</strong>. Sin embargo, <strong>en el taller de dumplings de DUM DUM™</strong>, cocinas en equipos, aprendes a hacer cosas y lo mejor es que, luego, te lo comes. <strong>Planazo, la verdad</strong>.",
