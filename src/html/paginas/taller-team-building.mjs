@@ -176,7 +176,7 @@ const DATOS_ESENCIALES = [
     ico: "hora",
     titulo: { es: ["UN PAR", "DE HORITAS"], en: ["A COUPLE", "OF HOURS"] },
     desc: {
-      es: ["La experiencia está pensada para que en ", "2 - 2,5 horas", " os dé tiempo a terminar el taller y a comer. Todo ágil, sin parones, dinámico y preparado para que nadie se aburra. Cortio. Al pie."],
+      es: ["La experiencia está pensada para que en ", "2 - 2,5 horas", " os dé tiempo a terminar el taller y a comer. Todo ágil, sin parones, dinámico y preparado para que nadie se aburra. Cortito. Al pie."],
       en: ["The experience is designed so that in ", "2 - 2.5 hours", " you have time to finish the workshop and eat. All fast-paced, no downtime, dynamic, and built so nobody gets bored. Short. Sweet."],
     },
   },
