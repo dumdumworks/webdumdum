@@ -96,6 +96,20 @@ function anioYY() {
 
 const num = (n) => "[nº" + String(n).padStart(2, "0") + "]";
 
+// srcset de la foto de un plato, SIN tocar disco: la carta se pinta en el
+// edge (functions/menu.js), donde no hay sistema de archivos — por eso no
+// se usa el srcset() de imagenes.mjs (ese sí mira el disco, pero solo sirve
+// para páginas que se generan en el build). Las fotos de "img/dumplings/"
+// siempre tienen sus variantes -480/-800 (dev/fotos-variantes.py se ejecutó
+// para generarlas); cualquier otra ruta de foto (p. ej. subida por el panel
+// a R2) no las tiene todavía, así que se queda con la imagen tal cual.
+function srcsetPlato(src) {
+  const m = /^\/?img\/dumplings\/([^/]+)\.jpg$/.exec(src);
+  if (!m) return "";
+  const base = "img/dumplings/" + m[1];
+  return ` srcset="${esc(base)}-480.jpg 480w, ${esc(base)}-800.jpg 800w" sizes="(min-width: 880px) 33vw, 100vw"`;
+}
+
 function plato(i, it, opts = {}) {
   const { t } = i;
   const nombre = tf(i, it, "name"), tagline = tf(i, it, "tagline"), ingr = tf(i, it, "ingredients");
@@ -126,7 +140,7 @@ function plato(i, it, opts = {}) {
   </div>
   <div class="dish-img">
     ${it.image
-      ? `<img src="${esc(it.image)}" alt="${esc(nombre)}" loading="lazy" decoding="async">`
+      ? `<img src="${esc(it.image)}"${srcsetPlato(it.image)} alt="${esc(nombre)}" loading="lazy" decoding="async">`
       : `<div class="dish-img-ph"><span class="ph-label">[${esc(nombre)}]</span><span class="ph-sub">product shot · 4:5</span></div>`}
     ${sobreFoto.length ? `<div class="dish-tags-overlay">${sobreFoto.map((x) => tag(i, x)).join("")}</div>` : ""}
   </div>
