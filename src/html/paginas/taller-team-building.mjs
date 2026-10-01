@@ -15,6 +15,13 @@ import { icono } from "./local.mjs";
 export const RUTA = "/taller-team-building";
 const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
 
+// Año en curso para el sello "MEJOR TEAM BUILDING" — se calcula en cada
+// build, nunca hay que tocarlo a mano para que no se quede desfasado.
+function anioActual() {
+  try { return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Madrid", year: "numeric" }).format(new Date()); }
+  catch (e) { return String(new Date().getFullYear()); }
+}
+
 // [titulo es/en, frase es/en] de cada paso — mismo proceso real de siempre
 // (equipos → masa → montaje → cocinado → degustación), pero contado como lo
 // que es: una tarde metiendo las manos en la masa con gente con la que
@@ -436,7 +443,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
 
 <div class="taller2-hero-media">
   ${sello("izq", "sello-mejor-team-building.svg", 260, 166,
-    t([esc("MEJOR TEAM"), `${esc("BUILDING ")}${reg("2026")}`], [esc("BEST TEAM"), `${esc("BUILDING ")}${reg("2026")}`]),
+    t([esc("MEJOR TEAM"), `${esc("BUILDING ")}${reg(anioActual())}`], [esc("BEST TEAM"), `${esc("BUILDING ")}${reg(anioActual())}`]),
     t(["SEGÚN NUESTRA MADRE", "QUE ES LA MEJOR"], ["ACCORDING TO OUR MOM", "WHO IS THE BEST"]))}
   <figure class="taller2-foto-hero">
     <img src="img/espacio/02-barra-horizontal.jpg" alt="${esc(t("La cocina de DUM DUM Bernabéu, con el equipo trabajando en la barra.", "The DUM DUM Bernabéu kitchen, with the team working the counter."))}" loading="eager" decoding="async">
@@ -458,7 +465,10 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
   <div class="hr taller2-datos-filete" aria-hidden="true"></div>
   ${datosEsenciales(i)}
   <div style="text-align:center">
-    <p class="taller2-esencial-nota">${esc(t("¿El precio? Te lo damos en cuanto nos cuentes cuántos sois.", "The price? We'll give it to you the moment you tell us how many you are."))}</p>
+    <p class="taller2-esencial-nota">${t(
+      `<strong>${esc("¿El precio?")}</strong> ${esc("Te lo damos en cuanto nos cuentes cuántos sois.")}`,
+      `<strong>${esc("The price?")}</strong> ${esc("We'll give it to you the moment you tell us how many you are.")}`
+    )}</p>
     <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
   </div>
   <div class="hr taller2-esencial-filete" aria-hidden="true"></div>
