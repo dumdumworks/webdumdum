@@ -465,7 +465,10 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
   <div class="hr taller2-datos-filete" aria-hidden="true"></div>
   ${datosEsenciales(i)}
   <div style="text-align:center">
-    <p class="taller2-esencial-nota">${esc(t("¿El precio? Te lo damos en cuanto nos cuentes cuántos sois.", "The price? We'll give it to you the moment you tell us how many you are."))}</p>
+    <p class="taller2-esencial-nota">${t(
+      `<strong>${esc("¿El precio?")}</strong> ${esc("Te lo damos en cuanto nos cuentes cuántos sois.")}`,
+      `<strong>${esc("The price?")}</strong> ${esc("We'll give it to you the moment you tell us how many you are.")}`
+    )}</p>
     <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
   </div>
   <div class="hr taller2-esencial-filete" aria-hidden="true"></div>
