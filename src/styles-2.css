@@ -2360,7 +2360,10 @@
   display: block;
   border: 1.5px solid var(--red);
   border-radius: 12px;
-  background: var(--bg);
+  /* Oscuro, no --bg: con la foto precargada antes de pintarse (visores.js)
+     este fondo casi nunca se ve, pero si se viera (la toda primera foto,
+     antes de que cargue) que no sea un destello claro sobre el visor oscuro. */
+  background: rgba(255, 255, 255, 0.08);
   -webkit-user-drag: none;
   pointer-events: none;          /* la imagen no captura el gesto, lo hace la figura */
 }

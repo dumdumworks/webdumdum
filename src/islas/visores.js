@@ -42,13 +42,20 @@ export function abrirVisorFotos(fotos, inicio, textos) {
       + `<button type="button" class="lb-nav lb-next" aria-label="${textos.siguiente}" data-visor-ir="1">→</button>`,
     pintar: (ov, n) => {
       const f = fotos[n];
-      ov.setAttribute("aria-label", textos.galeria);
       const img = $("img", ov);
-      img.src = f.src; img.style.objectPosition = f.pos || "50% 50%";
-      $(".lb-head .tiny", ov).textContent = (textos.etiqueta ? textos.etiqueta + " · " : "") + pad(n + 1) + " / " + pad(total);
-      // Antes de dar la foto por cambiada: que el navegador la haya decodificado
-      // de verdad, o se ve la vieja un instante de más (ver deslizar() en nucleo.js).
-      return img.decode().catch(() => {});
+      // Se decodifica en una imagen aparte, fuera de pantalla, ANTES de
+      // tocar la que se ve: si se cambiara el src directamente, el hueco
+      // queda en blanco (el fondo de .lb-img) mientras descarga la foto
+      // nueva — sobre todo la primera vez que se desliza, con la foto aún
+      // sin caché. Así la foto vieja se queda puesta hasta que la nueva
+      // está lista para pintarse de golpe.
+      const previa = new Image();
+      previa.src = f.src;
+      return previa.decode().catch(() => {}).then(() => {
+        ov.setAttribute("aria-label", textos.galeria);
+        img.src = f.src; img.style.objectPosition = f.pos || "50% 50%";
+        $(".lb-head .tiny", ov).textContent = (textos.etiqueta ? textos.etiqueta + " · " : "") + pad(n + 1) + " / " + pad(total);
+      });
     },
   });
 }
@@ -65,11 +72,17 @@ export function abrirVisorPlatos(platos, inicio) {
     pintar: (ov, n) => {
       const it = platos[n];
       const img = $("img", ov);
-      img.src = it.src; img.alt = it.nombre;
-      ov.setAttribute("aria-label", it.nombre);
-      $(".dish-lightbox-name", ov).textContent = it.nombre;
-      $(".dish-lightbox-count", ov).textContent = (n + 1) + " / " + total;
-      return img.decode().catch(() => {});
+      // Mismo motivo que en abrirVisorFotos: decodificar aparte antes de
+      // tocar el src visible, para que no se vea el hueco en blanco de
+      // fondo mientras descarga la foto nueva al deslizar.
+      const previa = new Image();
+      previa.src = it.src;
+      return previa.decode().catch(() => {}).then(() => {
+        img.src = it.src; img.alt = it.nombre;
+        ov.setAttribute("aria-label", it.nombre);
+        $(".dish-lightbox-name", ov).textContent = it.nombre;
+        $(".dish-lightbox-count", ov).textContent = (n + 1) + " / " + total;
+      });
     },
   });
 }
