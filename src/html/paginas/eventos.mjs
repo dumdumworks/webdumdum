@@ -88,7 +88,7 @@ function formulario(i) {
 </form>
 <div class="ev-form ev-form-ok" data-formulario-ok hidden>
   <div class="tiny muted">${esc(t("Mensaje enviado", "Message sent"))}</div>
-  <h3 class="h-2" style="margin-top:12px" tabindex="-1">${esc(t("Gracias.", "Thank you."))} <em style="font-style:normal;color:var(--red);font-weight:inherit">${esc(t("Te contestamos cuanto antes.", "We'll get back to you asap."))}</em></h3>
+  <h3 class="h-2" style="margin-top:12px" tabindex="-1">${esc(t("Gracias.", "Thank you."))} <em>${esc(t("Te contestamos cuanto antes.", "We'll get back to you asap."))}</em></h3>
   <button type="button" class="btn" style="margin-top:24px" data-otra>${esc(t("Enviar otra solicitud", "Send another request"))}</button>
 </div>`;
 }

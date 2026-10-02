@@ -36,7 +36,6 @@
    info-r ocupa la suya y alinea su texto a la DERECHA. */
 .hero-info-l { justify-self: stretch; text-align: left; }
 .hero-info-r { justify-self: stretch; text-align: right; }
-.hero-logo { grid-column: 2; }
 
 .hero-info {
   font-family: "JetBrains Mono", ui-monospace, monospace;
@@ -50,6 +49,7 @@
 }
 
 .hero-logo {
+  grid-column: 2;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -177,16 +177,15 @@
   }
   .hero-logo { grid-area: logo; width: min(39vw, 180px); }
   .hero-info-l { grid-area: info-l; }
-  .hero-info-r { grid-area: info-r; }
   /* Los dos bloques de texto (horario y direcciones) van más juntos entre
      sí (forman un grupo), separados del logo y de los botones por el aire
      mayor y uniforme (44px). */
-  .hero-info-r { margin-top: -20px; }
+  .hero-info-r { grid-area: info-r; margin-top: -20px; }
   .hero-info,
   .hero-info-l,
   .hero-info-r {
-    justify-self: center !important;
-    text-align: center !important;
+    justify-self: center;
+    text-align: center;
     white-space: normal;
   }
   .hero-actions .btn { justify-content: center; padding: 14px 20px; }
@@ -222,9 +221,10 @@
   background: var(--bg);
   transition: background .25s ease;
 }
-/* Refuerzo: en desktop (>880px) NUNCA se muestra, pase lo que pase */
+/* En desktop (>880px) NUNCA se muestra. Con dos clases (0,2,0): .map-cell
+   (display: flex, más abajo) la pisaría con el .map-cell-seal de una sola. */
 @media (min-width: 881px) {
-  .map-cell-seal { display: none !important; }
+  .map-cell.map-cell-seal { display: none; }
 }
 /* El sello se pinta con máscara: el color lo da background-color, así
    puede invertirse (rojo→crema) igual que el texto de las demás celdas.
@@ -655,7 +655,7 @@
   border-top: none;
 }
 .ev-form-ok .tiny.muted { color: rgba(255,250,243,0.7); }
-.ev-form-ok .h-2 em { color: var(--bg) !important; }
+.ev-form-ok .h-2 em { font-style: normal; font-weight: inherit; color: var(--bg); }
 .ev-form-ok .btn {
   background: var(--bg);
   color: var(--red);
@@ -889,8 +889,8 @@
   padding: 0;
 }
 .ev-split.ev-split--contact > div {
-  padding-left: var(--gutter) !important;
-  padding-right: var(--gutter) !important;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
 }
 .ev-split > div {
   padding: 64px var(--gutter);
@@ -1078,7 +1078,6 @@
   .ev-split.ev-split--contact { grid-template-columns: 1fr; }
   .ev-split.ev-split--contact > div:first-child { border-right: none; border-bottom: none; padding-bottom: 0; }
   .ev-split.ev-split--contact > div:last-child { padding-top: 24px; }
-  .ev-list { grid-template-columns: 1fr; }
   /* En móvil, la misma caja con las tres cifras apiladas y separadas por
      horizontales del mismo filete. */
   .ev-stats { grid-template-columns: 1fr; }
@@ -1105,6 +1104,8 @@
 /* Slider del espacio */
 .ev-slider {
   margin-top: 32px;
+  /* Referencia del .ev-slider-cta-fija (más abajo). */
+  position: relative;
 }
 /* Sin filete bajo la cabecera: competía con el cierre rojo de la retícula de
    encima (los datos del espacio en Eventos, la ficha de local) con solo el
@@ -1230,7 +1231,6 @@
    fijo, en el mismo sitio (esquina inferior izquierda de la foto a la vista),
    que la isla apunta a la noticia que hay en pantalla. En escritorio, con dos
    fotos a la vista, cada una conserva el suyo. */
-.ev-slider { position: relative; }
 .ev-slider-cta-fija { display: none; }
 @keyframes ev-slide-in {
   from { opacity: 0; transform: translateX(8px); }
@@ -2176,9 +2176,9 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 }
 
 /* Bebidas: texto compacto, SIN foto ni logo */
-.drinks-grid .dish .dish-img, .drinks-grid .dish .dish-card { display: none !important; }
+.drinks-grid .dish .dish-img, .drinks-grid .dish .dish-card { display: none; }
 /* Sin número en bebidas (gana espacio) */
-.drinks-grid .dish .num { display: none !important; }
+.drinks-grid .dish .num { display: none; }
 /* Cada bebida en vertical: nombre arriba, precio debajo */
 .drinks-grid .dish {
   display: block;
@@ -2227,19 +2227,19 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 
 @media (min-width: 880px) {
   /* En desktop ocultamos los nodos del layout mobile */
-  .m-only { display: none !important; }
+  .m-only { display: none; }
   /* Servicios: 3 columnas en desktop (en móvil la base es 2, como map-nav) */
   .ev-services-grid { grid-template-columns: repeat(3, 1fr); }
   .ev-service { min-height: 180px; }
   /* En desktop ocultamos las secciones marcadas como solo-mobile (Bebidas).
      Doble candado: por clase y por id, para que nunca falle. */
   .section-mobile-only,
-  .section--bebidas { display: none !important; }
+  .section--bebidas { display: none; }
   /* El pie con "Volver arriba" es de móvil: la carta de escritorio no lo lleva. */
   .menu-shell .menu-foot { display: none; }
   /* ─── Contenedor ────────────────────────────────────────── */
   .menu-shell { max-width: 1320px; padding: 24px 32px 100px; }
-  .menu-h { font-size: 96px !important; }
+  .menu-h { font-size: 96px; }
   .menu-head { padding-bottom: 16px; }
 
   .menu-sectionhead { padding: 64px 0 16px; }
@@ -2450,10 +2450,6 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
      a todo .dish) para NO tocar el borde rojo de la foto .dish-img,
      que en desktop sí se ve. Cualquier elemento nuevo dentro de la
      ficha hereda crema automáticamente. */
-  .dish.is-featured .dish-card {
-    background: var(--red);
-    border-color: var(--red);
-  }
   .dish.is-featured .dish-card,
   .dish.is-featured .dish-card * {
     color: var(--bg);
@@ -2463,7 +2459,10 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
      normales. La regla general de arriba lo dejaba crema (invisible sobre la
      página) y la ficha "flotaba" sin el trazo rojo que sí tiene la foto. Solo
      afecta al borde de la .dish-card en sí; los separadores de fila siguen crema. */
-  .dish.is-featured .dish-card { border-color: var(--red); }
+  .dish.is-featured .dish-card {
+    background: var(--red);
+    border-color: var(--red);
+  }
 
   /* ── EXCEPCIONES ─────────────────────────────────────────────── */
   /* Separadores de fila: borde crema (ya cubierto por la regla, se
@@ -2547,7 +2546,6 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
    ingredientes) y tiene el tamaño de las etiquetas VEG/HOT.
    ───────────────────────────────────────────────────────────── */
 .dish-photo-btn { display: none; }
-.dish-price-col { display: contents; }
 
 @media (max-width: 879px) {
   /* La 3ª columna (precio + botón) ocupa toda la altura del plato
@@ -2781,10 +2779,6 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
      caer sobre las mismas verticales o la línea interrumpida no continúa. */
   gap: 12px;
 }
-/* La columna de datos se estira a la altura de la fila —que marca el mapa— para
-   que el botón de vuelta caiga a ras de su borde inferior. El mapa se queda
-   arriba con su 16:9 intacto; sin el align-self se estiraría con la fila. */
-.local-datos { display: flex; flex-direction: column; }
 /* Sin filete propio en la ficha: el .local-datos de más abajo ya lo pone, y el
    margen que .info y .locale-map traen por defecto desalinearía 24/32px el
    filete y el borde superior del mapa, que tienen que arrancar a la vez. */
@@ -2821,10 +2815,18 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 .local-galeria .ev-slider-ctrls { margin-left: auto; }
 /* Ficha y mapa, cerrando la página. */
 .local-ficha-sec { padding: 56px 0 8vh; margin: 0 var(--gutter); }
-/* El filete vive aquí, no al pie de la galería: así arranca a la altura exacta
+/* La columna de datos se estira a la altura de la fila —que marca el mapa— para
+   que el botón de vuelta caiga a ras de su borde inferior. El mapa se queda
+   arriba con su 16:9 intacto; sin el align-self se estiraría con la fila.
+   El filete vive aquí, no al pie de la galería: así arranca a la altura exacta
    del borde superior del mapa y los dos trazos se leen como una sola línea
    cortada por el hueco entre columnas. */
-.local-datos { border-top: 1px solid var(--line); padding-top: 28px; }
+.local-datos {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+  padding-top: 28px;
+}
 .local-ficha-sec .local-ficha { margin-top: 0; }
 
 /* El envoltorio de las acciones ocupa el resto de la columna, para que la
@@ -2927,7 +2929,6 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
   .dato-celda { min-height: 160px; }
 
   .local-ficha { grid-template-columns: 1fr; gap: 0; }
-  .local-ficha .locale-map { margin-top: 32px; }
   /* Sin mapa dentro de la página, las cuatro acciones pasan a una retícula de
      2×2: reservar y llamar arriba, Maps y la vuelta al listado abajo. Mismo
      ancho (1fr 1fr) y mismo alto, para que se lean como un bloque. */

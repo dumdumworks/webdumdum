@@ -119,10 +119,7 @@ Webfonts:
   700; no existe semibold), recortadas a Latín (~12–15 kB cada una). Medium, Bold
   y Roman se precargan en `plantilla.mjs`. Si se añade un peso o estilo, hay que
   añadir su archivo y su `@font-face`: si no, el navegador lo sintetiza.
-  **Origen y licencia:** salen de la copia de macOS (`HelveticaNeue.ttc`), no de
-  una licencia web comprada (oct 2026). Yerai asume esa responsabilidad. Si algún
-  día se compra la licencia web de Monotype, basta con sustituir los cuatro
-  `.woff2` por los suyos. Generadas con `pyftsubset --font-number=N
+  Para regenerarlas, sobre `HelveticaNeue.ttc`: `pyftsubset --font-number=N
   --unicodes=U+0020-007E,U+00A0-017F,U+2010-2027,U+2030,U+2039-203A,U+20AC,U+2122,U+2212,U+2248,U+2264-2265
   --layout-features=kern,liga,tnum,pnum,lnum,case --flavor=woff2 --no-hinting`
   (caras 0, 2, 10 y 1 del `.ttc`). Flechas, ★, ✕ y emojis no existen en

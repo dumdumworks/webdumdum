@@ -3,7 +3,7 @@
 /* Logo tipográfico de la home (H1): las dos únicas letras que necesita
    ("DUM" y "DUMPLINGS & DESOBEDIENCIA TM") vienen recortadas de la fuente
    completa, así que pesan casi nada (~1-2kB cada una) pese a ser fuentes de
-   marca con licencia de uso web. Solo se usan en el H1 de la home. */
+   marca. Solo se usan en el H1 de la home. */
 @font-face {
   font-family: "Mastone-Outline";
   src: url("/fonts/MastoneOutline-Regular.woff2") format("woff2");
@@ -19,7 +19,7 @@
   font-display: swap;
 }
 
-/* Helvetica Neue alojada (licencia web): la ve igual todo el mundo, tenga o no
+/* Helvetica Neue alojada: la ve igual todo el mundo, tenga o no
    la del sistema. Nombre propio a propósito: con "Helvetica Neue" los Mac
    usarían la suya instalada y cada dispositivo vería una versión distinta.
    Solo los cuatro estilos que usa la web. Helvetica Neue no tiene semibold:
