@@ -17,11 +17,20 @@ import { srcset } from "./imagenes.mjs";
 // primeras; el resto deja su hueco y la isla las monta conforme hacen falta.
 const MONTADAS = 3;
 const pad = (n) => String(n).padStart(2, "0");
-// En móvil el hueco es la pista entera; en escritorio, la mitad (dos a la vista).
-const SIZES = "(max-width: 879px) 100vw, 50vw";
+// Lo que ocupa de verdad cada foto, medido sobre la página (en vw), para que el
+// navegador pida la variante justa del srcset. Con un sizes que exagere, pide
+// un archivo mayor del necesario: el de "50vw" en los sliders de Eventos, donde
+// la foto mide el 22 %, bajaba el original de ~300 KB en vez del de 800.
+//   carril   (fichas de local): 84 % en móvil, 52 % en tablet, 47 % en escritorio
+//   paginado (sliders de Eventos): 84-93 % en móvil y tablet, 21-23 % en escritorio
+const SIZES = {
+  carril: "(max-width: 879px) 85vw, 48vw",
+  paginado: "(max-width: 879px) 92vw, 23vw",
+};
 
 export function galeria(i, { fotos, ratio = "3 / 4", etiquetaHueco, raiz, modo = "carril", etiqueta = null, cta = null, visor = "fotos", huecos = 6, cols = 2, visibles = cols }) {
   const { t } = i;
+  const sizes = SIZES[modo] || SIZES.carril;
   const lista = fotos.length ? fotos : Array.from({ length: huecos }, () => ({ src: null }));
   const slots = lista.map((f, n) => {
     let dentro;
@@ -31,10 +40,10 @@ export function galeria(i, { fotos, ratio = "3 / 4", etiquetaHueco, raiz, modo =
       const ss = srcset(raiz, f.src);
       const comunes = ` data-foto="${n}"${f.name ? ` data-nombre="${esc(f.name)}"` : ""}`;
       dentro = n < MONTADAS
-        ? `<img src="${esc(f.src)}"${ss ? ` srcset="${esc(ss)}" sizes="${SIZES}"` : ""} alt="${esc(f.name || "")}" loading="lazy" decoding="async"`
+        ? `<img src="${esc(f.src)}"${ss ? ` srcset="${esc(ss)}" sizes="${sizes}"` : ""} alt="${esc(f.name || "")}" loading="lazy" decoding="async"`
           + ` style="object-position:${esc(f.pos || "50% 50%")};cursor:pointer"${comunes}>`
         // Hueco liso, no el marcador de rayas: aquí SÍ hay foto, solo que aún no se ha pedido.
-        : `<div class="ev-slider-espera" aria-hidden="true" data-src="${esc(f.src)}"${ss ? ` data-srcset="${esc(ss)}" data-sizes="${SIZES}"` : ""}`
+        : `<div class="ev-slider-espera" aria-hidden="true" data-src="${esc(f.src)}"${ss ? ` data-srcset="${esc(ss)}" data-sizes="${sizes}"` : ""}`
           + ` data-alt="${esc(f.name || "")}" data-pos="${esc(f.pos || "50% 50%")}"${comunes}></div>`;
     }
     // Enlace por foto (prensa: "Ver noticia →"); sin URL no se pinta.
