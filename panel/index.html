@@ -904,6 +904,7 @@
   })();
 
   // ── subida de foto (a R2 vía /api/upload) ──
+  const fi=$("#fileInput"),zone=$("#photoZone");
   // La foto se redimensiona AQUÍ, en el navegador (sin librerías): una principal
   // de hasta 1200 px de ancho y las variantes de 480 y 800 que la carta usa en
   // el srcset, todas JPEG. Un original de móvil de 4 MB queda en ~300 KB.
