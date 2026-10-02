@@ -12,7 +12,7 @@ con sips: el codificador JPEG de sips pesa el doble a igual calidad.
 import os, sys
 from PIL import Image
 
-CARPETAS = ["img/chamberi", "img/espacio", "img/taller", "img/dumplings"]
+CARPETAS = ["img/chamberi", "img/espacio", "img/taller", "img/dumplings", "img/prensa"]
 ANCHOS = [480, 800]
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 nuevas = 0
