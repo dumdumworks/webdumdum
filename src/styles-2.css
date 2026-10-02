@@ -929,6 +929,12 @@
   color: rgba(255,0,30,0.55);
 }
 
+/* ---------- TALLER TEAM BUILDING (/taller-team-building) · primer tramo ----------
+   El CSS de esta página está en DOS tramos de este archivo. Este primero
+   lleva el hero, el zigzag, el timeline y los datos esenciales; el segundo
+   (la versión emocional: sellos, Polaroid, reseñas, FAQ) va tras la ficha
+   de local, más abajo. */
+
 /* Hero centrado en cualquier ancho (/taller-team-building): el titular
    de .h-display tope a 168px de fuente (clamp), así que a partir de
    ~1527px de viewport deja de crecer — con el hero alineado a la
@@ -1409,6 +1415,8 @@
 }
 
 
+/* ---------- EVENTOS (continuación: redes, slider del espacio, galerías) ---------- */
+
 /* Las tres cifras de Redes, en las celdas del resumen de la ficha de local
    (.resumen-dato: icono, rótulo, dato y apostilla, centradas y separadas por
    verticales), dentro de una caja cerrada con el filete rojo, como allí. La
@@ -1738,6 +1746,8 @@
     animation: none;                /* sin la animación de entrada en el carrusel */
   }
 }
+
+/* ---------- EMBEDS · miniatura de YouTube ---------- */
 
 /* Miniatura de YouTube con botón de play (Universo). El reproductor se
    incrusta al pulsar (islas/embeds.js). La miniatura hqdefault es 4:3 con
@@ -2729,6 +2739,9 @@
   }
 }
 
+/* ---------- TALLER TEAM BUILDING (/taller-team-building) · segundo tramo ----------
+   Continúa el primer tramo (tras EVENTOS). Va después en el archivo a
+   propósito: gana empates de especificidad a lo de arriba. */
 /* ─────────────────────────────────────────────────────────────
    EXPERIMENTO — /taller-team-building, versión emocional (pedido
    por Yerai: más fotos, más tono, sin precios, libertad para romper
