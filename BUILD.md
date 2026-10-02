@@ -112,8 +112,23 @@ El `_redirects` generado solo contiene: el 301 de `/menu_eng`, los de `/embed`
 
 ## Fuentes
 
-La **única** webfont es **JetBrains Mono** (Google Fonts). El resto de la
-tipografía es de sistema (`--font-display` / `--font-mono` = Helvetica Neue).
+Webfonts:
+- **Helvetica Neue**, alojada en `fonts/` con el nombre de familia propio
+  `"Helvetica Neue Web"` para que ningún dispositivo use la del sistema. Solo los
+  estilos que usa la web: Roman (400), Italic (400), Medium (500) y Bold (600 y
+  700; no existe semibold), recortadas a Latín (~12–15 kB cada una). Medium, Bold
+  y Roman se precargan en `plantilla.mjs`. Si se añade un peso o estilo, hay que
+  añadir su archivo y su `@font-face`: si no, el navegador lo sintetiza.
+  **Origen y licencia:** salen de la copia de macOS (`HelveticaNeue.ttc`), no de
+  una licencia web comprada (oct 2026). Yerai asume esa responsabilidad. Si algún
+  día se compra la licencia web de Monotype, basta con sustituir los cuatro
+  `.woff2` por los suyos. Generadas con `pyftsubset --font-number=N
+  --unicodes=U+0020-007E,U+00A0-017F,U+2010-2027,U+2030,U+2039-203A,U+20AC,U+2122,U+2212,U+2248,U+2264-2265
+  --layout-features=kern,liga,tnum,pnum,lnum,case --flavor=woff2 --no-hinting`
+  (caras 0, 2, 10 y 1 del `.ttc`). Flechas, ★, ✕ y emojis no existen en
+  Helvetica Neue: salen de la fuente de reserva, como siempre.
+- **JetBrains Mono** (Google Fonts): topbar, estado del local y metadatos.
+- **Mastone Outline** y **SF Compact Bold**, recortadas: solo el logo de la home.
 Hubo un kit de Adobe Typekit que se retiró: ninguna regla usaba sus familias y
 costaba dos orígenes render-blocking. No reintroducir sin comprobar que se usa.
 

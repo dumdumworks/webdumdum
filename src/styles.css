@@ -19,6 +19,40 @@
   font-display: swap;
 }
 
+/* Helvetica Neue alojada (licencia web): la ve igual todo el mundo, tenga o no
+   la del sistema. Nombre propio a propósito: con "Helvetica Neue" los Mac
+   usarían la suya instalada y cada dispositivo vería una versión distinta.
+   Solo los cuatro estilos que usa la web. Helvetica Neue no tiene semibold:
+   el Bold cubre también el 600, que es lo que ya hacía el sistema en Mac. */
+@font-face {
+  font-family: "Helvetica Neue Web";
+  src: url("/fonts/HelveticaNeue-Roman.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Helvetica Neue Web";
+  src: url("/fonts/HelveticaNeue-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Helvetica Neue Web";
+  src: url("/fonts/HelveticaNeue-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Helvetica Neue Web";
+  src: url("/fonts/HelveticaNeue-Bold.woff2") format("woff2");
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #fffaf3;
   --ink: #ff001e;
@@ -30,11 +64,11 @@
   --line: #ff001e;
   --line-soft: rgba(255,0,30,0.18);
 
-  /* Helvetica · stack del sistema */
-  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Helvetica Neue alojada (ver @font-face arriba); el resto, solo si falla la carga */
+  --font-display: "Helvetica Neue Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
   /* La antigua "mono" hereda el display y se diferencia solo por
      mayúsculas + tracking (los .tiny/.label/.eyebrow ya lo aplican). */
-  --font-mono: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-display);
 
   --max: 1440px;
   --gutter: 32px;
