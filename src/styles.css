@@ -215,15 +215,15 @@ img { display: block; max-width: 100%; }
    solaparía. Lo ocultamos por debajo de 1280px; reaparece en pantallas anchas
    (≥1280px). El botón Reservar y el idioma se mantienen siempre. */
 @media (max-width: 1279px) {
-  .topbar-status { display: none !important; }
+  .topbar-status { display: none; }
 }
 /* Bloque derecho: estado abierto/cerrado + botón Reservar */
 .topbar .right { display: flex; gap: 16px; align-items: center; }
 /* Botón Reservar destacado en el header (rojo pleno) */
 .topbar-reservar {
   background: var(--red);
-  color: #fff !important;
-  padding: 8px 16px !important;
+  color: #fff;
+  padding: 8px 16px;
   border-radius: 999px;
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-weight: 600;
@@ -234,12 +234,12 @@ img { display: block; max-width: 100%; }
   white-space: nowrap;
 }
 .topbar-reservar:hover { background: var(--ink); }
-.topbar-reservar::after { display: none !important; }
+.topbar-reservar::after { display: none; }
 /* Botón "Pide ya" del header: mismo negro que el FAB, tamaño de Reservar */
 .topbar-pide {
   background: var(--black);
-  color: #fff !important;
-  padding: 8px 16px !important;
+  color: #fff;
+  padding: 8px 16px;
   border: none;
   border-radius: 999px;
   font-family: "JetBrains Mono", ui-monospace, monospace;
@@ -440,7 +440,7 @@ img { display: block; max-width: 100%; }
    402px. Forzamos línea, título e intro a 372px centrados para que coincidan. */
 .reserve-modal .alerg-scroll > .alerg-title,
 .reserve-modal .alerg-scroll > .alerg-intro,
-.reserve-modal .alerg-scroll > .alerg-sep{ width:372px !important; max-width:100% !important; margin-left:auto !important; margin-right:auto !important; box-sizing:border-box; }
+.reserve-modal .alerg-scroll > .alerg-sep{ width:372px; max-width:100%; margin-left:auto; margin-right:auto; box-sizing:border-box; }
 
 /* AIRES VERTICALES. El iframe DISH mete espacio vacío bajo el botón; lo
    compensamos con margen negativo. Valor controlado por --dish-air-bottom. */
@@ -457,14 +457,16 @@ img { display: block; max-width: 100%; }
 .reserve-modal .alerg-title::after{ display:none; }
 
 /* Forzar que el iframe/contenido de DISH ocupe todo el ancho del contenedor,
-   para que su borde coincida con el de líneas y textos (que van al 100%). */
+   para que su borde coincida con el de líneas y textos (que van al 100%).
+   Se deja !important: es un widget de terceros y no se puede probar aquí sin
+   él, así que no hay forma de comprobar que sin esto no se descuadraría. */
 .reserve-widget-wrap iframe, .reserve-widget-wrap > div { width:100% !important; max-width:100% !important; }
 @media (max-width:520px){
   .reserve-modal{ border-radius:20px; }
   /* Ancho del widget en móvil: 281px (medido). Líneas y textos a ese ancho. */
   .reserve-modal .alerg-scroll > .alerg-title,
   .reserve-modal .alerg-scroll > .alerg-intro,
-  .reserve-modal .alerg-scroll > .alerg-sep{ width:281px !important; }
+  .reserve-modal .alerg-scroll > .alerg-sep{ width:281px; }
   /* El widget DISH cambia de altura entre pasos (selección vs datos), así que NO
      compensamos con valores fijos (se romperían en uno de los pasos). Aire
      natural y estable: el widget respira con su propio espacio y la línea +
@@ -520,12 +522,7 @@ img { display: block; max-width: 100%; }
 @media (hover: none) { .lang-toggle span { transition: none; } }
 /* Grupo derecho móvil (Reservar + hamburguesa) · oculto en desktop */
 .topbar-mobile-right { display: none; align-items: center; gap: 14px; }
-.topbar-reservar-mobile { font-size: 11px; padding: 7px 14px !important; }
-/* Stack móvil: Reservar y Pide ya apilados, mismo ancho */
-.topbar-cta-stack { display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
-.topbar-cta-stack .topbar-reservar-mobile,
-.topbar-cta-stack .topbar-pide-mobile { width: 100%; text-align: center; }
-.topbar-pide-mobile { font-size: 11px; padding: 7px 14px !important; }
+.topbar-reservar-mobile { font-size: 11px; padding: 7px 14px; }
 /* Botón hamburguesa · oculto en desktop, visible en móvil (ver responsive) */
 .topbar-burger {
   display: none;
@@ -559,21 +556,21 @@ img { display: block; max-width: 100%; }
      y con el contenido (texto + flecha) centrado dentro del botón. */
   .sistema-ctas { display: flex; flex-direction: column; align-items: stretch; }
   .sistema-ctas > .btn {
-    width: 100% !important;
-    display: block !important;
-    text-align: center !important;
+    width: 100%;
+    display: block;
+    text-align: center;
     box-sizing: border-box;
-    gap: 0 !important;
-    flex: 0 0 auto !important;
-    height: auto !important;
+    gap: 0;
+    flex: 0 0 auto;
+    height: auto;
   }
   /* En móvil ocultamos el nav de escritorio y el bloque derecho */
-  .topbar .nav-desktop { display: none !important; }
-  .topbar .right { display: none !important; }
+  .topbar .nav-desktop { display: none; }
+  .topbar .right { display: none; }
   /* Mostramos el botón hamburguesa */
-  .topbar-burger { display: flex !important; }
+  .topbar-burger { display: flex; }
   /* Grupo derecho móvil (idioma + Reservar permanente + hamburguesa) visible */
-  .topbar-mobile-right { display: flex !important; gap: 12px; }
+  .topbar-mobile-right { display: flex; gap: 12px; }
   .topbar-mobile-right .lang-toggle { flex: none; padding: 6px 2px; }
   .topbar-mobile-right .topbar-reservar-mobile { flex: none; }
   /* El nav móvil pasa a panel desplegable bajo la barra */
