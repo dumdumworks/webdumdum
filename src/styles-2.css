@@ -929,6 +929,338 @@
   color: rgba(255,0,30,0.55);
 }
 
+/* ---------- EVENTOS (continuación: redes, slider del espacio, galerías) ---------- */
+
+/* Las tres cifras de Redes, en las celdas del resumen de la ficha de local
+   (.resumen-dato: icono, rótulo, dato y apostilla, centradas y separadas por
+   verticales), dentro de una caja cerrada con el filete rojo, como allí. La
+   caja pone el marco; las verticales las ponen las celdas (la primera no, que
+   ya está el marco). */
+.ev-stats {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--line);
+}
+.ev-stats .resumen-dato:first-child { border-left: none; }
+.ev-stats .resumen-dato:last-child { padding-right: 20px; }
+
+.ev-services {
+  padding: 64px var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
+.ev-services-grid {
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+.ev-service {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+  min-height: 150px;
+  min-width: 0;
+  padding: 22px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  box-sizing: border-box;
+  transition: background .2s ease, color .2s ease;
+}
+.ev-service:last-child { border-right: 1px solid var(--line); }
+.ev-service:hover { background: transparent; color: inherit; }
+.ev-service:hover .n { color: rgba(255,0,30,0.55); }
+/* La única celda con página propia SÍ es clicable: inversión roja, como el
+   resto de la web (el transition:none en táctil ya cubre .ev-service entero,
+   ver el bloque de "sin fundido al tocar" en styles.css). */
+.ev-service.is-link { cursor: pointer; }
+.ev-service.is-link:hover { background: var(--ink); color: var(--bg); }
+.ev-service.is-link:hover .n { color: rgba(255,250,243,0.7); }
+.ev-service .n {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: rgba(255,0,30,0.55);
+}
+.ev-service .t {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(20px, 2.2vw, 32px);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+/* Flecha solo en la única celda con página propia, mismo recurso que
+   .map-cell .t::after: la pone el CSS, no el marcado. */
+.ev-service.is-link .t::after { content: " →"; }
+/* Resalto al llegar desde "Elige tu tipo de evento" (ver data-ir-servicio,
+   src/islas/eventos.js): un parpadeo a rojo, distinto de la inversión a
+   tinta del :hover, para que quede claro que se puede pulsar sin
+   confundirlo con el estado normal de encima. Va en una capa propia
+   (::after), no en el "background" de .ev-service: ese lo pisa también el
+   :hover/:hover.is-link, y animar la misma propiedad que .is-link:hover
+   pelea con ella si el cursor ya está encima al llegar el scroll — el
+   primer fotograma de la animación (background:transparent) "gana" un
+   instante y se ve como un parpadeo antes del rojo. Con la capa aparte,
+   el :hover no la toca nunca. */
+@keyframes evServicioFlashCapa {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+@keyframes evServicioFlashN {
+  0%, 100% { color: rgba(255,0,30,0.55); }
+  50% { color: rgba(255,255,255,0.7); }
+}
+@keyframes evServicioFlashT {
+  0%, 100% { color: inherit; }
+  50% { color: #fff; }
+}
+.ev-service.is-flash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--red);
+  pointer-events: none;
+  animation: evServicioFlashCapa 1.8s ease-in-out;
+}
+.ev-service.is-flash .n,
+.ev-service.is-flash .t {
+  position: relative;
+  z-index: 1;
+}
+.ev-service.is-flash .n { animation: evServicioFlashN 1.8s ease-in-out; }
+.ev-service.is-flash .t { animation: evServicioFlashT 1.8s ease-in-out; }
+@media (prefers-reduced-motion: reduce) {
+  .ev-service.is-flash::after,
+  .ev-service.is-flash .n,
+  .ev-service.is-flash .t { animation-duration: .01ms; animation-iteration-count: 1; }
+}
+
+@media (max-width: 879px) {
+  .ev-split { grid-template-columns: 1fr; }
+  /* En móvil: cada bloque (título + texto) es una unidad compacta.
+     - Sin línea interna entre título y texto (la línea solo separa SECCIONES,
+       y esa es el border-bottom de .ev-split).
+     - Padding vertical reducido para que no sea tan largo.
+     - Poco espacio entre el título y el texto. */
+  .ev-split > div { padding: 32px var(--gutter); }
+  .ev-split > div:first-child { border-right: none; border-bottom: none; padding-bottom: 0; }
+  /* Los datos del espacio, en celdas como la ficha de local: a sangre y con
+     el mismo alto de celda (160). La lista de escritorio no se pinta. */
+  .ev-list { display: none; }
+  .ev-datos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Con el ancho de la columna y enmarcada, como la rejilla de servicios de
+       esta misma página: arriba e izquierda los pone la rejilla y derecha y
+       abajo cada celda, así la caja cierra. */
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    margin-top: 32px;
+  }
+  .ev-datos .dato-celda { min-height: 160px; }
+  /* 32px entre el primer bloque (título / título+botón) y el texto.
+     Coincide con el marginTop:32 de los botones → todos los huecos iguales. */
+  .ev-split > div:last-child { padding-top: 32px; }
+  /* El formulario de contacto también a 1 columna: título arriba, campos debajo */
+  .ev-split.ev-split--contact { grid-template-columns: 1fr; }
+  .ev-split.ev-split--contact > div:first-child { border-right: none; border-bottom: none; padding-bottom: 0; }
+  .ev-split.ev-split--contact > div:last-child { padding-top: 24px; }
+  .ev-list { grid-template-columns: 1fr; }
+  /* En móvil, la misma caja con las tres cifras apiladas y separadas por
+     horizontales del mismo filete. */
+  .ev-stats { grid-template-columns: 1fr; }
+  .ev-stats .resumen-dato { border-left: none; border-top: 1px solid var(--line); padding: 24px 20px; }
+  .ev-stats .resumen-dato:first-child { border-top: none; }
+  /* Las celdas de servicios, en el formato de las celdas de datos: 160 de
+     alto, índice en mono rojo y título en display a 22. La rejilla conserva
+     su ancho de siempre (el de la columna) y su marco. */
+  .ev-service { min-height: 160px; padding: 28px 22px 22px; gap: 24px; }
+  .ev-service .n { font-weight: 600; letter-spacing: 0.06em; color: var(--red); }
+  /* hyphens: manual: el corte de "Presenta-ciones" va decidido en el dato (un
+     guion blando), no donde le cuadre al navegador ("Presentacio-nes"). */
+  .ev-service .t { font-size: 22px; font-weight: 500; letter-spacing: -0.025em; line-height: 0.95; hyphens: manual; }
+
+  .ev-hero {
+    padding: 56px var(--gutter) 36px;
+    text-align: center;
+  }
+  .ev-hero p { margin-left: auto; margin-right: auto; }
+  .ev-hero-row { justify-content: center; }
+  .ev-hero-cta { display: grid; grid-template-columns: 1fr; width: 100%; margin-top: 36px; }
+}
+
+/* Slider del espacio */
+.ev-slider {
+  margin-top: 32px;
+}
+/* Sin filete bajo la cabecera: competía con el cierre rojo de la retícula de
+   encima (los datos del espacio en Eventos, la ficha de local) con solo el
+   contador y dos botones entre medias. Contador y flechas van sobre el aire y
+   el marco de la foto hace de borde. Los 14 de abajo colapsan con los de la
+   pista: es el aire real entre flechas y fotos (la mitad de los 28 de antes). */
+/* El rótulo ("Espacio · 01 / 11") alineado por abajo con los botones, no
+   centrado en su alto: así se asienta en la misma línea que los círculos. */
+.ev-slider-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.ev-slider-ctrls { display: flex; gap: 8px; }
+.ev-slider-btn {
+  width: 36px; height: 36px;
+  border: 1px solid var(--red);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--red);
+  font-family: var(--font-display);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background .18s ease, color .18s ease;
+}
+.ev-slider-btn:hover { background: var(--red); color: var(--bg); }
+.ev-slider-track {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+/* Carril deslizable de escritorio (galería de las fichas de local). Se ven dos
+   fotos, como en el slider de siempre, pero están todas en fila y se recorren
+   con la rueda del ratón. Va DESPUÉS de .ev-slider-track a propósito: misma
+   especificidad, así que el flex tiene que ganarle al grid por orden.
+   Sin scroll-snap: el movimiento lo anima el JS hacia un destino, y el snap
+   tiraría en sentido contrario a mitad de camino. */
+.ev-slider-carril {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.ev-slider-carril::-webkit-scrollbar { display: none; }
+.ev-slider-carril .ev-slider-slot { flex: 0 0 calc(50% - 6px); }
+.ev-slider-cols-1 .ev-slider-track {
+  grid-template-columns: 1fr;
+}
+.ev-slider-cols-2 .ev-slider-track {
+  grid-template-columns: 1fr 1fr;
+}
+.ev-slider-slot {
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  background: var(--bg);
+  overflow: hidden;
+  position: relative;
+  display: block;
+  padding: 0;
+  animation: ev-slide-in .35s ease;
+}
+.ev-slider-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ev-slider-ph {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255,0,30,0.06) 0 6px,
+    transparent 6px 14px
+  );
+  display: flex;
+  align-items: flex-end;
+  padding: 12px;
+}
+.ev-slider-ph span {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: rgba(255,0,30,0.55);
+}
+/* Hueco de una foto que aún no se ha pedido (carrusel de móvil). Liso y del
+   color del papel: solo se ve un instante mientras la imagen llega, y no debe
+   confundirse con el marcador de rayas, que significa "aquí no hay foto". */
+.ev-slider-espera {
+  position: absolute; inset: 0;
+  background: var(--paper);
+}
+
+.ev-slider-cta {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--bg);
+  color: var(--red);
+  border: 1px solid var(--red);
+  border-radius: 999px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background .18s ease, color .18s ease;
+}
+.ev-slider-cta:hover {
+  background: var(--red);
+  color: var(--bg);
+}
+/* En móvil el enlace por foto viajaría con el carrusel: en su lugar hay UNO
+   fijo, en el mismo sitio (esquina inferior izquierda de la foto a la vista),
+   que la isla apunta a la noticia que hay en pantalla. En escritorio, con dos
+   fotos a la vista, cada una conserva el suyo. */
+.ev-slider { position: relative; }
+.ev-slider-cta-fija { display: none; }
+@keyframes ev-slide-in {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (max-width: 879px) {
+  .ev-slider-slot .ev-slider-cta { display: none; }
+  .ev-slider-cta-fija { display: inline-flex; }
+  .ev-slider-track { grid-template-columns: 1fr; gap: 8px; }
+  .ev-slider-cols-2 .ev-slider-track { grid-template-columns: 1fr; }
+
+  /* Carrusel deslizable en móvil: las fotos van en fila horizontal y
+     se desplazan con el dedo (scroll nativo). El scroll-snap hace que
+     cada foto "encaje" centrada, pasando de una en una. */
+  .ev-slider-track-mobile {
+    display: flex;
+    grid-template-columns: none;
+    gap: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none;          /* Firefox: oculta la barra */
+  }
+  .ev-slider-track-mobile::-webkit-scrollbar { display: none; } /* Safari/Chrome */
+  .ev-slider-track-mobile .ev-slider-slot {
+    flex: 0 0 100%;                 /* cada foto ocupa el ancho completo */
+    width: 100%;
+    scroll-snap-align: center;
+    animation: none;                /* sin la animación de entrada en el carrusel */
+  }
+}
+
 /* ---------- TALLER TEAM BUILDING (/taller-team-building) · primer tramo ----------
    El CSS de esta página está en DOS tramos de este archivo. Este primero
    lleva el hero, el zigzag, el timeline y los datos esenciales; el segundo
@@ -1414,338 +1746,6 @@
   .taller2-dato-titulo { font-size: 34px; }
 }
 
-
-/* ---------- EVENTOS (continuación: redes, slider del espacio, galerías) ---------- */
-
-/* Las tres cifras de Redes, en las celdas del resumen de la ficha de local
-   (.resumen-dato: icono, rótulo, dato y apostilla, centradas y separadas por
-   verticales), dentro de una caja cerrada con el filete rojo, como allí. La
-   caja pone el marco; las verticales las ponen las celdas (la primera no, que
-   ya está el marco). */
-.ev-stats {
-  margin-top: 24px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border: 1px solid var(--line);
-}
-.ev-stats .resumen-dato:first-child { border-left: none; }
-.ev-stats .resumen-dato:last-child { padding-right: 20px; }
-
-.ev-services {
-  padding: 64px var(--gutter);
-  border-bottom: 1px solid var(--line);
-}
-.ev-services-grid {
-  margin-top: 32px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0;
-  border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
-}
-.ev-service {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 32px;
-  min-height: 150px;
-  min-width: 0;
-  padding: 22px;
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  box-sizing: border-box;
-  transition: background .2s ease, color .2s ease;
-}
-.ev-service:last-child { border-right: 1px solid var(--line); }
-.ev-service:hover { background: transparent; color: inherit; }
-.ev-service:hover .n { color: rgba(255,0,30,0.55); }
-/* La única celda con página propia SÍ es clicable: inversión roja, como el
-   resto de la web (el transition:none en táctil ya cubre .ev-service entero,
-   ver el bloque de "sin fundido al tocar" en styles.css). */
-.ev-service.is-link { cursor: pointer; }
-.ev-service.is-link:hover { background: var(--ink); color: var(--bg); }
-.ev-service.is-link:hover .n { color: rgba(255,250,243,0.7); }
-.ev-service .n {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-weight: 500;
-  font-size: 11px;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  color: rgba(255,0,30,0.55);
-}
-.ev-service .t {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(20px, 2.2vw, 32px);
-  letter-spacing: -0.02em;
-  line-height: 1;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  hyphens: auto;
-}
-/* Flecha solo en la única celda con página propia, mismo recurso que
-   .map-cell .t::after: la pone el CSS, no el marcado. */
-.ev-service.is-link .t::after { content: " →"; }
-/* Resalto al llegar desde "Elige tu tipo de evento" (ver data-ir-servicio,
-   src/islas/eventos.js): un parpadeo a rojo, distinto de la inversión a
-   tinta del :hover, para que quede claro que se puede pulsar sin
-   confundirlo con el estado normal de encima. Va en una capa propia
-   (::after), no en el "background" de .ev-service: ese lo pisa también el
-   :hover/:hover.is-link, y animar la misma propiedad que .is-link:hover
-   pelea con ella si el cursor ya está encima al llegar el scroll — el
-   primer fotograma de la animación (background:transparent) "gana" un
-   instante y se ve como un parpadeo antes del rojo. Con la capa aparte,
-   el :hover no la toca nunca. */
-@keyframes evServicioFlashCapa {
-  0%, 100% { opacity: 0; }
-  50% { opacity: 1; }
-}
-@keyframes evServicioFlashN {
-  0%, 100% { color: rgba(255,0,30,0.55); }
-  50% { color: rgba(255,255,255,0.7); }
-}
-@keyframes evServicioFlashT {
-  0%, 100% { color: inherit; }
-  50% { color: #fff; }
-}
-.ev-service.is-flash::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--red);
-  pointer-events: none;
-  animation: evServicioFlashCapa 1.8s ease-in-out;
-}
-.ev-service.is-flash .n,
-.ev-service.is-flash .t {
-  position: relative;
-  z-index: 1;
-}
-.ev-service.is-flash .n { animation: evServicioFlashN 1.8s ease-in-out; }
-.ev-service.is-flash .t { animation: evServicioFlashT 1.8s ease-in-out; }
-@media (prefers-reduced-motion: reduce) {
-  .ev-service.is-flash::after,
-  .ev-service.is-flash .n,
-  .ev-service.is-flash .t { animation-duration: .01ms; animation-iteration-count: 1; }
-}
-
-@media (max-width: 879px) {
-  .ev-split { grid-template-columns: 1fr; }
-  /* En móvil: cada bloque (título + texto) es una unidad compacta.
-     - Sin línea interna entre título y texto (la línea solo separa SECCIONES,
-       y esa es el border-bottom de .ev-split).
-     - Padding vertical reducido para que no sea tan largo.
-     - Poco espacio entre el título y el texto. */
-  .ev-split > div { padding: 32px var(--gutter); }
-  .ev-split > div:first-child { border-right: none; border-bottom: none; padding-bottom: 0; }
-  /* Los datos del espacio, en celdas como la ficha de local: a sangre y con
-     el mismo alto de celda (160). La lista de escritorio no se pinta. */
-  .ev-list { display: none; }
-  .ev-datos {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    /* Con el ancho de la columna y enmarcada, como la rejilla de servicios de
-       esta misma página: arriba e izquierda los pone la rejilla y derecha y
-       abajo cada celda, así la caja cierra. */
-    border-top: 1px solid var(--line);
-    border-left: 1px solid var(--line);
-    margin-top: 32px;
-  }
-  .ev-datos .dato-celda { min-height: 160px; }
-  /* 32px entre el primer bloque (título / título+botón) y el texto.
-     Coincide con el marginTop:32 de los botones → todos los huecos iguales. */
-  .ev-split > div:last-child { padding-top: 32px; }
-  /* El formulario de contacto también a 1 columna: título arriba, campos debajo */
-  .ev-split.ev-split--contact { grid-template-columns: 1fr; }
-  .ev-split.ev-split--contact > div:first-child { border-right: none; border-bottom: none; padding-bottom: 0; }
-  .ev-split.ev-split--contact > div:last-child { padding-top: 24px; }
-  .ev-list { grid-template-columns: 1fr; }
-  /* En móvil, la misma caja con las tres cifras apiladas y separadas por
-     horizontales del mismo filete. */
-  .ev-stats { grid-template-columns: 1fr; }
-  .ev-stats .resumen-dato { border-left: none; border-top: 1px solid var(--line); padding: 24px 20px; }
-  .ev-stats .resumen-dato:first-child { border-top: none; }
-  /* Las celdas de servicios, en el formato de las celdas de datos: 160 de
-     alto, índice en mono rojo y título en display a 22. La rejilla conserva
-     su ancho de siempre (el de la columna) y su marco. */
-  .ev-service { min-height: 160px; padding: 28px 22px 22px; gap: 24px; }
-  .ev-service .n { font-weight: 600; letter-spacing: 0.06em; color: var(--red); }
-  /* hyphens: manual: el corte de "Presenta-ciones" va decidido en el dato (un
-     guion blando), no donde le cuadre al navegador ("Presentacio-nes"). */
-  .ev-service .t { font-size: 22px; font-weight: 500; letter-spacing: -0.025em; line-height: 0.95; hyphens: manual; }
-
-  .ev-hero {
-    padding: 56px var(--gutter) 36px;
-    text-align: center;
-  }
-  .ev-hero p { margin-left: auto; margin-right: auto; }
-  .ev-hero-row { justify-content: center; }
-  .ev-hero-cta { display: grid; grid-template-columns: 1fr; width: 100%; margin-top: 36px; }
-}
-
-/* Slider del espacio */
-.ev-slider {
-  margin-top: 32px;
-}
-/* Sin filete bajo la cabecera: competía con el cierre rojo de la retícula de
-   encima (los datos del espacio en Eventos, la ficha de local) con solo el
-   contador y dos botones entre medias. Contador y flechas van sobre el aire y
-   el marco de la foto hace de borde. Los 14 de abajo colapsan con los de la
-   pista: es el aire real entre flechas y fotos (la mitad de los 28 de antes). */
-/* El rótulo ("Espacio · 01 / 11") alineado por abajo con los botones, no
-   centrado en su alto: así se asienta en la misma línea que los círculos. */
-.ev-slider-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-.ev-slider-ctrls { display: flex; gap: 8px; }
-.ev-slider-btn {
-  width: 36px; height: 36px;
-  border: 1px solid var(--red);
-  border-radius: 999px;
-  background: var(--bg);
-  color: var(--red);
-  font-family: var(--font-display);
-  font-size: 16px;
-  cursor: pointer;
-  transition: background .18s ease, color .18s ease;
-}
-.ev-slider-btn:hover { background: var(--red); color: var(--bg); }
-.ev-slider-track {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 14px;
-}
-/* Carril deslizable de escritorio (galería de las fichas de local). Se ven dos
-   fotos, como en el slider de siempre, pero están todas en fila y se recorren
-   con la rueda del ratón. Va DESPUÉS de .ev-slider-track a propósito: misma
-   especificidad, así que el flex tiene que ganarle al grid por orden.
-   Sin scroll-snap: el movimiento lo anima el JS hacia un destino, y el snap
-   tiraría en sentido contrario a mitad de camino. */
-.ev-slider-carril {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scrollbar-width: none;
-}
-.ev-slider-carril::-webkit-scrollbar { display: none; }
-.ev-slider-carril .ev-slider-slot { flex: 0 0 calc(50% - 6px); }
-.ev-slider-cols-1 .ev-slider-track {
-  grid-template-columns: 1fr;
-}
-.ev-slider-cols-2 .ev-slider-track {
-  grid-template-columns: 1fr 1fr;
-}
-.ev-slider-slot {
-  aspect-ratio: 4 / 3;
-  border: 1px solid var(--red);
-  border-radius: 8px;
-  background: var(--bg);
-  overflow: hidden;
-  position: relative;
-  display: block;
-  padding: 0;
-  animation: ev-slide-in .35s ease;
-}
-.ev-slider-slot img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.ev-slider-ph {
-  position: absolute; inset: 0;
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgba(255,0,30,0.06) 0 6px,
-    transparent 6px 14px
-  );
-  display: flex;
-  align-items: flex-end;
-  padding: 12px;
-}
-.ev-slider-ph span {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-weight: 500;
-  font-size: 11px;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  color: rgba(255,0,30,0.55);
-}
-/* Hueco de una foto que aún no se ha pedido (carrusel de móvil). Liso y del
-   color del papel: solo se ve un instante mientras la imagen llega, y no debe
-   confundirse con el marcador de rayas, que significa "aquí no hay foto". */
-.ev-slider-espera {
-  position: absolute; inset: 0;
-  background: var(--paper);
-}
-
-.ev-slider-cta {
-  position: absolute;
-  left: 10px;
-  bottom: 10px;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 10px;
-  background: var(--bg);
-  color: var(--red);
-  border: 1px solid var(--red);
-  border-radius: 999px;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-weight: 500;
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  transition: background .18s ease, color .18s ease;
-}
-.ev-slider-cta:hover {
-  background: var(--red);
-  color: var(--bg);
-}
-/* En móvil el enlace por foto viajaría con el carrusel: en su lugar hay UNO
-   fijo, en el mismo sitio (esquina inferior izquierda de la foto a la vista),
-   que la isla apunta a la noticia que hay en pantalla. En escritorio, con dos
-   fotos a la vista, cada una conserva el suyo. */
-.ev-slider { position: relative; }
-.ev-slider-cta-fija { display: none; }
-@keyframes ev-slide-in {
-  from { opacity: 0; transform: translateX(8px); }
-  to   { opacity: 1; transform: none; }
-}
-
-@media (max-width: 879px) {
-  .ev-slider-slot .ev-slider-cta { display: none; }
-  .ev-slider-cta-fija { display: inline-flex; }
-  .ev-slider-track { grid-template-columns: 1fr; gap: 8px; }
-  .ev-slider-cols-2 .ev-slider-track { grid-template-columns: 1fr; }
-
-  /* Carrusel deslizable en móvil: las fotos van en fila horizontal y
-     se desplazan con el dedo (scroll nativo). El scroll-snap hace que
-     cada foto "encaje" centrada, pasando de una en una. */
-  .ev-slider-track-mobile {
-    display: flex;
-    grid-template-columns: none;
-    gap: 0;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    scrollbar-width: none;          /* Firefox: oculta la barra */
-  }
-  .ev-slider-track-mobile::-webkit-scrollbar { display: none; } /* Safari/Chrome */
-  .ev-slider-track-mobile .ev-slider-slot {
-    flex: 0 0 100%;                 /* cada foto ocupa el ancho completo */
-    width: 100%;
-    scroll-snap-align: center;
-    animation: none;                /* sin la animación de entrada en el carrusel */
-  }
-}
 
 /* ---------- EMBEDS · miniatura de YouTube ---------- */
 
