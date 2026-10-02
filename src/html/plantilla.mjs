@@ -130,6 +130,14 @@ export function documento({ i, ruta, titulo, desc, cuerpo, ld, analitica, css, i
   <meta name="twitter:description" content="${esc(desc)}">
   <meta name="twitter:image" content="${esc(imagen)}">
 ${bloquesLd ? bloquesLd + "\n" : ""}
+  <!-- Helvetica Neue alojada: Medium (titulares) y Bold (etiquetas) salen en
+       todas las páginas y Roman (texto corrido) en casi todas. Sin precarga,
+       el navegador no las pide hasta leer el CSS y el texto se pinta antes
+       con la de reserva. Italic solo la usa el taller: no se precarga.
+       Con crossorigin aunque sea mismo origen: las fuentes siempre lo piden. -->
+  <link rel="preload" href="/fonts/HelveticaNeue-Medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/HelveticaNeue-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/HelveticaNeue-Roman.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <!-- JetBrains Mono va en todas las páginas (topbar, UI, precios). Oswald
