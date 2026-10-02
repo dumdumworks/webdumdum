@@ -77,6 +77,12 @@ normaliza en la propia función (`_redirects` no alcanza a las funciones).
   con `updated` en formato `AAAA-MM-DD`, que fecha `/menu` en el sitemap).
 - **R2** `dumdum-fotos`, binding **`PHOTOS`**: fotos de platos subidas desde el
   panel, servidas por `functions/img/menu/[[path]].js`.
+  El panel las redimensiona en el navegador antes de subirlas (principal de
+  hasta 1200 px y variantes de 480 y 800, JPEG, sin librerías) y la carta usa
+  el `srcset`. El nombre lleva el ancho (`<plato>-<ts>-1200.jpg`): así se
+  distinguen de las subidas antes (sin variantes). Convención en
+  `src/html/fotos-r2.mjs`; si cambian `ANCHOS`, cambiarlos también en el script
+  de `panel/index.html`.
 - **Access** (Zero Trust): aplicación self-hosted sobre `dum-dum.es/panel` y
   `dum-dum.es/api`, política Allow por email. Protege el panel y `functions/api/*`.
 - Los previews (`*.pages.dev`) no tienen KV: sirven la copia del repo.

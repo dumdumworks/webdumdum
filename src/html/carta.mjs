@@ -6,6 +6,7 @@
 // ─────────────────────────────────────────────────────────────
 import { esc } from "./plantilla.mjs";
 import { sanearInline, mdInline } from "./texto.mjs";
+import { candidatasR2 } from "./fotos-r2.mjs";
 
 // Los 14 alérgenos de declaración obligatoria (UE). id = clave que guarda cada plato.
 export const ALERGENOS = [
@@ -101,13 +102,18 @@ const num = (n) => "[nº" + String(n).padStart(2, "0") + "]";
 // se usa el srcset() de imagenes.mjs (ese sí mira el disco, pero solo sirve
 // para páginas que se generan en el build). Las fotos de "img/dumplings/"
 // siempre tienen sus variantes -480/-800 (dev/fotos-variantes.py se ejecutó
-// para generarlas); cualquier otra ruta de foto (p. ej. subida por el panel
-// a R2) no las tiene todavía, así que se queda con la imagen tal cual.
+// para generarlas). Las que sube el panel a R2 las traen desde que el panel
+// redimensiona al subir (nombre con el ancho, ver fotos-r2.mjs); las subidas
+// antes no, así que se quedan con la imagen tal cual.
+const SIZES_PLATO = ' sizes="(min-width: 880px) 33vw, 100vw"';
 function srcsetPlato(src) {
   const m = /^\/?img\/dumplings\/([^/]+)\.jpg$/.exec(src);
-  if (!m) return "";
-  const base = "img/dumplings/" + m[1];
-  return ` srcset="${esc(base)}-480.jpg 480w, ${esc(base)}-800.jpg 800w" sizes="(min-width: 880px) 33vw, 100vw"`;
+  if (m) {
+    const base = "img/dumplings/" + m[1];
+    return ` srcset="${esc(base)}-480.jpg 480w, ${esc(base)}-800.jpg 800w"${SIZES_PLATO}`;
+  }
+  const r2 = candidatasR2(src);
+  return r2 ? ` srcset="${r2.map(([u, w]) => `${esc(u)} ${w}w`).join(", ")}"${SIZES_PLATO}` : "";
 }
 
 function plato(i, it, opts = {}) {
