@@ -20,7 +20,7 @@ import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { idioma, documento, archivoDe, ORIGIN } from "./src/html/plantilla.mjs";
 import { LOCALES } from "./src/html/locales.mjs";
-import { ROUTES_SEO } from "./src/html/seo.mjs";
+import { ROUTES_SEO, ogDe } from "./src/html/seo.mjs";
 import { local, RUTA_LOCAL } from "./src/html/paginas/local.mjs";
 import { RUTA as RUTA_MENU } from "./src/html/paginas/menu.mjs";
 import { locales as paginaLocales, RUTA as RUTA_LOCALES } from "./src/html/paginas/locales.mjs";
@@ -192,7 +192,6 @@ const ROOT_FILES = [
   "favicon-48x48.png",
   "favicon-192x192.png",
   "apple-touch-icon.png",
-  "og-image.png",
   "site.webmanifest", "manifest.json", "browserconfig.xml",
 ];
 for (const f of ROOT_FILES) {
@@ -205,7 +204,7 @@ for (const f of ROOT_FILES) {
 if (fs.existsSync(path.join(ROOT, "menu.json"))) {
   fs.copyFileSync(path.join(ROOT, "menu.json"), path.join(DIST, "menu.base.json"));
 }
-// Directorios de assets estáticos (img incluye favicons y og-image; panel =
+// Directorios de assets estáticos (img incluye las imágenes para compartir, img/og; panel =
 // editor de carta, protegido por Cloudflare Access).
 for (const d of ["img", "panel", "fonts"]) {
   if (fs.existsSync(path.join(ROOT, d))) copyDir(d);
@@ -213,7 +212,8 @@ for (const d of ["img", "panel", "fonts"]) {
 
 // ── 5b) Verificar que NINGÚN recurso local del <head> falta en dist/ ──
 // Recorre la home generada y exige que cada recurso local con extensión de
-// archivo (favicons, og-image, css, js…) exista ya en dist/. Si falta alguno,
+// archivo (favicons, css, js…) exista ya en dist/, y lo mismo con la imagen para compartir
+// de cada ruta (img/og). Si falta alguno,
 // aborta el build en vez de dejar un 404 silencioso en producción.
 (function verifyAssets() {
   const home = fs.readFileSync(path.join(DIST, "index.html"), "utf8");
@@ -229,7 +229,11 @@ for (const d of ["img", "panel", "fonts"]) {
   if (missing.length) {
     throw new Error("Recursos referenciados en el <head> que NO están en dist/:\n  " + missing.join("\n  "));
   }
-  console.log("  verificados " + refs.size + " recursos del HTML (sin faltas)");
+  // La imagen para compartir de cada ruta: si falta, el HTML de esa ruta
+  // apuntaría a un 404 y WhatsApp mostraría el enlace sin imagen.
+  const sinOg = ROUTES_SEO.map((r) => ogDe(r.p)).filter((u) => !fs.existsSync(path.join(DIST, u)));
+  if (sinOg.length) throw new Error("Imágenes para compartir que faltan en dist/:\n  " + sinOg.join("\n  "));
+  console.log("  verificados " + refs.size + " recursos del HTML y " + ROUTES_SEO.length + " imágenes para compartir (sin faltas)");
 })();
 
 // Todas las URLs limpias que sirve la web, en sus dos idiomas. Las usan

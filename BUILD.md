@@ -52,7 +52,8 @@ En local (sin `CF_PAGES`) copia además `dev/*.html` (el visor `marco.html`).
 - `shell.mjs`: topbar, flotante "Pide ya", modales (pedir, reservar, DISH),
   footer y `specFoot()`. `esqueleto()` monta una página a partir de su `<main>`.
 - `locales.mjs`: los datos de los dos locales (FUENTE ÚNICA).
-- `seo.mjs`: título y descripción por ruta (`t`/`d` en español, `te`/`de` en inglés).
+- `seo.mjs`: título, descripción e imagen para compartir por ruta (`t`/`d` en español,
+  `te`/`de` en inglés, `og` → `img/og/<og>.jpg`, 1200×630).
 - `analitica.html`: Consent Mode v2 → Cookiebot (síncrono) → GA4 (solo en
   producción) y el listener global de conversiones. **No alterar ese orden.**
 - `ld-global.json`: JSON-LD del restaurante con los dos locales (lo llevan las
