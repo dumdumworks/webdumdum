@@ -301,6 +301,10 @@
    y se queda roja hasta que se va (el :hover se queda pegado tras el toque, y
    eso aquí se quiere: no es un pulsador). */
 @media (hover: hover) {
+  /* La línea pequeña (.d) tiene color propio, no hereda el de la celda: sin
+     su propio fundido saltaba antes que el resto (blanca sobre crema al
+     entrar, roja sobre rojo al salir) y se veía como un parpadeo. */
+  .map-cell .d { transition: color .25s ease; }
   .map-cell:hover:not(.map-cell-seal) { background: var(--ink); color: var(--bg); }
   .map-cell:hover .d { color: rgba(255,255,255,0.6); }
 }
