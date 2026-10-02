@@ -904,20 +904,58 @@
   })();
 
   // ── subida de foto (a R2 vía /api/upload) ──
-  const fi=$("#fileInput"),zone=$("#photoZone");
+  // La foto se redimensiona AQUÍ, en el navegador (sin librerías): una principal
+  // de hasta 1200 px de ancho y las variantes de 480 y 800 que la carta usa en
+  // el srcset, todas JPEG. Un original de móvil de 4 MB queda en ~300 KB.
+  // ANCHOS = el de src/html/fotos-r2.mjs (el nombre de las fotos depende de él).
+  const ANCHOS=[480,800],ANCHO_MAX=1200,ALTO_MAX=1600;
+  // Reduce a mitades sucesivas hasta quedar a ≤2× del ancho pedido: de 4000 a
+  // 480 de golpe, el canvas "salta" píxeles y la foto sale con dientes.
+  function reducir(origen,w){
+    let c=origen;
+    while(c.width/2>w){
+      const m=document.createElement("canvas");m.width=Math.round(c.width/2);m.height=Math.round(c.height/2);
+      const x=m.getContext("2d");x.imageSmoothingQuality="high";x.drawImage(c,0,0,m.width,m.height);c=m;
+    }
+    const f=document.createElement("canvas");f.width=w;f.height=Math.round(origen.height*w/origen.width);
+    const x=f.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,f.width,f.height); /* sin transparencias: JPEG */
+    x.imageSmoothingQuality="high";x.drawImage(c,0,0,f.width,f.height);
+    return new Promise(r=>f.toBlob(r,"image/jpeg",0.8));
+  }
+  // → {w, principal, variantes:{480:Blob,…}} o null si el navegador no decodifica la foto (p. ej. HEIC).
+  async function optimizar(file){
+    const url=URL.createObjectURL(file);
+    try{
+      const img=new Image();img.src=url;await img.decode(); /* respeta la orientación EXIF */
+      const k=Math.min(1,ANCHO_MAX/img.naturalWidth,ALTO_MAX/img.naturalHeight);
+      const w=Math.round(img.naturalWidth*k);
+      const base=document.createElement("canvas");base.width=img.naturalWidth;base.height=img.naturalHeight;
+      base.getContext("2d").drawImage(img,0,0);
+      const principal=await reducir(base,w),variantes={};
+      for(const a of ANCHOS) if(a<w) variantes[a]=await reducir(base,a);
+      return principal?{w,principal,variantes}:null;
+    }catch(e){return null;}
+    finally{URL.revokeObjectURL(url);}
+  }
+  const kb=n=>n>=1048576?(n/1048576).toFixed(1).replace(".",",")+" MB":Math.round(n/1024)+" KB";
   async function loadFile(file){
     if(!file||!file.type.startsWith("image/"))return;
     const d=cur();if(!d)return;
-    const rd=new FileReader();rd.onload=e=>{d._preview=e.target.result;renderPhoto();renderCard();renderList();};rd.readAsDataURL(file);
     setPill("saving","Subiendo foto…");
+    const opt=await optimizar(file);
+    const rd=new FileReader();rd.onload=e=>{d._preview=e.target.result;renderPhoto();renderCard();renderList();};rd.readAsDataURL(opt?opt.principal:file);
     try{
-      const fd=new FormData();fd.append("file",file);fd.append("name",d.id||"foto");
+      const fd=new FormData();fd.append("name",d.id||"foto");
+      if(opt){
+        fd.append("file",opt.principal,"foto.jpg");fd.append("w",opt.w);
+        for(const a in opt.variantes) fd.append("v"+a,opt.variantes[a],"foto-"+a+".jpg");
+      }else fd.append("file",file);
       const res=await fetch("/api/upload",{method:"POST",body:fd});
       const out=await res.json().catch(()=>({}));
       if(res.status===401) throw new Error("Sesión caducada — recarga la página");
       if(!res.ok||!out.ok) throw new Error(out.error||("HTTP "+res.status));
       d.image=out.url;d._preview=null;renderPhoto();renderCard();renderList();
-      markDirty();showToast("Foto subida — dale a Guardar para publicarla");
+      markDirty();showToast("Foto subida"+(opt?" ("+kb(file.size)+" → "+kb(opt.principal.size)+")":"")+" — dale a Guardar para publicarla");
     }catch(e){ setPill("dirty","Sin guardar");showToast("No se pudo subir la foto: "+e.message,true); }
   }
   zone.onclick=()=>fi.click();
