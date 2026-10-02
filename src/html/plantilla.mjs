@@ -2,6 +2,8 @@
 // Capa de plantillas de la web HTML: idioma, rutas y el documento entero
 // (<head> + <body>). Es código de Node: lo ejecuta build.mjs, no el navegador.
 // ─────────────────────────────────────────────────────────────
+import { ogDe } from "./seo.mjs";
+
 export const ORIGIN = "https://dum-dum.es";
 // También la comilla simple: hay atributos con JSON entre comillas simples
 // (data-textos, data-dish…) y un apóstrofo inglés ("Couldn't") los cortaba.
@@ -84,6 +86,7 @@ export function documento({ i, ruta, titulo, desc, cuerpo, ld, analitica, css, i
   const urlEs = ORIGIN + ruta;
   const urlEn = ORIGIN + "/en" + (ruta === "/" ? "/" : ruta);
   const url = i.lang === "en" ? urlEn : urlEs;
+  const imagen = `${ORIGIN}/${ogDe(ruta)}`;
   // "ld" admite un objeto (lo de siempre) o varios (p. ej. el Restaurant +
   // el BreadcrumbList de la página): cada uno en su propio <script>.
   // "</" no puede aparecer dentro de un <script>: se escapa el "<".
@@ -117,7 +120,7 @@ export function documento({ i, ruta, titulo, desc, cuerpo, ld, analitica, css, i
   <meta property="og:title" content="${esc(titulo)}">
   <meta property="og:description" content="${esc(desc)}">
   <meta property="og:url" content="${esc(url)}">
-  <meta property="og:image" content="${ORIGIN}/og-image.png">
+  <meta property="og:image" content="${esc(imagen)}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="${i.lang === "en" ? "en_GB" : "es_ES"}">
@@ -125,7 +128,7 @@ export function documento({ i, ruta, titulo, desc, cuerpo, ld, analitica, css, i
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${esc(titulo)}">
   <meta name="twitter:description" content="${esc(desc)}">
-  <meta name="twitter:image" content="${ORIGIN}/og-image.png">
+  <meta name="twitter:image" content="${esc(imagen)}">
 ${bloquesLd ? bloquesLd + "\n" : ""}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

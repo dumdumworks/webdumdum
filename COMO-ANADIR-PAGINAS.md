@@ -36,8 +36,12 @@ La web es HTML generado por `build.mjs` (ver `BUILD.md`). Una página nueva son
 
 ## Paso 2 — Título y descripción (en `src/html/seo.mjs`)
 
-    { p: "/merch", t: "DUM DUM™ — Merch", d: "Camisetas y merch de DUM DUM.",
+    { p: "/merch", og: "merch", t: "DUM DUM™ — Merch", d: "Camisetas y merch de DUM DUM.",
       te: "DUM DUM™ — Merch", de: "DUM DUM tees and merch." },
+
+`og` es la imagen que sale al compartir la página (WhatsApp, redes): un JPG de
+**1200×630** en `img/og/merch.jpg`, el mismo en los dos idiomas. El build aborta
+si falta el archivo.
 
 ## Paso 3 — Registrarla (en `build.mjs`)
 
