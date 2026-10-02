@@ -184,8 +184,8 @@
   .hero-info,
   .hero-info-l,
   .hero-info-r {
-    justify-self: center !important;
-    text-align: center !important;
+    justify-self: center;
+    text-align: center;
     white-space: normal;
   }
   .hero-actions .btn { justify-content: center; padding: 14px 20px; }
@@ -221,9 +221,10 @@
   background: var(--bg);
   transition: background .25s ease;
 }
-/* Refuerzo: en desktop (>880px) NUNCA se muestra, pase lo que pase */
+/* En desktop (>880px) NUNCA se muestra. Con dos clases (0,2,0): .map-cell
+   (display: flex, más abajo) la pisaría con el .map-cell-seal de una sola. */
 @media (min-width: 881px) {
-  .map-cell-seal { display: none !important; }
+  .map-cell.map-cell-seal { display: none; }
 }
 /* El sello se pinta con máscara: el color lo da background-color, así
    puede invertirse (rojo→crema) igual que el texto de las demás celdas.
@@ -654,7 +655,7 @@
   border-top: none;
 }
 .ev-form-ok .tiny.muted { color: rgba(255,250,243,0.7); }
-.ev-form-ok .h-2 em { color: var(--bg) !important; }
+.ev-form-ok .h-2 em { font-style: normal; font-weight: inherit; color: var(--bg); }
 .ev-form-ok .btn {
   background: var(--bg);
   color: var(--red);
@@ -888,8 +889,8 @@
   padding: 0;
 }
 .ev-split.ev-split--contact > div {
-  padding-left: var(--gutter) !important;
-  padding-right: var(--gutter) !important;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
 }
 .ev-split > div {
   padding: 64px var(--gutter);
@@ -2175,9 +2176,9 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 }
 
 /* Bebidas: texto compacto, SIN foto ni logo */
-.drinks-grid .dish .dish-img, .drinks-grid .dish .dish-card { display: none !important; }
+.drinks-grid .dish .dish-img, .drinks-grid .dish .dish-card { display: none; }
 /* Sin número en bebidas (gana espacio) */
-.drinks-grid .dish .num { display: none !important; }
+.drinks-grid .dish .num { display: none; }
 /* Cada bebida en vertical: nombre arriba, precio debajo */
 .drinks-grid .dish {
   display: block;
@@ -2226,19 +2227,19 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
 
 @media (min-width: 880px) {
   /* En desktop ocultamos los nodos del layout mobile */
-  .m-only { display: none !important; }
+  .m-only { display: none; }
   /* Servicios: 3 columnas en desktop (en móvil la base es 2, como map-nav) */
   .ev-services-grid { grid-template-columns: repeat(3, 1fr); }
   .ev-service { min-height: 180px; }
   /* En desktop ocultamos las secciones marcadas como solo-mobile (Bebidas).
      Doble candado: por clase y por id, para que nunca falle. */
   .section-mobile-only,
-  .section--bebidas { display: none !important; }
+  .section--bebidas { display: none; }
   /* El pie con "Volver arriba" es de móvil: la carta de escritorio no lo lleva. */
   .menu-shell .menu-foot { display: none; }
   /* ─── Contenedor ────────────────────────────────────────── */
   .menu-shell { max-width: 1320px; padding: 24px 32px 100px; }
-  .menu-h { font-size: 96px !important; }
+  .menu-h { font-size: 96px; }
   .menu-head { padding-bottom: 16px; }
 
   .menu-sectionhead { padding: 64px 0 16px; }
@@ -2545,7 +2546,6 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
    ingredientes) y tiene el tamaño de las etiquetas VEG/HOT.
    ───────────────────────────────────────────────────────────── */
 .dish-photo-btn { display: none; }
-.dish-price-col { display: contents; }
 
 @media (max-width: 879px) {
   /* La 3ª columna (precio + botón) ocupa toda la altura del plato
