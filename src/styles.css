@@ -486,6 +486,9 @@ img { display: block; max-width: 100%; }
     grid-area: ajustes !important; justify-self: end !important; align-self: center !important; width: auto !important; margin: 0 !important; padding: 0 !important; border: 0 !important;
   }
   #CybotCookiebotDialog:has(#CybotCookiebotDialogBody:not(.CybotCookiebotDialogHide)) #CybotCookiebotDialogNavList li:not(:has(#CybotCookiebotDialogNavDetails)) { display: none !important; }
+  /* La lista de pestañas trae overflow: auto y aquí mide 11px: recortaba el
+     subrayado de AJUSTES, que cae 3px por debajo de la caja. */
+  #CybotCookiebotDialog:has(#CybotCookiebotDialogBody:not(.CybotCookiebotDialogHide)) #CybotCookiebotDialogNavList { overflow: visible !important; }
   #CybotCookiebotDialog:has(#CybotCookiebotDialogBody:not(.CybotCookiebotDialogHide)) #CybotCookiebotDialogNav .CybotCookiebotDialogNavItemLink {
     margin: 0 !important; padding: 0 !important; border: 0 !important; opacity: 1 !important; height: 11px !important;
     font: 600 11px/11px "JetBrains Mono", ui-monospace, monospace !important;
