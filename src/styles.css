@@ -368,6 +368,168 @@ img { display: block; max-width: 100%; }
   left: var(--fab-inset) !important;
 }
 
+/* ── Banner de cookies (Cookiebot), escritorio ─────────────────────────────
+   El banner de Cookiebot se pinta dentro de nuestra página, así que lo
+   vestimos con el sistema de la web: barra de lado a lado, rojo con filetes de
+   1px crema, mono en mayúsculas y píldoras. Solo ≥880px; en móvil conserva el
+   suyo hasta que se diseñe.
+   Dos veces el id: sus reglas llevan id + clase y, a igualdad, ganarían ellas.
+   !important porque Cookiebot fija el estilo con sus propias !important.
+   Si algún día cambian los ids deja de aplicar y vuelve su banner: no rompe. */
+@media (min-width: 880px) {
+  #CybotCookiebotDialog#CybotCookiebotDialog {
+    top: auto !important; right: 0 !important; bottom: 0 !important; left: 0 !important;
+    transform: none !important;
+    width: 100% !important; max-width: none !important; height: auto !important; max-height: 60vh !important;
+    overflow: hidden !important;
+    background: var(--red) !important; color: var(--bg) !important;
+    border: 0 !important; border-top: 1px solid var(--bg) !important; border-radius: 0 !important;
+    box-shadow: none !important;
+    font-family: var(--font-display) !important;
+  }
+  /* Rejilla: pestañas | (hueco de la marca), texto a todo el ancho, y abajo
+     interruptores | botones. Margen lateral de 32px, el mismo que la barra
+     superior. */
+  #CybotCookiebotDialog .CybotCookiebotDialogContentWrapper {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    grid-template-rows: auto minmax(0, 1fr) auto !important;
+    grid-template-areas: none !important;
+    width: 100% !important; max-width: none !important; max-height: 60vh !important;
+    margin: 0 !important; padding: 0 32px !important;
+    box-sizing: border-box !important;
+  }
+  /* La marca de Cookiebot, fuera: es el CSS que ellos mismos documentan para
+     quitarla. La cabecera se queda para continuar el filete de las pestañas. */
+  a#CybotCookiebotDialogPoweredbyCybot,
+  div#CybotCookiebotDialogPoweredByText,
+  #CybotCookiebotDialogHeaderLogosWrapper { display: none !important; }
+  #CybotCookiebotDialogHeader,
+  #CybotCookiebotDialogNav {
+    align-self: stretch !important;
+    padding: 0 !important; border: 0 !important; border-bottom: 1px solid var(--bg) !important;
+    background: transparent !important;
+  }
+  #CybotCookiebotDialogHeader { grid-area: 1 / 2 !important; }
+  #CybotCookiebotDialogNav { grid-area: 1 / 1 !important; }
+  .CybotCookiebotFader,
+  .CybotCookiebotScrollbarContainer { display: none !important; }
+
+  /* Pestañas. La activa se subraya con 2px montados sobre el filete (margen
+     de -1px): sumados darían 3px. La cuarta (ajustes de publicidad IAB) no
+     se usa. */
+  #CybotCookiebotDialogNavList { justify-content: flex-start !important; margin: 0 !important; padding: 0 !important; }
+  #CybotCookiebotDialogNavList .CybotCookiebotDialogNavItem {
+    flex: 0 0 auto !important; display: block !important; width: auto !important; margin: 0 !important; padding: 0 !important;
+  }
+  #CybotCookiebotDialogNavList li:has(#CybotCookiebotDialogNavAdSettings) { display: none !important; }
+  #CybotCookiebotDialogNav .CybotCookiebotDialogNavItemLink {
+    display: inline-block !important; width: auto !important; margin: 0 28px -1px 0 !important; padding: 24px 0 18px !important;
+    border: 0 !important; border-bottom: 2px solid transparent !important; background: transparent !important;
+    font: 600 11px/1 "JetBrains Mono", ui-monospace, monospace !important;
+    letter-spacing: 0.06em !important; text-transform: uppercase !important; text-align: left !important;
+    color: var(--bg) !important; opacity: 0.5 !important;
+  }
+  #CybotCookiebotDialogNav .CybotCookiebotDialogNavItemLink.CybotCookiebotDialogActive {
+    opacity: 1 !important; border-bottom-color: var(--bg) !important;
+  }
+
+  /* Pestaña "Consentimiento". Los hijos del panel pasan a ser celdas de la
+     rejilla de arriba (display: contents) solo mientras ese panel está
+     visible; las otras pestañas siguen siendo un bloque con scroll. */
+  #CybotCookiebotDialogTabContent {
+    grid-area: 2 / 1 / 3 / 3 !important; min-height: 0 !important; overflow: auto !important; padding: 16px 0 12px !important;
+  }
+  #CybotCookiebotDialogTabContent:has(> #CybotCookiebotDialogBody:not(.CybotCookiebotDialogHide)),
+  #CybotCookiebotDialogTabContent > #CybotCookiebotDialogBody:not(.CybotCookiebotDialogHide) {
+    display: contents !important;
+  }
+  #CybotCookiebotDialogBody,
+  #CybotCookiebotDialogBody .CybotCookiebotScrollContainer,
+  #CybotCookiebotDialogBodyContent { height: auto !important; max-height: none !important; overflow: visible !important; }
+  #CybotCookiebotDialogBodyContent { padding: 0 !important; }
+
+  /* Ritmo vertical: 20px de aire medidos hasta la tinta (no hasta la caja de
+     la línea) entre filete y título, entre el último renglón y el filete de
+     debajo, hasta los botones y hasta el borde. De ahí los 14,6 y 14,5px:
+     20px menos lo que la caja de 28px (título, mayúscula de 18,6px) y la de
+     20px (texto) dejan por encima y por debajo de la letra. */
+  #CybotCookiebotDialogBody > .CybotCookiebotScrollContainer {
+    grid-area: 2 / 1 / 3 / 3 !important;
+    padding: 14.6px 0 14.5px !important; border-bottom: 1px solid var(--bg) !important;
+  }
+  #CybotCookiebotDialogBodyContentTitle {
+    margin: 0 0 12px !important; padding: 0 !important; color: var(--bg) !important;
+    font-size: 26px !important; font-weight: 500 !important; line-height: 28px !important; letter-spacing: -0.025em !important;
+  }
+  #CybotCookiebotDialogBodyContentText,
+  #CybotCookiebotDialogBodyContentText p {
+    max-width: none !important; margin: 0 !important; color: var(--bg) !important; font-size: 13px !important; line-height: 20px !important;
+  }
+  #CybotCookiebotDialogBody > .CybotCookiebotDialogBodyBottomWrapper {
+    grid-area: 3 / 1 !important; align-self: center !important; margin: 0 !important; padding: 20px 0 !important; border: 0 !important;
+  }
+  #CybotCookiebotDialogBodyLevelButtons,
+  #CybotCookiebotDialogBodyLevelButtonsTable,
+  #CybotCookiebotDialogBodyLevelButtonsRow,
+  #CybotCookiebotDialogBodyLevelButtonsSelectPane { margin: 0 !important; padding: 0 !important; border: 0 !important; }
+
+  /* Interruptores en una línea: etiqueta y palanca lado a lado. */
+  #CybotCookiebotDialogBodyFieldsetInnerContainer {
+    display: flex !important; gap: 28px !important; width: auto !important; padding: 0 !important; border: 0 !important;
+  }
+  #CybotCookiebotDialogBodyFieldsetInnerContainer .CybotCookiebotDialogBodyLevelButtonWrapper {
+    display: flex !important; flex: 0 0 auto !important; flex-direction: row !important; align-items: center !important; gap: 10px !important;
+    width: auto !important; margin: 0 !important; padding: 0 !important; border: 0 !important;
+  }
+  .CybotCookiebotDialogBodyLevelButtonLabel,
+  .CybotCookiebotDialogBodyLevelButtonLabel * {
+    margin: 0 !important; padding: 0 !important; color: var(--bg) !important;
+    font: 600 10px/1 "JetBrains Mono", ui-monospace, monospace !important;
+    letter-spacing: 0.06em !important; text-transform: uppercase !important;
+  }
+  .CybotCookiebotDialogBodyLevelButtonSlider { background: transparent !important; border: 1px solid var(--bg) !important; }
+  .CybotCookiebotDialogBodyLevelButtonSlider:before { background: var(--bg) !important; }
+  input:checked + .CybotCookiebotDialogBodyLevelButtonSlider { background: var(--bg) !important; }
+  input:checked + .CybotCookiebotDialogBodyLevelButtonSlider:before { background: var(--red) !important; }
+
+  /* Botones: los tres con el mismo peso (la normativa pide que rechazar sea
+     tan fácil como aceptar). Al pasar el ratón se invierten, como .btn. */
+  #CybotCookiebotDialogFooter {
+    grid-area: 3 / 2 !important; align-self: center !important; height: auto !important; padding: 20px 0 !important;
+    border: 0 !important; background: transparent !important;
+  }
+  #CybotCookiebotDialogFooter .CybotCookiebotScrollArea { height: auto !important; padding: 0 !important; overflow: visible !important; }
+  #CybotCookiebotDialogBodyButtons,
+  #CybotCookiebotDialogBodyButtonsWrapper { flex-direction: row !important; gap: 8px !important; width: auto !important; padding: 0 !important; }
+  #CybotCookiebotDialog#CybotCookiebotDialog .CybotCookiebotDialogBodyButton {
+    box-sizing: border-box !important; flex: 0 0 auto !important; width: auto !important; min-width: 0 !important; height: auto !important;
+    padding: 17px 28px !important; white-space: nowrap !important;
+    border: 1px solid var(--bg) !important; border-radius: 999px !important;
+    background: var(--red) !important; color: var(--bg) !important;
+    font: 600 12px/1.15 "JetBrains Mono", ui-monospace, monospace !important;
+    letter-spacing: 0.06em !important; text-transform: uppercase !important;
+    transition: background 0.18s ease, color 0.18s ease !important;
+  }
+  #CybotCookiebotDialog#CybotCookiebotDialog .CybotCookiebotDialogBodyButton:hover {
+    background: var(--bg) !important; color: var(--red) !important;
+  }
+  /* Pestañas Detalles y Acerca de las cookies, sobre el rojo: enlaces en crema
+     (los azules de Cookiebot no se leen), contadores en píldora crema y
+     filetes entre categorías con el 35% de crema. */
+  #CybotCookiebotDialogTabContent a { color: var(--bg) !important; text-decoration: underline !important; }
+  .CybotCookiebotDialogDetailBulkConsentCount { background: var(--bg) !important; color: var(--red) !important; }
+  #CybotCookiebotDialogTabContent > .CybotCookiebotScrollContainer,
+  #CybotCookiebotDialogTabContent .CookieCard {
+    border-color: color-mix(in srgb, var(--bg) 35%, transparent) !important;
+  }
+}
+/* Entre 880 y 1239px los botones no caben junto a los interruptores: bajan a
+   su propia fila. */
+@media (min-width: 880px) and (max-width: 1239px) {
+  #CybotCookiebotDialogFooter { grid-area: 4 / 1 / 5 / 3 !important; justify-self: start !important; }
+}
+
 /* ── Modal "Pide ya" (Take Away | Uber Eats) ────────────────── */
 .pide-overlay{
   position:fixed; inset:0; z-index:9999;
