@@ -10,7 +10,7 @@
 const TEXTOS = {
   es: {
     titulo: "USAMOS COOKIES PERO NO DAMOS LA TURRA",
-    frases: ["Esta web usa las cookies para analizar el uso y recoger datos.", "Si quieres saber más, visitas ", "estos detalles", "."],
+    frases: ["Esta web usa las cookies para analizar el uso y recoger datos.", "Si quieres saber más, visita ", "estos detalles", "."],
     permitir: "Permitir", rechazar: "Rechazar", ajustes: "Ajustes",
     consentimiento: "Consentimiento", acerca: "Acerca de las cookies", seleccion: "Permitir la selección",
   },
@@ -53,7 +53,9 @@ function escribir(dialogo, t) {
     const pestana = dialogo.querySelector("#CybotCookiebotDialogNavDetails");
     if (pestana) pestana.click();
   });
-  texto.replaceChildren(t.frases[0], document.createElement("br"), t.frases[1], enlace, t.frases[3]);
+  // El espacio antes del <br>: en escritorio el salto separa las frases; en móvil
+  // el CSS lo oculta y el texto corre como un solo párrafo ("punto y seguido").
+  texto.replaceChildren(t.frases[0], " ", document.createElement("br"), t.frases[1], enlace, t.frases[3]);
 }
 
 export function cookies() {
