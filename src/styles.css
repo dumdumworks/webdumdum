@@ -65,6 +65,17 @@
   font-display: swap;
 }
 
+/* Oswald alojada: solo la usa /taller-team-building (titulares del zigzag), así
+   que el navegador no la descarga en el resto de páginas aunque el CSS sea común.
+   Variable, solo subconjunto latino; 400 (regular) y 700 son los pesos que usa. */
+@font-face {
+  font-family: "Oswald";
+  src: url("/fonts/Oswald-Variable.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #fffaf3;
   --ink: #ff001e;
