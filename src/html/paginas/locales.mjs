@@ -6,7 +6,7 @@
 import { esc, breadcrumbLd, ldGlobalIdioma } from "../plantilla.mjs";
 import { esqueleto, specFoot } from "../shell.mjs";
 import { anio } from "../texto.mjs";
-import { RUTA_LOCAL, TEL_ICO } from "./local.mjs";
+import { RUTA_LOCAL, TEL_ICO, verboYNombre } from "./local.mjs";
 
 export const RUTA = "/locales";
 
@@ -28,8 +28,8 @@ function tarjeta(i, L, lema) {
         <b>${esc(t("Aforo", "Capacity"))}</b><div>${esc(tx(L.aforo))}</div>
       </div>
       <div class="locale-btns" style="margin-top:24px">
-        <a class="btn red" href="#" data-reservar="${L.slug}">${esc(t("Reservar en " + L.nombre, "Book at " + L.nombre))} →</a>
-        <a class="btn btn-call-green" href="tel:${esc(L.tel)}" data-llamar data-humano="${esc(L.telHuman)}">${TEL_ICO}${esc(t("Llamar a " + L.nombre, "Call " + L.nombre))} →</a>
+        <a class="btn red" href="#" data-reservar="${L.slug}">${verboYNombre(t("Reservar en", "Book at"), L.nombre)}</a>
+        <a class="btn btn-call-green" href="tel:${esc(L.tel)}" data-llamar data-humano="${esc(L.telHuman)}">${TEL_ICO}<span data-texto>${verboYNombre(t("Llamar a", "Call"), L.nombre)}</span></a>
       </div>
     </div>
     <div class="locale-pie">
