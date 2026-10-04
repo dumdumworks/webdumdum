@@ -134,8 +134,10 @@ Webfonts:
   400–600, solo Latín, ~31 kB): topbar, estado del local y metadatos. Es el mismo
   archivo que servía Google Fonts. No se precarga a propósito: medido con móvil
   estrangulado, el preload de 31 kB compite con el CSS y retrasa el FCP ~180 ms.
-  **Oswald** sigue
-  viniendo de Google Fonts, pero solo en `/taller-team-building`.
+- **Oswald**, alojada en `fonts/Oswald-Variable.woff2` (variable, 400–700, solo Latín,
+  ~21 kB): solo la usa `/taller-team-building`. El `@font-face` está en el CSS común,
+  pero el navegador solo descarga la fuente en las páginas que la pintan. Tampoco se
+  precarga. Ya no se pide nada a Google Fonts.
 - **Mastone Outline** y **SF Compact Bold**, recortadas: solo el logo de la home.
 Hubo un kit de Adobe Typekit que se retiró: ninguna regla usaba sus familias y
 costaba dos orígenes render-blocking. No reintroducir sin comprobar que se usa.

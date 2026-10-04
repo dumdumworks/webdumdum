@@ -138,14 +138,7 @@ ${bloquesLd ? bloquesLd + "\n" : ""}
   <link rel="preload" href="/fonts/HelveticaNeue-Medium.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/HelveticaNeue-Bold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/HelveticaNeue-Roman.woff2" as="font" type="font/woff2" crossorigin>
-  <!-- JetBrains Mono va alojada (ver @font-face). Oswald solo la usa
-       /taller-team-building (titulares del zigzag) y sigue viniendo de Google
-       Fonts: pedirla en el resto —sobre todo /menu, con 2/3 del tráfico y casi
-       todo móvil— era descargar y parsear una fuente que nunca se pinta. -->
-${ruta === "/taller-team-building" ? `  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
-` : ""}${precargas || ""}
+${precargas || ""}
   <link rel="stylesheet" href="/${css}">
   <script src="/${islas}" defer></script>
 </head>
