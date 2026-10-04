@@ -53,6 +53,18 @@
   font-display: swap;
 }
 
+/* JetBrains Mono alojada (topbar, estado del local, precios y etiquetas): una sola
+   fuente variable, solo el subconjunto latino. Antes se pedía a Google Fonts con
+   una hoja que bloqueaba el render y dos orígenes más. 400–600 cubre los pesos que
+   usa la web; el 700 se resuelve al 600, igual que antes. */
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/JetBrainsMono-Variable.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #fffaf3;
   --ink: #ff001e;

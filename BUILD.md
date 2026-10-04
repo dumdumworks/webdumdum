@@ -130,7 +130,12 @@ Webfonts:
   --layout-features=kern,liga,tnum,pnum,lnum,case --flavor=woff2 --no-hinting`
   (caras 0, 2, 10 y 1 del `.ttc`). Flechas, ★, ✕ y emojis no existen en
   Helvetica Neue: salen de la fuente de reserva, como siempre.
-- **JetBrains Mono** (Google Fonts): topbar, estado del local y metadatos.
+- **JetBrains Mono**, alojada en `fonts/JetBrainsMono-Variable.woff2` (variable, pesos
+  400–600, solo Latín, ~31 kB): topbar, estado del local y metadatos. Es el mismo
+  archivo que servía Google Fonts. No se precarga a propósito: medido con móvil
+  estrangulado, el preload de 31 kB compite con el CSS y retrasa el FCP ~180 ms.
+  **Oswald** sigue
+  viniendo de Google Fonts, pero solo en `/taller-team-building`.
 - **Mastone Outline** y **SF Compact Bold**, recortadas: solo el logo de la home.
 Hubo un kit de Adobe Typekit que se retiró: ninguna regla usaba sus familias y
 costaba dos orígenes render-blocking. No reintroducir sin comprobar que se usa.
