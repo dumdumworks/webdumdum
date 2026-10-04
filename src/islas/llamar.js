@@ -19,8 +19,8 @@ export function llamar() {
       e.preventDefault();
       if (!revelado) {
         revelado = true;
-        // El texto es el último nodo del enlace (tras el icono).
-        a.lastChild.textContent = a.dataset.humano + " →";
+        // Sustituye todo el texto del botón (verbo, salto y nombre) por el número.
+        a.querySelector("[data-texto]").textContent = a.dataset.humano + "\u00a0→";
         marcar();
         return;
       }
