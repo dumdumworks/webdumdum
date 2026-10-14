@@ -40,7 +40,7 @@ const PASOS = [
     "Vapor, salsa, toppings y listo. Es guay porque aquí puede que los jefes lo hagan peor y tú les enseñas y se callan la boca y te dan la razón.",
     "Steam, sauce, toppings, and done. It's cool because here the bosses might do it worse and you show them and they shut up and admit you're right."],
   ["A comer", "Time to eat",
-    "Os sentáis y os coméis el resultado. Os aplaudís porque os lo currastéis y la comida os sabe a gloria porque lo habéis hecho vosotros. FIN.",
+    "Os sentáis y os coméis el resultado. Os aplaudís porque os lo currasteis y la comida os sabe a gloria porque lo habéis hecho vosotros. FIN.",
     "You sit down and eat the result. You applaud each other because you busted your ass for it, and the food tastes like glory because you made it yourselves. THE END."],
 ];
 const FAQ = [
@@ -57,7 +57,7 @@ const FAQ = [
     a: ["Sí. La carta tiene opciones vegetarianas y cada plato lleva marcados sus alérgenos — nos cuentas las restricciones del grupo antes del taller y lo dejamos todo listo.",
       "Yes. The menu has vegetarian options and every dish lists its allergens — tell us the group's restrictions before the workshop and we'll have it all sorted."] },
   { q: ["¿Y si se nos quema todo?", "What if we burn everything?"],
-    a: ["Para eso está equipo, para que no pase nada. Y si pasa, pues risas. Lo que sea menos dramas.",
+    a: ["Para eso está el equipo, para que no pase nada. Y si pasa, pues risas. Lo que sea menos dramas.",
       "That's what the team's there for, so nothing goes wrong. And if it does, well, laughs. Anything but drama."] },
   { q: ["¿Podéis adaptar el taller a otro tipo de evento?", "Can you adapt the workshop for a different kind of event?"],
     a: ["Sí: el espacio, la carta y el formato se adaptan al tipo de evento. Cumpleaños, despedidas, presentaciones… cuéntanos qué necesitas y le buscamos forma.",
@@ -255,7 +255,7 @@ const RESENAS_PASO = {
     es: {
       texto: "“Le dije a mi jefe que ya que estábamos estirando masa podía también estirarse un poco con la pasta. Me dijo: la frase está bien pillada pero no te flipes. Nos reímos sin mirarnos. Desde entonces nos saludamos en el ascensor.”",
       autor: "Marina Nogales",
-      rol: "Es la hija del jefe pero en la oficina no lo sabe nadie. Ni si quiera el jefe.",
+      rol: "Es la hija del jefe pero en la oficina no lo sabe nadie. Ni siquiera el jefe.",
     },
     en: {
       texto: "“I told my boss that since we were already rolling out dough, he could loosen up the dough a bit too. He said: nice one, but don't push it. We laughed without looking at each other. Ever since, we just nod in the lift.”",
