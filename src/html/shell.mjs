@@ -10,12 +10,18 @@ import * as E from "./enlaces.mjs";
 
 // Una página entera: cabecera, contenido y pie. `main` es el HTML propio de la
 // página; `ruta` la neutra (sin /en), para marcar el enlace activo.
+// Rutas donde los accesos rápidos a pedir y reservar sobran o confunden.
+// Flotante "Pide ya": la carta (se llega por el QR de la mesa: no queremos
+// inducir a pedir online estando sentado) y el taller de team building (venta a
+// empresas: el cliente va a pedir presupuesto, no a pedir comida).
+const SIN_FLOTANTE = ["/menu", "/taller-team-building"];
+// "Reservar" de la barra móvil: solo el taller, por la misma razón.
+const SIN_RESERVAR_MOVIL = ["/taller-team-building"];
+
 export function esqueleto(i, ruta, locales, main) {
   return [
     topbar(i, ruta),
-    // En la carta (a la que se llega por el QR de la mesa) no hay flotante:
-    // no queremos inducir a pedir online estando sentado.
-    ruta === "/menu" ? "" : flotante(i),
+    SIN_FLOTANTE.includes(ruta) ? "" : flotante(i),
     modales(i, locales),
     "<main>\n" + main + "\n</main>",
     footer(i, locales),
@@ -72,7 +78,7 @@ export function topbar(i, ruta) {
 
   <div class="topbar-mobile-right">
     ${selectorIdioma(i, ruta)}
-    ${reservar(" topbar-reservar-mobile")}
+    ${SIN_RESERVAR_MOVIL.includes(ruta) ? "" : reservar(" topbar-reservar-mobile")}
     <button type="button" class="topbar-burger" data-burger aria-expanded="false"
       aria-label="${esc(t("Abrir menú", "Open menu"))}"
       data-abrir="${esc(t("Abrir menú", "Open menu"))}" data-cerrar="${esc(t("Cerrar menú", "Close menu"))}">
