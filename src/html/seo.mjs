@@ -36,9 +36,9 @@ export const ROUTES_SEO = [
     te: "DUM DUM\u2122 \u2014 Team Building Dumpling Workshop",
     de: "A dumpling-making workshop for your team, in Madrid. Team activities, tasting included, from \u20ac65/person. Download the dossier with rates." },
   { p: "/contacto", og: "contacto", t: "DUM DUM\u2122 \u2014 Contacto",
-    d: "dumdum@dum-dum.es / +34 614 746 065",
+    d: "dumdum@dum-dum.es / +34 686 486 261",
     te: "DUM DUM\u2122 \u2014 Contact",
-    de: "dumdum@dum-dum.es / +34 614 746 065" }
+    de: "dumdum@dum-dum.es / +34 686 486 261" }
 ];
 
 // Imagen para compartir de una ruta ("/menu" → img/og/menu.jpg). Si una ruta

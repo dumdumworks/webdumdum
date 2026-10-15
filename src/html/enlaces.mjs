@@ -9,6 +9,6 @@ export const TAKEAWAY_URL = "https://dum-dumplings.square.site/";
 export const SPOTIFY_URL = "https://open.spotify.com/playlist/75oqGRFz3CXErzrfBQTuVd?si=62f669c4e6674ff1";
 export const INSTAGRAM_URL = "https://www.instagram.com/dumdum.plings";
 export const EMAIL = "dumdum@dum-dum.es";
-export const TEL_GENERAL = { tel: "+34614746065", humano: "+34 614 746 065" };
+export const TEL_GENERAL = { tel: "+34686486261", humano: "+34 686 486 261" };
 // Horario de los dos locales, en minutos desde medianoche (como DUMDUM_LOCALES.tramos).
 export const TRAMOS = [[780, 939], [1200, 1359]];
