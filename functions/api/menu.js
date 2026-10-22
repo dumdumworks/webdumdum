@@ -46,6 +46,15 @@ export async function onRequestPost({ env, request }) {
   if (!data || typeof data !== "object" || !Array.isArray(data.sections)) {
     return json({ error: "Falta 'sections' (no parece una carta válida)." }, 400);
   }
+  // Cada sección con su id (único: la web pinta clases y busca por él), su título y sus platos.
+  const ids = new Set();
+  for (const s of data.sections) {
+    const ok = s && typeof s === "object" && typeof s.id === "string" && s.id.trim()
+      && typeof s.title === "string" && s.title.trim() && Array.isArray(s.items);
+    if (!ok) return json({ error: "Cada sección necesita 'id', 'title' y 'items'." }, 400);
+    if (ids.has(s.id)) return json({ error: "Hay dos secciones con el mismo id: " + s.id }, 400);
+    ids.add(s.id);
+  }
 
     const savedAt = new Date().toISOString();
   data.updated = savedAt.slice(0, 10);
