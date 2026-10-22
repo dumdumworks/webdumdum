@@ -36,7 +36,8 @@ function jsonLd(i, carta, url) {
     name: i.t("Carta de DUM DUM", "DUM DUM menu"),
     url,
     inLanguage: i.lang,
-    hasMenuSection: secciones,
+    // Una sección sin platos visibles no sale en la carta, y tampoco aquí.
+    hasMenuSection: secciones.filter((sec) => sec.hasMenuItem.length),
     provider: { "@type": "Restaurant", name: "DUM DUM", url: ORIGIN + "/" },
   };
 }
