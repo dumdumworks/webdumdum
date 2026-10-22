@@ -71,6 +71,15 @@ el panel) o `/menu.base.json` si falta, y la pintan en cada petición con
 como `menu.json`. Lleva datos estructurados `schema.org/Menu`. La barra final se
 normaliza en la propia función (`_redirects` no alcanza a las funciones).
 
+**Secciones.** La carta es una lista de secciones (`sections[]`: `id`, `title`,
+`title_en`, `note`, `note_en`, `items`), y el panel las gestiona: crear, nombrar en
+ES/EN, escribir su nota, ordenar y borrar (solo vacías). El `id` es estable una vez
+publicado (sale como clase `section--<id>` y la home busca `dumplings`; por eso esa
+no se puede borrar). Una sección sin platos visibles no se pinta ni entra en el
+JSON-LD. Solo `postres` y `bebidas` tienen maquetación propia; el resto usa la
+estándar. `functions/api/menu.js` rechaza al guardar secciones sin `id`/`title`/`items`
+o con `id` repetido.
+
 ### Infraestructura en Cloudflare (proyecto `webdumdum`, entorno Production)
 
 - **KV** `dumdum-menu`, binding **`MENU`**: la carta viva (clave `current`,
