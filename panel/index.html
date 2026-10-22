@@ -107,6 +107,9 @@
     transition:.15s;
   }
   .add-btn:hover{filter:brightness(1.06)}
+  .side-actions{display:flex;gap:6px}
+  .add-btn.ghost{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+  .add-btn.ghost:hover{border-color:var(--ink);filter:none}
   .side-search-wrap{position:relative;padding:0 14px;margin-bottom:12px}
   .side-search-wrap svg{position:absolute;left:27px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--muted);pointer-events:none}
   .side-search-wrap input.side-search{width:100%;padding:9px 12px 9px 37px;border:1px solid var(--line);border-radius:10px;
@@ -121,6 +124,25 @@
   .arch-back span{font-size:15px;line-height:1}
   .sec-label{font-size:11px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;
     color:var(--muted);padding:14px 10px 6px}
+  /* Cabecera de sección: el nombre abre su ficha; la ＋ añade un plato a esa sección. */
+  .sec-label.is-sec{display:flex;align-items:center;gap:6px;padding:12px 2px 4px 4px}
+  .sec-name{flex:1;min-width:0;display:flex;align-items:center;gap:7px;background:none;border:none;border-radius:7px;
+    padding:5px 6px;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;text-align:left;cursor:pointer;transition:.12s}
+  .sec-name .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sec-name .sec-n{font-weight:600;opacity:.65}
+  .sec-name:hover,.sec-label.sel .sec-name{background:var(--panel-2);color:var(--ink)}
+  .sec-add{flex-shrink:0;width:24px;height:24px;border:1px solid var(--line);border-radius:7px;background:var(--panel);
+    color:var(--muted);font-size:14px;font-weight:700;line-height:1;display:grid;place-items:center;transition:.12s;cursor:pointer}
+  .sec-add:hover{border-color:var(--ink);color:var(--ink)}
+  .sec-empty{padding:2px 10px 8px;color:var(--muted);font-size:12px}
+  /* Arrastrar secciones para ordenarlas: mientras se arrastra, los platos se pliegan y quedan solo las cabeceras. */
+  .sec-label.is-sec[draggable="true"]{cursor:grab}
+  .sec-grip{flex-shrink:0;width:10px;color:var(--muted);opacity:.45;font-size:15px;line-height:1;user-select:none}
+  .sec-label:hover .sec-grip{opacity:.8}
+  .sec-label.dragging{opacity:.4}
+  .sec-label.drop-before{box-shadow:inset 0 3px 0 -1px var(--ink)}
+  .sec-label.drop-after{box-shadow:inset 0 -3px 0 -1px var(--ink)}
+  .dishlist.drag-sec .dishrow,.dishlist.drag-sec .sec-empty{display:none}
   .arch-toggle{padding:12px 16px;border:none;border-top:1px solid var(--line);background:var(--panel);
     color:var(--muted);font-size:12.5px;font-weight:600;font-family:var(--sans);display:flex;align-items:center;gap:8px;transition:.15s;text-align:left;width:100%}
   .arch-toggle:hover{background:var(--panel-2);color:var(--ink)}
@@ -164,6 +186,19 @@
     padding:7px 11px;font-size:12px;font-weight:600;transition:.15s;flex-shrink:0}
   .del-btn:hover{border-color:var(--red);color:var(--red)}
   .ehead-actions{display:flex;gap:8px;flex-shrink:0}
+  .mv-btn{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 11px;font-size:12px;font-weight:600;transition:.15s;flex-shrink:0}
+  .mv-btn:hover:not(:disabled){border-color:var(--ink)}
+  .mv-btn:disabled{opacity:.4;cursor:not-allowed}
+  .dlg{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;background:rgba(20,23,28,.45)}
+  .dlg-box{width:min(420px,100%);background:var(--panel);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow)}
+  .dlg-box h2{margin:0 0 6px;font-size:16px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+  .dlg-box p{margin:0 0 18px;font-size:13px;line-height:1.5;color:var(--muted)}
+  .dlg-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+  .dlg-box p:not([hidden])+.dlg-actions{margin-top:0}
+  .dlg-yes{background:var(--red);color:#fff;border:none;border-radius:9px;padding:9px 16px;font-size:12.5px;font-weight:700;transition:.15s}
+  .dlg-yes:hover{filter:brightness(1.06)}
+  .sec-info{font-size:13px;line-height:1.5;color:var(--ink);margin:0 0 12px}
+  .sec-info .sub{color:var(--muted)}
   .arch-btn{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 13px;font-size:12px;font-weight:600;transition:.15s}
   .arch-btn:hover{border-color:var(--amber);color:var(--amber);background:color-mix(in srgb,var(--amber) 7%,transparent)}
   .arch-btn.restore{border-color:var(--green);color:var(--green)}
@@ -398,7 +433,10 @@
     <aside class="sidebar">
       <div class="side-head">
         <h2>La carta</h2>
-        <button class="add-btn" id="addDish">＋ Plato</button>
+        <div class="side-actions">
+          <button class="add-btn ghost" id="addSection">＋ Sección</button>
+          <button class="add-btn" id="addDish">＋ Plato</button>
+        </div>
       </div>
       <div class="side-search-wrap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
@@ -413,7 +451,7 @@
     <!-- Editor -->
     <main class="editor">
       <div class="editor-grid">
-        <section>
+        <section id="dishEditor">
           <div class="ehead">
             <div>
               <div class="eyebrow" id="edSection">Dumplings</div>
@@ -517,8 +555,65 @@
             </div>
           </fieldset>
         </section>
+
+        <!-- Ficha de una SECCIÓN (título, nota, orden): la que se abre al pulsar su nombre en la lista -->
+        <section id="secEditor" hidden>
+          <div class="ehead">
+            <div>
+              <div class="eyebrow" id="secEyebrow">Sección</div>
+              <h1 id="secTitleH">Sección</h1>
+            </div>
+            <div class="ehead-actions">
+              <button type="button" class="mv-btn" id="secUp" aria-label="Subir la sección en la carta">↑ Subir</button>
+              <button type="button" class="mv-btn" id="secDown" aria-label="Bajar la sección en la carta">↓ Bajar</button>
+              <button type="button" class="del-btn" id="secDel">Borrar</button>
+            </div>
+          </div>
+          <fieldset>
+            <div class="grp">
+              <div class="grp-label">Título <span class="req">obligatorio</span></div>
+              <div class="row2">
+                <div class="field"><label>Español <span class="flag">ES</span></label><input type="text" id="f_s_title" maxlength="28" autocomplete="off"></div>
+                <div class="field"><label>English <span class="flag">EN</span></label><input type="text" id="f_s_title_en" maxlength="28" autocomplete="off"></div>
+              </div>
+              <div class="num-hint">Si dejas el inglés vacío, en la versión inglesa se muestra el español.</div>
+            </div>
+
+            <div class="grp">
+              <div class="grp-label">Nota</div>
+              <div class="row2">
+                <div class="field"><label>Español <span class="flag">ES</span></label><input type="text" id="f_s_note" maxlength="90" autocomplete="off"></div>
+                <div class="field"><label>English <span class="flag">EN</span></label><input type="text" id="f_s_note_en" maxlength="90" autocomplete="off"></div>
+              </div>
+              <div class="num-hint">El texto pequeño que sale a la derecha del título (p. ej. “Un último bocado”). Opcional. Usa « / » para saltar de línea; « // », solo en móvil.</div>
+            </div>
+
+            <div class="grp">
+              <div class="grp-label">Platos</div>
+              <p class="sec-info" id="secInfo"></p>
+              <button type="button" class="add-btn" id="secAddDish">＋ Añadir un plato a esta sección</button>
+            </div>
+
+            <div class="savebar">
+              <button class="save-main" id="saveBtn2">Guardar cambios</button>
+              <span class="save-hint">Se publica en la web en segundos</span>
+            </div>
+          </fieldset>
+        </section>
       </div>
     </main>
+  </div>
+</div>
+
+<!-- Confirmación propia: el confirm() nativo no sale en navegadores embebidos y bloquea la página. -->
+<div class="dlg" id="dlg" hidden>
+  <div class="dlg-box" role="alertdialog" aria-modal="true" aria-labelledby="dlgTitle" aria-describedby="dlgHint">
+    <h2 id="dlgTitle"></h2>
+    <p id="dlgHint"></p>
+    <div class="dlg-actions">
+      <button type="button" class="btn-ghost" id="dlgNo">Cancelar</button>
+      <button type="button" class="dlg-yes" id="dlgYes">Borrar</button>
+    </div>
   </div>
 </div>
 
@@ -541,9 +636,11 @@
   const ALER_ALIAS={"huevo":"huevos","leche":"lacteos","cacahuete":"cacahuetes","frutos secos":"frutos_cascara","molusco":"moluscos","crustaceo":"crustaceos"};
   // ── Estado (se rellena al CARGAR la carta desde el servidor) ──
   let MENU = null;          // objeto menu.json completo (preserva disclaimer, gallery, updated…)
-  let SECTION_META = {};    // título de sección -> {id, title_en, note, note_en}
-  let dishes = [];          // modelo plano del editor
-  let SECTIONS = [];        // títulos de sección, en orden
+  let SECS = [];            // secciones, en orden: {id, title, title_en, note, note_en, _orig}
+  let dishes = [];          // modelo plano del editor (dish.sec = id de su sección)
+  let mode = "dish";        // qué se edita: un plato ("dish") o una sección ("section")
+  let selSec = null;        // sección abierta cuando mode === "section"
+  let dragSec = null;       // sección que se está arrastrando para ordenarla
   let selId = null, filter = "Todas", search = "", addingTag = false, addingSec = false, dirty = false, alerOpen = false, dragId = null;
 
   const slug = (s) => (s||"").toString().toLowerCase().normalize("NFD")
@@ -553,15 +650,16 @@
   function loadModel(menu){
     MENU = menu || { sections: [] };
     if(!Array.isArray(MENU.sections)) MENU.sections = [];
-    SECTIONS = MENU.sections.map(s=>s.title);
-    SECTION_META = {};
+    SECS = [];
     dishes = [];
     MENU.sections.forEach(s=>{
-      SECTION_META[s.title] = { id: s.id||slug(s.title), title_en: s.title_en||"", note: s.note||"", note_en: s.note_en||"" };
+      // El id es estable (lo usan la web y la home): si falta o se repite, se genera.
+      const sec = { id: uniqueId(s.id||slug(s.title)), title: s.title||"", title_en: s.title_en||"", note: s.note||"", note_en: s.note_en||"", _orig: s };
+      SECS.push(sec);
       (s.items||[]).forEach(it=>{
         dishes.push({
           id: it.id || ("plato-"+Math.random().toString(36).slice(2,8)),
-          sec: s.title, n: typeof it.n==="number"?it.n:0,
+          sec: sec.id, n: typeof it.n==="number"?it.n:0,
           name: it.name||"", name_en: it.name_en||"",
           tag: it.tagline||"", tag_en: it.tagline_en||"",
           ingr: it.ingredients||"", ingr_en: it.ingredients_en||"",
@@ -583,11 +681,10 @@
   // modelo del editor -> menu.json (conservando lo que no se edita)
   function buildMenu(){
     const out = Object.assign({}, MENU);
-    out.sections = SECTIONS.map(title=>{
-      const meta = SECTION_META[title] || { id: slug(title), title_en:"", note:"", note_en:"" };
+    out.sections = SECS.map(sec=>{
       // OJO: se conserva el ORDEN del array (la web pinta en ese orden) y el
       // NÚMERO 'n' tal cual (es la etiqueta de nº del plato, no la posición).
-      const items = dishes.filter(d=>d.sec===title).map((d)=>{
+      const items = dishes.filter(d=>d.sec===sec.id).map((d)=>{
         return Object.assign({}, d._orig || {}, {
           id: d.id, n: d.n,
           name: d.name, name_en: d.name_en,
@@ -599,7 +696,8 @@
           image: d.image,
         });
       });
-      return { id: meta.id, title, title_en: meta.title_en, note: meta.note, note_en: meta.note_en, items };
+      // _orig conserva lo que el editor no toca de la sección.
+      return Object.assign({}, sec._orig || {}, { id: sec.id, title: sec.title, title_en: sec.title_en, note: sec.note, note_en: sec.note_en, items });
     });
     return out;
   }
@@ -607,6 +705,81 @@
   const $=s=>document.querySelector(s);
   const el=(t,c)=>{const e=document.createElement(t);if(c)e.className=c;return e;};
   const cur=()=>dishes.find(d=>d.id===selId);
+
+  // ── secciones: alta, apertura, orden y borrado ──
+  const secById=(id)=>SECS.find(s=>s.id===id);
+  const secTitle=(id)=>{const s=secById(id);return s?s.title:"";};
+  function uniqueId(base,except){let id=base||"seccion",n=2;while(SECS.some(s=>s!==except&&s.id===id))id=(base||"seccion")+"-"+n++;return id;}
+  // Si ya hay una sección con ese título (sin mirar mayúsculas), se reutiliza.
+  function createSection(title){
+    const t=title.trim(),prev=SECS.find(s=>s.title.trim().toLowerCase()===t.toLowerCase());
+    if(prev)return prev;
+    // nuevo: aún no está publicada, así que su id puede seguir al título (ver el input del título).
+    const sec={id:uniqueId(slug(t)),title:t,title_en:"",note:"",note_en:"",_orig:null,nuevo:true};
+    SECS.push(sec);return sec;
+  }
+  function openSection(id){
+    mode="section";selSec=id;renderList();renderEditor();
+    const sel=document.querySelector(".sec-label.sel");if(sel)sel.scrollIntoView({block:"nearest"});   // que se vea en la lista
+  }
+  function newSection(){
+    let t="Sección nueva",n=2;
+    while(SECS.some(s=>s.title.trim().toLowerCase()===t.toLowerCase()))t="Sección nueva "+n++;
+    const sec=createSection(t);markDirty();
+    if(filter==="Archivados")filter="Todas";
+    renderTabs();openSection(sec.id);
+    const inp=$("#f_s_title");inp.focus();inp.select();
+  }
+  function addDishTo(secId){
+    if(!secById(secId))secId=createSection("General").id;   // sin ninguna sección, el plato necesita una
+    const id="nuevo-"+Date.now().toString(36);
+    dishes.push({id,sec:secId,n:dishes.filter(d=>d.sec===secId).length,name:"Plato nuevo",name_en:"",tag:"",tag_en:"",ingr:"",ingr_en:"",price:"0,00",tags:[],alerSel:[],avail:true,feat:false,archived:false,image:"",_preview:null,_orig:{}});
+    if(filter==="Archivados")filter="Todas";
+    mode="dish";selId=id;markDirty();renderTabs();renderList();renderEditor();
+    document.querySelector(".editor").scrollTo({top:0,behavior:"smooth"});
+  }
+  function moveSection(dir){
+    const i=SECS.findIndex(s=>s.id===selSec),j=i+dir;
+    if(i<0||j<0||j>=SECS.length)return;
+    [SECS[i],SECS[j]]=[SECS[j],SECS[i]];
+    markDirty();renderList();renderEditor();
+  }
+  // Arrastrar: la sección va antes o después de otra. Si queda donde estaba, no cuenta como cambio.
+  function moveSectionTo(id,targetId,before){
+    const i=SECS.findIndex(x=>x.id===id);
+    if(i<0||id===targetId||!SECS.some(x=>x.id===targetId))return;
+    const [sec]=SECS.splice(i,1);
+    const ti=SECS.findIndex(x=>x.id===targetId),ni=before?ti:ti+1;
+    SECS.splice(ni,0,sec);
+    if(ni===i)return;
+    markDirty();renderList();
+    if(mode==="section")renderSecEditor();   // actualiza «n de m» y los botones ↑ ↓
+  }
+  async function deleteSection(){
+    const s=secById(selSec);if(!s)return;
+    // La home cuenta los dumplings por el id "dumplings": sin esa sección se rompería.
+    if(s.id==="dumplings"){showToast("“Dumplings” no se puede borrar: la home usa sus platos",true);return;}
+    const n=dishes.filter(d=>d.sec===s.id).length;
+    if(n){showToast("“"+(s.title||"Esta sección")+"” tiene "+n+" plato"+(n===1?"":"s")+" (contando archivados): muévelos a otra sección o bórralos antes",true);return;}
+    if(!await confirmar("¿Borrar la sección “"+(s.title||"sin título")+"”?","Está vacía: solo se quita de la carta.","Borrar sección"))return;
+    const i=SECS.indexOf(s);SECS.splice(i,1);markDirty();renderTabs();
+    const next=SECS[Math.min(i,SECS.length-1)];
+    if(next)openSection(next.id);
+    else{mode="dish";selId=dishes.length?dishes[0].id:null;renderList();renderEditor();}
+  }
+  function renderSecEditor(){
+    const s=secById(selSec);if(!s)return;
+    const i=SECS.indexOf(s);
+    $("#secTitleH").textContent=s.title.trim()||"Sin título";
+    $("#secEyebrow").textContent="Sección · "+(i+1)+" de "+SECS.length;
+    $("#f_s_title").value=s.title;$("#f_s_title_en").value=s.title_en;
+    $("#f_s_note").value=s.note;$("#f_s_note_en").value=s.note_en;
+    $("#secUp").disabled=i===0;$("#secDown").disabled=i===SECS.length-1;
+    const all=dishes.filter(d=>d.sec===s.id),vis=all.filter(d=>d.avail&&!d.archived).length;
+    const info=$("#secInfo");info.textContent="";
+    info.append(all.length+(all.length===1?" plato":" platos")+" · "+vis+(vis===1?" visible":" visibles")+" en la carta");
+    if(!vis){const sub=el("span","sub");sub.textContent=" — sin ningún plato visible, la sección no aparece en la web.";info.appendChild(sub);}
+  }
   // Normaliza la ruta de imagen a raíz-absoluta SOLO para mostrarla (no cambia lo
   // que se guarda). El panel vive en /panel/, así que "img/x.jpg" (sin barra) se
   // buscaría en /panel/img/x.jpg y daría imagen rota; con la barra apunta a la raíz.
@@ -623,7 +796,7 @@
   }
   // ── sidebar list
   function makeRow(d){
-    const r=el("button","dishrow");r.setAttribute("aria-current",String(d.id===selId));
+    const r=el("button","dishrow");r.setAttribute("aria-current",String(mode==="dish"&&d.id===selId));
     const hidden=!d.avail&&!d.archived;
     if(d.archived)r.classList.add("archived");
     if(hidden)r.classList.add("off");
@@ -635,11 +808,11 @@
     const m=el("div","meta");
     const dn=el("div","dn");dn.textContent=d.name;
     const dp=el("div","dp");
-    dp.textContent=d.archived?("Archivado"+(d.sec?" · "+d.sec:"")):((hidden?"Oculto · ":"")+d.price+" €"+(d.tags.length?" · "+d.tags.length+" etiq.":""));
+    dp.textContent=d.archived?("Archivado"+(d.sec?" · "+secTitle(d.sec):"")):((hidden?"Oculto · ":"")+d.price+" €"+(d.tags.length?" · "+d.tags.length+" etiq.":""));
     m.appendChild(dn);m.appendChild(dp);
     r.append(grip,th,m);
     if(d.archived){const t=el("span","row-arch");t.textContent="📦";r.appendChild(t);}
-    r.onclick=()=>{selId=d.id;renderList();renderEditor();};
+    r.onclick=()=>{mode="dish";selId=d.id;renderList();renderEditor();};
     // ── arrastrar para reordenar dentro de la MISMA sección ──
     r.draggable=true;
     r.addEventListener("dragstart",e=>{dragId=d.id;if(e.dataTransfer){e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",d.id);}catch(_){}}r.classList.add("dragging");});
@@ -672,15 +845,49 @@
       arch.forEach(d=>list.appendChild(makeRow(d)));
       return;
     }
-    let any=false;
-    SECTIONS.forEach(sec=>{
-      const inSec=dishes.filter(d=>d.sec===sec&&!d.archived&&matchSearch(d));
-      if(!inSec.length)return;
+    let any=false;const q=search.trim();
+    SECS.forEach(s=>{
+      const inSec=dishes.filter(d=>d.sec===s.id&&!d.archived&&matchSearch(d));
+      // Con búsqueda solo salen las secciones con coincidencias; sin ella, todas, también
+      // las vacías (si no, no habría forma de abrirlas ni de llenarlas).
+      if(q&&!inSec.length)return;
       any=true;
-      const lab=el("div","sec-label");lab.textContent=sec;list.appendChild(lab);
+      const lab=el("div","sec-label is-sec"+(mode==="section"&&selSec===s.id?" sel":""));
+      const name=el("button","sec-name");name.type="button";name.title="Editar la sección";
+      const t=el("span","t");t.textContent=s.title||"Sin título";
+      const n=el("span","sec-n");n.textContent=dishes.filter(d=>d.sec===s.id&&!d.archived).length;
+      name.append(t,n);name.onclick=()=>openSection(s.id);
+      const grip=el("span","sec-grip");grip.textContent="⣿";grip.setAttribute("aria-hidden","true");
+      const add=el("button","sec-add");add.type="button";add.textContent="＋";
+      add.title="Añadir un plato a “"+(s.title||"esta sección")+"”";add.setAttribute("aria-label",add.title);
+      add.onclick=()=>addDishTo(s.id);
+      lab.append(grip,name,add);list.appendChild(lab);
+      // Con búsqueda la lista está filtrada: arrastrar solo sin ella. (Con teclado o toque: ↑ ↓ en la ficha.)
+      if(!q){
+        lab.draggable=true;
+        lab.addEventListener("dragstart",e=>{
+          dragSec=s.id;
+          if(e.dataTransfer){e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",s.id);}catch(_){}}
+          lab.classList.add("dragging");
+          setTimeout(()=>list.classList.add("drag-sec"),0);   // plegar los platos DESPUÉS de empezar, o el navegador cancela el arrastre
+        });
+        lab.addEventListener("dragend",()=>{dragSec=null;list.classList.remove("drag-sec");list.querySelectorAll(".sec-label").forEach(x=>x.classList.remove("dragging","drop-before","drop-after"));});
+        lab.addEventListener("dragover",e=>{
+          if(!dragSec||dragSec===s.id)return;
+          e.preventDefault();const rc=lab.getBoundingClientRect(),before=(e.clientY-rc.top)<rc.height/2;
+          lab.classList.toggle("drop-before",before);lab.classList.toggle("drop-after",!before);
+        });
+        lab.addEventListener("dragleave",e=>{if(!lab.contains(e.relatedTarget))lab.classList.remove("drop-before","drop-after");});
+        lab.addEventListener("drop",e=>{
+          if(!dragSec||dragSec===s.id)return;
+          e.preventDefault();const rc=lab.getBoundingClientRect(),before=(e.clientY-rc.top)<rc.height/2;
+          lab.classList.remove("drop-before","drop-after");moveSectionTo(dragSec,s.id,before);
+        });
+      }
+      if(!inSec.length){const e=el("div","sec-empty");e.textContent="Sin platos todavía";list.appendChild(e);return;}
       inSec.forEach(d=>list.appendChild(makeRow(d)));
     });
-    if(!any){const e=el("div","empty-note");e.textContent="Nada coincide con “"+search.trim()+"”.";list.appendChild(e);}
+    if(!any){const e=el("div","empty-note");e.textContent=q?"Nada coincide con “"+q+"”.":"Todavía no hay secciones. Crea una con “＋ Sección”.";list.appendChild(e);}
   }
 
   // ── categoría / sección
@@ -690,7 +897,7 @@
       const inp=el("input");inp.type="text";inp.className="secinput";inp.placeholder="Nombre de la sección…";inp.maxLength=28;
       const ok=el("button","tf-ok");ok.type="button";ok.textContent="Crear";
       const commit=()=>{const v=inp.value.trim();addingSec=false;
-        if(v){if(!SECTIONS.includes(v))SECTIONS.push(v);d.sec=v;$("#edSection").textContent=v;renderTabs();}
+        if(v){const sec=createSection(v);d.sec=sec.id;$("#edSection").textContent=sec.title;renderTabs();}
         renderCat();renderList();};
       ok.onclick=commit;
       inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();commit();}else if(e.key==="Escape"){addingSec=false;renderCat();}};
@@ -698,8 +905,8 @@
     }else{
       const wrap=el("span","cat-wrap");
       const sel=el("select","cat-select");sel.setAttribute("aria-label","Categoría del plato");
-      SECTIONS.forEach(s=>{const o=el("option");o.value=s;o.textContent=s;if(s===d.sec)o.selected=true;sel.appendChild(o);});
-      sel.onchange=e=>{d.sec=e.target.value;$("#edSection").textContent=d.sec;renderList();};
+      SECS.forEach(s=>{const o=el("option");o.value=s.id;o.textContent=s.title;if(s.id===d.sec)o.selected=true;sel.appendChild(o);});
+      sel.onchange=e=>{d.sec=e.target.value;$("#edSection").textContent=secTitle(d.sec);renderList();};
       wrap.appendChild(sel);
       const add=el("button","cat-add");add.type="button";add.textContent="＋";add.title="Nueva sección";add.setAttribute("aria-label","Crear nueva sección");
       add.onclick=()=>{addingSec=true;renderCat();};
@@ -792,11 +999,14 @@
 
   // ── editor
   function renderEditor(){
-    const d=cur();
     const grid=document.querySelector(".editor-grid");
+    $("#dishEditor").hidden=mode==="section";
+    $("#secEditor").hidden=mode!=="section";
+    if(mode==="section"){ if(grid) grid.style.visibility=""; renderSecEditor(); return; }
+    const d=cur();
     if(!d){ if(grid) grid.style.visibility="hidden"; return; }
     if(grid) grid.style.visibility="";
-    $("#edSection").textContent=d.sec;
+    $("#edSection").textContent=secTitle(d.sec);
     $("#edTitle").textContent=d.name||"Sin nombre";
     $("#f_name").value=d.name;$("#f_name_en").value=d.name_en;
     $("#f_tag").value=d.tag;$("#f_tag_en").value=d.tag_en;
@@ -890,6 +1100,26 @@
     renderTabs();renderList();renderEditor();
   };
 
+  // ── confirmación (propia; ver el HTML de #dlg) ──
+  let dlgDone=null,dlgPrev=null;
+  function confirmar(titulo,pista,okTxt){
+    return new Promise(res=>{
+      dlgPrev=document.activeElement;
+      $("#dlgTitle").textContent=titulo;$("#dlgHint").textContent=pista||"";$("#dlgHint").hidden=!pista;
+      $("#dlgYes").textContent=okTxt||"Borrar";
+      $("#dlg").hidden=false;$("#dlgNo").focus();   // el foco empieza en lo seguro: Cancelar
+      dlgDone=(v)=>{$("#dlg").hidden=true;dlgDone=null;if(dlgPrev&&dlgPrev.isConnected&&dlgPrev.focus)dlgPrev.focus();res(v);};
+    });
+  }
+  $("#dlgYes").onclick=()=>{if(dlgDone)dlgDone(true);};
+  $("#dlgNo").onclick=()=>{if(dlgDone)dlgDone(false);};
+  $("#dlg").addEventListener("mousedown",e=>{if(e.target.id==="dlg"&&dlgDone)dlgDone(false);});
+  document.addEventListener("keydown",e=>{
+    if(!dlgDone)return;
+    if(e.key==="Escape"){e.preventDefault();dlgDone(false);}
+    else if(e.key==="Tab"){e.preventDefault();const b=[$("#dlgNo"),$("#dlgYes")];b[(b.indexOf(document.activeElement)+(e.shiftKey?-1:1)+2)%2].focus();}   // el foco no se escapa del diálogo
+  });
+
   // ── estado de guardado + helpers ──
   const pill=$("#savePill"),saveTxt=$("#saveTxt"),toast=$("#toast"),toastTxt=$("#toastTxt");
   function setPill(cls,txt){pill.classList.remove("saving","dirty","ok");if(cls)pill.classList.add(cls);saveTxt.textContent=txt;}
@@ -900,7 +1130,7 @@
   (function(){
     const ed=document.querySelector(".editor");
     ed.addEventListener("input",e=>{ if(e.target.id==="alerInput")return; markDirty(); },true);
-    ed.addEventListener("click",e=>{ if(e.target.closest("button,.switch,.chip,.tf-dot,.cat-select")) markDirty(); },true);
+    ed.addEventListener("click",e=>{ if(e.target.closest("button:not(#delDish):not(#secDel),.switch,.chip,.tf-dot,.cat-select")) markDirty(); },true);
   })();
 
   // ── subida de foto (a R2 vía /api/upload) ──
@@ -969,36 +1199,71 @@
   zone.addEventListener("drop",e=>{if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);});
 
   // ── guardar (a KV vía /api/menu) ──
+  // Antes de guardar: toda sección con título y sin repetir (sin mirar mayúsculas).
+  function validar(){
+    const vistos=new Set();
+    for(const s of SECS){
+      const t=s.title.trim().toLowerCase();
+      if(!t){showToast("Una sección no tiene título: ponle uno antes de guardar",true);openSection(s.id);$("#f_s_title").focus();return false;}
+      if(vistos.has(t)){showToast("Hay dos secciones llamadas “"+s.title.trim()+"”: cambia una de las dos",true);openSection(s.id);$("#f_s_title").focus();return false;}
+      vistos.add(t);
+    }
+    return true;
+  }
   async function save(){
-    const btn=$("#saveBtn");btn.disabled=true;setPill("saving","Guardando…");
+    if(!validar())return;
+    const btns=[$("#saveBtn"),$("#saveBtn2")];btns.forEach(b=>b.disabled=true);setPill("saving","Guardando…");
     try{
       const menu=buildMenu();
       const res=await fetch("/api/menu",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(menu)});
       const out=await res.json().catch(()=>({}));
       if(res.status===401) throw new Error("Sesión caducada — recarga la página");
       if(!res.ok||!out.ok) throw new Error(out.error||("HTTP "+res.status));
-      MENU=menu;dirty=false;setPill("ok","Guardado · en vivo");
+      MENU=menu;dirty=false;SECS.forEach(s=>{s.nuevo=false;});setPill("ok","Guardado · en vivo");
       showToast("Guardado ✓ — publicado en la web");
     }catch(e){ setPill("dirty","Error al guardar");showToast("No se pudo guardar: "+e.message,true); }
-    finally{ btn.disabled=false; }
+    finally{ btns.forEach(b=>b.disabled=false); }
   }
-  $("#saveBtn").onclick=save;
+  $("#saveBtn").onclick=save;$("#saveBtn2").onclick=save;
   window.addEventListener("beforeunload",e=>{ if(dirty){ e.preventDefault();e.returnValue=""; } });
 
+  // "＋ Plato": en la sección del plato abierto (o en la sección abierta, o en la primera).
   $("#addDish").onclick=()=>{
-    const id="nuevo-"+Date.now().toString(36);
-    const d0=cur();const sec=(d0&&!d0.archived&&SECTIONS.includes(d0.sec))?d0.sec:(SECTIONS[0]||"General");
-    if(!SECTIONS.includes(sec)){SECTIONS.push(sec);SECTION_META[sec]={id:slug(sec),title_en:"",note:"",note_en:""};}
-    dishes.push({id,sec,n:dishes.filter(d=>d.sec===sec).length,name:"Plato nuevo",name_en:"",tag:"",tag_en:"",ingr:"",ingr_en:"",price:"0,00",tags:[],alerSel:[],avail:true,feat:false,archived:false,image:"",_preview:null,_orig:{}});
-    if(filter==="Archivados")filter="Todas";
-    selId=id;markDirty();renderTabs();renderList();renderEditor();
-    document.querySelector(".editor").scrollTo({top:0,behavior:"smooth"});
+    const d0=cur();
+    addDishTo(mode==="section"?selSec:((d0&&!d0.archived&&secById(d0.sec))?d0.sec:(SECS[0]&&SECS[0].id)));
   };
-  $("#delDish").onclick=()=>{
+  $("#addSection").onclick=newSection;
+  $("#secAddDish").onclick=()=>addDishTo(selSec);
+  $("#secUp").onclick=()=>moveSection(-1);
+  $("#secDown").onclick=()=>moveSection(1);
+  $("#secDel").onclick=deleteSection;
+  // Título, título EN y notas de la sección abierta (la lista y las fichas se refrescan al teclear).
+  [["#f_s_title","title"],["#f_s_title_en","title_en"],["#f_s_note","note"],["#f_s_note_en","note_en"]].forEach(([id,key])=>{
+    $(id).addEventListener("input",e=>{
+      const s=secById(selSec);if(!s)return;
+      s[key]=e.target.value;
+      if(key==="title"){
+        $("#secTitleH").textContent=e.target.value.trim()||"Sin título";
+        // El id sale en la web (clase CSS de la sección): una sección aún sin publicar lo
+        // recalcula con el título; una ya publicada lo conserva para no romper nada.
+        if(s.nuevo){
+          const nid=uniqueId(slug(e.target.value),s);
+          if(nid!==s.id){dishes.forEach(d=>{if(d.sec===s.id)d.sec=nid;});s.id=nid;selSec=nid;}
+        }
+      }
+      renderList();
+    });
+  });
+  $("#delDish").onclick=async()=>{
     const d=cur();if(!d)return;
-    if(!confirm("¿Borrar “"+(d.name||"este plato")+"” para siempre?\n\n(Si solo quieres quitarlo un tiempo, usa Archivar.)"))return;
-    const i=dishes.findIndex(x=>x.id===selId);if(i<0)return;
-    dishes.splice(i,1);selId=dishes.length?dishes[Math.max(0,i-1)].id:null;
+    if(!await confirmar("¿Borrar “"+(d.name||"este plato")+"” para siempre?","Si solo quieres quitarlo un tiempo, usa Archivar."))return;
+    const i=dishes.findIndex(x=>x.id===d.id);if(i<0)return;
+    // Tras borrar, el editor se queda en la misma sección (el anterior o el siguiente de ella),
+    // no en el vecino de la lista plana: un plato nuevo está al final de esa lista.
+    const hermanos=dishes.filter(x=>x.sec===d.sec&&!x.archived),k=hermanos.indexOf(d);
+    const vecino=hermanos[k-1]||hermanos[k+1];
+    dishes.splice(i,1);
+    selId=vecino?vecino.id:(dishes.find(x=>!x.archived)||dishes[0]||{}).id||null;
     markDirty();renderTabs();renderList();renderEditor();
   };
   $("#viewSite").onclick=()=>window.open("/menu","_blank","noopener");

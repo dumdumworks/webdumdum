@@ -163,6 +163,8 @@ function plato(i, it, opts = {}) {
 
 function seccion(i, sec) {
   const platos = (sec.items || []).filter((it) => it.available !== false && !it.archived);
+  // Sin platos visibles (sección nueva aún vacía, o todos ocultos/archivados): ni cabecera.
+  if (!platos.length) return "";
   const cls = ["dish-grid", sec.id === "postres" ? "dish-grid-2col-m" : "", sec.id === "bebidas" ? "dish-grid-2col-m drinks-grid" : ""].filter(Boolean).join(" ");
   // La nota admite " / " para forzar un salto de línea (igual que los
   // títulos, vía mdInline): sin eso, envuelve sola según el ancho y el hueco
@@ -262,7 +264,7 @@ export function renderCarta(i, carta) {
     </div>
   </div>
 ${disclaimer ? `  <aside class="menu-disclaimer"><span class="menu-disclaimer-arrow" aria-hidden="true">→</span><div class="menu-disclaimer-bubble"><p>${sanearInline(disclaimer)}</p></div></aside>\n` : ""}
-${secciones.map((sec) => seccion(i, sec)).join("\n")}
+${secciones.map((sec) => seccion(i, sec)).filter(Boolean).join("\n")}
 
   <aside class="menu-chopsticks-note">
     <span class="menu-chopsticks-arrow" aria-hidden="true">→</span>
