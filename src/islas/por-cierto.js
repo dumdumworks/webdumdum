@@ -72,13 +72,11 @@ function pintar(a) {
   cerrar.type = "button"; cerrar.className = "cierto-x"; cerrar.textContent = "✕";
   cerrar.setAttribute("aria-label", t("Cerrar", "Close"));
   const media = document.createElement("div"); media.className = "cierto-media";
-  const cuerpo = document.createElement("div"); cuerpo.className = "cierto-body";
   const ir = document.createElement("a");
   ir.className = "btn red cierto-ir"; ir.href = a.boton.url;
   ir.textContent = t("Ir a ", "Go to ") + t(a.boton.texto, a.boton.texto_en) + " →";
-  cuerpo.append(ir);
   const dentro = document.createElement("div"); dentro.className = "cierto-in";
-  dentro.append(cerrar, media, cuerpo);
+  dentro.append(cerrar, media, ir);
   // Copia del contenido de la pastilla: es lo que se ve en la tarjeta al empezar y al terminar.
   const pre = document.createElement("div"); pre.className = "cierto-pre"; pre.setAttribute("aria-hidden", "true");
   pre.append(ico.cloneNode(true), txt.cloneNode(true));

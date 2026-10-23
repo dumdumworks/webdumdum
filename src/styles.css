@@ -458,8 +458,12 @@ img { display: block; max-width: 100%; }
 }
 .cierto-media{ aspect-ratio: 16 / 9; background: var(--sage-faint); }
 .cierto-media img, .cierto-media video{ display: block; width: 100%; height: 100%; object-fit: cover; }
-.cierto-body{ display: flex; flex-direction: column; padding: 14px 16px 16px; }
-.cierto-ir{ justify-content: center; }
+/* El botón flota sobre la imagen (que ocupa toda la tarjeta, sin franja de texto debajo); el
+   filete crema, como el de la pastilla, lo separa de cualquier foto. */
+.cierto-ir{
+  position: absolute; left: var(--fab-inset); right: var(--fab-inset); bottom: var(--fab-inset);
+  justify-content: center; border-color: var(--bg);
+}
 .cierto-x{
   position: absolute; top: 8px; right: 8px; z-index: 1;
   width: 28px; height: 28px; padding: 0;
