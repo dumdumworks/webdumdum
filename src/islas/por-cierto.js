@@ -103,7 +103,6 @@ function pintar(a) {
       tarjeta.classList.add("is-open"); tarjeta.inert = false;   // ya está en su sitio final, aún sin pintarse
       if (!media.firstChild) media.append(medio(a.media));        // primera vez: ahora sí se pide el archivo
       boton.classList.add("is-visto");                            // las pupilas dejan de moverse
-      marcarVisto(a.id);                                          // y no vuelve a salir en este dispositivo
     }
     const c = tarjeta.getBoundingClientRect();
     const fin = () => {
@@ -163,15 +162,6 @@ function pintar(a) {
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && abierta && !animando) mover(false, true); });
 }
 
-// «Ya visto»: un aviso que se ha abierto no vuelve a salir en este dispositivo. Es una nota en
-// el navegador (solo guarda los ids de avisos), sin ningún dato personal; si no se puede
-// guardar, simplemente se vuelve a mostrar.
-const CLAVE_VISTOS = "dd-cierto-visto";
-const vistos = () => { try { return JSON.parse(localStorage.getItem(CLAVE_VISTOS)) || []; } catch (e) { return []; } };
-const marcarVisto = (id) => {
-  try { localStorage.setItem(CLAVE_VISTOS, JSON.stringify([...new Set([...vistos(), id])].slice(-20))); } catch (e) { /* sin almacenamiento */ }
-};
-
 // En la carta, en móvil, «Por cierto!» ocupa el sitio de alérgenos (derecha) y alérgenos pasa a
 // la izquierda: en el resto de la web la derecha es de «Pide ya». Alérgenos se desliza a su
 // nuevo sitio (técnica FLIP) en vez de saltar, porque ya está en pantalla cuando llega el aviso.
@@ -188,6 +178,6 @@ function cruzarConAlergenos() {
 export async function porCierto() {
   let datos;
   try { datos = await (await fetch("/por-cierto.json")).json(); } catch (e) { return; }
-  const aviso = (datos.avisos || []).find((a) => a.activo !== false && (!a.paginas || a.paginas.includes(ruta())) && !vistos().includes(a.id));
+  const aviso = (datos.avisos || []).find((a) => a.activo !== false && (!a.paginas || a.paginas.includes(ruta())));
   if (aviso) esperarSinAviso().then(() => pintar(aviso));
 }

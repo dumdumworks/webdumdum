@@ -406,7 +406,7 @@
   @keyframes spin{to{transform:rotate(360deg)}}
 
   /* ── Avisos «Por cierto» ─────────────────── */
-  .photo-zone.av-zone{aspect-ratio:3/4;max-width:360px}
+  .photo-zone.av-zone{aspect-ratio:4/5;max-width:360px}
   #avFechas{white-space:pre-line}
   .av-prev-btn.blanco{background:#fffaf3;color:var(--red)}
   .av-color{display:flex;align-items:center;gap:12px;margin-top:14px}
@@ -418,11 +418,12 @@
   .av-dest{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
   .av-dest-txt{font-size:12.5px;color:var(--muted)}
   .av-dest-txt b{color:var(--ink);font-weight:600}
-  /* Vista previa: la tarjeta tal cual la pinta la web (imagen 3:4 + botón), sin texto. */
+  /* Vista previa: la tarjeta tal cual la pinta la web (imagen 4:5 + botón), sin texto. */
   .av-prev{max-width:360px;border:1px solid var(--red);border-radius:20px;overflow:hidden;background:#fffaf3;box-shadow:0 8px 32px rgba(255,0,30,.18)}
-  .av-prev-img{aspect-ratio:3/4;background:var(--panel-2) center/cover no-repeat;display:grid;place-items:center;color:var(--muted);font-size:12px}
+  .av-prev-img{aspect-ratio:4/5;background:var(--panel-2) center/cover no-repeat;display:grid;place-items:center;color:var(--muted);font-size:12px}
   .av-prev{position:relative}
-  .av-prev-img video{width:100%;height:100%;object-fit:cover;display:block}
+  .av-prev-img{position:relative}
+  .av-prev-img img,.av-prev-img video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .av-prev-btn{position:absolute;left:0;right:0;bottom:16px;width:50%;min-width:max-content;margin-inline:auto;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;border-radius:999px;
     border:1px solid #fffaf3;background:var(--red);color:#fff;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 
@@ -653,7 +654,7 @@
         <div class="side-actions"><button class="add-btn" id="addAviso">＋ Aviso</button></div>
       </div>
       <div class="dishlist" id="avisoList"></div>
-      <p class="av-order">Sale el primero de la lista que esté activo en esa página. Cada visitante lo ve una sola vez.</p>
+      <p class="av-order">Sale el primero de la lista que esté activo en esa página.</p>
     </aside>
 
     <main class="editor">
@@ -696,7 +697,7 @@
               <div class="pz-inner">
                 <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15l-5-5L5 21"/><path d="M3 16V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg></div>
                 <div class="pz-title">Arrastra una imagen o un vídeo, o haz clic</div>
-                <div class="pz-sub">JPG · PNG · MP4 · se recorta a 3:4 · se sube al instante</div>
+                <div class="pz-sub">JPG · PNG · MP4 · se recorta a 4:5 · se sube al instante</div>
               </div>
               <div class="pz-actions" id="avActions" hidden>
                 <button type="button" id="avChange">Cambiar</button>
@@ -704,7 +705,7 @@
               </div>
             </div>
             <input type="file" id="avFile" accept="image/*,video/mp4,video/quicktime,video/webm" hidden>
-            <div class="num-hint">Mejor a 1800 × 2400 px (vertical, 3:4). Vídeo: MP4 (H.264), de unos 10 s y hasta 10 MB, mejor vertical y sin sonido (se ve en bucle y mudo). El aviso no lleva texto aparte: lo que quieras decir, ponlo dentro de la imagen. El botón flota sobre su parte baja (mira «Así se verá»).</div>
+            <div class="num-hint">Mejor a 1600 × 2000 px (vertical, 4:5). Vídeo: MP4 (H.264), de unos 10 s y hasta 10 MB, mejor vertical y sin sonido (se ve en bucle y mudo). El aviso no lleva texto aparte: lo que quieras decir, ponlo dentro de la imagen. El botón flota sobre su parte baja (mira «Así se verá»).</div>
           </div>
 
           <div class="grp">
@@ -1432,7 +1433,7 @@
 </script>
 <script>
 // ── Avisos «Por cierto» ──────────────────────────────────────────────────────
-// Cada aviso es una imagen 3:4 + un botón, sin texto propio. Se guarda en el
+// Cada aviso es una imagen 4:5 + un botón, sin texto propio. Se guarda en el
 // formato que lee la web (/por-cierto.json), así el editor y la web comparten un solo modelo:
 //   { id, nombre, creado, modificado, activo, paginas:["/eventos"],
 //     media:{tipo:"imagen"|"video",src,poster?,alt:""}, boton:{texto,texto_en,color:"rojo"|"blanco",url | accion} }
@@ -1463,8 +1464,8 @@
     {id:"evento",nombre:"Solicitud de evento",es:"Solicitar evento",en:"Request an event",url:"/eventos#contact-eventos"}
   ];
   const GRUPOS=[["Páginas",DESTINOS.slice(0,-3)],["Acciones",DESTINOS.slice(-3)]];
-  // Imagen estándar: vertical 3:4 a 864 × 1152 (la tarjeta mide 440 px como mucho; cubre pantallas @2x).
-  const W=864,H=1152;
+  // Imagen estándar: vertical 4:5 a 864 × 1080 (la tarjeta mide 440 px como mucho; cubre pantallas @2x).
+  const W=864,H=1080;
   const ICONO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 15l-5-5L5 21"/><path d="M3 16V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>';
 
   let AV=[],sel=null,dirty=false,cargado=false,vista="carta";
@@ -1590,8 +1591,8 @@
   });
   $("#avActive").onclick=()=>{const a=cur();if(!a)return;a.activo=!a.activo;setDirty();pintar();};
 
-  // ── imagen: recorte centrado a 3:4, reducción y subida ──
-  // Recorte centrado a 3:4 de lo que sea dibujable (imagen o fotograma de vídeo), ya reducido a JPEG.
+  // ── imagen: recorte centrado a 4:5, reducción y subida ──
+  // Recorte centrado a 4:5 de lo que sea dibujable (imagen o fotograma de vídeo), ya reducido a JPEG.
   async function recortarA3x4(fuente,nw,nh){
     let sw=nw,sh=Math.round(sw*H/W);
     if(sh>nh){sh=nh;sw=Math.round(sh*W/H);}

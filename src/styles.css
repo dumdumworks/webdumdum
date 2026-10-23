@@ -466,9 +466,9 @@ img { display: block; max-width: 100%; }
   letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
   color: var(--bg); opacity: 0; pointer-events: none;
 }
-/* Vertical, 3:4. Si la pantalla es baja (móvil apaisado) se recorta por abajo en vez de hacer scroll
+/* Vertical, 4:5. Si la pantalla es baja (móvil apaisado) se recorta por abajo en vez de hacer scroll
    dentro de la tarjeta: así el botón no se va. */
-.cierto-media{ width: 100%; aspect-ratio: 3 / 4; max-height: calc(var(--cierto-alto) - 2px); background: var(--sage-faint); }
+.cierto-media{ width: 100%; aspect-ratio: 4 / 5; max-height: calc(var(--cierto-alto) - 2px); background: var(--sage-faint); }
 .cierto-media img, .cierto-media video{ display: block; width: 100%; height: 100%; object-fit: cover; }
 /* El botón flota sobre la imagen (que ocupa toda la tarjeta, sin franja de texto debajo): centrado,
    a la mitad del ancho (sin bajar de lo que mide su texto, que en inglés es más largo); el filete
