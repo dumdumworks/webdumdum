@@ -373,23 +373,25 @@ img { display: block; max-width: 100%; }
   }
 }
 
-/* «¡Por cierto!» · gemelo del botón de alérgenos al OTRO lado (abajo a la
-   izquierda): misma base, mismo crema y filete rojo. Abre una tarjeta con un aviso
-   (islas/por-cierto.js). Entra con un fundido cuando la isla lo pinta, y se
-   atenúa al hacer scroll como el «Pide ya». */
+/* «¡Por cierto!» · como el botón de alérgenos pero al OTRO lado (abajo a la
+   izquierda) y en ROJO, para que destaque. Filete crema: sobre el papel no se ve
+   (queda rojo liso) y sobre las fichas destacadas en rojo pleno lo recorta, que
+   es lo que el crema de alérgenos resuelve con el color de fondo. Abre una
+   tarjeta con un aviso (islas/por-cierto.js). Entra con un fundido cuando la
+   isla lo pinta, y se atenúa al hacer scroll como el «Pide ya». */
 .cierto-fab{
   left: var(--fab-inset); right: auto;
-  background: var(--bg);
-  color: var(--red);
-  border-color: var(--red);
-  box-shadow: 0 3px 16px rgba(255, 0, 30, 0.16);
+  background: var(--red);
+  color: var(--bg);
+  border-color: var(--bg);
+  box-shadow: 0 3px 16px rgba(255, 0, 30, 0.35);
   opacity: 0;
   transition: opacity .25s ease, box-shadow .18s ease, transform .18s ease;
 }
 .cierto-fab.is-on{ opacity: 1; }
 .cierto-fab.is-on.is-scrolling{ opacity: 0.35; }
 @media (hover: hover){
-  .cierto-fab:hover{ box-shadow: 0 5px 22px rgba(255, 0, 30, 0.32); }
+  .cierto-fab:hover{ box-shadow: 0 5px 22px rgba(255, 0, 30, 0.5); }
 }
 /* Con 340px o menos no caben las dos pastillas de la carta: solo los ojitos (el texto
    sigue ahí para los lectores de pantalla). */
