@@ -34,6 +34,9 @@
     color-scheme: light;   /* El panel va SIEMPRE claro: ignora el modo oscuro del dispositivo. */
   }
 
+  /* Solo para la vista previa de los avisos: el botón de la tarjeta usa la tipografía de la web. */
+  @font-face{font-family:"JetBrains Mono";src:url("/fonts/JetBrainsMono-Variable.woff2") format("woff2");font-weight:400 600;font-display:swap}
+
   *{box-sizing:border-box}
   [hidden]{display:none!important}
   html,body{height:100%}
@@ -416,7 +419,7 @@
   .av-prev-img{aspect-ratio:3/4;background:var(--panel-2) center/cover no-repeat;display:grid;place-items:center;color:var(--muted);font-size:12px}
   .av-prev{position:relative}
   .av-prev-btn{position:absolute;left:0;right:0;bottom:16px;width:50%;min-width:max-content;margin-inline:auto;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;border-radius:999px;
-    border:1px solid #fffaf3;background:var(--red);color:#fff;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+    border:1px solid #fffaf3;background:var(--red);color:#fff;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 
   .savebar{display:flex;gap:10px;align-items:center;margin-top:6px}
   .save-main{background:var(--ink);color:#fff;border:none;border-radius:10px;padding:11px 22px;font-weight:700;font-size:14px;transition:.15s;display:inline-flex;align-items:center;gap:8px}
