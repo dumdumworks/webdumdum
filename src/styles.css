@@ -427,7 +427,8 @@ img { display: block; max-width: 100%; }
   right: var(--fab-inset);
   max-width: 440px;
   bottom: calc(var(--fab-bottom) + 54px);
-  max-height: calc(100vh - var(--fab-bottom) - 54px - var(--fab-inset));   /* móvil apaisado: que no se salga por arriba */
+  --cierto-alto: calc(100vh - var(--fab-bottom) - 54px - var(--fab-inset));   /* móvil apaisado: que no se salga por arriba */
+  max-height: var(--cierto-alto);
   z-index: 60;
   background: var(--bg);
   border: 1px solid var(--red);
@@ -456,7 +457,9 @@ img { display: block; max-width: 100%; }
   letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
   color: var(--bg); opacity: 0; pointer-events: none;
 }
-.cierto-media{ aspect-ratio: 16 / 9; background: var(--sage-faint); }
+/* Vertical, 3:4. Si la pantalla es baja (móvil apaisado) se recorta por abajo en vez de hacer scroll
+   dentro de la tarjeta: así el botón no se va. */
+.cierto-media{ width: 100%; aspect-ratio: 3 / 4; max-height: calc(var(--cierto-alto) - 2px); background: var(--sage-faint); }
 .cierto-media img, .cierto-media video{ display: block; width: 100%; height: 100%; object-fit: cover; }
 /* El botón flota sobre la imagen (que ocupa toda la tarjeta, sin franja de texto debajo); el
    filete crema, como el de la pastilla, lo separa de cualquier foto. */

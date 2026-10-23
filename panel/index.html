@@ -403,7 +403,7 @@
   @keyframes spin{to{transform:rotate(360deg)}}
 
   /* ── Avisos «Por cierto» ─────────────────── */
-  .photo-zone.av-zone{aspect-ratio:16/9}
+  .photo-zone.av-zone{aspect-ratio:3/4;max-width:360px}
   .av-empty{padding:48px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6}
   .av-empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
   .av-order{padding:10px 12px 14px;color:var(--muted);font-size:11.5px;line-height:1.5;border-top:1px solid var(--line-soft)}
@@ -411,9 +411,9 @@
   .av-dest{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
   .av-dest-txt{font-size:12.5px;color:var(--muted)}
   .av-dest-txt b{color:var(--ink);font-weight:600}
-  /* Vista previa: la tarjeta tal cual la pinta la web (imagen 16:9 + botón), sin texto. */
-  .av-prev{max-width:380px;border:1px solid var(--red);border-radius:20px;overflow:hidden;background:#fffaf3;box-shadow:0 8px 32px rgba(255,0,30,.18)}
-  .av-prev-img{aspect-ratio:16/9;background:var(--panel-2) center/cover no-repeat;display:grid;place-items:center;color:var(--muted);font-size:12px}
+  /* Vista previa: la tarjeta tal cual la pinta la web (imagen 3:4 + botón), sin texto. */
+  .av-prev{max-width:360px;border:1px solid var(--red);border-radius:20px;overflow:hidden;background:#fffaf3;box-shadow:0 8px 32px rgba(255,0,30,.18)}
+  .av-prev-img{aspect-ratio:3/4;background:var(--panel-2) center/cover no-repeat;display:grid;place-items:center;color:var(--muted);font-size:12px}
   .av-prev{position:relative}
   .av-prev-btn{position:absolute;left:16px;right:16px;bottom:16px;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;border-radius:999px;
     border:1px solid #fffaf3;background:var(--red);color:#fff;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
@@ -670,7 +670,7 @@
               <div class="pz-inner">
                 <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15l-5-5L5 21"/><path d="M3 16V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg></div>
                 <div class="pz-title">Arrastra una imagen o haz clic</div>
-                <div class="pz-sub">JPG · PNG · se recorta a 16:9 · se sube al instante</div>
+                <div class="pz-sub">JPG · PNG · se recorta a 3:4 · se sube al instante</div>
               </div>
               <div class="pz-actions" id="avActions" hidden>
                 <button type="button" id="avChange">Cambiar</button>
@@ -678,7 +678,7 @@
               </div>
             </div>
             <input type="file" id="avFile" accept="image/*" hidden>
-            <div class="num-hint">Mejor a 1920 × 1080 px. El aviso no lleva texto aparte: lo que quieras decir, ponlo dentro de la imagen. El botón flota sobre su parte baja (mira «Así se verá»).</div>
+            <div class="num-hint">Mejor a 1800 × 2400 px (vertical, 3:4). El aviso no lleva texto aparte: lo que quieras decir, ponlo dentro de la imagen. El botón flota sobre su parte baja (mira «Así se verá»).</div>
           </div>
 
           <div class="grp">
@@ -1406,7 +1406,7 @@
 </script>
 <script>
 // ── Avisos «Por cierto» ──────────────────────────────────────────────────────
-// Cada aviso es una imagen 16:9 + un botón «Ir a …», sin texto propio. Se guarda en el
+// Cada aviso es una imagen 3:4 + un botón «Ir a …», sin texto propio. Se guarda en el
 // formato que lee la web (/por-cierto.json), así el editor y la web comparten un solo modelo:
 //   { id, activo, paginas:["/eventos"], media:{tipo:"imagen",src,alt:""}, boton:{texto,texto_en,url} }
 (function(){
@@ -1421,8 +1421,8 @@
   ];
   const DESTINOS=PAGINAS.filter(p=>p.url!=="/");
   const pag=u=>PAGINAS.find(p=>p.url===u);
-  // Imagen estándar: 16:9 a 960 × 540 (la tarjeta mide 440 px como mucho, así que cubre pantallas @2x).
-  const W=960,H=540;
+  // Imagen estándar: vertical 3:4 a 864 × 1152 (la tarjeta mide 440 px como mucho; cubre pantallas @2x).
+  const W=864,H=1152;
   const ICONO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 15l-5-5L5 21"/><path d="M3 16V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>';
 
   let AV=[],sel=null,dirty=false,cargado=false,vista="carta";
@@ -1516,7 +1516,7 @@
   };
   $("#avActive").onclick=()=>{const a=cur();if(!a)return;a.activo=!a.activo;setDirty();pintar();};
 
-  // ── imagen: recorte centrado a 16:9, reducción y subida ──
+  // ── imagen: recorte centrado a 3:4, reducción y subida ──
   async function recortar(file){
     const url=URL.createObjectURL(file);
     try{
