@@ -373,9 +373,82 @@ img { display: block; max-width: 100%; }
   }
 }
 
+/* «¡Por cierto!» · gemelo del botón de alérgenos al OTRO lado (abajo a la
+   izquierda): misma base, mismo crema y filete rojo. Abre una tarjeta con un aviso
+   (islas/por-cierto.js). Entra con un fundido cuando la isla lo pinta, y se
+   atenúa al hacer scroll como el «Pide ya». */
+.cierto-fab{
+  left: var(--fab-inset); right: auto;
+  background: var(--bg);
+  color: var(--red);
+  border-color: var(--red);
+  box-shadow: 0 3px 16px rgba(255, 0, 30, 0.16);
+  opacity: 0;
+  transition: opacity .25s ease, box-shadow .18s ease, transform .18s ease;
+}
+.cierto-fab.is-on{ opacity: 1; }
+.cierto-fab.is-on.is-scrolling{ opacity: 0.35; }
+@media (hover: hover){
+  .cierto-fab:hover{ box-shadow: 0 5px 22px rgba(255, 0, 30, 0.32); }
+}
+/* Con 340px o menos no caben las dos pastillas de la carta: solo los ojitos (el texto
+   sigue ahí para los lectores de pantalla). */
+@media (max-width: 340px){
+  .cierto-fab{ padding: 11px; }   /* 20 de icono + 22 + 2 de filete = círculo de 44 */
+  .cierto-txt{ position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+/* Los ojitos miran de un lado a otro hasta que alguien abre la tarjeta (is-visto). */
+.cierto-pupila{ animation: cierto-mirar 6s ease-in-out infinite; }
+.cierto-fab.is-visto .cierto-pupila{ animation: none; }
+@keyframes cierto-mirar{
+  0%, 38%{ transform: translateX(0); }
+  46%, 62%{ transform: translateX(-1.9px); }
+  70%, 100%{ transform: translateX(0); }
+}
+
+/* La tarjeta nace sobre la pastilla (44px de alto + 10px de aire), anclada abajo a
+   la izquierda. Cerrada: invisible, sin ratón y con inert (fuera del orden de tab). */
+.cierto-card{
+  position: fixed;
+  left: var(--fab-inset);
+  bottom: calc(var(--fab-bottom) + 54px);
+  z-index: 60;
+  width: min(340px, calc(100vw - 2 * var(--fab-inset)));
+  background: var(--bg);
+  border: 1px solid var(--red);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(255, 0, 30, 0.22);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px) scale(0.98);
+  transform-origin: bottom left;
+  transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
+}
+.cierto-card.is-open{
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.cierto-media{ aspect-ratio: 16 / 9; background: var(--sage-faint); }
+.cierto-media img, .cierto-media video{ display: block; width: 100%; height: 100%; object-fit: cover; }
+.cierto-body{ display: flex; flex-direction: column; gap: 12px; padding: 14px 16px 16px; }
+.cierto-texto{ margin: 0; font-size: 15px; line-height: 1.4; color: var(--red); text-wrap: balance; }
+.cierto-ir{ justify-content: center; }
+.cierto-x{
+  position: absolute; top: 8px; right: 8px; z-index: 1;
+  width: 28px; height: 28px; padding: 0;
+  display: grid; place-items: center;
+  border: 1px solid var(--red); border-radius: 50%;
+  background: var(--bg); color: var(--red);
+  font-size: 12px; line-height: 1; cursor: pointer;
+}
+
 /* Primer prefers-reduced-motion del sitio: el relevo aparece sin fundido. */
 @media (prefers-reduced-motion: reduce){
-  .fab, .alerg-fab, .alerg-fab.is-on, .pide-fab, .yt-play{ transition: none; }
+  .fab, .alerg-fab, .alerg-fab.is-on, .pide-fab, .cierto-fab, .cierto-card, .cierto-card.is-open, .yt-play{ transition: none; }
+  .cierto-pupila{ animation: none; }
 }
 
 /* Badge de Cookiebot (el círculo de abajo a la izquierda que reabre el aviso
