@@ -379,17 +379,12 @@ img { display: block; max-width: 100%; }
 }
 
 /* Badge de Cookiebot (el círculo de abajo a la izquierda que reabre el aviso
-   de cookies). Viene con bottom/left de 10px y SIN safe-area, así que en el
-   iPhone se mete bajo la barra de gestos y queda a distinta altura que
-   nuestros flotantes; además, al contraerse la barra de Safari cambia el
-   inset y los dos bailan entre sí. Lo traemos a la misma línea.
-   !important porque Cookiebot fija el estilo desde su propia hoja; es la única
-   forma de ganarle sin tocar su script. Si algún día cambian el id, esta regla
-   deja de aplicar sin más y el badge vuelve a su sitio de siempre: no rompe. */
-#CookiebotWidget {
-  bottom: var(--fab-bottom) !important;
-  left: var(--fab-inset) !important;
-}
+   de cookies): oculto. En la carta, en móvil, tapaba el contenido. Su función
+   (cambiar o retirar el consentimiento) la cubren los enlaces «Cookies» del
+   menú móvil y del pie (data-cookies → Cookiebot.renew(), ver islas/cookies.js).
+   !important porque Cookiebot fija el estilo desde su propia hoja. Si algún día
+   cambian el id, el badge vuelve a salir: no rompe nada. */
+#CookiebotWidget { display: none !important; }
 
 /* ── Banner de cookies (Cookiebot) ─────────────────────────────
    El banner se pinta dentro de nuestra página, así que lo vestimos con el

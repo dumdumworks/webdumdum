@@ -52,6 +52,7 @@ export function topbar(i, ruta) {
     enlace(principales[1]), enlace(principales[2]), enlace(principales[3]),
     enlaceExterno(E.INSTAGRAM_URL, "Instagram"),
     enlaceExterno(E.SPOTIFY_URL, "DD*Radio"),
+    `<a href="#" data-cookies>Cookies</a>`,
   ];
   const reservar = (extra) =>
     `<button type="button" class="topbar-reservar${extra || ""}" data-reservar>${esc(t("Reservar", "Book"))} →</button>`;
@@ -218,7 +219,7 @@ export function footer(i, locales) {
 
   <div class="foot-bot">
     <div>© DUM DUM™ · Dumplings &amp; ${esc(t("Desobediencia", "Disobedience"))} · Madrid</div>
-    <div></div>
+    <div><a href="#" class="link-hover" data-cookies>Cookies</a></div>
   </div>
 </footer>`;
 }
