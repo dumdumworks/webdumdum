@@ -407,6 +407,7 @@
 
   /* ── Avisos «Por cierto» ─────────────────── */
   .photo-zone.av-zone{aspect-ratio:3/4;max-width:360px}
+  #avFechas{white-space:pre-line}
   .av-empty{padding:48px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6}
   .av-empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
   .av-order{padding:10px 12px 14px;color:var(--muted);font-size:11.5px;line-height:1.5;border-top:1px solid var(--line-soft)}
@@ -657,13 +658,31 @@
         <section id="avisoEditor" hidden>
           <div class="ehead">
             <div>
-              <div class="eyebrow">Aviso</div>
-              <h1 id="avTitle">Eventos</h1>
+              <div class="eyebrow" id="avEyebrow">Aviso</div>
+              <h1 id="avTitle">Sin nombre</h1>
             </div>
             <div class="ehead-actions">
               <button type="button" class="mv-btn" id="avUp" aria-label="Subir el aviso en la lista">↑ Subir</button>
               <button type="button" class="mv-btn" id="avDown" aria-label="Bajar el aviso en la lista">↓ Bajar</button>
               <button type="button" class="del-btn" id="avDel">Borrar</button>
+            </div>
+          </div>
+
+          <div class="cat-state-row">
+            <div class="grp" style="margin:0">
+              <div class="grp-label">Nombre <span class="req">obligatorio</span></div>
+              <div class="field" style="margin:0">
+                <input type="text" id="avName" maxlength="60" autocomplete="off" placeholder="p. ej. Taller de octubre">
+                <div class="num-hint" id="avFechas"></div>
+              </div>
+            </div>
+            <div class="grp" style="margin:0">
+              <div class="grp-label">Estado</div>
+              <div class="meta-toggles">
+                <button type="button" class="statebtn" id="avActive" aria-pressed="true" title="Actívalo para que se muestre en la web. Desactivado, no aparece (se conserva aquí).">
+                  <span class="sb-ic" aria-hidden="true">✓</span> Activo
+                </button>
+              </div>
             </div>
           </div>
 
@@ -682,13 +701,6 @@
             </div>
             <input type="file" id="avFile" accept="image/*" hidden>
             <div class="num-hint">Mejor a 1800 × 2400 px (vertical, 3:4). El aviso no lleva texto aparte: lo que quieras decir, ponlo dentro de la imagen. El botón flota sobre su parte baja (mira «Así se verá»).</div>
-          </div>
-
-          <div class="grp">
-            <div class="grp-label">Estado</div>
-            <button type="button" class="statebtn" id="avActive" aria-pressed="true" title="Desactivado, el aviso no sale en la web pero se conserva aquí.">
-              <span class="sb-ic" aria-hidden="true">✓</span> Activo
-            </button>
           </div>
 
           <div class="grp">
@@ -1411,7 +1423,7 @@
 // ── Avisos «Por cierto» ──────────────────────────────────────────────────────
 // Cada aviso es una imagen 3:4 + un botón, sin texto propio. Se guarda en el
 // formato que lee la web (/por-cierto.json), así el editor y la web comparten un solo modelo:
-//   { id, activo, paginas:["/eventos"], media:{tipo:"imagen",src,alt:""}, boton:{texto,texto_en,url | accion} }
+//   { id, nombre, creado, modificado, activo, paginas:["/eventos"], media:{tipo:"imagen",src,alt:""}, boton:{texto,texto_en,url | accion} }
 (function(){
   "use strict";
   const $=s=>document.querySelector(s),ui=window.panelUI;
@@ -1449,7 +1461,12 @@
   const uid=()=>"a"+Date.now().toString(36);
   const cur=()=>AV.find(a=>a.id===sel);
   const destinoDe=a=>a.boton&&DESTINOS.find(d=>d.accion?d.accion===a.boton.accion:d.url===a.boton.url);
-  const nombre=a=>{const d=destinoDe(a);return d?d.nombre:"Sin destino";};
+  const destinoNombre=a=>{const d=destinoDe(a);return d?d.nombre:"Sin destino";};
+  const titulo=a=>a.nombre.trim()||"Sin nombre";
+  // Fechas del registro: día y hora, en hora de Madrid.
+  const fecha=iso=>iso?new Date(iso).toLocaleString("es-ES",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",timeZone:"Europe/Madrid"}):"—";
+  // Lo que cuenta como «modificado»: todo menos el orden y las propias fechas.
+  const firma=a=>JSON.stringify([a.nombre,a.activo,a.paginas,a.media.src,a.boton]);
   const resumen=a=>(a.paginas||[]).map(u=>(pag(u)||{es:u}).es).join(", ")||"Sin páginas";
   function setDirty(){dirty=true;ui.setPill("dirty","Sin guardar");}
 
@@ -1480,7 +1497,7 @@
       if(a.media.src)th.style.backgroundImage="url("+JSON.stringify(a._preview||a.media.src)+")";
       else th.innerHTML=ICONO;
       const m=document.createElement("span");m.className="meta";
-      const dn=document.createElement("div");dn.className="dn";dn.textContent=nombre(a);
+      const dn=document.createElement("div");dn.className="dn";dn.textContent=titulo(a);
       const dp=document.createElement("div");dp.className="dp";dp.textContent=resumen(a);
       m.append(dn,dp);b.append(th,m);
       if(!a.activo){const o=document.createElement("span");o.className="dot-off";o.textContent="Off";b.append(o);}
@@ -1504,7 +1521,7 @@
     $("#avDest").value=d?d.id:"";
     $("#avDestTxt").innerHTML=d?"El botón dice <b>«"+d.es+" →»</b> y <b>«"+d.en+" →»</b>":"Elige a dónde lleva el botón";
     $("#avPrevBtn").textContent=d?d.es+" →":"—";
-    $("#avTitle").textContent=nombre(a);
+    $("#avEyebrow").textContent="Aviso · "+destinoNombre(a);
   }
   function pintarPaginas(a){
     const c=$("#avPages");c.textContent="";
@@ -1524,6 +1541,8 @@
     pintarLista();
     const a=cur();if(!a)return;
     pintarImagen(a);pintarDestino(a);pintarPaginas(a);
+    $("#avName").value=a.nombre;$("#avTitle").textContent=titulo(a);
+    $("#avFechas").textContent="Solo para ti, no sale en la web.\nCreado: "+fecha(a.creado)+"\nÚltima modificación: "+fecha(a.modificado);
     $("#avActive").setAttribute("aria-pressed",String(a.activo));
     const i=AV.indexOf(a);$("#avUp").disabled=i===0;$("#avDown").disabled=i===AV.length-1;
   }
@@ -1537,6 +1556,10 @@
     const a=cur(),d=DESTINOS.find(x=>x.id===e.target.value);if(!a||!d)return;
     a.boton=botonDe(d);setDirty();pintarDestino(a);pintarLista();
   };
+  $("#avName").addEventListener("input",e=>{
+    const a=cur();if(!a)return;
+    a.nombre=e.target.value;setDirty();$("#avTitle").textContent=titulo(a);pintarLista();
+  });
   $("#avActive").onclick=()=>{const a=cur();if(!a)return;a.activo=!a.activo;setDirty();pintar();};
 
   // ── imagen: recorte centrado a 3:4, reducción y subida ──
@@ -1581,7 +1604,8 @@
 
   // ── crear, ordenar, borrar ──
   $("#addAviso").onclick=()=>{
-    const a={id:uid(),activo:false,paginas:["/","/locales","/eventos"],media:{tipo:"imagen",src:"",alt:""},boton:botonDe(DESTINOS.find(x=>x.id==="/eventos"))};
+    const ahora=new Date().toISOString();
+    const a={id:uid(),nombre:"",creado:ahora,modificado:ahora,activo:false,paginas:["/","/locales","/eventos"],media:{tipo:"imagen",src:"",alt:""},boton:botonDe(DESTINOS.find(x=>x.id==="/eventos"))};
     AV.unshift(a);sel=a.id;setDirty();pintar();
   };
   function mover(d){
@@ -1598,10 +1622,11 @@
   // ── cargar y guardar (/api/banners) ──
   function modelo(d){
     AV=((d&&d.avisos)||[]).map(a=>({
-      id:a.id||uid(),activo:a.activo!==false,paginas:(a.paginas||[]).slice(),
+      id:a.id||uid(),nombre:a.nombre||"",creado:a.creado||"",modificado:a.modificado||a.creado||"",activo:a.activo!==false,paginas:(a.paginas||[]).slice(),
       media:{tipo:"imagen",src:(a.media&&a.media.src)||"",alt:""},
       boton:a.boton||{texto:"",texto_en:""}
     }));
+    AV.forEach(a=>{a._firma=firma(a);});
     sel=(AV[0]||{}).id||null;
   }
   async function cargar(){
@@ -1615,6 +1640,9 @@
   }
   function validar(){
     for(const a of AV){
+      if(!a.nombre.trim()){sel=a.id;pintar();$("#avName").focus();ui.showToast("Un aviso no tiene nombre: ponle uno antes de guardar",true);return false;}
+    }
+    for(const a of AV){
       if(!a.activo)continue;
       const fallo=!a.media.src?"no tiene imagen":!destinoDe(a)?"no tiene destino":!a.paginas.length?"no tiene ninguna página":"";
       if(fallo){sel=a.id;pintar();ui.showToast("Un aviso activo "+fallo+": complétalo o desactívalo antes de guardar",true);return false;}
@@ -1625,12 +1653,14 @@
     if(!validar())return;
     const b=$("#saveAv");b.disabled=true;ui.setPill("saving","Guardando…");
     try{
-      const avisos=AV.map(a=>({id:a.id,activo:a.activo,paginas:a.paginas,media:a.media,boton:a.boton}));
+      const ahora=new Date().toISOString();
+      AV.forEach(a=>{if(!a.creado)a.creado=ahora;a.modificado=!a._firma?a.creado:firma(a)!==a._firma?ahora:a.modificado;});
+      const avisos=AV.map(a=>({id:a.id,nombre:a.nombre.trim(),creado:a.creado,modificado:a.modificado,activo:a.activo,paginas:a.paginas,media:a.media,boton:a.boton}));
       const res=await fetch("/api/banners",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({avisos})});
       const out=await res.json().catch(()=>({}));
       if(res.status===401)throw new Error("Sesión caducada — recarga la página");
       if(!res.ok||!out.ok)throw new Error(out.error||("HTTP "+res.status));
-      dirty=false;ui.setPill("ok","Guardado · en vivo");ui.showToast("Guardado ✓ — publicado en la web");
+      AV.forEach(a=>{a._firma=firma(a);});dirty=false;pintar();ui.setPill("ok","Guardado · en vivo");ui.showToast("Guardado ✓ — publicado en la web");
     }catch(e){ui.setPill("dirty","Error al guardar");ui.showToast("No se pudo guardar: "+e.message,true);}
     finally{b.disabled=false;}
   }
