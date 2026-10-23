@@ -52,7 +52,7 @@ const EASE = "cubic-bezier(0.32, 0.72, 0, 1)";   // arranca con decisión y fren
 const DURACION = 520;
 const sinMovimiento = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function pintar(a) {
+function pintar(avisos) {
   const boton = document.createElement("button");
   boton.type = "button";
   boton.className = "fab cierto-fab";
@@ -71,16 +71,37 @@ function pintar(a) {
   const cerrar = document.createElement("button");
   cerrar.type = "button"; cerrar.className = "cierto-x"; cerrar.textContent = "✕";
   cerrar.setAttribute("aria-label", t("Cerrar", "Close"));
-  const media = document.createElement("div"); media.className = "cierto-media";
-  const ir = document.createElement("a");
-  ir.className = "btn cierto-ir" + (a.boton.color === "blanco" ? "" : " red");
-  // Una acción ("pide", "reservar") abre el modal de la web con el escuchador de modales.js;
-  // una página va a su ruta en el idioma de la que se está viendo.
-  if (a.boton.accion) { ir.href = "#"; ir.setAttribute("data-" + a.boton.accion, ""); }
-  else ir.href = (EN ? "/en" : "") + a.boton.url;
-  ir.textContent = t(a.boton.texto, a.boton.texto_en) + " →";
+  // Cada aviso es una diapositiva (imagen o vídeo + su botón); con varios, la tarjeta es una galería
+  // que se desliza en horizontal (scroll-snap nativo) y se señala con puntos.
+  const diapositivas = avisos.map((a) => {
+    const media = document.createElement("div"); media.className = "cierto-media";
+    const ir = document.createElement("a");
+    ir.className = "btn cierto-ir" + (a.boton.color === "blanco" ? "" : " red");
+    // Una acción ("pide", "reservar") abre el modal de la web con el escuchador de modales.js;
+    // una página va a su ruta en el idioma de la que se está viendo.
+    if (a.boton.accion) { ir.href = "#"; ir.setAttribute("data-" + a.boton.accion, ""); }
+    else ir.href = (EN ? "/en" : "") + a.boton.url;
+    ir.textContent = t(a.boton.texto, a.boton.texto_en) + " →";
+    const el = document.createElement("div"); el.className = "cierto-slide";
+    el.append(media, ir);
+    return { a, media, ir, el };
+  });
+  const pista = document.createElement("div"); pista.className = "cierto-pista";
+  pista.append(...diapositivas.map((d) => d.el));
   const dentro = document.createElement("div"); dentro.className = "cierto-in";
-  dentro.append(cerrar, media, ir);
+  dentro.append(cerrar, pista);
+  const puntos = [];
+  if (diapositivas.length > 1) {
+    const pts = document.createElement("div"); pts.className = "cierto-pts";
+    diapositivas.forEach((_, i) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "cierto-pt";
+      b.setAttribute("aria-label", t("Aviso ", "Item ") + (i + 1) + t(" de ", " of ") + diapositivas.length);
+      b.addEventListener("click", () => ir_a(i));
+      pts.append(b); puntos.push(b);
+    });
+    dentro.append(pts);
+  }
   // Copia del contenido de la pastilla: es lo que se ve en la tarjeta al empezar y al terminar.
   const pre = document.createElement("div"); pre.className = "cierto-pre"; pre.setAttribute("aria-hidden", "true");
   pre.append(ico.cloneNode(true), txt.cloneNode(true));
@@ -90,7 +111,36 @@ function pintar(a) {
   if (ruta() === "/menu") cruzarConAlergenos();
   requestAnimationFrame(() => boton.classList.add("is-on"));
 
-  let abierta = false, animando = false;
+  let abierta = false, animando = false, actual = -1;
+
+  // El archivo de cada diapositiva no se pide hasta que hace falta: la primera, al abrir; las
+  // demás, cuando alguien intenta deslizar (así quien solo abre y cierra no descarga nada más).
+  const cargar = (i) => { const d = diapositivas[i]; if (d && !d.media.firstChild) d.media.append(medio(d.a.media)); };
+  const cargarTodas = () => diapositivas.forEach((_, i) => cargar(i));
+  const reproducir = () => diapositivas.forEach((d, i) => {
+    const v = d.media.querySelector("video");
+    if (v) { if (abierta && i === actual) v.play().catch(() => {}); else v.pause(); }
+  });
+  // Solo la diapositiva visible entra en el orden de tabulación.
+  function marcar(i) {
+    if (i === actual) return;
+    actual = i;
+    diapositivas.forEach((d, k) => { d.el.inert = k !== i; });
+    puntos.forEach((b, k) => { if (k === i) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current"); });
+    if (abierta) cargar(i);   // cerrada, no se pide nada
+    reproducir();
+  }
+  function ir_a(i) {
+    cargarTodas();
+    pista.scrollTo({ left: i * pista.clientWidth, behavior: sinMovimiento() ? "auto" : "smooth" });
+  }
+  marcar(0);
+  let marco = 0;
+  pista.addEventListener("scroll", () => {
+    cancelAnimationFrame(marco);
+    marco = requestAnimationFrame(() => marcar(Math.round(pista.scrollLeft / pista.clientWidth)));
+  }, { passive: true });
+  pista.addEventListener("pointerdown", cargarTodas, { once: true });
 
   // Anima la tarjeta entre la pastilla y su sitio final. `teclado`: el foco solo se mueve si
   // se usó el teclado (en táctil, un foco programático pinta el anillo en iOS).
@@ -101,18 +151,18 @@ function pintar(a) {
     const p = boton.getBoundingClientRect();
     if (abriendo) {
       tarjeta.classList.add("is-open"); tarjeta.inert = false;   // ya está en su sitio final, aún sin pintarse
-      if (!media.firstChild) media.append(medio(a.media));        // primera vez: ahora sí se pide el archivo
+      cargar(Math.max(actual, 0));                                 // primera vez: ahora sí se pide el archivo
       boton.classList.add("is-visto");                            // las pupilas dejan de moverse
     }
     const c = tarjeta.getBoundingClientRect();
     const fin = () => {
       if (abriendo) {
-        const v = media.querySelector("video"); if (v) v.play().catch(() => {});
+        reproducir();
         if (teclado) tarjeta.focus({ preventScroll: true });
       } else {
         tarjeta.classList.remove("is-open"); tarjeta.inert = true;
         boton.style.visibility = "";
-        const v = media.querySelector("video"); if (v) v.pause();
+        reproducir();
         if (teclado) boton.focus({ preventScroll: true });
       }
       animando = false;
@@ -158,8 +208,13 @@ function pintar(a) {
   boton.addEventListener("click", alternar);
   cerrar.addEventListener("click", (e) => { if (!animando && abierta) mover(false, e.detail === 0); });
   // Al abrir un modal (o saltar al formulario de la misma página) la tarjeta se recoge: no queda detrás.
-  ir.addEventListener("click", () => { if (!animando && abierta) mover(false, false); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && abierta && !animando) mover(false, true); });
+  diapositivas.forEach((d) => d.ir.addEventListener("click", () => { if (!animando && abierta) mover(false, false); }));
+  document.addEventListener("keydown", (e) => {
+    if (!abierta || animando) return;
+    if (e.key === "Escape") mover(false, true);
+    else if (e.key === "ArrowRight" && actual < diapositivas.length - 1) ir_a(actual + 1);
+    else if (e.key === "ArrowLeft" && actual > 0) ir_a(actual - 1);
+  });
 }
 
 // En la carta, en móvil, «Por cierto!» ocupa el sitio de alérgenos (derecha) y alérgenos pasa a
@@ -178,6 +233,8 @@ function cruzarConAlergenos() {
 export async function porCierto() {
   let datos;
   try { datos = await (await fetch("/por-cierto.json")).json(); } catch (e) { return; }
-  const aviso = (datos.avisos || []).find((a) => a.activo !== false && (!a.paginas || a.paginas.includes(ruta())));
-  if (aviso) esperarSinAviso().then(() => pintar(aviso));
+  const aqui = (datos.avisos || []).filter((a) => a.activo !== false && (!a.paginas || a.paginas.includes(ruta())));
+  // Con varios activos, galería (por defecto) o solo el primero, según el interruptor del editor.
+  const avisos = datos.galeria === false ? aqui.slice(0, 1) : aqui;
+  if (avisos.length) esperarSinAviso().then(() => pintar(avisos));
 }

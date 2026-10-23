@@ -408,6 +408,10 @@
   /* ── Avisos «Por cierto» ─────────────────── */
   .photo-zone.av-zone{aspect-ratio:4/5;max-width:360px}
   #avFechas{white-space:pre-line}
+  .av-modo{padding:0 14px 12px}
+  .av-modo .sec-label{padding:2px 0 8px}
+  .av-modo .views{display:flex}
+  .av-modo .view-tab{flex:1}
   .av-prev-btn.blanco{background:#fffaf3;color:var(--red)}
   .av-color{display:flex;align-items:center;gap:12px;margin-top:14px}
   .av-color>span{font-size:11.5px;font-weight:500;color:var(--muted)}
@@ -653,8 +657,15 @@
         <h2>Por cierto</h2>
         <div class="side-actions"><button class="add-btn" id="addAviso">＋ Aviso</button></div>
       </div>
+      <div class="av-modo">
+        <div class="sec-label">Si hay varios activos en una página</div>
+        <div class="views" role="group" aria-label="Qué hacer si hay varios avisos activos en una página">
+          <button type="button" class="view-tab" id="avGaleria" aria-pressed="true">Galería</button>
+          <button type="button" class="view-tab" id="avUno" aria-pressed="false">Solo el primero</button>
+        </div>
+      </div>
       <div class="dishlist" id="avisoList"></div>
-      <p class="av-order">Sale el primero de la lista que esté activo en esa página.</p>
+      <p class="av-order" id="avOrden"></p>
     </aside>
 
     <main class="editor">
@@ -1435,6 +1446,8 @@
 // ── Avisos «Por cierto» ──────────────────────────────────────────────────────
 // Cada aviso es una imagen 4:5 + un botón, sin texto propio. Se guarda en el
 // formato que lee la web (/por-cierto.json), así el editor y la web comparten un solo modelo:
+// El conjunto es { galeria:true|false, avisos:[…] }: con varios activos en una página, la tarjeta es
+// una galería (por defecto) o muestra solo el primero. Cada aviso:
 //   { id, nombre, creado, modificado, activo, paginas:["/eventos"],
 //     media:{tipo:"imagen"|"video",src,poster?,alt:""}, boton:{texto,texto_en,color:"rojo"|"blanco",url | accion} }
 (function(){
@@ -1468,7 +1481,7 @@
   const W=864,H=1080;
   const ICONO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 15l-5-5L5 21"/><path d="M3 16V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>';
 
-  let AV=[],sel=null,dirty=false,cargado=false,vista="carta";
+  let AV=[],GAL=true,sel=null,dragAv=null,dirty=false,cargado=false,vista="carta";
   const pills={};   // indicador de guardado de cada vista, para devolverlo al volver a ella
 
   const uid=()=>"a"+Date.now().toString(36);
@@ -1506,6 +1519,7 @@
     AV.forEach(a=>{
       const b=document.createElement("button");b.type="button";b.className="dishrow"+(a.activo?"":" off");
       b.setAttribute("aria-current",String(a.id===sel));
+      const grip=document.createElement("span");grip.className="grip";grip.textContent="⣿";
       // En la miniatura, un vídeo se representa con su póster.
       const mini=a.media.tipo==="video"?a.media.poster:(a._preview||a.media.src);
       const th=document.createElement("span");th.className="thumb"+(mini?"":" empty");
@@ -1514,9 +1528,16 @@
       const m=document.createElement("span");m.className="meta";
       const dn=document.createElement("div");dn.className="dn";dn.textContent=titulo(a);
       const dp=document.createElement("div");dp.className="dp";dp.textContent=resumen(a);
-      m.append(dn,dp);b.append(th,m);
+      m.append(dn,dp);b.append(grip,th,m);
       if(!a.activo){const o=document.createElement("span");o.className="dot-off";o.textContent="Off";b.append(o);}
       b.onclick=()=>{sel=a.id;pintar();};
+      // Arrastrar para ordenar, igual que los platos: la línea marca si cae antes o después.
+      b.draggable=true;
+      b.addEventListener("dragstart",e=>{dragAv=a.id;if(e.dataTransfer){e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",a.id);}catch(_){}}b.classList.add("dragging");});
+      b.addEventListener("dragend",()=>{dragAv=null;l.querySelectorAll(".dishrow").forEach(x=>x.classList.remove("dragging","drop-before","drop-after"));});
+      b.addEventListener("dragover",e=>{if(!dragAv||dragAv===a.id)return;e.preventDefault();const rc=b.getBoundingClientRect(),antes=(e.clientY-rc.top)<rc.height/2;b.classList.toggle("drop-before",antes);b.classList.toggle("drop-after",!antes);});
+      b.addEventListener("dragleave",()=>{b.classList.remove("drop-before","drop-after");});
+      b.addEventListener("drop",e=>{if(!dragAv)return;e.preventDefault();const rc=b.getBoundingClientRect(),antes=(e.clientY-rc.top)<rc.height/2;b.classList.remove("drop-before","drop-after");moverA(dragAv,a.id,antes);});
       l.append(b);
     });
   }
@@ -1562,8 +1583,14 @@
       c.append(b);
     });
   }
+  function pintarModo(){
+    $("#avGaleria").setAttribute("aria-pressed",String(GAL));$("#avUno").setAttribute("aria-pressed",String(!GAL));
+    $("#avOrden").textContent=GAL?"Con varios activos en una página se ven como galería, en este orden. Arrastra para ordenarlos.":"Sale solo el primero de la lista que esté activo en esa página. Arrastra para ordenarlos.";
+  }
+  $("#avGaleria").onclick=()=>{GAL=true;setDirty();pintarModo();};
+  $("#avUno").onclick=()=>{GAL=false;setDirty();pintarModo();};
   function pintar(){
-    pintarLista();
+    pintarModo();pintarLista();
     const a=cur();if(!a)return;
     pintarImagen(a);pintarDestino(a);pintarPaginas(a);
     $("#avName").value=a.nombre;$("#avTitle").textContent=titulo(a);
@@ -1675,6 +1702,15 @@
     const a={id:uid(),nombre:"",creado:ahora,modificado:ahora,activo:false,paginas:["/","/locales","/eventos"],media:{tipo:"imagen",src:"",alt:""},boton:{...botonDe(DESTINOS.find(x=>x.id==="/eventos")),color:"rojo"}};
     AV.unshift(a);sel=a.id;setDirty();pintar();
   };
+  function moverA(id,destino,antes){
+    const i=AV.findIndex(x=>x.id===id);
+    if(i<0||id===destino||!AV.some(x=>x.id===destino))return;
+    const [a]=AV.splice(i,1);
+    const ti=AV.findIndex(x=>x.id===destino),ni=antes?ti:ti+1;
+    AV.splice(ni,0,a);
+    if(ni===i)return;
+    setDirty();pintar();
+  }
   function mover(d){
     const a=cur(),i=AV.indexOf(a),j=i+d;if(!a||j<0||j>=AV.length)return;
     AV.splice(i,1);AV.splice(j,0,a);setDirty();pintar();
@@ -1688,6 +1724,7 @@
 
   // ── cargar y guardar (/api/banners) ──
   function modelo(d){
+    GAL=!d||d.galeria!==false;
     AV=((d&&d.avisos)||[]).map(a=>({
       id:a.id||uid(),nombre:a.nombre||"",creado:a.creado||"",modificado:a.modificado||a.creado||"",activo:a.activo!==false,paginas:(a.paginas||[]).slice(),
       media:{tipo:a.media&&a.media.tipo==="video"?"video":"imagen",src:(a.media&&a.media.src)||"",...(a.media&&a.media.poster?{poster:a.media.poster}:{}),alt:""},
@@ -1723,7 +1760,7 @@
       const ahora=new Date().toISOString();
       AV.forEach(a=>{if(!a.creado)a.creado=ahora;a.modificado=!a._firma?a.creado:firma(a)!==a._firma?ahora:a.modificado;});
       const avisos=AV.map(a=>({id:a.id,nombre:a.nombre.trim(),creado:a.creado,modificado:a.modificado,activo:a.activo,paginas:a.paginas,media:a.media,boton:a.boton}));
-      const res=await fetch("/api/banners",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({avisos})});
+      const res=await fetch("/api/banners",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({galeria:GAL,avisos})});
       const out=await res.json().catch(()=>({}));
       if(res.status===401)throw new Error("Sesión caducada — recarga la página");
       if(!res.ok||!out.ok)throw new Error(out.error||("HTTP "+res.status));
