@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// «¡Por cierto!»: pastilla flotante (gemela del botón de alérgenos, pero a la
+// «Por cierto!»: pastilla flotante (gemela del botón de alérgenos, pero a la
 // izquierda) que despliega una tarjeta con un aviso: imagen o vídeo y un botón
 // «Ir a …». PROTOTIPO: lee /por-cierto.json; si no existe o no hay ningún aviso
 // para esta página, no hace nada (ni pinta ni pide nada más).
@@ -14,9 +14,9 @@ const ruta = () => location.pathname.replace(/^\/en(?=\/|$)/, "").replace(/\/+$/
 
 // Dos ojitos mirando de lado; las pupilas llevan su propia animación (ver el CSS).
 const OJOS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
-  + '<circle cx="6.9" cy="12" r="3.5"></circle><circle cx="17.1" cy="12" r="3.5"></circle>'
-  + '<circle class="cierto-pupila" cx="7.9" cy="12" r="1.55" fill="currentColor" stroke="none"></circle>'
-  + '<circle class="cierto-pupila" cx="18.1" cy="12" r="1.55" fill="currentColor" stroke="none"></circle></svg>';
+  + '<circle cx="6.3" cy="12" r="4.2"></circle><circle cx="17.7" cy="12" r="4.2"></circle>'
+  + '<circle class="cierto-pupila" cx="7.5" cy="12" r="1.8" fill="currentColor" stroke="none"></circle>'
+  + '<circle class="cierto-pupila" cx="18.9" cy="12" r="1.8" fill="currentColor" stroke="none"></circle></svg>';
 
 // El aviso de cookies de la primera visita ocupa el mismo rincón: esperar a que se cierre.
 const avisoCookiesAbierto = () => {
@@ -52,7 +52,7 @@ function pintar(a) {
   ico.className = "fab-ico"; ico.setAttribute("aria-hidden", "true"); ico.innerHTML = OJOS;
   const txt = document.createElement("span");
   txt.className = "cierto-txt";
-  txt.textContent = t(a.etiqueta || "¡Por cierto!", a.etiqueta_en || "By the way!");
+  txt.textContent = t(a.etiqueta || "Por cierto!", a.etiqueta_en || "By the way!");
   boton.append(ico, txt);
 
   const tarjeta = document.createElement("aside");
