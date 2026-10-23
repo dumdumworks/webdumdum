@@ -404,6 +404,7 @@ img { display: block; max-width: 100%; }
    16 de aire = 348): solo los ojitos (el texto sigue ahí para los lectores de pantalla). */
 @media (max-width: 347px){
   .cierto-fab{ min-width: 0; padding: 11px; }   /* 20 de icono + 22 + 2 de filete = círculo de 44 */
+  .cierto-pre{ padding: 11px; }
   .cierto-txt{ position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 /* Los ojitos miran de un lado a otro hasta que alguien abre la tarjeta (is-visto). */
@@ -436,15 +437,24 @@ img { display: block; max-width: 100%; }
   box-shadow: 0 8px 32px rgba(255, 0, 30, 0.22);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(8px) scale(0.98);
-  transform-origin: bottom left;
-  transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
 }
-.cierto-card.is-open{
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  transition: opacity .2s ease, transform .2s ease;
+.cierto-card.is-open{ opacity: 1; visibility: visible; }
+/* El foco al abrir con teclado va a la propia tarjeta: sin anillo (no señala nada), y el
+   anillo global es outline + box-shadow, así que hay que devolver la sombra propia. */
+.cierto-card:focus{ outline: none; }
+.cierto-card:focus-visible{ outline: none; box-shadow: 0 8px 32px rgba(255, 0, 30, 0.22); }
+/* Lo que hay dentro va maquetado a su tamaño final: lo anima islas/por-cierto.js, que solo
+   recorta la caja mientras crece. */
+.cierto-in{ position: relative; }
+/* Copia del contenido de la pastilla (ojos + texto), idéntica a ella: es lo que ve la
+   tarjeta al empezar a abrirse y al acabar de cerrarse. */
+.cierto-pre{
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  box-sizing: border-box; padding: 11px 18px 11px 13px;
+  font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 600; font-size: 12px;
+  letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
+  color: var(--bg); opacity: 0; pointer-events: none;
 }
 .cierto-media{ aspect-ratio: 16 / 9; background: var(--sage-faint); }
 .cierto-media img, .cierto-media video{ display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -462,7 +472,7 @@ img { display: block; max-width: 100%; }
 
 /* Primer prefers-reduced-motion del sitio: el relevo aparece sin fundido. */
 @media (prefers-reduced-motion: reduce){
-  .fab, .alerg-fab, .alerg-fab.is-on, .pide-fab, .cierto-fab, .cierto-card, .cierto-card.is-open, .yt-play{ transition: none; }
+  .fab, .alerg-fab, .alerg-fab.is-on, .pide-fab, .cierto-fab, .yt-play{ transition: none; }
   .cierto-pupila{ animation: none; }
 }
 
