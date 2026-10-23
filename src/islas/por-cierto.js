@@ -230,10 +230,19 @@ function cruzarConAlergenos() {
   if (dx) alerg.animate({ transform: ["translateX(" + dx + "px)", "none"] }, { duration: DURACION, easing: EASE });
 }
 
+// Un aviso sale solo si está activo, tiene medio y botón, y la página figura en «Dónde sale».
+// Cualquier dato que falte o falle (404, JSON roto, lista vacía) deja la página sin botón.
+const sale = (a) => a && a.activo === true && a.media && a.media.src && a.boton &&
+  Array.isArray(a.paginas) && a.paginas.includes(ruta());
+
 export async function porCierto() {
   let datos;
-  try { datos = await (await fetch("/por-cierto.json")).json(); } catch (e) { return; }
-  const aqui = (datos.avisos || []).filter((a) => a.activo !== false && (!a.paginas || a.paginas.includes(ruta())));
+  try {
+    const r = await fetch("/por-cierto.json");
+    if (!r.ok) return;
+    datos = await r.json();
+  } catch (e) { return; }
+  const aqui = Array.isArray(datos && datos.avisos) ? datos.avisos.filter(sale) : [];
   // Con varios activos, galería (por defecto) o solo el primero, según el interruptor del editor.
   const avisos = datos.galeria === false ? aqui.slice(0, 1) : aqui;
   if (avisos.length) esperarSinAviso().then(() => pintar(avisos));
