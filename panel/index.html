@@ -637,7 +637,7 @@
     </main>
   </div>
 
-  <!-- Avisos «Por cierto»: una imagen y un botón «Ir a», sin texto. Mismo esquema que la carta. -->
+  <!-- Avisos «Por cierto»: una imagen y un botón, sin texto. Mismo esquema que la carta. -->
   <div class="body" id="bodyAvisos" hidden>
     <aside class="sidebar">
       <div class="side-head">
@@ -655,7 +655,7 @@
           <div class="ehead">
             <div>
               <div class="eyebrow">Aviso</div>
-              <h1 id="avTitle">Ir a Eventos</h1>
+              <h1 id="avTitle">Eventos</h1>
             </div>
             <div class="ehead-actions">
               <button type="button" class="mv-btn" id="avUp" aria-label="Subir el aviso en la lista">↑ Subir</button>
@@ -689,7 +689,7 @@
           </div>
 
           <div class="grp">
-            <div class="grp-label">Botón «Ir a»</div>
+            <div class="grp-label">Botón</div>
             <div class="av-dest">
               <div class="cat-wrap"><select class="cat-select" id="avDest" aria-label="A dónde lleva el botón"></select></div>
               <span class="av-dest-txt" id="avDestTxt"></span>
@@ -1406,13 +1406,13 @@
 </script>
 <script>
 // ── Avisos «Por cierto» ──────────────────────────────────────────────────────
-// Cada aviso es una imagen 3:4 + un botón «Ir a …», sin texto propio. Se guarda en el
+// Cada aviso es una imagen 3:4 + un botón, sin texto propio. Se guarda en el
 // formato que lee la web (/por-cierto.json), así el editor y la web comparten un solo modelo:
 //   { id, activo, paginas:["/eventos"], media:{tipo:"imagen",src,alt:""}, boton:{texto,texto_en,url | accion} }
 (function(){
   "use strict";
   const $=s=>document.querySelector(s),ui=window.panelUI;
-  // Páginas de la web. Los nombres son los de la barra superior (ES / EN); el botón dirá «Ir a <nombre>».
+  // Páginas de la web, con los nombres de la barra superior (ES / EN).
   const PAGINAS=[
     {url:"/",es:"Inicio",en:"Home"},{url:"/menu",es:"Carta",en:"Menu"},{url:"/locales",es:"Locales",en:"Locations"},
     {url:"/locales/chamberi",es:"Chamberí",en:"Chamberí"},{url:"/locales/bernabeu",es:"Bernabéu",en:"Bernabéu"},
@@ -1421,13 +1421,19 @@
   ];
   const pag=u=>PAGINAS.find(p=>p.url===u);
   // A dónde puede llevar el botón: una página, o una acción que abre un modal de la web
-  // (accion:"pide" / "reservar") o salta al formulario de eventos. Cada destino guarda su
-  // rótulo en los dos idiomas: el botón dice «Ir a <nombre>».
+  // (accion:"pide" / "reservar") o salta al formulario de eventos. `nombre` es lo que ve quien
+  // edita; `es` / `en`, lo que dice el botón: cada destino tiene su propia llamada a la acción.
+  const BOTON={
+    "/menu":["Ver la carta","See the menu"],"/locales":["Ver los locales","See our locations"],
+    "/locales/chamberi":["Ver Chamberí","See Chamberí"],"/locales/bernabeu":["Ver Bernabéu","See Bernabéu"],
+    "/eventos":["Ver eventos","See events"],"/taller-team-building":["Más sobre el taller","More about the workshop"],
+    "/contacto":["Escríbenos","Get in touch"]
+  };
   const DESTINOS=[
-    ...PAGINAS.filter(p=>p.url!=="/").map(p=>({id:p.url,es:p.es,en:p.en,url:p.url})),
-    {id:"pide",es:"Pide ya",en:"Order now",accion:"pide"},
-    {id:"reservar",es:"Reservar",en:"Booking",accion:"reservar"},
-    {id:"evento",es:"Solicitud de evento",en:"Event request",url:"/eventos#contact-eventos"}
+    ...PAGINAS.filter(p=>p.url!=="/").map(p=>({id:p.url,nombre:p.es,es:BOTON[p.url][0],en:BOTON[p.url][1],url:p.url})),
+    {id:"pide",nombre:"Pide ya",es:"Pide ya",en:"Order now",accion:"pide"},
+    {id:"reservar",nombre:"Reservar",es:"Reservar",en:"Book",accion:"reservar"},
+    {id:"evento",nombre:"Solicitud de evento",es:"Solicitar evento",en:"Request an event",url:"/eventos#contact-eventos"}
   ];
   const GRUPOS=[["Páginas",DESTINOS.slice(0,-3)],["Acciones",DESTINOS.slice(-3)]];
   // Imagen estándar: vertical 3:4 a 864 × 1152 (la tarjeta mide 440 px como mucho; cubre pantallas @2x).
@@ -1440,7 +1446,7 @@
   const uid=()=>"a"+Date.now().toString(36);
   const cur=()=>AV.find(a=>a.id===sel);
   const destinoDe=a=>a.boton&&DESTINOS.find(d=>d.accion?d.accion===a.boton.accion:d.url===a.boton.url);
-  const nombre=a=>{const d=destinoDe(a);return d?"Ir a "+d.es:"Sin destino";};
+  const nombre=a=>{const d=destinoDe(a);return d?d.nombre:"Sin destino";};
   const resumen=a=>(a.paginas||[]).map(u=>(pag(u)||{es:u}).es).join(", ")||"Sin páginas";
   function setDirty(){dirty=true;ui.setPill("dirty","Sin guardar");}
 
@@ -1493,8 +1499,8 @@
   function pintarDestino(a){
     const d=destinoDe(a);
     $("#avDest").value=d?d.id:"";
-    $("#avDestTxt").innerHTML=d?"El botón dice <b>«Ir a "+d.es+" →»</b> y <b>«Go to "+d.en+" →»</b>":"Elige a dónde lleva el botón";
-    $("#avPrevBtn").textContent=d?"Ir a "+d.es+" →":"—";
+    $("#avDestTxt").innerHTML=d?"El botón dice <b>«"+d.es+" →»</b> y <b>«"+d.en+" →»</b>":"Elige a dónde lleva el botón";
+    $("#avPrevBtn").textContent=d?d.es+" →":"—";
     $("#avTitle").textContent=nombre(a);
   }
   function pintarPaginas(a){
@@ -1520,7 +1526,7 @@
   }
   $("#avDest").append(...GRUPOS.map(([nom,ds])=>{
     const g=document.createElement("optgroup");g.label=nom;
-    ds.forEach(d=>{const o=document.createElement("option");o.value=d.id;o.textContent=d.es;g.append(o);});
+    ds.forEach(d=>{const o=document.createElement("option");o.value=d.id;o.textContent=d.nombre;g.append(o);});
     return g;
   }));
   const botonDe=d=>({texto:d.es,texto_en:d.en,...(d.accion?{accion:d.accion}:{url:d.url})});

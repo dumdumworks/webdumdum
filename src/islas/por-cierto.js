@@ -1,8 +1,8 @@
 // ─────────────────────────────────────────────────────────────
 // «Por cierto!»: pastilla flotante (gemela del botón de alérgenos, pero a la
-// izquierda) que despliega una tarjeta con un aviso: imagen o vídeo y un botón
-// «Ir a …». PROTOTIPO: lee /por-cierto.json; si no existe o no hay ningún aviso
-// para esta página, no hace nada (ni pinta ni pide nada más).
+// izquierda) que despliega una tarjeta con un aviso: imagen o vídeo y un botón.
+// PROTOTIPO: lee /por-cierto.json; si no existe o no hay ningún aviso para esta página,
+// no hace nada (ni pinta ni pide nada más).
 // La imagen o el vídeo NO se piden hasta que alguien abre la tarjeta.
 // ─────────────────────────────────────────────────────────────
 import { $, atenuarAlScroll } from "./nucleo.js";
@@ -78,7 +78,7 @@ function pintar(a) {
   // una página va a su ruta en el idioma de la que se está viendo.
   if (a.boton.accion) { ir.href = "#"; ir.setAttribute("data-" + a.boton.accion, ""); }
   else ir.href = (EN ? "/en" : "") + a.boton.url;
-  ir.textContent = t("Ir a ", "Go to ") + t(a.boton.texto, a.boton.texto_en) + " →";
+  ir.textContent = t(a.boton.texto, a.boton.texto_en) + " →";
   const dentro = document.createElement("div"); dentro.className = "cierto-in";
   dentro.append(cerrar, media, ir);
   // Copia del contenido de la pastilla: es lo que se ve en la tarjeta al empezar y al terminar.
