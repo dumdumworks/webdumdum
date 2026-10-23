@@ -73,7 +73,11 @@ function pintar(a) {
   cerrar.setAttribute("aria-label", t("Cerrar", "Close"));
   const media = document.createElement("div"); media.className = "cierto-media";
   const ir = document.createElement("a");
-  ir.className = "btn red cierto-ir"; ir.href = a.boton.url;
+  ir.className = "btn red cierto-ir";
+  // Una acción ("pide", "reservar") abre el modal de la web con el escuchador de modales.js;
+  // una página va a su ruta en el idioma de la que se está viendo.
+  if (a.boton.accion) { ir.href = "#"; ir.setAttribute("data-" + a.boton.accion, ""); }
+  else ir.href = (EN ? "/en" : "") + a.boton.url;
   ir.textContent = t("Ir a ", "Go to ") + t(a.boton.texto, a.boton.texto_en) + " →";
   const dentro = document.createElement("div"); dentro.className = "cierto-in";
   dentro.append(cerrar, media, ir);
@@ -152,6 +156,8 @@ function pintar(a) {
   const alternar = (e) => { if (!animando) mover(!abierta, e.detail === 0); };
   boton.addEventListener("click", alternar);
   cerrar.addEventListener("click", (e) => { if (!animando && abierta) mover(false, e.detail === 0); });
+  // Al abrir un modal (o saltar al formulario de la misma página) la tarjeta se recoge: no queda detrás.
+  ir.addEventListener("click", () => { if (!animando && abierta) mover(false, false); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && abierta && !animando) mover(false, true); });
 }
 

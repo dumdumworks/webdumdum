@@ -1408,7 +1408,7 @@
 // ── Avisos «Por cierto» ──────────────────────────────────────────────────────
 // Cada aviso es una imagen 3:4 + un botón «Ir a …», sin texto propio. Se guarda en el
 // formato que lee la web (/por-cierto.json), así el editor y la web comparten un solo modelo:
-//   { id, activo, paginas:["/eventos"], media:{tipo:"imagen",src,alt:""}, boton:{texto,texto_en,url} }
+//   { id, activo, paginas:["/eventos"], media:{tipo:"imagen",src,alt:""}, boton:{texto,texto_en,url | accion} }
 (function(){
   "use strict";
   const $=s=>document.querySelector(s),ui=window.panelUI;
@@ -1419,8 +1419,17 @@
     {url:"/eventos",es:"Eventos",en:"Events"},{url:"/taller-team-building",es:"Team building",en:"Team building"},
     {url:"/contacto",es:"Contacto",en:"Contact"}
   ];
-  const DESTINOS=PAGINAS.filter(p=>p.url!=="/");
   const pag=u=>PAGINAS.find(p=>p.url===u);
+  // A dónde puede llevar el botón: una página, o una acción que abre un modal de la web
+  // (accion:"pide" / "reservar") o salta al formulario de eventos. Cada destino guarda su
+  // rótulo en los dos idiomas: el botón dice «Ir a <nombre>».
+  const DESTINOS=[
+    ...PAGINAS.filter(p=>p.url!=="/").map(p=>({id:p.url,es:p.es,en:p.en,url:p.url})),
+    {id:"pide",es:"Pide ya",en:"Order now",accion:"pide"},
+    {id:"reservar",es:"Reservar",en:"Booking",accion:"reservar"},
+    {id:"evento",es:"Solicitud de evento",en:"Event request",url:"/eventos#contact-eventos"}
+  ];
+  const GRUPOS=[["Páginas",DESTINOS.slice(0,-3)],["Acciones",DESTINOS.slice(-3)]];
   // Imagen estándar: vertical 3:4 a 864 × 1152 (la tarjeta mide 440 px como mucho; cubre pantallas @2x).
   const W=864,H=1152;
   const ICONO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 15l-5-5L5 21"/><path d="M3 16V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>';
@@ -1430,7 +1439,7 @@
 
   const uid=()=>"a"+Date.now().toString(36);
   const cur=()=>AV.find(a=>a.id===sel);
-  const destinoDe=a=>pag(a.boton&&a.boton.url);
+  const destinoDe=a=>a.boton&&DESTINOS.find(d=>d.accion?d.accion===a.boton.accion:d.url===a.boton.url);
   const nombre=a=>{const d=destinoDe(a);return d?"Ir a "+d.es:"Sin destino";};
   const resumen=a=>(a.paginas||[]).map(u=>(pag(u)||{es:u}).es).join(", ")||"Sin páginas";
   function setDirty(){dirty=true;ui.setPill("dirty","Sin guardar");}
@@ -1483,7 +1492,7 @@
   }
   function pintarDestino(a){
     const d=destinoDe(a);
-    $("#avDest").value=d?d.url:"";
+    $("#avDest").value=d?d.id:"";
     $("#avDestTxt").innerHTML=d?"El botón dice <b>«Ir a "+d.es+" →»</b> y <b>«Go to "+d.en+" →»</b>":"Elige a dónde lleva el botón";
     $("#avPrevBtn").textContent=d?"Ir a "+d.es+" →":"—";
     $("#avTitle").textContent=nombre(a);
@@ -1509,10 +1518,15 @@
     $("#avActive").setAttribute("aria-pressed",String(a.activo));
     const i=AV.indexOf(a);$("#avUp").disabled=i===0;$("#avDown").disabled=i===AV.length-1;
   }
-  $("#avDest").append(...DESTINOS.map(d=>{const o=document.createElement("option");o.value=d.url;o.textContent=d.es;return o;}));
+  $("#avDest").append(...GRUPOS.map(([nom,ds])=>{
+    const g=document.createElement("optgroup");g.label=nom;
+    ds.forEach(d=>{const o=document.createElement("option");o.value=d.id;o.textContent=d.es;g.append(o);});
+    return g;
+  }));
+  const botonDe=d=>({texto:d.es,texto_en:d.en,...(d.accion?{accion:d.accion}:{url:d.url})});
   $("#avDest").onchange=e=>{
-    const a=cur(),d=pag(e.target.value);if(!a||!d)return;
-    a.boton={texto:d.es,texto_en:d.en,url:d.url};setDirty();pintarDestino(a);pintarLista();
+    const a=cur(),d=DESTINOS.find(x=>x.id===e.target.value);if(!a||!d)return;
+    a.boton=botonDe(d);setDirty();pintarDestino(a);pintarLista();
   };
   $("#avActive").onclick=()=>{const a=cur();if(!a)return;a.activo=!a.activo;setDirty();pintar();};
 
@@ -1558,8 +1572,7 @@
 
   // ── crear, ordenar, borrar ──
   $("#addAviso").onclick=()=>{
-    const d=DESTINOS.find(x=>x.url==="/eventos");
-    const a={id:uid(),activo:false,paginas:["/","/locales","/eventos"],media:{tipo:"imagen",src:"",alt:""},boton:{texto:d.es,texto_en:d.en,url:d.url}};
+    const a={id:uid(),activo:false,paginas:["/","/locales","/eventos"],media:{tipo:"imagen",src:"",alt:""},boton:botonDe(DESTINOS.find(x=>x.id==="/eventos"))};
     AV.unshift(a);sel=a.id;setDirty();pintar();
   };
   function mover(d){
@@ -1578,7 +1591,7 @@
     AV=((d&&d.avisos)||[]).map(a=>({
       id:a.id||uid(),activo:a.activo!==false,paginas:(a.paginas||[]).slice(),
       media:{tipo:"imagen",src:(a.media&&a.media.src)||"",alt:""},
-      boton:a.boton||{texto:"",texto_en:"",url:""}
+      boton:a.boton||{texto:"",texto_en:""}
     }));
     sel=(AV[0]||{}).id||null;
   }
