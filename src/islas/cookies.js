@@ -59,6 +59,16 @@ function escribir(dialogo, t) {
 }
 
 export function cookies() {
+  // Enlaces «Cookies» (menú móvil y pie): reabren el aviso para cambiar o retirar el
+  // consentimiento. Sustituyen al botón flotante de Cookiebot, oculto por CSS.
+  document.addEventListener("click", (e) => {
+    const enlace = e.target.closest && e.target.closest("[data-cookies]");
+    if (!enlace) return;
+    e.preventDefault();
+    const burger = document.querySelector("[data-burger][aria-expanded='true']");
+    if (burger) burger.click();   // cierra el menú móvil: el aviso sale limpio
+    if (window.Cookiebot && window.Cookiebot.renew) window.Cookiebot.renew();
+  });
   const t = TEXTOS[document.documentElement.lang === "en" ? "en" : "es"];
   let vigilando = null;
   const mirar = () => {
