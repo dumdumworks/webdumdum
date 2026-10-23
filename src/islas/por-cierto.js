@@ -73,10 +73,6 @@ function pintar(a) {
   cerrar.setAttribute("aria-label", t("Cerrar", "Close"));
   const media = document.createElement("div"); media.className = "cierto-media";
   const cuerpo = document.createElement("div"); cuerpo.className = "cierto-body";
-  if (a.texto) {
-    const p = document.createElement("p"); p.className = "cierto-texto";
-    p.textContent = t(a.texto, a.texto_en); cuerpo.append(p);
-  }
   const ir = document.createElement("a");
   ir.className = "btn red cierto-ir"; ir.href = a.boton.url;
   ir.textContent = t("Ir a ", "Go to ") + t(a.boton.texto, a.boton.texto_en) + " →";

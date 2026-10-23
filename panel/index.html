@@ -90,6 +90,19 @@
   }
   .btn-ghost:hover{background:var(--panel-2);border-color:var(--muted)}
 
+  /* Selector de vista (Carta / Por cierto): mismo lenguaje que statebtn, en segmentado. */
+  .views{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2)}
+  .view-tab{border:none;background:transparent;color:var(--muted);font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:7px;transition:.15s}
+  .view-tab:hover{color:var(--ink)}
+  .view-tab[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(20,23,28,.08)}
+  /* En móvil la barra no cabe en una fila: marca + estado arriba; selector + «Ver en la web» debajo. */
+  @media (max-width:720px){
+    .topbar{flex-wrap:wrap;gap:10px}
+    .views{order:4;flex:1 1 160px;min-width:0}
+    #viewSite{order:5}
+    .view-tab{flex:1}
+  }
+
   /* ── Body ────────────────────────────────── */
   .body{display:grid;grid-template-columns:288px 1fr;min-height:0}
   @media (max-width:900px){.body{grid-template-columns:1fr}}
@@ -389,6 +402,21 @@
   .ls-spin{width:34px;height:34px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--ink);animation:spin 0.8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
 
+  /* ── Avisos «Por cierto» ─────────────────── */
+  .photo-zone.av-zone{aspect-ratio:16/9}
+  .av-empty{padding:48px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6}
+  .av-empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
+  .av-order{padding:10px 12px 14px;color:var(--muted);font-size:11.5px;line-height:1.5;border-top:1px solid var(--line-soft)}
+  .dishrow .dot-off{flex-shrink:0;font-size:10.5px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 7px}
+  .av-dest{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .av-dest-txt{font-size:12.5px;color:var(--muted)}
+  .av-dest-txt b{color:var(--ink);font-weight:600}
+  /* Vista previa: la tarjeta tal cual la pinta la web (imagen 16:9 + botón), sin texto. */
+  .av-prev{max-width:380px;border:1px solid var(--red);border-radius:20px;overflow:hidden;background:#fffaf3;box-shadow:0 8px 32px rgba(255,0,30,.18)}
+  .av-prev-img{aspect-ratio:16/9;background:var(--panel-2) center/cover no-repeat;display:grid;place-items:center;color:var(--muted);font-size:12px}
+  .av-prev-btn{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 16px 16px;padding:14px 18px;border-radius:999px;
+    background:var(--red);color:#fff;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+
   .savebar{display:flex;gap:10px;align-items:center;margin-top:6px}
   .save-main{background:var(--ink);color:#fff;border:none;border-radius:10px;padding:11px 22px;font-weight:700;font-size:14px;transition:.15s;display:inline-flex;align-items:center;gap:8px}
   .save-main:hover{filter:brightness(1.06)}
@@ -417,8 +445,12 @@
       <div class="mark"><img src="/favicon-192x192.png?v=3" alt="DUM DUM"></div>
       <div>
         <div class="name">DUM DUM</div>
-        <div class="sub">Editor de carta</div>
+        <div class="sub" id="brandSub">Editor de carta</div>
       </div>
+    </div>
+    <div class="views" role="group" aria-label="Qué quieres editar">
+      <button type="button" class="view-tab" id="tabCarta" aria-pressed="true">Carta</button>
+      <button type="button" class="view-tab" id="tabAvisos" aria-pressed="false">Por cierto</button>
     </div>
     <div class="spacer"></div>
     <div class="save-pill" id="savePill"><span class="dot"></span><span id="saveTxt">Guardado · en vivo</span></div>
@@ -428,7 +460,7 @@
     </button>
   </header>
 
-  <div class="body">
+  <div class="body" id="bodyCarta">
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="side-head">
@@ -599,6 +631,88 @@
               <span class="save-hint">Se publica en la web en segundos</span>
             </div>
           </fieldset>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Avisos «Por cierto»: una imagen y un botón «Ir a», sin texto. Mismo esquema que la carta. -->
+  <div class="body" id="bodyAvisos" hidden>
+    <aside class="sidebar">
+      <div class="side-head">
+        <h2>Por cierto</h2>
+        <div class="side-actions"><button class="add-btn" id="addAviso">＋ Aviso</button></div>
+      </div>
+      <div class="dishlist" id="avisoList"></div>
+      <p class="av-order">Sale el primero de la lista que esté activo en esa página. Cada visitante lo ve una sola vez.</p>
+    </aside>
+
+    <main class="editor">
+      <div class="editor-grid">
+        <div class="av-empty" id="avEmpty" hidden><b>Aún no hay avisos</b>Crea el primero con “＋ Aviso”.</div>
+        <section id="avisoEditor" hidden>
+          <div class="ehead">
+            <div>
+              <div class="eyebrow">Aviso</div>
+              <h1 id="avTitle">Ir a Eventos</h1>
+            </div>
+            <div class="ehead-actions">
+              <button type="button" class="mv-btn" id="avUp" aria-label="Subir el aviso en la lista">↑ Subir</button>
+              <button type="button" class="mv-btn" id="avDown" aria-label="Bajar el aviso en la lista">↓ Bajar</button>
+              <button type="button" class="del-btn" id="avDel">Borrar</button>
+            </div>
+          </div>
+
+          <div class="grp">
+            <div class="grp-label">Imagen</div>
+            <div class="photo-zone av-zone" id="avZone" tabindex="0" role="button" aria-label="Subir o cambiar la imagen del aviso">
+              <div class="pz-inner">
+                <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15l-5-5L5 21"/><path d="M3 16V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg></div>
+                <div class="pz-title">Arrastra una imagen o haz clic</div>
+                <div class="pz-sub">JPG · PNG · se recorta a 16:9 · se sube al instante</div>
+              </div>
+              <div class="pz-actions" id="avActions" hidden>
+                <button type="button" id="avChange">Cambiar</button>
+                <button type="button" id="avRemove">Quitar</button>
+              </div>
+            </div>
+            <input type="file" id="avFile" accept="image/*" hidden>
+            <div class="num-hint">Mejor a 1920 × 1080 px. El aviso no lleva texto aparte: lo que quieras decir, ponlo dentro de la imagen.</div>
+          </div>
+
+          <div class="grp">
+            <div class="grp-label">Estado</div>
+            <button type="button" class="statebtn" id="avActive" aria-pressed="true" title="Desactivado, el aviso no sale en la web pero se conserva aquí.">
+              <span class="sb-ic" aria-hidden="true">✓</span> Activo
+            </button>
+          </div>
+
+          <div class="grp">
+            <div class="grp-label">Botón «Ir a»</div>
+            <div class="av-dest">
+              <div class="cat-wrap"><select class="cat-select" id="avDest" aria-label="A dónde lleva el botón"></select></div>
+              <span class="av-dest-txt" id="avDestTxt"></span>
+            </div>
+          </div>
+
+          <div class="grp">
+            <div class="grp-label">Dónde sale <span class="req">al menos una página</span></div>
+            <div class="chips" id="avPages"></div>
+            <div class="num-hint">Sale en la versión española y en la inglesa de cada página.</div>
+          </div>
+
+          <div class="grp">
+            <div class="grp-label">Así se verá</div>
+            <div class="av-prev" aria-hidden="true">
+              <div class="av-prev-img" id="avPrevImg"></div>
+              <div class="av-prev-btn" id="avPrevBtn"></div>
+            </div>
+          </div>
+
+          <div class="savebar">
+            <button class="save-main" id="saveAv">Guardar cambios</button>
+            <span class="save-hint">Se publica en la web en segundos</span>
+          </div>
         </section>
       </div>
     </main>
@@ -1224,6 +1338,8 @@
     }catch(e){ setPill("dirty","Error al guardar");showToast("No se pudo guardar: "+e.message,true); }
     finally{ btns.forEach(b=>b.disabled=false); }
   }
+  // La vista de «Por cierto» (script de abajo) comparte con la carta el indicador, el aviso, el diálogo y el reductor de fotos.
+  window.panelUI={setPill,getPill:()=>({cls:["saving","dirty","ok"].find(c=>pill.classList.contains(c))||"",txt:saveTxt.textContent}),showToast,confirmar,reducir,kb};
   $("#saveBtn").onclick=save;$("#saveBtn2").onclick=save;
   window.addEventListener("beforeunload",e=>{ if(dirty){ e.preventDefault();e.returnValue=""; } });
 
@@ -1285,6 +1401,218 @@
     }catch(e){ loadMsg.innerHTML="No se pudo cargar la carta:<br>"+e.message+"<br><br>Recarga para reintentar."; }
   }
   init();
+})();
+</script>
+<script>
+// ── Avisos «Por cierto» ──────────────────────────────────────────────────────
+// Cada aviso es una imagen 16:9 + un botón «Ir a …», sin texto propio. Se guarda en el
+// formato que lee la web (/por-cierto.json), así el editor y la web comparten un solo modelo:
+//   { id, activo, paginas:["/eventos"], media:{tipo:"imagen",src,alt:""}, boton:{texto,texto_en,url} }
+(function(){
+  "use strict";
+  const $=s=>document.querySelector(s),ui=window.panelUI;
+  // Páginas de la web. Los nombres son los de la barra superior (ES / EN); el botón dirá «Ir a <nombre>».
+  const PAGINAS=[
+    {url:"/",es:"Inicio",en:"Home"},{url:"/menu",es:"Carta",en:"Menu"},{url:"/locales",es:"Locales",en:"Locations"},
+    {url:"/locales/chamberi",es:"Chamberí",en:"Chamberí"},{url:"/locales/bernabeu",es:"Bernabéu",en:"Bernabéu"},
+    {url:"/eventos",es:"Eventos",en:"Events"},{url:"/taller-team-building",es:"Team building",en:"Team building"},
+    {url:"/contacto",es:"Contacto",en:"Contact"}
+  ];
+  const DESTINOS=PAGINAS.filter(p=>p.url!=="/");
+  const pag=u=>PAGINAS.find(p=>p.url===u);
+  // Imagen estándar: 16:9 a 960 × 540 (la tarjeta mide 440 px como mucho, así que cubre pantallas @2x).
+  const W=960,H=540;
+  const ICONO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 15l-5-5L5 21"/><path d="M3 16V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>';
+
+  let AV=[],sel=null,dirty=false,cargado=false,vista="carta";
+  const pills={};   // indicador de guardado de cada vista, para devolverlo al volver a ella
+
+  const uid=()=>"a"+Date.now().toString(36);
+  const cur=()=>AV.find(a=>a.id===sel);
+  const destinoDe=a=>pag(a.boton&&a.boton.url);
+  const nombre=a=>{const d=destinoDe(a);return d?"Ir a "+d.es:"Sin destino";};
+  const resumen=a=>(a.paginas||[]).map(u=>(pag(u)||{es:u}).es).join(", ")||"Sin páginas";
+  function setDirty(){dirty=true;ui.setPill("dirty","Sin guardar");}
+
+  // ── cambio de vista ──
+  function mostrar(v){
+    if(v===vista)return;
+    pills[vista]=ui.getPill();vista=v;
+    const av=v==="avisos";
+    $("#bodyCarta").hidden=av;$("#bodyAvisos").hidden=!av;
+    $("#tabCarta").setAttribute("aria-pressed",String(!av));$("#tabAvisos").setAttribute("aria-pressed",String(av));
+    $("#brandSub").textContent=av?"Editor de avisos":"Editor de carta";
+    const p=pills[v];if(p)ui.setPill(p.cls,p.txt);
+    if(av&&!cargado)cargar();
+  }
+  $("#tabCarta").onclick=()=>mostrar("carta");
+  $("#tabAvisos").onclick=()=>mostrar("avisos");
+  $("#viewSite").onclick=()=>window.open(vista==="avisos"?"/":"/menu","_blank","noopener");
+
+  // ── lista ──
+  function pintarLista(){
+    const l=$("#avisoList");l.textContent="";
+    $("#avEmpty").hidden=AV.length>0;$("#avisoEditor").hidden=!AV.length;
+    if(!AV.length){const n=document.createElement("div");n.className="empty-note";n.textContent="Sin avisos";l.append(n);return;}
+    AV.forEach(a=>{
+      const b=document.createElement("button");b.type="button";b.className="dishrow"+(a.activo?"":" off");
+      b.setAttribute("aria-current",String(a.id===sel));
+      const th=document.createElement("span");th.className="thumb"+(a.media.src?"":" empty");
+      if(a.media.src)th.style.backgroundImage="url("+JSON.stringify(a._preview||a.media.src)+")";
+      else th.innerHTML=ICONO;
+      const m=document.createElement("span");m.className="meta";
+      const dn=document.createElement("div");dn.className="dn";dn.textContent=nombre(a);
+      const dp=document.createElement("div");dp.className="dp";dp.textContent=resumen(a);
+      m.append(dn,dp);b.append(th,m);
+      if(!a.activo){const o=document.createElement("span");o.className="dot-off";o.textContent="Off";b.append(o);}
+      b.onclick=()=>{sel=a.id;pintar();};
+      l.append(b);
+    });
+  }
+
+  // ── ficha ──
+  function pintarImagen(a){
+    const z=$("#avZone"),src=a._preview||a.media.src;
+    z.classList.toggle("has-photo",!!src);
+    z.querySelector("img")?.remove();
+    if(src){const i=document.createElement("img");i.alt="";i.src=src;z.prepend(i);}
+    z.querySelector(".pz-inner").hidden=!!src;$("#avActions").hidden=!src;
+    const pv=$("#avPrevImg");pv.style.backgroundImage=src?"url("+JSON.stringify(src)+")":"";
+    pv.textContent=src?"":"Sin imagen";
+  }
+  function pintarDestino(a){
+    const d=destinoDe(a);
+    $("#avDest").value=d?d.url:"";
+    $("#avDestTxt").innerHTML=d?"El botón dice <b>«Ir a "+d.es+" →»</b> y <b>«Go to "+d.en+" →»</b>":"Elige a dónde lleva el botón";
+    $("#avPrevBtn").textContent=d?"Ir a "+d.es+" →":"—";
+    $("#avTitle").textContent=nombre(a);
+  }
+  function pintarPaginas(a){
+    const c=$("#avPages");c.textContent="";
+    PAGINAS.forEach(p=>{
+      const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=p.es;
+      b.setAttribute("aria-pressed",String(a.paginas.includes(p.url)));
+      b.onclick=()=>{
+        const i=a.paginas.indexOf(p.url);
+        if(i<0)a.paginas.push(p.url);else a.paginas.splice(i,1);
+        a.paginas.sort((x,y)=>PAGINAS.findIndex(q=>q.url===x)-PAGINAS.findIndex(q=>q.url===y));
+        b.setAttribute("aria-pressed",String(i<0));setDirty();pintarLista();
+      };
+      c.append(b);
+    });
+  }
+  function pintar(){
+    pintarLista();
+    const a=cur();if(!a)return;
+    pintarImagen(a);pintarDestino(a);pintarPaginas(a);
+    $("#avActive").setAttribute("aria-pressed",String(a.activo));
+    const i=AV.indexOf(a);$("#avUp").disabled=i===0;$("#avDown").disabled=i===AV.length-1;
+  }
+  $("#avDest").append(...DESTINOS.map(d=>{const o=document.createElement("option");o.value=d.url;o.textContent=d.es;return o;}));
+  $("#avDest").onchange=e=>{
+    const a=cur(),d=pag(e.target.value);if(!a||!d)return;
+    a.boton={texto:d.es,texto_en:d.en,url:d.url};setDirty();pintarDestino(a);pintarLista();
+  };
+  $("#avActive").onclick=()=>{const a=cur();if(!a)return;a.activo=!a.activo;setDirty();pintar();};
+
+  // ── imagen: recorte centrado a 16:9, reducción y subida ──
+  async function recortar(file){
+    const url=URL.createObjectURL(file);
+    try{
+      const img=new Image();img.src=url;await img.decode();   // respeta la orientación EXIF
+      let sw=img.naturalWidth,sh=Math.round(sw*H/W);
+      if(sh>img.naturalHeight){sh=img.naturalHeight;sw=Math.round(sh*W/H);}
+      const c=document.createElement("canvas");c.width=sw;c.height=sh;
+      c.getContext("2d").drawImage(img,Math.round((img.naturalWidth-sw)/2),Math.round((img.naturalHeight-sh)/2),sw,sh,0,0,sw,sh);
+      return {blob:await ui.reducir(c,Math.min(W,sw)),ancho:img.naturalWidth};
+    }catch(e){return null;}
+    finally{URL.revokeObjectURL(url);}
+  }
+  async function subir(file){
+    const a=cur();
+    if(!a||!file||!file.type.startsWith("image/"))return;
+    ui.setPill("saving","Subiendo imagen…");
+    const r=await recortar(file);
+    if(!r){ui.setPill("dirty","Sin guardar");ui.showToast("No se pudo leer la imagen: prueba con un JPG o PNG",true);return;}
+    const rd=new FileReader();rd.onload=e=>{a._preview=e.target.result;pintar();};rd.readAsDataURL(r.blob);
+    try{
+      const fd=new FormData();fd.append("kind","aviso");fd.append("name","aviso");fd.append("file",r.blob,"aviso.jpg");
+      const res=await fetch("/api/upload",{method:"POST",body:fd});
+      const out=await res.json().catch(()=>({}));
+      if(res.status===401)throw new Error("Sesión caducada — recarga la página");
+      if(!res.ok||!out.ok)throw new Error(out.error||("HTTP "+res.status));
+      a.media={tipo:"imagen",src:out.url,alt:""};a._preview=null;pintar();setDirty();
+      ui.showToast("Imagen subida ("+ui.kb(file.size)+" → "+ui.kb(r.blob.size)+")"+(r.ancho<W?" — es pequeña, se verá borrosa":"")+" — dale a Guardar para publicarla",r.ancho<W);
+    }catch(e){setDirty();ui.showToast("No se pudo subir la imagen: "+e.message,true);}
+  }
+  const zona=$("#avZone"),fi=$("#avFile");
+  zona.onclick=()=>fi.click();
+  zona.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fi.click();}};
+  fi.onchange=e=>{subir(e.target.files[0]);e.target.value="";};
+  $("#avChange").onclick=e=>{e.stopPropagation();fi.click();};
+  $("#avRemove").onclick=e=>{e.stopPropagation();const a=cur();if(!a)return;a.media={tipo:"imagen",src:"",alt:""};a._preview=null;setDirty();pintar();};
+  ["dragenter","dragover"].forEach(ev=>zona.addEventListener(ev,e=>{e.preventDefault();zona.classList.add("drag");}));
+  ["dragleave","drop"].forEach(ev=>zona.addEventListener(ev,e=>{e.preventDefault();if(ev==="dragleave"&&zona.contains(e.relatedTarget))return;zona.classList.remove("drag");}));
+  zona.addEventListener("drop",e=>{if(e.dataTransfer.files[0])subir(e.dataTransfer.files[0]);});
+
+  // ── crear, ordenar, borrar ──
+  $("#addAviso").onclick=()=>{
+    const d=DESTINOS.find(x=>x.url==="/eventos");
+    const a={id:uid(),activo:false,paginas:["/","/locales","/eventos"],media:{tipo:"imagen",src:"",alt:""},boton:{texto:d.es,texto_en:d.en,url:d.url}};
+    AV.unshift(a);sel=a.id;setDirty();pintar();
+  };
+  function mover(d){
+    const a=cur(),i=AV.indexOf(a),j=i+d;if(!a||j<0||j>=AV.length)return;
+    AV.splice(i,1);AV.splice(j,0,a);setDirty();pintar();
+  }
+  $("#avUp").onclick=()=>mover(-1);$("#avDown").onclick=()=>mover(1);
+  $("#avDel").onclick=async()=>{
+    const a=cur();if(!a)return;
+    if(!await ui.confirmar("¿Borrar este aviso para siempre?","Si solo quieres quitarlo un tiempo, desactívalo."))return;
+    const i=AV.indexOf(a);AV.splice(i,1);sel=(AV[i]||AV[i-1]||{}).id||null;setDirty();pintar();
+  };
+
+  // ── cargar y guardar (/api/banners) ──
+  function modelo(d){
+    AV=((d&&d.avisos)||[]).map(a=>({
+      id:a.id||uid(),activo:a.activo!==false,paginas:(a.paginas||[]).slice(),
+      media:{tipo:"imagen",src:(a.media&&a.media.src)||"",alt:""},
+      boton:a.boton||{texto:"",texto_en:"",url:""}
+    }));
+    sel=(AV[0]||{}).id||null;
+  }
+  async function cargar(){
+    ui.setPill("saving","Cargando…");
+    try{
+      const res=await fetch("/api/banners",{headers:{"Accept":"application/json"},cache:"no-store"});
+      if(res.status===401)throw new Error("Sesión caducada — recarga la página");
+      if(!res.ok)throw new Error("HTTP "+res.status);
+      modelo(await res.json());cargado=true;dirty=false;pintar();ui.setPill("ok","En vivo");
+    }catch(e){ui.setPill("dirty","Error al cargar");ui.showToast("No se pudieron cargar los avisos: "+e.message,true);}
+  }
+  function validar(){
+    for(const a of AV){
+      if(!a.activo)continue;
+      const fallo=!a.media.src?"no tiene imagen":!destinoDe(a)?"no tiene destino":!a.paginas.length?"no tiene ninguna página":"";
+      if(fallo){sel=a.id;pintar();ui.showToast("Un aviso activo "+fallo+": complétalo o desactívalo antes de guardar",true);return false;}
+    }
+    return true;
+  }
+  async function guardar(){
+    if(!validar())return;
+    const b=$("#saveAv");b.disabled=true;ui.setPill("saving","Guardando…");
+    try{
+      const avisos=AV.map(a=>({id:a.id,activo:a.activo,paginas:a.paginas,media:a.media,boton:a.boton}));
+      const res=await fetch("/api/banners",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({avisos})});
+      const out=await res.json().catch(()=>({}));
+      if(res.status===401)throw new Error("Sesión caducada — recarga la página");
+      if(!res.ok||!out.ok)throw new Error(out.error||("HTTP "+res.status));
+      dirty=false;ui.setPill("ok","Guardado · en vivo");ui.showToast("Guardado ✓ — publicado en la web");
+    }catch(e){ui.setPill("dirty","Error al guardar");ui.showToast("No se pudo guardar: "+e.message,true);}
+    finally{b.disabled=false;}
+  }
+  $("#saveAv").onclick=guardar;
+  window.addEventListener("beforeunload",e=>{if(dirty){e.preventDefault();e.returnValue="";}});
 })();
 </script>
 </body>

@@ -458,8 +458,7 @@ img { display: block; max-width: 100%; }
 }
 .cierto-media{ aspect-ratio: 16 / 9; background: var(--sage-faint); }
 .cierto-media img, .cierto-media video{ display: block; width: 100%; height: 100%; object-fit: cover; }
-.cierto-body{ display: flex; flex-direction: column; gap: 12px; padding: 14px 16px 16px; }
-.cierto-texto{ margin: 0; font-size: 15px; line-height: 1.4; color: var(--red); text-wrap: balance; }
+.cierto-body{ display: flex; flex-direction: column; padding: 14px 16px 16px; }
 .cierto-ir{ justify-content: center; }
 .cierto-x{
   position: absolute; top: 8px; right: 8px; z-index: 1;
