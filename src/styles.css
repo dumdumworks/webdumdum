@@ -415,18 +415,24 @@ img { display: block; max-width: 100%; }
   70%, 100%{ transform: translateX(0); }
 }
 
-/* La tarjeta nace sobre la pastilla (44px de alto + 10px de aire), anclada abajo a
-   la izquierda. Cerrada: invisible, sin ratón y con inert (fuera del orden de tab). */
+/* La tarjeta nace sobre las pastillas (44px de alto + 10px de aire). Con los mismos
+   márgenes laterales que ellas (left y right = --fab-inset), ocupa justo el hueco que va
+   del borde izquierdo del botón izquierdo al borde derecho del botón derecho: queda
+   centrada entre los dos. En pantallas anchas se queda en 440px, pegada a la izquierda.
+   Cerrada: invisible, sin ratón y con inert (fuera del orden de tab). */
 .cierto-card{
   position: fixed;
   left: var(--fab-inset);
+  right: var(--fab-inset);
+  max-width: 440px;
   bottom: calc(var(--fab-bottom) + 54px);
+  max-height: calc(100vh - var(--fab-bottom) - 54px - var(--fab-inset));   /* móvil apaisado: que no se salga por arriba */
   z-index: 60;
-  width: min(340px, calc(100vw - 2 * var(--fab-inset)));
   background: var(--bg);
   border: 1px solid var(--red);
   border-radius: 20px;
-  overflow: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   box-shadow: 0 8px 32px rgba(255, 0, 30, 0.22);
   opacity: 0;
   visibility: hidden;
