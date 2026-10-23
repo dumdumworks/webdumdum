@@ -62,7 +62,7 @@ function pintar(a) {
   ico.className = "fab-ico"; ico.setAttribute("aria-hidden", "true"); ico.innerHTML = OJOS;
   const txt = document.createElement("span");
   txt.className = "cierto-txt";
-  txt.textContent = t(a.etiqueta || "Por cierto!", a.etiqueta_en || "By the way!");
+  txt.textContent = t("Por cierto!", "By the way!");
   boton.append(ico, txt);
 
   const tarjeta = document.createElement("aside");
@@ -73,7 +73,7 @@ function pintar(a) {
   cerrar.setAttribute("aria-label", t("Cerrar", "Close"));
   const media = document.createElement("div"); media.className = "cierto-media";
   const ir = document.createElement("a");
-  ir.className = "btn red cierto-ir";
+  ir.className = "btn cierto-ir" + (a.boton.color === "blanco" ? "" : " red");
   // Una acción ("pide", "reservar") abre el modal de la web con el escuchador de modales.js;
   // una página va a su ruta en el idioma de la que se está viendo.
   if (a.boton.accion) { ir.href = "#"; ir.setAttribute("data-" + a.boton.accion, ""); }
@@ -87,6 +87,7 @@ function pintar(a) {
   tarjeta.append(dentro, pre);
   document.body.append(boton, tarjeta);
   atenuarAlScroll(boton);
+  if (ruta() === "/menu") cruzarConAlergenos();
   requestAnimationFrame(() => boton.classList.add("is-on"));
 
   let abierta = false, animando = false;
@@ -102,6 +103,7 @@ function pintar(a) {
       tarjeta.classList.add("is-open"); tarjeta.inert = false;   // ya está en su sitio final, aún sin pintarse
       if (!media.firstChild) media.append(medio(a.media));        // primera vez: ahora sí se pide el archivo
       boton.classList.add("is-visto");                            // las pupilas dejan de moverse
+      marcarVisto(a.id);                                          // y no vuelve a salir en este dispositivo
     }
     const c = tarjeta.getBoundingClientRect();
     const fin = () => {
@@ -161,9 +163,31 @@ function pintar(a) {
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && abierta && !animando) mover(false, true); });
 }
 
+// «Ya visto»: un aviso que se ha abierto no vuelve a salir en este dispositivo. Es una nota en
+// el navegador (solo guarda los ids de avisos), sin ningún dato personal; si no se puede
+// guardar, simplemente se vuelve a mostrar.
+const CLAVE_VISTOS = "dd-cierto-visto";
+const vistos = () => { try { return JSON.parse(localStorage.getItem(CLAVE_VISTOS)) || []; } catch (e) { return []; } };
+const marcarVisto = (id) => {
+  try { localStorage.setItem(CLAVE_VISTOS, JSON.stringify([...new Set([...vistos(), id])].slice(-20))); } catch (e) { /* sin almacenamiento */ }
+};
+
+// En la carta, en móvil, «Por cierto!» ocupa el sitio de alérgenos (derecha) y alérgenos pasa a
+// la izquierda: en el resto de la web la derecha es de «Pide ya». Alérgenos se desliza a su
+// nuevo sitio (técnica FLIP) en vez de saltar, porque ya está en pantalla cuando llega el aviso.
+function cruzarConAlergenos() {
+  if (!matchMedia("(max-width: 879px)").matches) return;
+  const alerg = $("[data-alerg-fab]");
+  const antes = alerg ? alerg.getBoundingClientRect().left : 0;
+  document.documentElement.classList.add("cierto-cruzado");
+  if (!alerg || sinMovimiento()) return;
+  const dx = antes - alerg.getBoundingClientRect().left;
+  if (dx) alerg.animate({ transform: ["translateX(" + dx + "px)", "none"] }, { duration: DURACION, easing: EASE });
+}
+
 export async function porCierto() {
   let datos;
   try { datos = await (await fetch("/por-cierto.json")).json(); } catch (e) { return; }
-  const aviso = (datos.avisos || []).find((a) => a.activo !== false && (!a.paginas || a.paginas.includes(ruta())));
+  const aviso = (datos.avisos || []).find((a) => a.activo !== false && (!a.paginas || a.paginas.includes(ruta())) && !vistos().includes(a.id));
   if (aviso) esperarSinAviso().then(() => pintar(aviso));
 }

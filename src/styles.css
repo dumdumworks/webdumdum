@@ -315,6 +315,8 @@ img { display: block; max-width: 100%; }
    no se ve, pero iguala la geometría a la del botón de alérgenos. */
 .pide-fab{
   display: none;
+  min-width: var(--fab-ancho);
+  justify-content: center;
   background: var(--black);
   color: var(--bg);
   border-color: var(--black);
@@ -406,6 +408,13 @@ img { display: block; max-width: 100%; }
   .cierto-fab{ min-width: 0; padding: 11px; }   /* 20 de icono + 22 + 2 de filete = círculo de 44 */
   .cierto-pre{ padding: 11px; }
   .cierto-txt{ position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+/* En la carta, en móvil: «Por cierto!» ocupa el sitio de alérgenos (derecha) y alérgenos pasa a la
+   izquierda (la derecha del resto de la web es de «Pide ya»). Lo activa la isla (cierto-cruzado). */
+@media (max-width: 879px){
+  .cierto-cruzado .alerg-fab{ left: var(--fab-inset); right: auto; }
+  .cierto-cruzado .cierto-fab{ left: auto; right: var(--fab-inset); }
+  .cierto-cruzado .cierto-card{ left: auto; width: min(440px, calc(100vw - 2 * var(--fab-inset))); }
 }
 /* Los ojitos miran de un lado a otro hasta que alguien abre la tarjeta (is-visto). */
 .cierto-pupila{ animation: cierto-mirar 6s ease-in-out infinite; }

@@ -233,7 +233,7 @@
   }
   .photo-zone.has-photo{border-style:solid;border-color:var(--line)}
   .photo-zone.drag{border-color:var(--ink);background:color-mix(in srgb,var(--ink) 7%,var(--panel-2))}
-  .photo-zone img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .photo-zone img,.photo-zone video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .pz-inner{display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px;z-index:1;pointer-events:none}
   .pz-inner .ic{width:40px;height:40px;border-radius:11px;background:var(--panel);border:1px solid var(--line);
     display:grid;place-items:center;color:var(--ink);box-shadow:var(--shadow)}
@@ -408,6 +408,9 @@
   /* ── Avisos «Por cierto» ─────────────────── */
   .photo-zone.av-zone{aspect-ratio:3/4;max-width:360px}
   #avFechas{white-space:pre-line}
+  .av-prev-btn.blanco{background:#fffaf3;color:var(--red)}
+  .av-color{display:flex;align-items:center;gap:12px;margin-top:14px}
+  .av-color>span{font-size:11.5px;font-weight:500;color:var(--muted)}
   .av-empty{padding:48px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6}
   .av-empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
   .av-order{padding:10px 12px 14px;color:var(--muted);font-size:11.5px;line-height:1.5;border-top:1px solid var(--line-soft)}
@@ -419,6 +422,7 @@
   .av-prev{max-width:360px;border:1px solid var(--red);border-radius:20px;overflow:hidden;background:#fffaf3;box-shadow:0 8px 32px rgba(255,0,30,.18)}
   .av-prev-img{aspect-ratio:3/4;background:var(--panel-2) center/cover no-repeat;display:grid;place-items:center;color:var(--muted);font-size:12px}
   .av-prev{position:relative}
+  .av-prev-img video{width:100%;height:100%;object-fit:cover;display:block}
   .av-prev-btn{position:absolute;left:0;right:0;bottom:16px;width:50%;min-width:max-content;margin-inline:auto;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;border-radius:999px;
     border:1px solid #fffaf3;background:var(--red);color:#fff;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 
@@ -687,20 +691,20 @@
           </div>
 
           <div class="grp">
-            <div class="grp-label">Imagen</div>
-            <div class="photo-zone av-zone" id="avZone" tabindex="0" role="button" aria-label="Subir o cambiar la imagen del aviso">
+            <div class="grp-label">Imagen o vídeo</div>
+            <div class="photo-zone av-zone" id="avZone" tabindex="0" role="button" aria-label="Subir o cambiar la imagen o el vídeo del aviso">
               <div class="pz-inner">
                 <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15l-5-5L5 21"/><path d="M3 16V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg></div>
-                <div class="pz-title">Arrastra una imagen o haz clic</div>
-                <div class="pz-sub">JPG · PNG · se recorta a 3:4 · se sube al instante</div>
+                <div class="pz-title">Arrastra una imagen o un vídeo, o haz clic</div>
+                <div class="pz-sub">JPG · PNG · MP4 · se recorta a 3:4 · se sube al instante</div>
               </div>
               <div class="pz-actions" id="avActions" hidden>
                 <button type="button" id="avChange">Cambiar</button>
                 <button type="button" id="avRemove">Quitar</button>
               </div>
             </div>
-            <input type="file" id="avFile" accept="image/*" hidden>
-            <div class="num-hint">Mejor a 1800 × 2400 px (vertical, 3:4). El aviso no lleva texto aparte: lo que quieras decir, ponlo dentro de la imagen. El botón flota sobre su parte baja (mira «Así se verá»).</div>
+            <input type="file" id="avFile" accept="image/*,video/mp4,video/quicktime,video/webm" hidden>
+            <div class="num-hint">Mejor a 1800 × 2400 px (vertical, 3:4). Vídeo: MP4 (H.264), de unos 10 s y hasta 10 MB, mejor vertical y sin sonido (se ve en bucle y mudo). El aviso no lleva texto aparte: lo que quieras decir, ponlo dentro de la imagen. El botón flota sobre su parte baja (mira «Así se verá»).</div>
           </div>
 
           <div class="grp">
@@ -708,6 +712,13 @@
             <div class="av-dest">
               <div class="cat-wrap"><select class="cat-select" id="avDest" aria-label="A dónde lleva el botón"></select></div>
               <span class="av-dest-txt" id="avDestTxt"></span>
+            </div>
+            <div class="av-color">
+              <span>Color</span>
+              <div class="chips" id="avColor">
+                <button type="button" class="chip" data-color="rojo" aria-pressed="true">Rojo</button>
+                <button type="button" class="chip" data-color="blanco" aria-pressed="false">Blanco</button>
+              </div>
             </div>
           </div>
 
@@ -1423,7 +1434,8 @@
 // ── Avisos «Por cierto» ──────────────────────────────────────────────────────
 // Cada aviso es una imagen 3:4 + un botón, sin texto propio. Se guarda en el
 // formato que lee la web (/por-cierto.json), así el editor y la web comparten un solo modelo:
-//   { id, nombre, creado, modificado, activo, paginas:["/eventos"], media:{tipo:"imagen",src,alt:""}, boton:{texto,texto_en,url | accion} }
+//   { id, nombre, creado, modificado, activo, paginas:["/eventos"],
+//     media:{tipo:"imagen"|"video",src,poster?,alt:""}, boton:{texto,texto_en,color:"rojo"|"blanco",url | accion} }
 (function(){
   "use strict";
   const $=s=>document.querySelector(s),ui=window.panelUI;
@@ -1493,8 +1505,10 @@
     AV.forEach(a=>{
       const b=document.createElement("button");b.type="button";b.className="dishrow"+(a.activo?"":" off");
       b.setAttribute("aria-current",String(a.id===sel));
-      const th=document.createElement("span");th.className="thumb"+(a.media.src?"":" empty");
-      if(a.media.src)th.style.backgroundImage="url("+JSON.stringify(a._preview||a.media.src)+")";
+      // En la miniatura, un vídeo se representa con su póster.
+      const mini=a.media.tipo==="video"?a.media.poster:(a._preview||a.media.src);
+      const th=document.createElement("span");th.className="thumb"+(mini?"":" empty");
+      if(mini)th.style.backgroundImage="url("+JSON.stringify(mini)+")";
       else th.innerHTML=ICONO;
       const m=document.createElement("span");m.className="meta";
       const dn=document.createElement("div");dn.className="dn";dn.textContent=titulo(a);
@@ -1507,20 +1521,30 @@
   }
 
   // ── ficha ──
+  // <img> o <video> (mudo, en bucle, como en la tarjeta de la web) según el tipo.
+  function elemento(tipo,src,poster){
+    if(tipo!=="video"){const i=document.createElement("img");i.alt="";i.src=src;return i;}
+    const v=document.createElement("video");
+    v.muted=v.loop=v.autoplay=v.playsInline=true;if(poster)v.poster=poster;v.src=src;
+    return v;
+  }
   function pintarImagen(a){
-    const z=$("#avZone"),src=a._preview||a.media.src;
+    const z=$("#avZone"),pv=$("#avPrevImg");
+    const tipo=a._preview?a._previewTipo:a.media.tipo,src=a._preview||a.media.src,poster=a._preview?"":a.media.poster;
     z.classList.toggle("has-photo",!!src);
-    z.querySelector("img")?.remove();
-    if(src){const i=document.createElement("img");i.alt="";i.src=src;z.prepend(i);}
+    z.querySelector("img,video")?.remove();pv.textContent="";
+    if(src){z.prepend(elemento(tipo,src,poster));pv.append(elemento(tipo,src,poster));}
+    else pv.textContent="Sin imagen";
     z.querySelector(".pz-inner").hidden=!!src;$("#avActions").hidden=!src;
-    const pv=$("#avPrevImg");pv.style.backgroundImage=src?"url("+JSON.stringify(src)+")":"";
-    pv.textContent=src?"":"Sin imagen";
   }
   function pintarDestino(a){
     const d=destinoDe(a);
     $("#avDest").value=d?d.id:"";
     $("#avDestTxt").innerHTML=d?"El botón dice <b>«"+d.es+" →»</b> y <b>«"+d.en+" →»</b>":"Elige a dónde lleva el botón";
     $("#avPrevBtn").textContent=d?d.es+" →":"—";
+    const color=a.boton.color==="blanco"?"blanco":"rojo";
+    $("#avPrevBtn").classList.toggle("blanco",color==="blanco");
+    document.querySelectorAll("#avColor .chip").forEach(c=>c.setAttribute("aria-pressed",String(c.dataset.color===color)));
     $("#avEyebrow").textContent="Aviso · "+destinoNombre(a);
   }
   function pintarPaginas(a){
@@ -1554,8 +1578,12 @@
   const botonDe=d=>({texto:d.es,texto_en:d.en,...(d.accion?{accion:d.accion}:{url:d.url})});
   $("#avDest").onchange=e=>{
     const a=cur(),d=DESTINOS.find(x=>x.id===e.target.value);if(!a||!d)return;
-    a.boton=botonDe(d);setDirty();pintarDestino(a);pintarLista();
+    a.boton={...botonDe(d),color:a.boton.color};setDirty();pintarDestino(a);pintarLista();
   };
+  $("#avColor").addEventListener("click",e=>{
+    const c=e.target.closest(".chip"),a=cur();if(!c||!a)return;
+    a.boton.color=c.dataset.color;setDirty();pintarDestino(a);
+  });
   $("#avName").addEventListener("input",e=>{
     const a=cur();if(!a)return;
     a.nombre=e.target.value;setDirty();$("#avTitle").textContent=titulo(a);pintarLista();
@@ -1563,34 +1591,72 @@
   $("#avActive").onclick=()=>{const a=cur();if(!a)return;a.activo=!a.activo;setDirty();pintar();};
 
   // ── imagen: recorte centrado a 3:4, reducción y subida ──
+  // Recorte centrado a 3:4 de lo que sea dibujable (imagen o fotograma de vídeo), ya reducido a JPEG.
+  async function recortarA3x4(fuente,nw,nh){
+    let sw=nw,sh=Math.round(sw*H/W);
+    if(sh>nh){sh=nh;sw=Math.round(sh*W/H);}
+    const c=document.createElement("canvas");c.width=sw;c.height=sh;
+    c.getContext("2d").drawImage(fuente,Math.round((nw-sw)/2),Math.round((nh-sh)/2),sw,sh,0,0,sw,sh);
+    return ui.reducir(c,Math.min(W,sw));
+  }
   async function recortar(file){
     const url=URL.createObjectURL(file);
     try{
       const img=new Image();img.src=url;await img.decode();   // respeta la orientación EXIF
-      let sw=img.naturalWidth,sh=Math.round(sw*H/W);
-      if(sh>img.naturalHeight){sh=img.naturalHeight;sw=Math.round(sh*W/H);}
-      const c=document.createElement("canvas");c.width=sw;c.height=sh;
-      c.getContext("2d").drawImage(img,Math.round((img.naturalWidth-sw)/2),Math.round((img.naturalHeight-sh)/2),sw,sh,0,0,sw,sh);
-      return {blob:await ui.reducir(c,Math.min(W,sw)),ancho:img.naturalWidth};
+      return {blob:await recortarA3x4(img,img.naturalWidth,img.naturalHeight),ancho:img.naturalWidth};
     }catch(e){return null;}
     finally{URL.revokeObjectURL(url);}
   }
-  async function subir(file){
-    const a=cur();
-    if(!a||!file||!file.type.startsWith("image/"))return;
+  async function enviar(fd){
+    const res=await fetch("/api/upload",{method:"POST",body:fd});
+    const out=await res.json().catch(()=>({}));
+    if(res.status===401)throw new Error("Sesión caducada — recarga la página");
+    if(!res.ok||!out.ok)throw new Error(out.error||("HTTP "+res.status));
+    return out;
+  }
+  async function subirImagen(file,a){
     ui.setPill("saving","Subiendo imagen…");
     const r=await recortar(file);
     if(!r){ui.setPill("dirty","Sin guardar");ui.showToast("No se pudo leer la imagen: prueba con un JPG o PNG",true);return;}
-    const rd=new FileReader();rd.onload=e=>{a._preview=e.target.result;pintar();};rd.readAsDataURL(r.blob);
+    const rd=new FileReader();rd.onload=e=>{a._preview=e.target.result;a._previewTipo="imagen";pintar();};rd.readAsDataURL(r.blob);
     try{
       const fd=new FormData();fd.append("kind","aviso");fd.append("name","aviso");fd.append("file",r.blob,"aviso.jpg");
-      const res=await fetch("/api/upload",{method:"POST",body:fd});
-      const out=await res.json().catch(()=>({}));
-      if(res.status===401)throw new Error("Sesión caducada — recarga la página");
-      if(!res.ok||!out.ok)throw new Error(out.error||("HTTP "+res.status));
+      const out=await enviar(fd);
       a.media={tipo:"imagen",src:out.url,alt:""};a._preview=null;pintar();setDirty();
       ui.showToast("Imagen subida ("+ui.kb(file.size)+" → "+ui.kb(r.blob.size)+")"+(r.ancho<W?" — es pequeña, se verá borrosa":"")+" — dale a Guardar para publicarla",r.ancho<W);
-    }catch(e){setDirty();ui.showToast("No se pudo subir la imagen: "+e.message,true);}
+    }catch(e){a._preview=null;pintar();setDirty();ui.showToast("No se pudo subir la imagen: "+e.message,true);}
+  }
+  // El vídeo se sube tal cual (no se recodifica en el navegador); de su primer fotograma sale el
+  // póster, que es lo que se ve en la tarjeta mientras el vídeo carga.
+  const MAX_VIDEO=10*1048576;
+  async function subirVideo(file,a){
+    if(file.size>MAX_VIDEO){ui.showToast("El vídeo pesa "+ui.kb(file.size)+": el máximo son 10 MB. Recórtalo o bájale la calidad",true);return;}
+    ui.setPill("saving","Subiendo vídeo…");
+    const url=URL.createObjectURL(file),v=document.createElement("video");
+    v.muted=true;v.playsInline=true;v.preload="auto";v.src=url;
+    try{
+      await new Promise((ok,ko)=>{v.onloadeddata=ok;v.onerror=ko;});
+      v.currentTime=Math.min(0.1,(v.duration||0)/2);
+      await new Promise(r=>{v.onseeked=r;});
+      const poster=await recortarA3x4(v,v.videoWidth,v.videoHeight);
+      a._preview=url;a._previewTipo="video";pintar();
+      const fd=new FormData();fd.append("kind","aviso");fd.append("name","aviso");
+      fd.append("file",file,"aviso."+(file.type==="video/webm"?"webm":file.type==="video/quicktime"?"mov":"mp4"));fd.append("poster",poster,"poster.jpg");
+      const out=await enviar(fd);
+      a.media={tipo:"video",src:out.url,poster:out.poster,alt:""};a._preview=null;pintar();setDirty();
+      const largo=v.duration>15;
+      ui.showToast("Vídeo subido ("+ui.kb(file.size)+", "+Math.round(v.duration)+" s)"+(largo?" — es largo: mejor de unos 10 s":"")+" — dale a Guardar para publicarlo",largo);
+    }catch(e){
+      a._preview=null;pintar();setDirty();
+      ui.showToast(e&&e.message?"No se pudo subir el vídeo: "+e.message:"No se puede leer este vídeo: prueba con un MP4 (H.264)",true);
+    }finally{URL.revokeObjectURL(url);}
+  }
+  async function subir(file){
+    const a=cur();if(!a||!file)return;
+    if(file.type==="image/gif"){ui.showToast("Los GIF pesan demasiado: conviértelo a MP4 y súbelo así",true);return;}
+    if(file.type.startsWith("video/"))return subirVideo(file,a);
+    if(file.type.startsWith("image/"))return subirImagen(file,a);
+    ui.showToast("Formato no admitido: usa JPG, PNG o MP4",true);
   }
   const zona=$("#avZone"),fi=$("#avFile");
   zona.onclick=()=>fi.click();
@@ -1605,7 +1671,7 @@
   // ── crear, ordenar, borrar ──
   $("#addAviso").onclick=()=>{
     const ahora=new Date().toISOString();
-    const a={id:uid(),nombre:"",creado:ahora,modificado:ahora,activo:false,paginas:["/","/locales","/eventos"],media:{tipo:"imagen",src:"",alt:""},boton:botonDe(DESTINOS.find(x=>x.id==="/eventos"))};
+    const a={id:uid(),nombre:"",creado:ahora,modificado:ahora,activo:false,paginas:["/","/locales","/eventos"],media:{tipo:"imagen",src:"",alt:""},boton:{...botonDe(DESTINOS.find(x=>x.id==="/eventos")),color:"rojo"}};
     AV.unshift(a);sel=a.id;setDirty();pintar();
   };
   function mover(d){
@@ -1623,8 +1689,8 @@
   function modelo(d){
     AV=((d&&d.avisos)||[]).map(a=>({
       id:a.id||uid(),nombre:a.nombre||"",creado:a.creado||"",modificado:a.modificado||a.creado||"",activo:a.activo!==false,paginas:(a.paginas||[]).slice(),
-      media:{tipo:"imagen",src:(a.media&&a.media.src)||"",alt:""},
-      boton:a.boton||{texto:"",texto_en:""}
+      media:{tipo:a.media&&a.media.tipo==="video"?"video":"imagen",src:(a.media&&a.media.src)||"",...(a.media&&a.media.poster?{poster:a.media.poster}:{}),alt:""},
+      boton:{color:"rojo",...(a.boton||{texto:"",texto_en:""})}
     }));
     AV.forEach(a=>{a._firma=firma(a);});
     sel=(AV[0]||{}).id||null;
