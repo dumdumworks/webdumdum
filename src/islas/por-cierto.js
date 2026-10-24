@@ -1,8 +1,8 @@
 // ─────────────────────────────────────────────────────────────
 // «Por cierto!»: pastilla flotante (gemela del botón de alérgenos, pero a la
 // izquierda) que despliega una tarjeta con un aviso: imagen o vídeo y un botón.
-// PROTOTIPO: lee /por-cierto.json; si no existe o no hay ningún aviso para esta página,
-// no hace nada (ni pinta ni pide nada más).
+// Lee /por-cierto.json (functions/por-cierto.json.js): si no responde o no hay ningún aviso activo para
+// esta página, no hace nada (ni pinta ni pide nada más).
 // La imagen o el vídeo NO se piden hasta que alguien abre la tarjeta.
 // ─────────────────────────────────────────────────────────────
 import { $, atenuarAlScroll } from "./nucleo.js";
@@ -63,7 +63,21 @@ function pintar(avisos) {
   const txt = document.createElement("span");
   txt.className = "cierto-txt";
   txt.textContent = t("Por cierto!", "By the way!");
+  // Con miniatura (56 px, la genera el editor al subir la imagen) la pastilla enseña de qué va el
+  // aviso, sin descargar la imagen grande hasta que se abre. Sin ella, los ojitos.
+  const mini = avisos[0].media.mini;
+  if (mini) {
+    const im = new Image();
+    im.src = mini; im.alt = ""; im.width = im.height = 28;
+    ico.className = "fab-ico cierto-mini"; ico.replaceChildren(im);
+  }
   boton.append(ico, txt);
+  // Con varios avisos, cuántos hay: el aviso de «tienes algo nuevo» de siempre.
+  if (avisos.length > 1) {
+    const n = document.createElement("span");
+    n.className = "cierto-num"; n.setAttribute("aria-hidden", "true"); n.textContent = avisos.length;
+    boton.append(n);
+  }
 
   const tarjeta = document.createElement("aside");
   tarjeta.id = "cierto-card"; tarjeta.className = "cierto-card";

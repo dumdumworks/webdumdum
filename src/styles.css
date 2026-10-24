@@ -402,11 +402,29 @@ img { display: block; max-width: 100%; }
 @media (hover: hover){
   .cierto-fab:hover{ box-shadow: 0 5px 22px rgba(255, 0, 30, 0.5); }
 }
+/* Miniatura del aviso en vez de los ojitos: 28px con el filete crema de la pastilla. El margen
+   negativo la deja en los 20px de alto del icono, así la pastilla sigue midiendo 44. */
+.cierto-mini{ width: 28px; height: 28px; margin: -4px 0; border-radius: 50%; box-shadow: 0 0 0 2px var(--bg); overflow: hidden; background: var(--sage-faint); }
+.cierto-mini img{ display: block; width: 28px; height: 28px; object-fit: cover; }
+/* Con la miniatura el contenido pasaría de los 150px de las otras pastillas: se recoge aire a los lados. */
+.cierto-fab:has(.cierto-mini), .cierto-pre:has(.cierto-mini){ padding: 11px 16px 11px 9px; gap: 7px; }
+/* Número de avisos, sobresaliendo de la esquina; el filete crema lo separa de lo que haya debajo. */
+.cierto-num{
+  position: absolute; top: -8px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; box-sizing: border-box;
+  border-radius: 10px; background: var(--black); color: var(--bg); border: 2px solid var(--bg);
+  font-size: 11px; line-height: 16px; text-align: center; letter-spacing: 0;
+}
+/* Entrada: a los 2s de cargar sale con un rebote y un único halo; después, quieta. */
+.cierto-fab.is-on{ animation: cierto-entra .9s cubic-bezier(.34, 1.56, .64, 1) 2s backwards, cierto-halo 1.4s ease-out 2.7s 1; }
+@keyframes cierto-entra{ from{ opacity: 0; transform: translateY(24px) scale(.6); } 60%{ opacity: 1; } to{ opacity: 1; transform: none; } }
+@keyframes cierto-halo{ from{ box-shadow: 0 0 0 0 rgba(255, 0, 30, 0.55); } to{ box-shadow: 0 0 0 22px rgba(255, 0, 30, 0); } }
 /* Con 347px o menos no caben las dos pastillas de la carta (150 + 150 + 2×16 de margen +
    16 de aire = 348): solo los ojitos (el texto sigue ahí para los lectores de pantalla). */
 @media (max-width: 347px){
   .cierto-fab{ min-width: 0; padding: 11px; }   /* 20 de icono + 22 + 2 de filete = círculo de 44 */
   .cierto-pre{ padding: 11px; }
+  .cierto-fab:has(.cierto-mini), .cierto-pre:has(.cierto-mini){ padding: 7px; }   /* 28 + 14 + 2 de filete = círculo de 44 */
+  .cierto-mini{ margin: 0; }
   .cierto-txt{ position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 /* En la carta, en móvil: «Por cierto!» ocupa el sitio de alérgenos (derecha) y alérgenos pasa a la
@@ -516,6 +534,7 @@ img { display: block; max-width: 100%; }
 @media (prefers-reduced-motion: reduce){
   .fab, .alerg-fab, .alerg-fab.is-on, .pide-fab, .cierto-fab, .yt-play{ transition: none; }
   .cierto-pupila{ animation: none; }
+  .cierto-fab.is-on{ animation: none; }
 }
 
 /* Badge de Cookiebot (el círculo de abajo a la izquierda que reabre el aviso
