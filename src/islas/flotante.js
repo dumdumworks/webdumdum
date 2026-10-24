@@ -1,6 +1,6 @@
 // Flotante "Pide ya" (solo móvil): se puede arrastrar; un toque lo abre. Pierde
 // opacidad mientras se hace scroll y la recupera al parar.
-import { $ } from "./nucleo.js";
+import { $, atenuarAlScroll } from "./nucleo.js";
 import { abrirPide } from "./modales.js";
 
 export function flotante() {
@@ -33,10 +33,5 @@ export function flotante() {
     if (fueToque) abrirPide("inicio");
   });
 
-  let timer = null;
-  window.addEventListener("scroll", () => {
-    fab.classList.add("is-scrolling");
-    clearTimeout(timer);
-    timer = setTimeout(() => fab.classList.remove("is-scrolling"), 600);
-  }, { passive: true });
+  atenuarAlScroll(fab);
 }

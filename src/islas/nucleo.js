@@ -3,6 +3,17 @@ export const $ = (sel, raiz = document) => raiz.querySelector(sel);
 export const $$ = (sel, raiz = document) => Array.prototype.slice.call(raiz.querySelectorAll(sel));
 export const emitir = (nombre, detail) => window.dispatchEvent(new CustomEvent(nombre, { detail }));
 
+// Un flotante pierde opacidad mientras se hace scroll (clase is-scrolling) y la
+// recupera 600ms después de parar: no tapa el contenido mientras se lee.
+export function atenuarAlScroll(el) {
+  let timer = null;
+  window.addEventListener("scroll", () => {
+    el.classList.add("is-scrolling");
+    clearTimeout(timer);
+    timer = setTimeout(() => el.classList.remove("is-scrolling"), 600);
+  }, { passive: true });
+}
+
 // Atrapa el foco dentro de un diálogo: lo lleva al propio diálogo (no al primer
 // control: en iOS eso pintaba el anillo azul de foco sobre la X al abrir con el
 // dedo), mantiene Tab/Shift+Tab dentro y, al soltar, devuelve el foco a quien

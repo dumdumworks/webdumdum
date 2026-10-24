@@ -12,6 +12,10 @@
 //     decodificar la foto).
 // Devuelve { ok:true, url:"/img/menu/<clave>" } — esa url se guarda en el campo
 // "image" del plato y la sirve functions/img/menu/[[path]].js desde R2.
+//
+// Con kind=aviso (avisos «Por cierto!») file es la imagen 4:5 ya recortada o un vídeo, y llegan
+// además "poster" (fotograma del vídeo) y "mini" (miniatura cuadrada de la pastilla), ambos
+// JPEG. Devuelve { ok, url, poster?, mini? }; ver subirAviso.
 // ─────────────────────────────────────────────────────────────
 import { requireAccess } from "../_lib/access.js";
 import { claveFoto, variantesDe } from "../../src/html/fotos-r2.mjs";
@@ -21,6 +25,29 @@ function json(obj, status = 200) {
     status,
     headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
   });
+}
+
+const VIDEOS = { "video/mp4": "mp4", "video/webm": "webm", "video/quicktime": "mov" };
+
+async function subirAviso(env, form, file) {
+  const ts = Date.now();
+  const esVideo = file.type in VIDEOS;
+  if (!esVideo && file.type !== "image/jpeg") return json({ error: "Un aviso admite un JPEG o un vídeo MP4, WebM o MOV." }, 400);
+  if (file.size > (esVideo ? 10 : 2) * 1024 * 1024) return json({ error: esVideo ? "El vídeo supera 10 MB." : "La imagen supera 2 MB." }, 400);
+
+  const piezas = [["url", `aviso-${ts}.${esVideo ? VIDEOS[file.type] : "jpg"}`, file, file.type]];
+  for (const [campo, max] of [["poster", 2 * 1024 * 1024], ["mini", 300 * 1024]]) {
+    const f = form.get(campo);
+    if (!f) { if (campo === "poster" && esVideo) return json({ error: "Falta el póster del vídeo." }, 400); continue; }
+    if (typeof f === "string" || f.type !== "image/jpeg" || f.size > max) return json({ error: `El campo '${campo}' debe ser un JPEG pequeño.` }, 400);
+    piezas.push([campo, `aviso-${ts}-${campo}.jpg`, f, "image/jpeg"]);
+  }
+  const salida = { ok: true };
+  for (const [campo, key, blob, contentType] of piezas) {
+    await env.PHOTOS.put(key, await blob.arrayBuffer(), { httpMetadata: { contentType } });
+    salida[campo] = `/img/menu/${key}`;
+  }
+  return json(salida);
 }
 
 export async function onRequestPost({ env, request }) {
@@ -36,6 +63,7 @@ export async function onRequestPost({ env, request }) {
   }
   const file = form.get("file");
   if (!file || typeof file === "string") return json({ error: "Falta el archivo 'file'." }, 400);
+  if (form.get("kind") === "aviso") return subirAviso(env, form, file);
 
   const type = file.type || "application/octet-stream";
   if (!type.startsWith("image/")) return json({ error: "Solo se admiten imágenes." }, 400);

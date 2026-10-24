@@ -17,6 +17,7 @@ import { home } from "./home.js";
 import { faq } from "./faq.js";
 import { eventos } from "./eventos.js";
 import { cookies } from "./cookies.js";
+import { porCierto } from "./por-cierto.js";
 import { $$ } from "./nucleo.js";
 
 estado();
@@ -32,6 +33,7 @@ home();
 faq();
 eventos();
 cookies();
+porCierto();
 
 // El selector de idioma guarda la preferencia ANTES de navegar (misma clave
 // que React); el script de cabecera la lea al aterrizar para llevar a cada

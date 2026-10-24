@@ -96,6 +96,25 @@ o con `id` repetido.
   `dum-dum.es/api`, política Allow por email. Protege el panel y `functions/api/*`.
 - Los previews (`*.pages.dev`) no tienen KV: sirven la copia del repo.
 
+## Avisos «Por cierto!» (pastilla flotante con tarjeta)
+
+Pastilla roja abajo a la izquierda (a 16 px del borde en móvil y sobre el margen de la web, `--gutter`,
+en desktop) que se abre en una tarjeta 4:5 con una imagen o un vídeo y un botón. Sin avisos activos para la
+página no se pinta nada. La isla es `src/islas/por-cierto.js`; los avisos se editan en la pestaña
+«Avisos» de `panel/` y se guardan en la **misma KV** que la carta (binding `MENU`), clave `por-cierto`:
+
+- `functions/api/banners.js` (tras Access): `GET` devuelve todo y `POST` valida y guarda. La validación está
+  en `functions/_lib/avisos.js`: reconstruye cada campo, solo admite archivos de `/img/menu/` y rutas
+  internas, y rechaza un aviso activo al que le falte imagen, texto, destino o páginas.
+- `functions/por-cierto.json.js` (público): solo los avisos activos, sin nombre ni fechas, con la misma
+  caché corta que la carta. La web lo pide en cada página; si no hay KV o está vacío devuelve `{avisos:[]}`.
+- `functions/api/upload.js` con `kind=aviso`: imagen 4:5 (JPEG ya recortado por el panel) o vídeo
+  (MP4/WebM/MOV, hasta 10 MB) con su `poster`, y la `mini` cuadrada (112 px) que sale en la pastilla.
+  Todo va a R2 (`aviso-<ts>[-poster|-mini].<ext>`) y se sirve desde `/img/menu/`, que atiende `Range` (206)
+  porque Safari lo exige para reproducir vídeo.
+- La imagen o el vídeo grandes no se piden hasta abrir la tarjeta; la pastilla solo carga la miniatura
+  (sin ella, los ojitos).
+
 ## Idiomas
 
 ES y EN son **rutas distintas** (`/menu` y `/en/menu`) con `hreflang` cruzado. El
