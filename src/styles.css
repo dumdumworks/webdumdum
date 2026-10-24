@@ -428,7 +428,7 @@ img { display: block; max-width: 100%; }
 /* La tarjeta nace sobre las pastillas (44px de alto + 10px de aire). Con los mismos
    márgenes laterales que ellas (left y right = --fab-inset), ocupa justo el hueco que va
    del borde izquierdo del botón izquierdo al borde derecho del botón derecho: queda
-   centrada entre los dos. En pantallas anchas se queda en 440px, pegada a la izquierda.
+   centrada entre los dos. En pantallas anchas se queda en 440px, pegada a la izquierda (en desktop, sobre el margen de la web).
    Cerrada: invisible, sin ratón y con inert (fuera del orden de tab). */
 .cierto-card{
   position: fixed;
@@ -449,6 +449,10 @@ img { display: block; max-width: 100%; }
   visibility: hidden;
 }
 .cierto-card.is-open{ opacity: 1; visibility: visible; }
+/* En desktop, alineadas con el margen del resto de la web (logo, titulares, pie): --gutter. */
+@media (min-width: 880px){
+  .cierto-fab, .cierto-card{ left: var(--gutter); }
+}
 /* El foco al abrir con teclado va a la propia tarjeta: sin anillo (no señala nada), y el
    anillo global es outline + box-shadow, así que hay que devolver la sombra propia. */
 .cierto-card:focus{ outline: none; }
