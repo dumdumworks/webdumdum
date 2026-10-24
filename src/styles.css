@@ -478,27 +478,35 @@ img { display: block; max-width: 100%; }
 /* Lo que hay dentro va maquetado a su tamaño final: lo anima islas/por-cierto.js, que solo
    recorta la caja mientras crece. */
 .cierto-in{ position: relative; }
-/* Galería: las diapositivas van en fila y se encajan al deslizar (scroll-snap nativo, sin JS de
-   arrastre). Cada una es lo que era antes la tarjeta entera; el botón se ancla a SU diapositiva. */
+/* Historias: todas ocupan la misma celda (la tarjeta mide lo que una 4:5) y solo se ve la actual;
+   la isla marca inert a las demás. El cambio es instantáneo, como en Instagram. La pista recibe el
+   gesto entero (toque, mantener, deslizar hacia abajo), así que el navegador no debe hacer scroll
+   ni seleccionar ni abrir el menú de imagen con la pulsación larga. */
 .cierto-pista{
-  display: flex; overflow-x: auto; scrollbar-width: none;
-  scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+  position: relative; display: grid; touch-action: none;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
-.cierto-pista::-webkit-scrollbar{ display: none; }
-.cierto-slide{ position: relative; flex: 0 0 100%; scroll-snap-align: start; scroll-snap-stop: always; }
-/* Puntos: en una pastilla crema con filete rojo, como la ✕ (se leen sobre cualquier imagen).
-   Cada punto es un botón de 24px (objetivo táctil) con el punto dibujado dentro. */
-.cierto-pts{
-  position: absolute; top: 8px; left: 50%; transform: translateX(-50%); z-index: 1;
-  display: flex; align-items: center; height: 28px; padding: 0 6px;
-  border: 1px solid var(--red); border-radius: 999px; background: var(--bg);
+.cierto-slide{ position: relative; grid-area: 1 / 1; }
+.cierto-slide[inert]{ visibility: hidden; }
+/* Zonas de toque: el primer tercio vuelve atrás y el resto avanza. Botones invisibles (teclado y
+   lector de pantalla); el botón de la tarjeta (z-index 1) queda por encima. */
+.cierto-zona{ position: absolute; top: 0; bottom: 0; padding: 0; border: 0; border-radius: 0; background: none; cursor: default; -webkit-tap-highlight-color: transparent; }
+.cierto-zona-ant{ left: 0; width: 33.333%; }
+.cierto-zona-sig{ left: 33.333%; right: 0; }
+/* Barritas de progreso, en la fila de la ✕ y a su izquierda (la ✕ no se mueve haya o no haya barras).
+   El fondo de cada una es crema al 40 %; el relleno, crema entero, crece con scaleX desde la isla.
+   Un velo oscuro suave detrás las deja leerse sobre cualquier imagen. Mantener pulsado las esconde. */
+.cierto-bars{ position: absolute; z-index: 1; top: 21px; left: 8px; right: 44px; display: flex; gap: 3px; pointer-events: none; }
+.cierto-bars::before{
+  content: ""; position: absolute; z-index: -1; top: -21px; left: -8px; right: -44px; height: 64px;
+  background: linear-gradient(var(--black), transparent); opacity: 0.3;
 }
-.cierto-pt{ position: relative; width: 24px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer; }
-.cierto-pt::before{
-  content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px;
-  border-radius: 50%; box-shadow: inset 0 0 0 1px var(--red);
-}
-.cierto-pt[aria-current]::before{ background: var(--red); }
+.cierto-bar{ position: relative; flex: 1; height: 2px; overflow: hidden; border-radius: 1px; }
+.cierto-bar::before, .cierto-bar > span{ content: ""; position: absolute; inset: 0; background: var(--bg); }
+.cierto-bar::before{ opacity: 0.4; }
+.cierto-bar > span{ transform: scaleX(0); transform-origin: left; }
+.cierto-bars, .cierto-x{ transition: opacity .2s ease; }
+.cierto-card.is-pausado .cierto-bars, .cierto-card.is-pausado .cierto-x{ opacity: 0; }
 /* Copia del contenido de la pastilla (ojos + texto), idéntica a ella: es lo que ve la
    tarjeta al empezar a abrirse y al acabar de cerrarse. */
 .cierto-pre{
@@ -512,12 +520,12 @@ img { display: block; max-width: 100%; }
 /* Vertical, 4:5. Si la pantalla es baja (móvil apaisado) se recorta por abajo en vez de hacer scroll
    dentro de la tarjeta: así el botón no se va. */
 .cierto-media{ width: 100%; aspect-ratio: 4 / 5; max-height: calc(var(--cierto-alto) - 2px); background: var(--sage-faint); }
-.cierto-media img, .cierto-media video{ display: block; width: 100%; height: 100%; object-fit: cover; }
+.cierto-media img, .cierto-media video{ display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
 /* El botón flota sobre la imagen (que ocupa toda la tarjeta, sin franja de texto debajo): centrado,
    a la mitad del ancho (sin bajar de lo que mide su texto, que en inglés es más largo); el filete
    crema, como el de la pastilla, lo separa de cualquier foto. */
 .cierto-ir{
-  position: absolute; left: 0; right: 0; bottom: var(--fab-inset);
+  position: absolute; z-index: 1; left: 0; right: 0; bottom: var(--fab-inset);
   width: 50%; min-width: max-content; margin-inline: auto;
   justify-content: center; border-color: var(--bg);
 }
@@ -535,6 +543,7 @@ img { display: block; max-width: 100%; }
   .fab, .alerg-fab, .alerg-fab.is-on, .pide-fab, .cierto-fab, .yt-play{ transition: none; }
   .cierto-pupila{ animation: none; }
   .cierto-fab.is-on{ animation: none; }
+  .cierto-bars, .cierto-x{ transition: none; }
 }
 
 /* Badge de Cookiebot (el círculo de abajo a la izquierda que reabre el aviso
