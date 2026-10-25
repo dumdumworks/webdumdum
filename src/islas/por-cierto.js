@@ -1,7 +1,8 @@
 // ─────────────────────────────────────────────────────────────
-// «Por cierto!»: pastilla flotante (gemela del botón de alérgenos, pero a la
-// izquierda) que despliega una tarjeta con un aviso: imagen o vídeo y un botón. Con varios avisos, la
-// tarjeta se comporta como las stories de Instagram (ver «historias» más abajo).
+// Avisos: botón flotante redondo a la izquierda, con la cara de DUM DUM como foto de perfil, un
+// aro rojo como el de las stories y el número de avisos como una notificación. Despliega una tarjeta
+// con un aviso: imagen o vídeo y un botón. Con varios avisos, la tarjeta se comporta como las
+// stories de Instagram (ver «historias» más abajo).
 // Lee /por-cierto.json (functions/por-cierto.json.js): si no responde o no hay ningún aviso activo para
 // esta página, no hace nada (ni pinta ni pide nada más).
 // La imagen o el vídeo NO se piden hasta que alguien abre la tarjeta.
@@ -13,11 +14,11 @@ const t = (es, en) => (EN && en ? en : es);
 // Ruta neutra de la página (sin /en ni barra final), la misma que usa el selector de páginas.
 const ruta = () => location.pathname.replace(/^\/en(?=\/|$)/, "").replace(/\/+$/, "") || "/";
 
-// Dos ojitos mirando de lado; las pupilas llevan su propia animación (ver el CSS).
-const OJOS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
-  + '<circle cx="6.3" cy="12" r="4.2"></circle><circle cx="17.7" cy="12" r="4.2"></circle>'
-  + '<circle class="cierto-pupila" cx="7.5" cy="12" r="1.8" fill="currentColor" stroke="none"></circle>'
-  + '<circle class="cierto-pupila" cx="18.9" cy="12" r="1.8" fill="currentColor" stroke="none"></circle></svg>';
+// La foto de perfil es el favicon de la web (ya está en el repo; no añade ningún archivo).
+const AVATAR = "/favicon-192x192.png";
+// Lo último que ha visto este navegador (los ids de los avisos): hasta que cambien, el aro va en
+// gris y sin número, como una story ya vista.
+const VISTO = "dumdum.avisos";
 
 // El aviso de cookies de la primera visita ocupa el mismo rincón: esperar a que se cierre.
 const avisoCookiesAbierto = () => {
@@ -63,25 +64,24 @@ function pintar(avisos) {
   boton.setAttribute("aria-expanded", "false");
   boton.setAttribute("aria-controls", "cierto-card");
   const ico = document.createElement("span");
-  ico.className = "fab-ico"; ico.setAttribute("aria-hidden", "true"); ico.innerHTML = OJOS;
+  ico.className = "fab-ico cierto-avatar"; ico.setAttribute("aria-hidden", "true");
+  const foto = new Image();
+  foto.src = AVATAR; foto.alt = ""; foto.width = foto.height = 48;
+  ico.append(foto);
+  // El botón no lleva texto visible; esto es lo que lee un lector de pantalla.
   const txt = document.createElement("span");
-  txt.className = "cierto-txt";
-  txt.textContent = t("Por cierto!", "By the way!");
-  // Con miniatura (56 px, la genera el editor al subir la imagen) la pastilla enseña de qué va el
-  // aviso, sin descargar la imagen grande hasta que se abre. Sin ella, los ojitos.
-  const mini = avisos[0].media.mini;
-  if (mini) {
-    const im = new Image();
-    im.src = mini; im.alt = ""; im.width = im.height = 28;
-    ico.className = "fab-ico cierto-mini"; ico.replaceChildren(im);
-  }
+  txt.className = "sr-only";
+  txt.textContent = t("Novedades de DUM DUM", "News from DUM DUM");
   boton.append(ico, txt);
-  // Con varios avisos, cuántos hay: el aviso de «tienes algo nuevo» de siempre.
-  if (avisos.length > 1) {
-    const n = document.createElement("span");
-    n.className = "cierto-num"; n.setAttribute("aria-hidden", "true"); n.textContent = avisos.length;
-    boton.append(n);
-  }
+  // Como la notificación de una app: cuántos avisos hay, hasta que se abren.
+  const huella = avisos.map((a) => a.id).join(",");
+  const marcarVisto = () => { try { localStorage.setItem(VISTO, huella); } catch (e) { /* sin almacenamiento: se vuelve a ver */ } };
+  let visto = false;
+  try { visto = localStorage.getItem(VISTO) === huella; } catch (e) { /* idem */ }
+  const num = document.createElement("span");
+  num.className = "cierto-num"; num.setAttribute("aria-hidden", "true"); num.textContent = avisos.length;
+  boton.append(num);
+  if (visto) boton.classList.add("is-visto");
 
   const tarjeta = document.createElement("aside");
   tarjeta.id = "cierto-card"; tarjeta.className = "cierto-card";
@@ -132,7 +132,7 @@ function pintar(avisos) {
   }
   // Copia del contenido de la pastilla: es lo que se ve en la tarjeta al empezar y al terminar.
   const pre = document.createElement("div"); pre.className = "cierto-pre"; pre.setAttribute("aria-hidden", "true");
-  pre.append(ico.cloneNode(true), txt.cloneNode(true));
+  pre.append(ico.cloneNode(true));
   tarjeta.append(dentro, pre);
   document.body.append(boton, tarjeta);
   atenuarAlScroll(boton);
@@ -240,17 +240,18 @@ function pintar(avisos) {
   tarjeta.addEventListener("focusout", () => { foco = false; aplicar(); });
   document.addEventListener("visibilitychange", aplicar);
 
-  // Anima la tarjeta entre la pastilla y su sitio final. `teclado`: el foco solo se mueve si
+  // Anima la tarjeta entre el botón redondo y su sitio final. `teclado`: el foco solo se mueve si
   // se usó el teclado (en táctil, un foco programático pinta el anillo en iOS).
   function mover(abriendo, teclado) {
     animando = true;
     abierta = abriendo;
     boton.setAttribute("aria-expanded", String(abriendo));
     const p = boton.getBoundingClientRect();
+    const aro = getComputedStyle(boton).borderColor;   // rojo si hay avisos sin ver, gris si ya se vieron
     if (abriendo) {
       tarjeta.classList.add("is-open"); tarjeta.inert = false;   // ya está en su sitio final, aún sin pintarse
       mostrar(0);                                                  // siempre desde la primera; ahora sí se pide el archivo
-      boton.classList.add("is-visto");                            // las pupilas dejan de moverse
+      boton.classList.add("is-visto"); marcarVisto();            // aro gris y sin número, hasta que haya avisos nuevos
     }
     if (!abriendo) parar();
     const c = tarjeta.getBoundingClientRect();
@@ -271,20 +272,16 @@ function pintar(avisos) {
       boton.style.visibility = abriendo ? "hidden" : "";
       return fin();
     }
-    const css = getComputedStyle(document.documentElement);
-    const rojo = css.getPropertyValue("--red").trim(), crema = css.getPropertyValue("--bg").trim();
-    const caja = (r, radio, sombra) => ({
+    const rojo = getComputedStyle(document.documentElement).getPropertyValue("--red").trim();
+    const caja = (r, radio, borde, sombra) => ({
       left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px",
-      right: "auto", bottom: "auto", maxHeight: "none", borderRadius: radio, boxShadow: sombra,
+      right: "auto", bottom: "auto", maxHeight: "none", borderRadius: radio, borderWidth: borde, boxShadow: sombra,
     });
-    const deBoton = caja(p, "22px", getComputedStyle(boton).boxShadow);
-    const deTarjeta = caja(c, "20px", getComputedStyle(tarjeta).boxShadow);
-    // El color va aparte: mezclar rojo y crema pasa por un rosa lavado. Se queda rojo (un botón
-    // que crece) hasta un cuarto del recorrido y el cambio a crema llega ya con la caja casi hecha.
-    const rojizo = { backgroundColor: rojo, borderColor: crema }, cremoso = { backgroundColor: crema, borderColor: rojo };
-    const colores = abriendo
-      ? [{ ...rojizo, offset: 0 }, { ...rojizo, offset: 0.25 }, { ...cremoso, offset: 1 }]
-      : [{ ...cremoso, offset: 0 }, { ...rojizo, offset: 0.75 }, { ...rojizo, offset: 1 }];
+    // El botón es un círculo crema con aro de 2px; la tarjeta es crema con filete de 1px. El aro
+    // pasa a rojo (o de vuelta) mientras la caja crece.
+    const deBoton = caja(p, p.width / 2 + "px", "2px", getComputedStyle(boton).boxShadow);
+    const deTarjeta = caja(c, "20px", "1px", getComputedStyle(tarjeta).boxShadow);
+    const colores = [{ borderColor: abriendo ? aro : rojo }, { borderColor: abriendo ? rojo : aro }];
     const dur = abriendo ? DURACION : DURACION * 0.85;
     tarjeta.style.overflow = "hidden";
     dentro.style.width = c.width - 2 + "px";   // el contenido se maqueta a su ancho final
