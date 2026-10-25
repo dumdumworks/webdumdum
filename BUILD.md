@@ -96,16 +96,17 @@ o con `id` repetido.
   `dum-dum.es/api`, política Allow por email. Protege el panel y `functions/api/*`.
 - Los previews (`*.pages.dev`) no tienen KV: sirven la copia del repo.
 
-## Avisos «Por cierto!» (pastilla flotante con tarjeta)
+## Avisos (botón flotante con tarjeta)
 
-Pastilla roja abajo a la izquierda (a 16 px del borde en móvil y sobre el margen de la web, `--gutter`,
-en desktop) que se abre en una tarjeta 4:5 con una imagen o un vídeo y un botón. Sin avisos activos para la
-página no se pinta nada. La isla es `src/islas/por-cierto.js`; los avisos se editan en la pestaña
+Botón redondo de 44 px abajo a la izquierda (a 16 px del borde en móvil y sobre el margen de la web, `--gutter`,
+en desktop), con el favicon como foto, aro verde y el número de avisos, que se abre en una tarjeta 4:5 con una
+imagen o un vídeo y un botón. Los avisos activos salen en **todas las páginas** (ES y EN), sin elegir dónde;
+sin avisos activos no se pinta nada. La isla es `src/islas/por-cierto.js`; los avisos se editan en la pestaña
 «Avisos» de `panel/` y se guardan en la **misma KV** que la carta (binding `MENU`), clave `por-cierto`:
 
 - `functions/api/banners.js` (tras Access): `GET` devuelve todo y `POST` valida y guarda. La validación está
   en `functions/_lib/avisos.js`: reconstruye cada campo, solo admite archivos de `/img/menu/` y rutas
-  internas, y rechaza un aviso activo al que le falte imagen, texto, destino o páginas.
+  internas, y rechaza un aviso activo al que le falte imagen, texto o destino.
 - `functions/por-cierto.json.js` (público): solo los avisos activos, sin nombre ni fechas, con la misma
   caché corta que la carta. La web lo pide en cada página; si no hay KV o está vacío devuelve `{avisos:[]}`.
 - `functions/api/upload.js` con `kind=aviso`: imagen 4:5 (JPEG ya recortado por el panel) o vídeo

@@ -3,16 +3,14 @@
 // aro verde (el de «mejores amigos» de Instagram) y el número de avisos como una notificación. Despliega una tarjeta
 // con un aviso: imagen o vídeo y un botón. Con varios avisos, la tarjeta se comporta como las
 // stories de Instagram (ver «historias» más abajo).
-// Lee /por-cierto.json (functions/por-cierto.json.js): si no responde o no hay ningún aviso activo para
-// esta página, no hace nada (ni pinta ni pide nada más).
+// Lee /por-cierto.json (functions/por-cierto.json.js). Los avisos activos salen en TODAS las páginas:
+// si no responde o no hay ninguno activo, no hace nada (ni pinta ni pide nada más).
 // La imagen o el vídeo NO se piden hasta que alguien abre la tarjeta.
 // ─────────────────────────────────────────────────────────────
 import { atenuarAlScroll } from "./nucleo.js";
 
 const EN = document.documentElement.lang === "en";
 const t = (es, en) => (EN && en ? en : es);
-// Ruta neutra de la página (sin /en ni barra final), la misma que usa el selector de páginas.
-const ruta = () => location.pathname.replace(/^\/en(?=\/|$)/, "").replace(/\/+$/, "") || "/";
 
 // La foto de perfil es el favicon de la web (ya está en el repo; no añade ningún archivo).
 const AVATAR = "/favicon-192x192.png";
@@ -313,10 +311,9 @@ function pintar(avisos) {
   });
 }
 
-// Un aviso sale solo si está activo, tiene medio y botón, y la página figura en «Dónde sale».
-// Cualquier dato que falte o falle (404, JSON roto, lista vacía) deja la página sin botón.
-const sale = (a) => a && a.activo === true && a.media && a.media.src && a.boton &&
-  Array.isArray(a.paginas) && a.paginas.includes(ruta());
+// Un aviso sale solo si está activo y tiene medio y botón. Cualquier dato que falte o falle
+// (404, JSON roto, lista vacía) deja la página sin botón.
+const sale = (a) => a && a.activo === true && a.media && a.media.src && a.boton;
 
 export async function porCierto() {
   let datos;
@@ -325,8 +322,8 @@ export async function porCierto() {
     if (!r.ok) return;
     datos = await r.json();
   } catch (e) { return; }
-  const aqui = Array.isArray(datos && datos.avisos) ? datos.avisos.filter(sale) : [];
-  // Con varios activos, galería (por defecto) o solo el primero, según el interruptor del editor.
-  const avisos = datos.galeria === false ? aqui.slice(0, 1) : aqui;
+  const activos = Array.isArray(datos && datos.avisos) ? datos.avisos.filter(sale) : [];
+  // Con varios activos, stories (por defecto) o solo el primero, según el interruptor del editor.
+  const avisos = datos.galeria === false ? activos.slice(0, 1) : activos;
   if (avisos.length) esperarSinAviso().then(() => pintar(avisos));
 }

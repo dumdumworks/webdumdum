@@ -658,8 +658,8 @@
         <div class="side-actions"><button class="add-btn" id="addAviso">＋ Aviso</button></div>
       </div>
       <div class="av-modo">
-        <div class="sec-label">Si hay varios activos en una página</div>
-        <div class="views" role="group" aria-label="Qué hacer si hay varios avisos activos en una página">
+        <div class="sec-label">Si hay varios activos</div>
+        <div class="views" role="group" aria-label="Qué hacer si hay varios avisos activos">
           <button type="button" class="view-tab" id="avGaleria" aria-pressed="true">Galería</button>
           <button type="button" class="view-tab" id="avUno" aria-pressed="false">Solo el primero</button>
         </div>
@@ -732,12 +732,6 @@
                 <button type="button" class="chip" data-color="blanco" aria-pressed="false">Blanco</button>
               </div>
             </div>
-          </div>
-
-          <div class="grp">
-            <div class="grp-label">Dónde sale <span class="req">al menos una página</span></div>
-            <div class="chips" id="avPages"></div>
-            <div class="num-hint">Sale en la versión española y en la inglesa de cada página.</div>
           </div>
 
           <div class="grp">
@@ -1446,21 +1440,20 @@
 // ── Avisos «Por cierto» ──────────────────────────────────────────────────────
 // Cada aviso es una imagen 4:5 + un botón, sin texto propio. Se guarda en el
 // formato que lee la web (/por-cierto.json), así el editor y la web comparten un solo modelo:
-// El conjunto es { galeria:true|false, avisos:[…] }: con varios activos en una página, la tarjeta es
-// una galería (por defecto) o muestra solo el primero. Cada aviso:
-//   { id, nombre, creado, modificado, activo, paginas:["/eventos"],
+// El conjunto es { galeria:true|false, avisos:[…] }: los avisos activos salen en TODA la web; con varios,
+// la tarjeta funciona como stories (por defecto) o muestra solo el primero. Cada aviso:
+//   { id, nombre, creado, modificado, activo,
 //     media:{tipo:"imagen"|"video",src,poster?,mini?,alt:""}, boton:{texto,texto_en,color:"rojo"|"blanco",url | accion} }
 (function(){
   "use strict";
   const $=s=>document.querySelector(s),ui=window.panelUI;
-  // Páginas de la web, con los nombres de la barra superior (ES / EN).
+  // Páginas de la web, con los nombres de la barra superior (ES / EN): son los destinos posibles del botón.
   const PAGINAS=[
     {url:"/",es:"Inicio",en:"Home"},{url:"/menu",es:"Carta",en:"Menu"},{url:"/locales",es:"Locales",en:"Locations"},
     {url:"/locales/chamberi",es:"Chamberí",en:"Chamberí"},{url:"/locales/bernabeu",es:"Bernabéu",en:"Bernabéu"},
     {url:"/eventos",es:"Eventos",en:"Events"},{url:"/taller-team-building",es:"Team building",en:"Team building"},
     {url:"/contacto",es:"Contacto",en:"Contact"}
   ];
-  const pag=u=>PAGINAS.find(p=>p.url===u);
   // A dónde puede llevar el botón: una página, o una acción que abre un modal de la web
   // (accion:"pide" / "reservar") o salta al formulario de eventos. `nombre` es lo que ve quien
   // edita; `es` / `en`, lo que dice el botón: cada destino tiene su propia llamada a la acción.
@@ -1492,8 +1485,7 @@
   // Fechas del registro: día y hora, en hora de Madrid.
   const fecha=iso=>iso?new Date(iso).toLocaleString("es-ES",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",timeZone:"Europe/Madrid"}):"—";
   // Lo que cuenta como «modificado»: todo menos el orden y las propias fechas.
-  const firma=a=>JSON.stringify([a.nombre,a.activo,a.paginas,a.media.src,a.boton]);
-  const resumen=a=>(a.paginas||[]).map(u=>(pag(u)||{es:u}).es).join(", ")||"Sin páginas";
+  const firma=a=>JSON.stringify([a.nombre,a.activo,a.media.src,a.boton]);
   function setDirty(){dirty=true;ui.setPill("dirty","Sin guardar");}
 
   // ── cambio de vista ──
@@ -1527,7 +1519,7 @@
       else th.innerHTML=ICONO;
       const m=document.createElement("span");m.className="meta";
       const dn=document.createElement("div");dn.className="dn";dn.textContent=titulo(a);
-      const dp=document.createElement("div");dp.className="dp";dp.textContent=resumen(a);
+      const dp=document.createElement("div");dp.className="dp";dp.textContent=destinoNombre(a);
       m.append(dn,dp);b.append(grip,th,m);
       if(!a.activo){const o=document.createElement("span");o.className="dot-off";o.textContent="Off";b.append(o);}
       b.onclick=()=>{sel=a.id;pintar();};
@@ -1569,30 +1561,16 @@
     document.querySelectorAll("#avColor .chip").forEach(c=>c.setAttribute("aria-pressed",String(c.dataset.color===color)));
     $("#avEyebrow").textContent="Aviso · "+destinoNombre(a);
   }
-  function pintarPaginas(a){
-    const c=$("#avPages");c.textContent="";
-    PAGINAS.forEach(p=>{
-      const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=p.es;
-      b.setAttribute("aria-pressed",String(a.paginas.includes(p.url)));
-      b.onclick=()=>{
-        const i=a.paginas.indexOf(p.url);
-        if(i<0)a.paginas.push(p.url);else a.paginas.splice(i,1);
-        a.paginas.sort((x,y)=>PAGINAS.findIndex(q=>q.url===x)-PAGINAS.findIndex(q=>q.url===y));
-        b.setAttribute("aria-pressed",String(i<0));setDirty();pintarLista();
-      };
-      c.append(b);
-    });
-  }
   function pintarModo(){
     $("#avGaleria").setAttribute("aria-pressed",String(GAL));$("#avUno").setAttribute("aria-pressed",String(!GAL));
-    $("#avOrden").textContent=GAL?"Con varios activos en una página se ven como galería, en este orden. Arrastra para ordenarlos.":"Sale solo el primero de la lista que esté activo en esa página. Arrastra para ordenarlos.";
+    $("#avOrden").textContent=GAL?"Los activos salen en toda la web (en español y en inglés). Con varios se ven como stories, en este orden. Arrastra para ordenarlos.":"Los activos salen en toda la web (en español y en inglés), pero solo el primero de la lista. Arrastra para ordenarlos.";
   }
   $("#avGaleria").onclick=()=>{GAL=true;setDirty();pintarModo();};
   $("#avUno").onclick=()=>{GAL=false;setDirty();pintarModo();};
   function pintar(){
     pintarModo();pintarLista();
     const a=cur();if(!a)return;
-    pintarImagen(a);pintarDestino(a);pintarPaginas(a);
+    pintarImagen(a);pintarDestino(a);
     $("#avName").value=a.nombre;$("#avTitle").textContent=titulo(a);
     $("#avFechas").textContent="Solo para ti, no sale en la web.\nCreado: "+fecha(a.creado)+"\nÚltima modificación: "+fecha(a.modificado);
     $("#avActive").setAttribute("aria-pressed",String(a.activo));
@@ -1706,7 +1684,7 @@
   // ── crear, ordenar, borrar ──
   $("#addAviso").onclick=()=>{
     const ahora=new Date().toISOString();
-    const a={id:uid(),nombre:"",creado:ahora,modificado:ahora,activo:false,paginas:["/","/locales","/eventos"],media:{tipo:"imagen",src:"",alt:""},boton:{...botonDe(DESTINOS.find(x=>x.id==="/eventos")),color:"rojo"}};
+    const a={id:uid(),nombre:"",creado:ahora,modificado:ahora,activo:false,media:{tipo:"imagen",src:"",alt:""},boton:{...botonDe(DESTINOS.find(x=>x.id==="/eventos")),color:"rojo"}};
     AV.unshift(a);sel=a.id;setDirty();pintar();
   };
   function moverA(id,destino,antes){
@@ -1733,7 +1711,7 @@
   function modelo(d){
     GAL=!d||d.galeria!==false;
     AV=((d&&d.avisos)||[]).map(a=>({
-      id:a.id||uid(),nombre:a.nombre||"",creado:a.creado||"",modificado:a.modificado||a.creado||"",activo:a.activo!==false,paginas:(a.paginas||[]).slice(),
+      id:a.id||uid(),nombre:a.nombre||"",creado:a.creado||"",modificado:a.modificado||a.creado||"",activo:a.activo!==false,
       media:{tipo:a.media&&a.media.tipo==="video"?"video":"imagen",src:(a.media&&a.media.src)||"",...(a.media&&a.media.poster?{poster:a.media.poster}:{}),...(a.media&&a.media.mini?{mini:a.media.mini}:{}),alt:""},
       boton:{color:"rojo",...(a.boton||{texto:"",texto_en:""})}
     }));
@@ -1755,7 +1733,7 @@
     }
     for(const a of AV){
       if(!a.activo)continue;
-      const fallo=!a.media.src?"no tiene imagen":!destinoDe(a)?"no tiene destino":!a.paginas.length?"no tiene ninguna página":"";
+      const fallo=!a.media.src?"no tiene imagen":!destinoDe(a)?"no tiene destino":"";
       if(fallo){sel=a.id;pintar();ui.showToast("Un aviso activo "+fallo+": complétalo o desactívalo antes de guardar",true);return false;}
     }
     return true;
@@ -1766,7 +1744,7 @@
     try{
       const ahora=new Date().toISOString();
       AV.forEach(a=>{if(!a.creado)a.creado=ahora;a.modificado=!a._firma?a.creado:firma(a)!==a._firma?ahora:a.modificado;});
-      const avisos=AV.map(a=>({id:a.id,nombre:a.nombre.trim(),creado:a.creado,modificado:a.modificado,activo:a.activo,paginas:a.paginas,media:a.media,boton:a.boton}));
+      const avisos=AV.map(a=>({id:a.id,nombre:a.nombre.trim(),creado:a.creado,modificado:a.modificado,activo:a.activo,media:a.media,boton:a.boton}));
       const res=await fetch("/api/banners",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({galeria:GAL,avisos})});
       const out=await res.json().catch(()=>({}));
       if(res.status===401)throw new Error("Sesión caducada — recarga la página");
