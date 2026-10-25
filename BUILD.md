@@ -114,6 +114,13 @@ página no se pinta nada. La isla es `src/islas/por-cierto.js`; los avisos se ed
   porque Safari lo exige para reproducir vídeo.
 - La imagen o el vídeo grandes no se piden hasta abrir la tarjeta; la pastilla solo carga la miniatura
   (sin ella, los ojitos).
+- Con varios avisos activos en la página, la tarjeta se comporta como las **stories de Instagram**:
+  barritas de progreso arriba (en la fila de la ✕), avance solo (5 s por imagen; el vídeo, lo que dure y sin
+  bucle), toque a la derecha = siguiente y en el primer tercio = anterior (en la primera la reinicia; al
+  acabar la última se cierra), mantener pulsado = pausa y esconde barras y ✕, deslizar hacia abajo = cierra.
+  Empieza siempre por la primera al abrir. Se pausa con la pestaña oculta y con el foco del teclado en el
+  botón o la ✕; con «reducir movimiento» no hay avance automático. Con un solo aviso no hay barras ni
+  avance. Las constantes del gesto están al principio de `por-cierto.js`.
 
 ## Idiomas
 
