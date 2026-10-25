@@ -110,8 +110,8 @@ sin avisos activos no se pinta nada. La isla es `src/islas/por-cierto.js`; los a
 - `functions/por-cierto.json.js` (público): solo los avisos activos, sin nombre ni fechas, con la misma
   caché corta que la carta. La web lo pide en cada página; si no hay KV o está vacío devuelve `{avisos:[]}`.
 - `functions/api/upload.js` con `kind=aviso`: imagen 9:16 (JPEG ya recortado por el panel) o vídeo
-  (MP4/WebM/MOV, hasta 10 MB) con su `poster`, y la `mini` cuadrada (112 px) que sale en la pastilla.
-  Todo va a R2 (`aviso-<ts>[-poster|-mini].<ext>`) y se sirve desde `/img/menu/`, que atiende `Range` (206)
+  (MP4/WebM/MOV, hasta 10 MB) con su `poster` (primer fotograma).
+  Todo va a R2 (`aviso-<ts>[-poster].<ext>`) y se sirve desde `/img/menu/`, que atiende `Range` (206)
   porque Safari lo exige para reproducir vídeo.
 - **Carga en diferido.** Ni el JS ni el CSS de los avisos van en los bundles principales. En
   `islas.js` solo hay un cargador (`islas/avisos-carga.js`): espera a `load` y a que el navegador esté libre,

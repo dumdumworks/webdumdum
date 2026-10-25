@@ -1451,7 +1451,7 @@
 // El conjunto es { galeria:true|false, avisos:[…] }: los avisos activos salen en TODA la web; con varios,
 // la tarjeta funciona como stories (por defecto) o muestra solo el primero. Cada aviso:
 //   { id, nombre, creado, modificado, activo,
-//     media:{tipo:"imagen"|"video",src,poster?,mini?,alt:""}, boton:{texto,texto_en,color:"rojo"|"blanco",url | accion} }
+//     media:{tipo:"imagen"|"video",src,poster?,alt:""}, boton:{texto,texto_en,color:"rojo"|"blanco",url | accion} }
 (function(){
   "use strict";
   const $=s=>document.querySelector(s),ui=window.panelUI;
@@ -1625,18 +1625,11 @@
     c.getContext("2d").drawImage(fuente,Math.round((nw-sw)/2),Math.round((nh-sh)/2),sw,sh,0,0,sw,sh);
     return ui.reducir(c,Math.min(W,sw));
   }
-  // Miniatura cuadrada de la pastilla de la web (56 px, el doble para pantallas @2x): el centro de la
-  // imagen. Así la web no descarga la foto entera hasta que alguien abre la tarjeta.
-  function miniatura(fuente,nw,nh){
-    const l=Math.min(nw,nh),c=document.createElement("canvas");c.width=c.height=112;
-    c.getContext("2d").drawImage(fuente,Math.round((nw-l)/2),Math.round((nh-l)/2),l,l,0,0,112,112);
-    return new Promise(ok=>c.toBlob(ok,"image/jpeg",0.8));
-  }
   async function recortar(file){
     const url=URL.createObjectURL(file);
     try{
       const img=new Image();img.src=url;await img.decode();   // respeta la orientación EXIF
-      return {blob:await recortarA9x16(img,img.naturalWidth,img.naturalHeight),mini:await miniatura(img,img.naturalWidth,img.naturalHeight),ancho:img.naturalWidth};
+      return {blob:await recortarA9x16(img,img.naturalWidth,img.naturalHeight),ancho:img.naturalWidth};
     }catch(e){return null;}
     finally{URL.revokeObjectURL(url);}
   }
@@ -1653,9 +1646,9 @@
     if(!r){ui.setPill("dirty","Sin guardar");ui.showToast("No se pudo leer la imagen: prueba con un JPG o PNG",true);return;}
     const rd=new FileReader();rd.onload=e=>{a._preview=e.target.result;a._previewTipo="imagen";pintar();};rd.readAsDataURL(r.blob);
     try{
-      const fd=new FormData();fd.append("kind","aviso");fd.append("name","aviso");fd.append("file",r.blob,"aviso.jpg");fd.append("mini",r.mini,"mini.jpg");
+      const fd=new FormData();fd.append("kind","aviso");fd.append("name","aviso");fd.append("file",r.blob,"aviso.jpg");
       const out=await enviar(fd);
-      a.media={tipo:"imagen",src:out.url,mini:out.mini,alt:""};a._preview=null;pintar();setDirty();
+      a.media={tipo:"imagen",src:out.url,alt:""};a._preview=null;pintar();setDirty();
       ui.showToast("Imagen subida ("+ui.kb(file.size)+" → "+ui.kb(r.blob.size)+")"+(r.ancho<W?" — es pequeña, se verá borrosa":"")+" — dale a Guardar para publicarla",r.ancho<W);
     }catch(e){a._preview=null;pintar();setDirty();ui.showToast("No se pudo subir la imagen: "+e.message,true);}
   }
@@ -1671,12 +1664,12 @@
       await new Promise((ok,ko)=>{v.onloadeddata=ok;v.onerror=ko;});
       v.currentTime=Math.min(0.1,(v.duration||0)/2);
       await new Promise(r=>{v.onseeked=r;});
-      const poster=await recortarA9x16(v,v.videoWidth,v.videoHeight),mini=await miniatura(v,v.videoWidth,v.videoHeight);
+      const poster=await recortarA9x16(v,v.videoWidth,v.videoHeight);
       a._preview=url;a._previewTipo="video";pintar();
       const fd=new FormData();fd.append("kind","aviso");fd.append("name","aviso");
-      fd.append("file",file,"aviso."+(file.type==="video/webm"?"webm":file.type==="video/quicktime"?"mov":"mp4"));fd.append("poster",poster,"poster.jpg");fd.append("mini",mini,"mini.jpg");
+      fd.append("file",file,"aviso."+(file.type==="video/webm"?"webm":file.type==="video/quicktime"?"mov":"mp4"));fd.append("poster",poster,"poster.jpg");
       const out=await enviar(fd);
-      a.media={tipo:"video",src:out.url,poster:out.poster,mini:out.mini,alt:""};a._preview=null;pintar();setDirty();
+      a.media={tipo:"video",src:out.url,poster:out.poster,alt:""};a._preview=null;pintar();setDirty();
       const largo=v.duration>15;
       ui.showToast("Vídeo subido ("+ui.kb(file.size)+", "+Math.round(v.duration)+" s)"+(largo?" — es largo: mejor de unos 10 s":"")+" — dale a Guardar para publicarlo",largo);
     }catch(e){
@@ -1732,7 +1725,7 @@
     GAL=!d||d.galeria!==false;
     AV=((d&&d.avisos)||[]).map(a=>({
       id:a.id||uid(),nombre:a.nombre||"",creado:a.creado||"",modificado:a.modificado||a.creado||"",activo:a.activo!==false,
-      media:{tipo:a.media&&a.media.tipo==="video"?"video":"imagen",src:(a.media&&a.media.src)||"",...(a.media&&a.media.poster?{poster:a.media.poster}:{}),...(a.media&&a.media.mini?{mini:a.media.mini}:{}),alt:""},
+      media:{tipo:a.media&&a.media.tipo==="video"?"video":"imagen",src:(a.media&&a.media.src)||"",...(a.media&&a.media.poster?{poster:a.media.poster}:{}),alt:""},
       boton:{color:"rojo",...(a.boton||{texto:"",texto_en:""})}
     }));
     AV.forEach(a=>{a._firma=firma(a);});

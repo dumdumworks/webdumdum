@@ -3,7 +3,7 @@
 // misma KV que la carta (binding MENU), bajo su propia clave; la web los lee de
 // /por-cierto.json. Modelo (el mismo del editor y de islas/por-cierto.js):
 //   { galeria: boolean, avisos: [{ id, nombre, creado, modificado, activo,
-//     media: { tipo: "imagen"|"video", src, poster?, mini?, alt },
+//     media: { tipo: "imagen"|"video", src, poster?, alt },
 //     boton: { texto, texto_en, color: "rojo"|"blanco", url | accion: "pide"|"reservar" } }] }
 // El editor manda lo que quiere guardar: aquí se valida y se reconstruye campo a campo,
 // así en KV (y en la web) no entra nada que no esté en este modelo.
@@ -41,7 +41,6 @@ export function sanear(entrada) {
         tipo: m.tipo === "video" ? "video" : "imagen",
         src: archivo(m.src),
         ...(archivo(m.poster) ? { poster: archivo(m.poster) } : {}),
-        ...(archivo(m.mini) ? { mini: archivo(m.mini) } : {}),
         alt: texto(m.alt, 140),
       },
       boton: {
