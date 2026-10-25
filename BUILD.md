@@ -142,7 +142,11 @@ sin avisos activos no se pinta nada. La isla es `src/islas/por-cierto.js`; los a
   tarjeta es negro (`--black`) mientras carga, nunca gris. Tras ver un vídeo hasta poder reproducirlo entero
   se guarda en la **Cache API** (`dumdum-avisos`); en las siguientes páginas y visitas se reproduce desde ahí,
   sin red y también en Safari. Se borran los guardados que ya no son avisos activos. El botón sale a los 2 s
-  de la primera página de la visita (con rebote) y enseguida y sin rebote en las demás (`sessionStorage`).
+  de la primera página de la visita (con rebote). **En las demás páginas está puesto de entrada, como «Pide ya»**:
+  los avisos pintados se guardan en `sessionStorage` y `avisos-carga.js` los lanza en cuanto carga el script
+  (sin esperar a `load` ni al JSON; el CSS y el JS de avisos salen de caché), sin fundido ni rebote. El JSON se
+  consulta después solo para comprobar que siguen activos: si ya no queda ninguno, se retira el botón y la
+  tarjeta (`window.dumdumAvisosQuitar`); si solo cambió algo, se ve en la página siguiente.
 
 ## Idiomas
 

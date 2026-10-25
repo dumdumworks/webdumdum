@@ -182,7 +182,10 @@ function pintar(avisos, sinEntrada) {
   diapositivas.forEach((d) => { if (d.a.media.tipo === "video") enCache(d.a.media.src).then((u) => { d.local = u; }); });
   limpiarCache(avisos.filter((a) => a.media.tipo === "video").map((a) => a.media.src));
   atenuarAlScroll(boton);
-  requestAnimationFrame(() => boton.classList.add("is-on"));
+  // Ya salió en esta visita: queda puesto de entrada, como «Pide ya» (sin fundido ni rebote).
+  if (sinEntrada) boton.classList.add("is-on"); else requestAnimationFrame(() => boton.classList.add("is-on"));
+  // Si al comprobar el JSON ya no hay avisos activos (avisos-carga.js), se retira todo lo pintado.
+  window.dumdumAvisosQuitar = () => { boton.remove(); tarjeta.remove(); };
 
   let abierta = false, animando = false, actual = 0;
   let sostenido = false, arrastrando = false, foco = false;   // lo que detiene la historia
@@ -415,4 +418,4 @@ avatar.src = AVATAR;
 new Promise((ok) => setTimeout(ok, yaSalio ? 0 : Math.max(0, ENTRADA_MS - performance.now())))
   .then(esperarSinAviso)
   .then(() => avatar.decode().catch(() => {}))
-  .then(() => pintar(window.dumdumAvisos, yaSalio));
+  .then(() => { if (window.dumdumAvisos.length) pintar(window.dumdumAvisos, yaSalio); });
