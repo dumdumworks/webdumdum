@@ -416,6 +416,7 @@
   color: var(--ink);
 }
 .menu-sectionhead .meta { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; font-size: 11px; letter-spacing: 0; text-transform: uppercase; color: rgba(255,0,30,0.55); text-align: right; }
+.menu-sectionhead .meta .nota-linea { white-space: nowrap; }
 
 .dish {
   display: grid;

@@ -168,9 +168,13 @@ function seccion(i, sec) {
   const cls = ["dish-grid", sec.id === "postres" ? "dish-grid-2col-m" : "", sec.id === "bebidas" ? "dish-grid-2col-m drinks-grid" : ""].filter(Boolean).join(" ");
   // La nota admite " / " para forzar un salto de línea (igual que los
   // títulos, vía mdInline): sin eso, envuelve sola según el ancho y el hueco
-  // hasta el filete varía con la longitud del texto de cada sección.
+  // hasta el filete varía con la longitud del texto de cada sección. Cada línea
+  // forzada va sin partirse (nota-linea): en móvil la nota comparte fila con un
+  // título largo y, si no, una frase se rompía en dos y salían tres líneas.
+  const lineasNota = mdInline(tf(i, sec, "note")).split("<br>");
+  const nota = lineasNota.length > 1 ? lineasNota.map((l) => `<span class="nota-linea">${l}</span>`).join("<br>") : lineasNota[0];
   return `<section class="menu-section section--${esc(sec.id)}${sec.id === "bebidas" ? " section-mobile-only" : ""}">
-  <div class="menu-sectionhead"><h3>${esc(tf(i, sec, "title"))}</h3><div class="meta">${mdInline(tf(i, sec, "note"))}</div></div>
+  <div class="menu-sectionhead"><h3>${esc(tf(i, sec, "title"))}</h3><div class="meta">${nota}</div></div>
   <div class="${cls}">
 ${/* En mochis las etiquetas van junto al nombre (columna estrecha, ficha
      compacta); en el resto de secciones, en su propia línea (ver plato()). */
