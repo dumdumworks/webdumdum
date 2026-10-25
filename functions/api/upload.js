@@ -14,8 +14,8 @@
 // "image" del plato y la sirve functions/img/menu/[[path]].js desde R2.
 //
 // Con kind=aviso (avisos «Por cierto!») file es la imagen 9:16 ya recortada o un vídeo, y llegan
-// además "poster" (fotograma del vídeo) y "mini" (miniatura cuadrada de la pastilla), ambos
-// JPEG. Devuelve { ok, url, poster?, mini? }; ver subirAviso.
+// además "poster" (fotograma del vídeo, JPEG; obligatorio si es vídeo). Devuelve
+// { ok, url, poster? }; ver subirAviso.
 // ─────────────────────────────────────────────────────────────
 import { requireAccess } from "../_lib/access.js";
 import { claveFoto, variantesDe } from "../../src/html/fotos-r2.mjs";
@@ -36,11 +36,11 @@ async function subirAviso(env, form, file) {
   if (file.size > (esVideo ? 10 : 2) * 1024 * 1024) return json({ error: esVideo ? "El vídeo supera 10 MB." : "La imagen supera 2 MB." }, 400);
 
   const piezas = [["url", `aviso-${ts}.${esVideo ? VIDEOS[file.type] : "jpg"}`, file, file.type]];
-  for (const [campo, max] of [["poster", 2 * 1024 * 1024], ["mini", 300 * 1024]]) {
-    const f = form.get(campo);
-    if (!f) { if (campo === "poster" && esVideo) return json({ error: "Falta el póster del vídeo." }, 400); continue; }
-    if (typeof f === "string" || f.type !== "image/jpeg" || f.size > max) return json({ error: `El campo '${campo}' debe ser un JPEG pequeño.` }, 400);
-    piezas.push([campo, `aviso-${ts}-${campo}.jpg`, f, "image/jpeg"]);
+  if (esVideo) {
+    const poster = form.get("poster");
+    if (!poster) return json({ error: "Falta el póster del vídeo." }, 400);
+    if (typeof poster === "string" || poster.type !== "image/jpeg" || poster.size > 2 * 1024 * 1024) return json({ error: "El campo 'poster' debe ser un JPEG pequeño." }, 400);
+    piezas.push(["poster", `aviso-${ts}-poster.jpg`, poster, "image/jpeg"]);
   }
   const salida = { ok: true };
   for (const [campo, key, blob, contentType] of piezas) {
