@@ -128,6 +128,11 @@ sin avisos activos no se pinta nada. La isla es `src/islas/por-cierto.js`; los a
   Empieza siempre por la primera al abrir. Se pausa con la pestaña oculta y con el foco del teclado en el
   botón o la ✕; con «reducir movimiento» no hay avance automático. Con un solo aviso no hay barras ni
   avance. Las constantes del gesto están al principio de `por-cierto.js`.
+- **Sonido:** los vídeos suenan (la tarjeta se abre con un toque, así que el navegador lo permite) y, si algún
+  aviso es un vídeo, la tarjeta lleva un altavoz a la izquierda de la ✕ para silenciarlos (se recuerda en
+  `sessionStorage`). El `play()` cae dentro del toque que abre la tarjeta, que es lo que exige Safari. Si el
+  navegador lo rechaza (`NotAllowedError`, p. ej. el avance automático en iOS), el vídeo sigue mudo y el
+  altavoz lo muestra tachado: un toque en él lo activa.
 
 ## Idiomas
 

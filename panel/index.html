@@ -713,7 +713,7 @@
               </div>
             </div>
             <input type="file" id="avFile" accept="image/*,video/mp4,video/quicktime,video/webm" hidden>
-            <div class="num-hint">Mejor a 1080 × 1920 px (vertical, 9:16, como una story). Vídeo: MP4 (H.264), de unos 10 s y hasta 10 MB, vertical y sin sonido (se ve mudo; al acabar pasa al siguiente aviso). El aviso no lleva texto aparte: lo que quieras decir, ponlo dentro de la imagen. El botón flota sobre su parte baja (mira «Así se verá»).</div>
+            <div class="num-hint">Mejor a 1080 × 1920 px (vertical, 9:16, como una story). Vídeo: MP4 (H.264), de unos 10 s y hasta 10 MB, vertical. El vídeo suena al abrir la tarjeta (con un botón para silenciarlo) y, al acabar, pasa al siguiente aviso. El aviso no lleva texto aparte: lo que quieras decir, ponlo dentro de la imagen. El botón flota sobre su parte baja (mira «Así se verá»).</div>
           </div>
 
           <div class="grp">
@@ -1544,7 +1544,7 @@
   }
 
   // ── ficha ──
-  // <img> o <video> (mudo, en bucle, como en la tarjeta de la web) según el tipo.
+  // <img> o <video> (mudo y en bucle: es solo la vista previa del editor) según el tipo.
   function elemento(tipo,src,poster){
     if(tipo!=="video"){const i=document.createElement("img");i.alt="";i.src=src;return i;}
     const v=document.createElement("video");
@@ -1748,13 +1748,16 @@
     }catch(e){ui.setPill("dirty","Error al cargar");ui.showToast("No se pudieron cargar los avisos: "+e.message,true);}
   }
   function validar(){
+    // Mientras se sube un archivo el aviso aún no tiene src (solo la vista previa local): no es que falte.
+    const sube=AV.find(a=>a._preview);
+    if(sube){sel=sube.id;pintar();ui.showToast("Todavía se está subiendo la imagen o el vídeo: espera un momento y vuelve a guardar",true);return false;}
     for(const a of AV){
       if(!a.nombre.trim()){sel=a.id;pintar();$("#avName").focus();ui.showToast("Un aviso no tiene nombre: ponle uno antes de guardar",true);return false;}
     }
     for(const a of AV){
       if(!a.activo)continue;
       const fallo=!a.media.src?"no tiene imagen":!destinoDe(a)?"no tiene destino":!a.boton.texto.trim()?"no tiene texto en el botón":"";
-      if(fallo){sel=a.id;pintar();ui.showToast("Un aviso activo "+fallo+": complétalo o desactívalo antes de guardar",true);return false;}
+      if(fallo){sel=a.id;pintar();ui.showToast("El aviso «"+titulo(a)+"» está activo pero "+fallo+": complétalo o desactívalo antes de guardar",true);return false;}
     }
     return true;
   }
