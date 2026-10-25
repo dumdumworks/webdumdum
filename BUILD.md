@@ -113,8 +113,14 @@ sin avisos activos no se pinta nada. La isla es `src/islas/por-cierto.js`; los a
   (MP4/WebM/MOV, hasta 10 MB) con su `poster`, y la `mini` cuadrada (112 px) que sale en la pastilla.
   Todo va a R2 (`aviso-<ts>[-poster|-mini].<ext>`) y se sirve desde `/img/menu/`, que atiende `Range` (206)
   porque Safari lo exige para reproducir vídeo.
-- La imagen o el vídeo grandes no se piden hasta abrir la tarjeta; la pastilla solo carga la miniatura
-  (sin ella, los ojitos).
+- **Carga en diferido.** Ni el JS ni el CSS de los avisos van en los bundles principales. En
+  `islas.js` solo hay un cargador (`islas/avisos-carga.js`): espera a `load` y a que el navegador esté libre,
+  lee `/por-cierto.json` y, **solo si hay algún aviso activo**, baja `assets/avisos.<hash>.css` y después
+  `assets/avisos.<hash>.js` (esbuild los construye aparte en `build.mjs`, antes que las islas, que llevan
+  sus rutas con hash por `define`). Sin avisos la web solo hace esa petición al JSON. El botón no sale antes
+  de los 2 s de la visita. El CSS (`src/styles-avisos.css`) se carga después de `styles.css` y usa su base `.fab`/`.btn`.
+- La imagen o el vídeo grandes no se piden hasta abrir la tarjeta (la visible y la siguiente); el botón solo
+  carga la foto de perfil (el favicon).
 - Con varios avisos activos en la página, la tarjeta se comporta como las **stories de Instagram**:
   barritas de progreso arriba (en la fila de la ✕), avance solo (5 s por imagen; el vídeo, lo que dure y sin
   bucle), toque a la derecha = siguiente y en el primer tercio = anterior (en la primera la reinicia; al

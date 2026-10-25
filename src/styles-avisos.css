@@ -1,0 +1,150 @@
+/* ─────────────────────────────────────────────────────────────
+   Avisos (botón redondo + tarjeta de stories). Se carga APARTE, solo cuando hay algún aviso
+   activo y la página ya ha terminado de cargar (islas/avisos-carga.js): no pesa en el CSS que
+   bloquea el pintado. Va después de styles.css, así que gana igual por orden. Usa la base
+   `.fab` y `.btn` de styles.css.
+   ───────────────────────────────────────────────────────────── */
+:root{
+  /* El verde del aro de «mejores amigos» de Instagram: el del botón de los avisos (aro y aura). */
+  --close-friends: #1fd45a;
+  /* Diámetro del botón redondo: aro de 2,5px + 1,5px de crema + foto de 36px
+     (los 44px de alto de «Pide ya» y «Alérgenos»: los tres miden lo mismo). */
+  --cierto-d: 44px;
+}
+
+/* Avisos · botón redondo abajo a la izquierda (al otro lado que «Pide ya»): la cara de DUM DUM como
+   foto de perfil dentro de un aro y un aura verdes, como una story de «mejores amigos» sin ver, y el
+   número de avisos como una notificación (roja). Abierta la tarjeta, el aro pasa a gris y el número desaparece (is-visto). Crema por
+   dentro: sobre el papel casi no se nota y sobre las fichas rojas lo recorta. Abre una tarjeta
+   (islas/por-cierto.js). Entra con un fundido cuando la isla lo pinta y se atenúa al hacer scroll
+   como el «Pide ya». */
+.cierto-fab{
+  left: var(--fab-inset); right: auto;
+  width: var(--cierto-d); height: var(--cierto-d);
+  justify-content: center;
+  padding: 1.5px;   /* aro + hueco = 4px: la foto cae en píxel entero */
+  background: var(--bg);
+  border: 2.5px solid var(--close-friends);
+  box-shadow: 0 3px 16px rgba(31, 212, 90, 0.45);
+  opacity: 0;
+  transition: opacity .25s ease, box-shadow .18s ease, transform .18s ease;
+}
+.cierto-fab.is-on{ opacity: 1; }
+.cierto-fab.is-on.is-scrolling{ opacity: 0.35; }
+@media (hover: hover){
+  .cierto-fab:hover{ box-shadow: 0 5px 22px rgba(31, 212, 90, 0.6); }
+}
+.cierto-avatar{ width: calc(var(--cierto-d) - 8px); height: calc(var(--cierto-d) - 8px); border-radius: 50%; overflow: hidden; }
+.cierto-avatar img{ display: block; width: 100%; height: 100%; object-fit: cover; }
+/* Número de avisos sobre la esquina superior derecha del aro; el filete crema lo separa de lo que haya debajo. */
+.cierto-num{
+  position: absolute; top: -5px; right: -5px; min-width: 20px; height: 20px; padding: 0 5px;
+  border-radius: 10px; background: var(--red); color: var(--bg); border: 2px solid var(--bg);
+  font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 600;
+  font-size: 11px; line-height: 16px; text-align: center; letter-spacing: 0;
+}
+.cierto-fab.is-visto{ border-color: var(--sage); box-shadow: 0 3px 16px rgba(26, 26, 26, 0.14); }
+.cierto-fab.is-visto .cierto-num{ display: none; }
+/* Entrada: sale con un rebote y un único halo; después, quieta. Ya vista, solo el fundido. La espera de los
+   2 primeros segundos la hace islas/avisos-carga.js, no el CSS. */
+.cierto-fab.is-on:not(.is-visto){ animation: cierto-entra .9s cubic-bezier(.34, 1.56, .64, 1) backwards, cierto-halo 1.4s ease-out .7s 1; }
+@keyframes cierto-entra{ from{ opacity: 0; transform: translateY(24px) scale(.6); } 60%{ opacity: 1; } to{ opacity: 1; transform: none; } }
+@keyframes cierto-halo{ from{ box-shadow: 0 0 0 0 rgba(31, 212, 90, 0.55); } to{ box-shadow: 0 0 0 22px rgba(31, 212, 90, 0); } }
+/* La tarjeta nace sobre los botones (el redondo de 44px + 10px de aire), pegada a la izquierda
+   (en desktop, sobre el margen de la web). Es una story 9:16 y NUNCA se recorta: su ancho sale de
+   la altura que hay (--cierto-alto: la pantalla menos los botones de abajo y la barra superior),
+   con tope de 440px y del ancho de la pantalla. En un móvil normal manda el ancho; en pantallas
+   bajas (iPhone SE, portátiles) la tarjeta se estrecha.
+   Cerrada: invisible, sin ratón y con inert (fuera del orden de tab). */
+.cierto-card{
+  position: fixed;
+  left: var(--fab-inset);
+  bottom: calc(var(--fab-bottom) + var(--cierto-d) + 10px);
+  /* 76px: la barra superior (68px) y un poco de aire. 2px: el filete de la tarjeta. */
+  --cierto-alto: calc(100vh - var(--fab-bottom) - var(--cierto-d) - 10px - 76px);
+  width: min(440px, calc(100vw - 2 * var(--fab-inset)), calc((var(--cierto-alto) - 2px) * 9 / 16 + 2px));
+  max-height: var(--cierto-alto);
+  z-index: 60;
+  background: var(--bg);
+  border: 1px solid var(--red);
+  border-radius: 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow: 0 8px 32px rgba(255, 0, 30, 0.22);
+  opacity: 0;
+  visibility: hidden;
+}
+.cierto-card.is-open{ opacity: 1; visibility: visible; }
+/* En móvil 100vh incluye la barra del navegador aunque esté a la vista: dvh es la altura real. */
+@supports (height: 100dvh){
+  .cierto-card{ --cierto-alto: calc(100dvh - var(--fab-bottom) - var(--cierto-d) - 10px - 76px); }
+}
+/* En desktop, alineadas con el margen del resto de la web (logo, titulares, pie): --gutter. */
+@media (min-width: 880px){
+  .cierto-fab, .cierto-card{ left: var(--gutter); }
+}
+/* El foco al abrir con teclado va a la propia tarjeta: sin anillo (no señala nada), y el
+   anillo global es outline + box-shadow, así que hay que devolver la sombra propia. */
+.cierto-card:focus{ outline: none; }
+.cierto-card:focus-visible{ outline: none; box-shadow: 0 8px 32px rgba(255, 0, 30, 0.22); }
+/* Lo que hay dentro va maquetado a su tamaño final: lo anima islas/por-cierto.js, que solo
+   recorta la caja mientras crece. */
+.cierto-in{ position: relative; }
+/* Historias: todas ocupan la misma celda (la tarjeta mide lo que una 9:16) y solo se ve la actual;
+   la isla marca inert a las demás. El cambio es instantáneo, como en Instagram. La pista recibe el
+   gesto entero (toque, mantener, deslizar hacia abajo), así que el navegador no debe hacer scroll
+   ni seleccionar ni abrir el menú de imagen con la pulsación larga. */
+.cierto-pista{
+  position: relative; display: grid; touch-action: none;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+}
+.cierto-slide{ position: relative; grid-area: 1 / 1; }
+.cierto-slide[inert]{ visibility: hidden; }
+/* Zonas de toque: el primer tercio vuelve atrás y el resto avanza. Botones invisibles (teclado y
+   lector de pantalla); el botón de la tarjeta (z-index 1) queda por encima. */
+.cierto-zona{ position: absolute; top: 0; bottom: 0; padding: 0; border: 0; border-radius: 0; background: none; cursor: default; -webkit-tap-highlight-color: transparent; }
+.cierto-zona-ant{ left: 0; width: 33.333%; }
+.cierto-zona-sig{ left: 33.333%; right: 0; }
+/* Barritas de progreso, en la fila de la ✕ y a su izquierda (la ✕ no se mueve haya o no haya barras).
+   El fondo de cada una es crema al 40 %; el relleno, crema entero, crece con scaleX desde la isla.
+   Un velo oscuro suave detrás las deja leerse sobre cualquier imagen. Mantener pulsado las esconde. */
+.cierto-bars{ position: absolute; z-index: 1; top: 21px; left: 8px; right: 44px; display: flex; gap: 3px; pointer-events: none; }
+.cierto-bars::before{
+  content: ""; position: absolute; z-index: -1; top: -21px; left: -8px; right: -44px; height: 64px;
+  background: linear-gradient(var(--black), transparent); opacity: 0.3;
+}
+.cierto-bar{ position: relative; flex: 1; height: 2px; overflow: hidden; border-radius: 1px; }
+.cierto-bar::before, .cierto-bar > span{ content: ""; position: absolute; inset: 0; background: var(--bg); }
+.cierto-bar::before{ opacity: 0.4; }
+.cierto-bar > span{ transform: scaleX(0); transform-origin: left; }
+.cierto-bars, .cierto-x{ transition: opacity .2s ease; }
+.cierto-card.is-pausado .cierto-bars, .cierto-card.is-pausado .cierto-x{ opacity: 0; }
+/* Copia de la foto del botón, idéntica a ella: es lo que ve la tarjeta al empezar a abrirse y al
+   acabar de cerrarse (queda centrada, así no importa que el filete pase de 2px a 1px). */
+.cierto-pre{ position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; opacity: 0; pointer-events: none; }
+/* Vertical, 9:16: el ancho de la tarjeta ya se ajusta a la altura disponible, así que no hace falta recortar. */
+.cierto-media{ width: 100%; aspect-ratio: 9 / 16; background: var(--sage-faint); }
+.cierto-media img, .cierto-media video{ display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
+/* El botón flota sobre la imagen (que ocupa toda la tarjeta, sin franja de texto debajo): centrado,
+   a la mitad del ancho como mínimo y tan ancho como pida su texto, hasta dejar el margen de la tarjeta a cada
+   lado (un texto largo, hasta 40 caracteres, pasa a dos líneas); el filete crema, como el de la pastilla, lo
+   separa de cualquier foto. */
+.cierto-ir{
+  position: absolute; z-index: 1; left: 0; right: 0; bottom: var(--fab-inset);
+  width: max-content; min-width: 50%; max-width: calc(100% - 2 * var(--fab-inset)); margin-inline: auto;
+  justify-content: center; text-align: center; border-color: var(--bg);
+}
+.cierto-x{
+  position: absolute; top: 8px; right: 8px; z-index: 1;
+  width: 28px; height: 28px; padding: 0;
+  display: grid; place-items: center;
+  border: 1px solid var(--red); border-radius: 50%;
+  background: var(--bg); color: var(--red);
+  font-size: 12px; line-height: 1; cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .cierto-fab{ transition: none; }
+  .cierto-fab.is-on:not(.is-visto){ animation: none; }
+  .cierto-bars, .cierto-x{ transition: none; }
+}

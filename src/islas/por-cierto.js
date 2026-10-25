@@ -3,8 +3,9 @@
 // aro verde (el de «mejores amigos» de Instagram) y el número de avisos como una notificación. Despliega una tarjeta
 // con un aviso: imagen o vídeo y un botón. Con varios avisos, la tarjeta se comporta como las
 // stories de Instagram (ver «historias» más abajo).
-// Lee /por-cierto.json (functions/por-cierto.json.js). Los avisos activos salen en TODAS las páginas:
-// si no responde o no hay ninguno activo, no hace nada (ni pinta ni pide nada más).
+// Es un bundle APARTE (assets/avisos.<hash>.js, con su CSS): no va en el de las islas. Lo carga
+// islas/avisos-carga.js, ya con los avisos activos en window.dumdumAvisos, así que aquí no hay
+// que leer ni filtrar nada: solo pintar.
 // La imagen o el vídeo NO se piden hasta que alguien abre la tarjeta.
 // ─────────────────────────────────────────────────────────────
 import { atenuarAlScroll } from "./nucleo.js";
@@ -311,19 +312,8 @@ function pintar(avisos) {
   });
 }
 
-// Un aviso sale solo si está activo y tiene medio y botón. Cualquier dato que falte o falle
-// (404, JSON roto, lista vacía) deja la página sin botón.
-const sale = (a) => a && a.activo === true && a.media && a.media.src && a.boton;
-
-export async function porCierto() {
-  let datos;
-  try {
-    const r = await fetch("/por-cierto.json");
-    if (!r.ok) return;
-    datos = await r.json();
-  } catch (e) { return; }
-  const activos = Array.isArray(datos && datos.avisos) ? datos.avisos.filter(sale) : [];
-  // Con varios activos, stories (por defecto) o solo el primero, según el interruptor del editor.
-  const avisos = datos.galeria === false ? activos.slice(0, 1) : activos;
-  if (avisos.length) esperarSinAviso().then(() => pintar(avisos));
-}
+// El botón nunca sale antes de los 2 s de la visita (con la página recién cargada no hay prisa).
+const ENTRADA_MS = 2000;
+new Promise((ok) => setTimeout(ok, Math.max(0, ENTRADA_MS - performance.now())))
+  .then(esperarSinAviso)
+  .then(() => pintar(window.dumdumAvisos));
