@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────
 // Avisos: botón flotante redondo a la izquierda, con la cara de DUM DUM como foto de perfil, un
-// aro rojo como el de las stories y el número de avisos como una notificación. Despliega una tarjeta
+// aro verde (el de «mejores amigos» de Instagram) y el número de avisos como una notificación. Despliega una tarjeta
 // con un aviso: imagen o vídeo y un botón. Con varios avisos, la tarjeta se comporta como las
 // stories de Instagram (ver «historias» más abajo).
 // Lee /por-cierto.json (functions/por-cierto.json.js): si no responde o no hay ningún aviso activo para
@@ -247,7 +247,7 @@ function pintar(avisos) {
     abierta = abriendo;
     boton.setAttribute("aria-expanded", String(abriendo));
     const p = boton.getBoundingClientRect();
-    const aro = getComputedStyle(boton).borderColor;   // rojo si hay avisos sin ver, gris si ya se vieron
+    const aro = getComputedStyle(boton).borderColor;   // verde si hay avisos sin ver, gris si ya se vieron
     if (abriendo) {
       tarjeta.classList.add("is-open"); tarjeta.inert = false;   // ya está en su sitio final, aún sin pintarse
       mostrar(0);                                                  // siempre desde la primera; ahora sí se pide el archivo
