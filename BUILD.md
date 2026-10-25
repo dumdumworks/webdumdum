@@ -133,6 +133,10 @@ sin avisos activos no se pinta nada. La isla es `src/islas/por-cierto.js`; los a
   `sessionStorage`). El `play()` cae dentro del toque que abre la tarjeta, que es lo que exige Safari. Si el
   navegador lo rechaza (`NotAllowedError`, p. ej. el avance automático en iOS), el vídeo sigue mudo y el
   altavoz lo muestra tachado: un toque en él lo activa.
+- **Botón de la tarjeta («de una»):** si lleva a otra página no hay animación de cierre (la tarjeta se queda
+  como está hasta que cambia la página, sin enseñar el botón redondo en medio); si abre un modal o salta a un
+  ancla de la misma página, se esconde de golpe. **Vídeos:** `preload="auto"` y, al cerrar la tarjeta, vuelven al
+  primer fotograma sin descargarse de nuevo: reabrir arranca al instante.
 
 ## Idiomas
 
