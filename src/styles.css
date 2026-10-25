@@ -498,12 +498,13 @@ img { display: block; max-width: 100%; }
 .cierto-media{ width: 100%; aspect-ratio: 9 / 16; background: var(--sage-faint); }
 .cierto-media img, .cierto-media video{ display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
 /* El botón flota sobre la imagen (que ocupa toda la tarjeta, sin franja de texto debajo): centrado,
-   a la mitad del ancho (sin bajar de lo que mide su texto, que en inglés es más largo); el filete
-   crema, como el de la pastilla, lo separa de cualquier foto. */
+   a la mitad del ancho como mínimo y tan ancho como pida su texto, hasta dejar el margen de la tarjeta a cada
+   lado (un texto largo, hasta 40 caracteres, pasa a dos líneas); el filete crema, como el de la pastilla, lo
+   separa de cualquier foto. */
 .cierto-ir{
   position: absolute; z-index: 1; left: 0; right: 0; bottom: var(--fab-inset);
-  width: 50%; min-width: max-content; margin-inline: auto;
-  justify-content: center; border-color: var(--bg);
+  width: max-content; min-width: 50%; max-width: calc(100% - 2 * var(--fab-inset)); margin-inline: auto;
+  justify-content: center; text-align: center; border-color: var(--bg);
 }
 .cierto-x{
   position: absolute; top: 8px; right: 8px; z-index: 1;

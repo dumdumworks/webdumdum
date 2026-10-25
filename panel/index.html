@@ -419,9 +419,6 @@
   .av-empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
   .av-order{padding:10px 12px 14px;color:var(--muted);font-size:11.5px;line-height:1.5;border-top:1px solid var(--line-soft)}
   .dishrow .dot-off{flex-shrink:0;font-size:10.5px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 7px}
-  .av-dest{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .av-dest-txt{font-size:12.5px;color:var(--muted)}
-  .av-dest-txt b{color:var(--ink);font-weight:600}
   /* Vista previa: la tarjeta tal cual la pinta la web (imagen 9:16 + botón), sin texto. */
   .av-prev{max-width:270px;border:1px solid var(--red);border-radius:20px;overflow:hidden;background:#fffaf3;box-shadow:0 8px 32px rgba(255,0,30,.18)}
   .av-prev-img{aspect-ratio:9/16;background:var(--panel-2) center/cover no-repeat;display:grid;place-items:center;color:var(--muted);font-size:12px}
@@ -721,10 +718,21 @@
 
           <div class="grp">
             <div class="grp-label">Botón</div>
-            <div class="av-dest">
-              <div class="cat-wrap"><select class="cat-select" id="avDest" aria-label="A dónde lleva el botón"></select></div>
-              <span class="av-dest-txt" id="avDestTxt"></span>
+            <div class="field">
+              <label for="avDest">A dónde lleva</label>
+              <div class="cat-wrap"><select class="cat-select" id="avDest"></select></div>
             </div>
+            <div class="row2">
+              <div class="field" style="margin:0">
+                <label for="avTxtEs">Texto en español</label>
+                <input type="text" id="avTxtEs" maxlength="40" autocomplete="off">
+              </div>
+              <div class="field" style="margin:0">
+                <label for="avTxtEn">Texto en inglés</label>
+                <input type="text" id="avTxtEn" maxlength="40" autocomplete="off">
+              </div>
+            </div>
+            <div class="num-hint">Sin la flecha: la web la añade. Al cambiar de destino el texto se rellena solo, salvo que lo hayas cambiado tú. Si dejas el inglés vacío, la versión inglesa usa el texto en español.</div>
             <div class="av-color">
               <span>Color</span>
               <div class="chips" id="avColor">
@@ -1555,8 +1563,12 @@
   function pintarDestino(a){
     const d=destinoDe(a);
     $("#avDest").value=d?d.id:"";
-    $("#avDestTxt").innerHTML=d?"El botón dice <b>«"+d.es+" →»</b> y <b>«"+d.en+" →»</b>":"Elige a dónde lleva el botón";
-    $("#avPrevBtn").textContent=d?d.es+" →":"—";
+    // Los campos de texto solo se reescriben si no es lo que el usuario está tecleando.
+    const es=$("#avTxtEs"),en=$("#avTxtEn");
+    if(document.activeElement!==es)es.value=a.boton.texto||"";
+    if(document.activeElement!==en)en.value=a.boton.texto_en||"";
+    es.placeholder=d?d.es:"Texto del botón";en.placeholder=d?d.en:"Button text";
+    $("#avPrevBtn").textContent=a.boton.texto?a.boton.texto+" →":"—";
     const color=a.boton.color==="blanco"?"blanco":"rojo";
     $("#avPrevBtn").classList.toggle("blanco",color==="blanco");
     document.querySelectorAll("#avColor .chip").forEach(c=>c.setAttribute("aria-pressed",String(c.dataset.color===color)));
@@ -1583,10 +1595,17 @@
     return g;
   }));
   const botonDe=d=>({texto:d.es,texto_en:d.en,...(d.accion?{accion:d.accion}:{url:d.url})});
+  // Al cambiar de destino, cada texto se rellena con el del nuevo destino solo si seguía siendo el
+  // del anterior (o estaba vacío): un texto escrito a mano se respeta.
   $("#avDest").onchange=e=>{
     const a=cur(),d=DESTINOS.find(x=>x.id===e.target.value);if(!a||!d)return;
-    a.boton={...botonDe(d),color:a.boton.color};setDirty();pintarDestino(a);pintarLista();
+    const antes=destinoDe(a),b=a.boton;
+    const sigue=(v,def)=>!v||(antes&&v===antes[def]);
+    a.boton={...botonDe(d),texto:sigue(b.texto,"es")?d.es:b.texto,texto_en:sigue(b.texto_en,"en")?d.en:b.texto_en,color:b.color};
+    setDirty();pintarDestino(a);pintarLista();
   };
+  $("#avTxtEs").addEventListener("input",e=>{const a=cur();if(!a)return;a.boton.texto=e.target.value;setDirty();pintarDestino(a);});
+  $("#avTxtEn").addEventListener("input",e=>{const a=cur();if(!a)return;a.boton.texto_en=e.target.value;setDirty();});
   $("#avColor").addEventListener("click",e=>{
     const c=e.target.closest(".chip"),a=cur();if(!c||!a)return;
     a.boton.color=c.dataset.color;setDirty();pintarDestino(a);
@@ -1734,7 +1753,7 @@
     }
     for(const a of AV){
       if(!a.activo)continue;
-      const fallo=!a.media.src?"no tiene imagen":!destinoDe(a)?"no tiene destino":"";
+      const fallo=!a.media.src?"no tiene imagen":!destinoDe(a)?"no tiene destino":!a.boton.texto.trim()?"no tiene texto en el botón":"";
       if(fallo){sel=a.id;pintar();ui.showToast("Un aviso activo "+fallo+": complétalo o desactívalo antes de guardar",true);return false;}
     }
     return true;
@@ -1745,7 +1764,7 @@
     try{
       const ahora=new Date().toISOString();
       AV.forEach(a=>{if(!a.creado)a.creado=ahora;a.modificado=!a._firma?a.creado:firma(a)!==a._firma?ahora:a.modificado;});
-      const avisos=AV.map(a=>({id:a.id,nombre:a.nombre.trim(),creado:a.creado,modificado:a.modificado,activo:a.activo,media:a.media,boton:a.boton}));
+      const avisos=AV.map(a=>({id:a.id,nombre:a.nombre.trim(),creado:a.creado,modificado:a.modificado,activo:a.activo,media:a.media,boton:{...a.boton,texto:a.boton.texto.trim(),texto_en:(a.boton.texto_en||"").trim()}}));
       const res=await fetch("/api/banners",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({galeria:GAL,avisos})});
       const out=await res.json().catch(()=>({}));
       if(res.status===401)throw new Error("Sesión caducada — recarga la página");
