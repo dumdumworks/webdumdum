@@ -66,7 +66,7 @@ function pintar(avisos) {
   const ico = document.createElement("span");
   ico.className = "fab-ico cierto-avatar"; ico.setAttribute("aria-hidden", "true");
   const foto = new Image();
-  foto.src = AVATAR; foto.alt = ""; foto.width = foto.height = 44;
+  foto.src = AVATAR; foto.alt = ""; foto.width = foto.height = 36;
   ico.append(foto);
   // El botón no lleva texto visible; esto es lo que lee un lector de pantalla.
   const txt = document.createElement("span");
