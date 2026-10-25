@@ -44,17 +44,32 @@ fs.mkdirSync(path.join(DIST, "assets"), { recursive: true });
 // ── 1) Islas (src/islas/) ────────────────────────────────────
 // El poco JS de las páginas, unido y minificado por esbuild, con nombre por
 // hash para cachearlo un año (_headers, /assets/*).
-const islasRes = await esbuild.build({
-  entryPoints: [path.join(ROOT, "src/islas/islas.js")],
-  bundle: true, minify: true, format: "iife", target: ["es2018"], write: false,
-  logLevel: "silent",
-});
-if (islasRes.warnings.length) {
-  throw new Error("Islas con avisos: " + islasRes.warnings.map((w) => w.text).join("; "));
+async function empaquetar(entrada, define = {}) {
+  const res = await esbuild.build({
+    entryPoints: [path.join(ROOT, entrada)],
+    bundle: true, minify: true, format: "iife", target: ["es2018"], write: false,
+    logLevel: "silent", define,
+  });
+  if (res.warnings.length) {
+    throw new Error(entrada + " con avisos: " + res.warnings.map((w) => w.text).join("; "));
+  }
+  return Buffer.from(res.outputFiles[0].contents);
 }
-const islasBuf = Buffer.from(islasRes.outputFiles[0].contents);
-const islasName = `assets/islas.${hash8(islasBuf)}.js`;
-fs.writeFileSync(path.join(DIST, islasName), islasBuf);
+function publicar(nombre, ext, buf) {
+  const ruta = `assets/${nombre}.${hash8(buf)}.${ext}`;
+  fs.writeFileSync(path.join(DIST, ruta), buf);
+  return ruta;
+}
+// Los avisos (botón + tarjeta de stories) van aparte, con su CSS: los baja islas/avisos-carga.js
+// solo si hay algún aviso activo y ya con la página cargada. Se construyen ANTES que las islas,
+// que llevan sus rutas con hash dentro.
+const avisosJsName = publicar("avisos", "js", await empaquetar("src/islas/por-cierto.js"));
+const avisosCssMin = await esbuild.transform(rd("src/styles-avisos.css"), { loader: "css", minify: true });
+const avisosCssName = publicar("avisos", "css", Buffer.from(avisosCssMin.code, "utf8"));
+const islasBuf = await empaquetar("src/islas/islas.js", {
+  __AVISOS_JS__: JSON.stringify(avisosJsName), __AVISOS_CSS__: JSON.stringify(avisosCssName),
+});
+const islasName = publicar("islas", "js", islasBuf);
 
 // ── 2) CSS unido y MINIFICADO (styles.css sin el @import + styles-2.css) ──
 // Orden IMPORTANTE: styles-2 primero, replicando la cascada del @import original.
@@ -354,5 +369,6 @@ console.log("BUILD OK → dist/");
 if (devCopiados) console.log(`  dev/ → ${devCopiados} herramienta(s) de revisión (no se publican)`);
 console.log("  " + cssName + " (" + kb(cssBuf) + ")");
 console.log("  " + islasName + " (" + kb(islasBuf) + ") · islas");
+console.log("  " + avisosJsName + " + " + avisosCssName + " · avisos (en diferido)");
 console.log("  páginas: " + RUTAS_HTML.map((p) => p + " (+ /en" + p + ")").join(", ") + " · la carta se pinta en el edge (functions/_generado/carta.js)");
 console.log("  404.html y en/404.html");
