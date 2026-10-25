@@ -277,9 +277,9 @@ function pintar(avisos) {
       left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px",
       right: "auto", bottom: "auto", maxHeight: "none", borderRadius: radio, borderWidth: borde, boxShadow: sombra,
     });
-    // El botón es un círculo crema con aro de 2px; la tarjeta es crema con filete de 1px. El aro
+    // El botón es un círculo crema con aro de 2,5px; la tarjeta es crema con filete de 1px. El aro
     // pasa a rojo (o de vuelta) mientras la caja crece.
-    const deBoton = caja(p, p.width / 2 + "px", "2px", getComputedStyle(boton).boxShadow);
+    const deBoton = caja(p, p.width / 2 + "px", "2.5px", getComputedStyle(boton).boxShadow);
     const deTarjeta = caja(c, "20px", "1px", getComputedStyle(tarjeta).boxShadow);
     const colores = [{ borderColor: abriendo ? aro : rojo }, { borderColor: abriendo ? rojo : aro }];
     const dur = abriendo ? DURACION : DURACION * 0.85;

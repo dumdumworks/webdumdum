@@ -112,7 +112,7 @@
   /* Ancho común de «Alérgenos» y «Pide ya» (el texto más largo mide 149,13px): así
      se leen como un par, en español y en inglés (los dos textos tienen la misma longitud). */
   --fab-ancho: 150px;
-  /* Diámetro del botón redondo de los avisos: aro de 2px + 2px de crema + foto de 36px
+  /* Diámetro del botón redondo de los avisos: aro de 2,5px + 1,5px de crema + foto de 36px
      (los 44px de alto de «Pide ya» y «Alérgenos»: los tres miden lo mismo). */
   --cierto-d: 44px;
 }
@@ -395,9 +395,9 @@ img { display: block; max-width: 100%; }
   left: var(--fab-inset); right: auto;
   width: var(--cierto-d); height: var(--cierto-d);
   justify-content: center;
-  padding: 2px;
+  padding: 1.5px;   /* aro + hueco = 4px: la foto cae en píxel entero */
   background: var(--bg);
-  border: 2px solid var(--close-friends);
+  border: 2.5px solid var(--close-friends);
   box-shadow: 0 3px 16px rgba(31, 212, 90, 0.45);
   opacity: 0;
   transition: opacity .25s ease, box-shadow .18s ease, transform .18s ease;
