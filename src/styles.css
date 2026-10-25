@@ -422,18 +422,19 @@ img { display: block; max-width: 100%; }
 .cierto-fab.is-on:not(.is-visto){ animation: cierto-entra .9s cubic-bezier(.34, 1.56, .64, 1) 2s backwards, cierto-halo 1.4s ease-out 2.7s 1; }
 @keyframes cierto-entra{ from{ opacity: 0; transform: translateY(24px) scale(.6); } 60%{ opacity: 1; } to{ opacity: 1; transform: none; } }
 @keyframes cierto-halo{ from{ box-shadow: 0 0 0 0 rgba(31, 212, 90, 0.55); } to{ box-shadow: 0 0 0 22px rgba(31, 212, 90, 0); } }
-/* La tarjeta nace sobre los botones (el redondo de 44px + 10px de aire). Con los mismos
-   márgenes laterales que ellos (left y right = --fab-inset), ocupa justo el hueco que va
-   del borde izquierdo del botón izquierdo al borde derecho del botón derecho: queda
-   centrada entre los dos. En pantallas anchas se queda en 440px, pegada a la izquierda (en desktop, sobre el margen de la web).
+/* La tarjeta nace sobre los botones (el redondo de 44px + 10px de aire), pegada a la izquierda
+   (en desktop, sobre el margen de la web). Es una story 9:16 y NUNCA se recorta: su ancho sale de
+   la altura que hay (--cierto-alto: la pantalla menos los botones de abajo y la barra superior),
+   con tope de 440px y del ancho de la pantalla. En un móvil normal manda el ancho; en pantallas
+   bajas (iPhone SE, portátiles) la tarjeta se estrecha.
    Cerrada: invisible, sin ratón y con inert (fuera del orden de tab). */
 .cierto-card{
   position: fixed;
   left: var(--fab-inset);
-  right: var(--fab-inset);
-  max-width: 440px;
   bottom: calc(var(--fab-bottom) + var(--cierto-d) + 10px);
-  --cierto-alto: calc(100vh - var(--fab-bottom) - var(--cierto-d) - 10px - var(--fab-inset));   /* móvil apaisado: que no se salga por arriba */
+  /* 76px: la barra superior (68px) y un poco de aire. 2px: el filete de la tarjeta. */
+  --cierto-alto: calc(100vh - var(--fab-bottom) - var(--cierto-d) - 10px - 76px);
+  width: min(440px, calc(100vw - 2 * var(--fab-inset)), calc((var(--cierto-alto) - 2px) * 9 / 16 + 2px));
   max-height: var(--cierto-alto);
   z-index: 60;
   background: var(--bg);
@@ -446,6 +447,10 @@ img { display: block; max-width: 100%; }
   visibility: hidden;
 }
 .cierto-card.is-open{ opacity: 1; visibility: visible; }
+/* En móvil 100vh incluye la barra del navegador aunque esté a la vista: dvh es la altura real. */
+@supports (height: 100dvh){
+  .cierto-card{ --cierto-alto: calc(100dvh - var(--fab-bottom) - var(--cierto-d) - 10px - 76px); }
+}
 /* En desktop, alineadas con el margen del resto de la web (logo, titulares, pie): --gutter. */
 @media (min-width: 880px){
   .cierto-fab, .cierto-card{ left: var(--gutter); }
@@ -457,7 +462,7 @@ img { display: block; max-width: 100%; }
 /* Lo que hay dentro va maquetado a su tamaño final: lo anima islas/por-cierto.js, que solo
    recorta la caja mientras crece. */
 .cierto-in{ position: relative; }
-/* Historias: todas ocupan la misma celda (la tarjeta mide lo que una 4:5) y solo se ve la actual;
+/* Historias: todas ocupan la misma celda (la tarjeta mide lo que una 9:16) y solo se ve la actual;
    la isla marca inert a las demás. El cambio es instantáneo, como en Instagram. La pista recibe el
    gesto entero (toque, mantener, deslizar hacia abajo), así que el navegador no debe hacer scroll
    ni seleccionar ni abrir el menú de imagen con la pulsación larga. */
@@ -489,17 +494,17 @@ img { display: block; max-width: 100%; }
 /* Copia de la foto del botón, idéntica a ella: es lo que ve la tarjeta al empezar a abrirse y al
    acabar de cerrarse (queda centrada, así no importa que el filete pase de 2px a 1px). */
 .cierto-pre{ position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; opacity: 0; pointer-events: none; }
-/* Vertical, 4:5. Si la pantalla es baja (móvil apaisado) se recorta por abajo en vez de hacer scroll
-   dentro de la tarjeta: así el botón no se va. */
-.cierto-media{ width: 100%; aspect-ratio: 4 / 5; max-height: calc(var(--cierto-alto) - 2px); background: var(--sage-faint); }
+/* Vertical, 9:16: el ancho de la tarjeta ya se ajusta a la altura disponible, así que no hace falta recortar. */
+.cierto-media{ width: 100%; aspect-ratio: 9 / 16; background: var(--sage-faint); }
 .cierto-media img, .cierto-media video{ display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
 /* El botón flota sobre la imagen (que ocupa toda la tarjeta, sin franja de texto debajo): centrado,
-   a la mitad del ancho (sin bajar de lo que mide su texto, que en inglés es más largo); el filete
-   crema, como el de la pastilla, lo separa de cualquier foto. */
+   a la mitad del ancho como mínimo y tan ancho como pida su texto, hasta dejar el margen de la tarjeta a cada
+   lado (un texto largo, hasta 40 caracteres, pasa a dos líneas); el filete crema, como el de la pastilla, lo
+   separa de cualquier foto. */
 .cierto-ir{
   position: absolute; z-index: 1; left: 0; right: 0; bottom: var(--fab-inset);
-  width: 50%; min-width: max-content; margin-inline: auto;
-  justify-content: center; border-color: var(--bg);
+  width: max-content; min-width: 50%; max-width: calc(100% - 2 * var(--fab-inset)); margin-inline: auto;
+  justify-content: center; text-align: center; border-color: var(--bg);
 }
 .cierto-x{
   position: absolute; top: 8px; right: 8px; z-index: 1;

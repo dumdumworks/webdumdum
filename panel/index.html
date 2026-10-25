@@ -406,7 +406,7 @@
   @keyframes spin{to{transform:rotate(360deg)}}
 
   /* ── Avisos «Por cierto» ─────────────────── */
-  .photo-zone.av-zone{aspect-ratio:4/5;max-width:360px}
+  .photo-zone.av-zone{aspect-ratio:9/16;max-width:270px}
   #avFechas{white-space:pre-line}
   .av-modo{padding:0 14px 12px}
   .av-modo .sec-label{padding:2px 0 8px}
@@ -419,16 +419,13 @@
   .av-empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
   .av-order{padding:10px 12px 14px;color:var(--muted);font-size:11.5px;line-height:1.5;border-top:1px solid var(--line-soft)}
   .dishrow .dot-off{flex-shrink:0;font-size:10.5px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 7px}
-  .av-dest{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .av-dest-txt{font-size:12.5px;color:var(--muted)}
-  .av-dest-txt b{color:var(--ink);font-weight:600}
-  /* Vista previa: la tarjeta tal cual la pinta la web (imagen 4:5 + botón), sin texto. */
-  .av-prev{max-width:360px;border:1px solid var(--red);border-radius:20px;overflow:hidden;background:#fffaf3;box-shadow:0 8px 32px rgba(255,0,30,.18)}
-  .av-prev-img{aspect-ratio:4/5;background:var(--panel-2) center/cover no-repeat;display:grid;place-items:center;color:var(--muted);font-size:12px}
+  /* Vista previa: la tarjeta tal cual la pinta la web (imagen 9:16 + botón), sin texto. */
+  .av-prev{max-width:270px;border:1px solid var(--red);border-radius:20px;overflow:hidden;background:#fffaf3;box-shadow:0 8px 32px rgba(255,0,30,.18)}
+  .av-prev-img{aspect-ratio:9/16;background:var(--panel-2) center/cover no-repeat;display:grid;place-items:center;color:var(--muted);font-size:12px}
   .av-prev{position:relative}
   .av-prev-img{position:relative}
   .av-prev-img img,.av-prev-img video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .av-prev-btn{position:absolute;left:0;right:0;bottom:16px;width:50%;min-width:max-content;margin-inline:auto;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;border-radius:999px;
+  .av-prev-btn{position:absolute;left:0;right:0;bottom:16px;width:max-content;min-width:50%;max-width:calc(100% - 32px);margin-inline:auto;text-align:center;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;border-radius:999px;
     border:1px solid #fffaf3;background:var(--red);color:#fff;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 
   .savebar{display:flex;gap:10px;align-items:center;margin-top:6px}
@@ -708,7 +705,7 @@
               <div class="pz-inner">
                 <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15l-5-5L5 21"/><path d="M3 16V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg></div>
                 <div class="pz-title">Arrastra una imagen o un vídeo, o haz clic</div>
-                <div class="pz-sub">JPG · PNG · MP4 · se recorta a 4:5 · se sube al instante</div>
+                <div class="pz-sub">JPG · PNG · MP4 · se recorta a 9:16 · se sube al instante</div>
               </div>
               <div class="pz-actions" id="avActions" hidden>
                 <button type="button" id="avChange">Cambiar</button>
@@ -716,15 +713,26 @@
               </div>
             </div>
             <input type="file" id="avFile" accept="image/*,video/mp4,video/quicktime,video/webm" hidden>
-            <div class="num-hint">Mejor a 1600 × 2000 px (vertical, 4:5). Vídeo: MP4 (H.264), de unos 10 s y hasta 10 MB, mejor vertical y sin sonido (se ve en bucle y mudo). El aviso no lleva texto aparte: lo que quieras decir, ponlo dentro de la imagen. El botón flota sobre su parte baja (mira «Así se verá»).</div>
+            <div class="num-hint">Mejor a 1080 × 1920 px (vertical, 9:16, como una story). Vídeo: MP4 (H.264), de unos 10 s y hasta 10 MB, vertical y sin sonido (se ve mudo; al acabar pasa al siguiente aviso). El aviso no lleva texto aparte: lo que quieras decir, ponlo dentro de la imagen. El botón flota sobre su parte baja (mira «Así se verá»).</div>
           </div>
 
           <div class="grp">
             <div class="grp-label">Botón</div>
-            <div class="av-dest">
-              <div class="cat-wrap"><select class="cat-select" id="avDest" aria-label="A dónde lleva el botón"></select></div>
-              <span class="av-dest-txt" id="avDestTxt"></span>
+            <div class="field">
+              <label for="avDest">A dónde lleva</label>
+              <div class="cat-wrap"><select class="cat-select" id="avDest"></select></div>
             </div>
+            <div class="row2">
+              <div class="field" style="margin:0">
+                <label for="avTxtEs">Texto del botón en español</label>
+                <input type="text" id="avTxtEs" maxlength="40" autocomplete="off">
+              </div>
+              <div class="field" style="margin:0">
+                <label for="avTxtEn">Texto del botón en inglés</label>
+                <input type="text" id="avTxtEn" maxlength="40" autocomplete="off">
+              </div>
+            </div>
+            <div class="num-hint">Sin la flecha: la web la añade. Al cambiar de destino el texto se rellena solo, salvo que lo hayas cambiado tú. Si dejas el inglés vacío, la versión inglesa usa el texto en español.</div>
             <div class="av-color">
               <span>Color</span>
               <div class="chips" id="avColor">
@@ -1438,7 +1446,7 @@
 </script>
 <script>
 // ── Avisos «Por cierto» ──────────────────────────────────────────────────────
-// Cada aviso es una imagen 4:5 + un botón, sin texto propio. Se guarda en el
+// Cada aviso es una imagen 9:16 + un botón, sin texto propio. Se guarda en el
 // formato que lee la web (/por-cierto.json), así el editor y la web comparten un solo modelo:
 // El conjunto es { galeria:true|false, avisos:[…] }: los avisos activos salen en TODA la web; con varios,
 // la tarjeta funciona como stories (por defecto) o muestra solo el primero. Cada aviso:
@@ -1470,8 +1478,9 @@
     {id:"evento",nombre:"Solicitud de evento",es:"Solicitar evento",en:"Request an event",url:"/eventos#contact-eventos"}
   ];
   const GRUPOS=[["Páginas",DESTINOS.slice(0,-3)],["Acciones",DESTINOS.slice(-3)]];
-  // Imagen estándar: vertical 4:5 a 864 × 1080 (la tarjeta mide 440 px como mucho; cubre pantallas @2x).
-  const W=864,H=1080;
+  // Imagen estándar: vertical 9:16 a 1080 × 1920, el tamaño de una story (la tarjeta mide 440 px como mucho;
+  // cubre pantallas @3x de un móvil de 360 px de ancho).
+  const W=1080,H=1920;
   const ICONO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 15l-5-5L5 21"/><path d="M3 16V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>';
 
   let AV=[],GAL=true,sel=null,dragAv=null,dirty=false,cargado=false,vista="carta";
@@ -1554,8 +1563,12 @@
   function pintarDestino(a){
     const d=destinoDe(a);
     $("#avDest").value=d?d.id:"";
-    $("#avDestTxt").innerHTML=d?"El botón dice <b>«"+d.es+" →»</b> y <b>«"+d.en+" →»</b>":"Elige a dónde lleva el botón";
-    $("#avPrevBtn").textContent=d?d.es+" →":"—";
+    // Los campos de texto solo se reescriben si no es lo que el usuario está tecleando.
+    const es=$("#avTxtEs"),en=$("#avTxtEn");
+    if(document.activeElement!==es)es.value=a.boton.texto||"";
+    if(document.activeElement!==en)en.value=a.boton.texto_en||"";
+    es.placeholder=d?d.es:"Texto del botón";en.placeholder=d?d.en:"Button text";
+    $("#avPrevBtn").textContent=a.boton.texto?a.boton.texto+" →":"—";
     const color=a.boton.color==="blanco"?"blanco":"rojo";
     $("#avPrevBtn").classList.toggle("blanco",color==="blanco");
     document.querySelectorAll("#avColor .chip").forEach(c=>c.setAttribute("aria-pressed",String(c.dataset.color===color)));
@@ -1582,10 +1595,17 @@
     return g;
   }));
   const botonDe=d=>({texto:d.es,texto_en:d.en,...(d.accion?{accion:d.accion}:{url:d.url})});
+  // Al cambiar de destino, cada texto se rellena con el del nuevo destino solo si seguía siendo el
+  // del anterior (o estaba vacío): un texto escrito a mano se respeta.
   $("#avDest").onchange=e=>{
     const a=cur(),d=DESTINOS.find(x=>x.id===e.target.value);if(!a||!d)return;
-    a.boton={...botonDe(d),color:a.boton.color};setDirty();pintarDestino(a);pintarLista();
+    const antes=destinoDe(a),b=a.boton;
+    const sigue=(v,def)=>!v||(antes&&v===antes[def]);
+    a.boton={...botonDe(d),texto:sigue(b.texto,"es")?d.es:b.texto,texto_en:sigue(b.texto_en,"en")?d.en:b.texto_en,color:b.color};
+    setDirty();pintarDestino(a);pintarLista();
   };
+  $("#avTxtEs").addEventListener("input",e=>{const a=cur();if(!a)return;a.boton.texto=e.target.value;setDirty();pintarDestino(a);});
+  $("#avTxtEn").addEventListener("input",e=>{const a=cur();if(!a)return;a.boton.texto_en=e.target.value;setDirty();});
   $("#avColor").addEventListener("click",e=>{
     const c=e.target.closest(".chip"),a=cur();if(!c||!a)return;
     a.boton.color=c.dataset.color;setDirty();pintarDestino(a);
@@ -1596,9 +1616,9 @@
   });
   $("#avActive").onclick=()=>{const a=cur();if(!a)return;a.activo=!a.activo;setDirty();pintar();};
 
-  // ── imagen: recorte centrado a 4:5, reducción y subida ──
-  // Recorte centrado a 4:5 de lo que sea dibujable (imagen o fotograma de vídeo), ya reducido a JPEG.
-  async function recortarA3x4(fuente,nw,nh){
+  // ── imagen: recorte centrado a 9:16, reducción y subida ──
+  // Recorte centrado a 9:16 de lo que sea dibujable (imagen o fotograma de vídeo), ya reducido a JPEG.
+  async function recortarA9x16(fuente,nw,nh){
     let sw=nw,sh=Math.round(sw*H/W);
     if(sh>nh){sh=nh;sw=Math.round(sh*W/H);}
     const c=document.createElement("canvas");c.width=sw;c.height=sh;
@@ -1616,7 +1636,7 @@
     const url=URL.createObjectURL(file);
     try{
       const img=new Image();img.src=url;await img.decode();   // respeta la orientación EXIF
-      return {blob:await recortarA3x4(img,img.naturalWidth,img.naturalHeight),mini:await miniatura(img,img.naturalWidth,img.naturalHeight),ancho:img.naturalWidth};
+      return {blob:await recortarA9x16(img,img.naturalWidth,img.naturalHeight),mini:await miniatura(img,img.naturalWidth,img.naturalHeight),ancho:img.naturalWidth};
     }catch(e){return null;}
     finally{URL.revokeObjectURL(url);}
   }
@@ -1651,7 +1671,7 @@
       await new Promise((ok,ko)=>{v.onloadeddata=ok;v.onerror=ko;});
       v.currentTime=Math.min(0.1,(v.duration||0)/2);
       await new Promise(r=>{v.onseeked=r;});
-      const poster=await recortarA3x4(v,v.videoWidth,v.videoHeight),mini=await miniatura(v,v.videoWidth,v.videoHeight);
+      const poster=await recortarA9x16(v,v.videoWidth,v.videoHeight),mini=await miniatura(v,v.videoWidth,v.videoHeight);
       a._preview=url;a._previewTipo="video";pintar();
       const fd=new FormData();fd.append("kind","aviso");fd.append("name","aviso");
       fd.append("file",file,"aviso."+(file.type==="video/webm"?"webm":file.type==="video/quicktime"?"mov":"mp4"));fd.append("poster",poster,"poster.jpg");fd.append("mini",mini,"mini.jpg");
@@ -1733,7 +1753,7 @@
     }
     for(const a of AV){
       if(!a.activo)continue;
-      const fallo=!a.media.src?"no tiene imagen":!destinoDe(a)?"no tiene destino":"";
+      const fallo=!a.media.src?"no tiene imagen":!destinoDe(a)?"no tiene destino":!a.boton.texto.trim()?"no tiene texto en el botón":"";
       if(fallo){sel=a.id;pintar();ui.showToast("Un aviso activo "+fallo+": complétalo o desactívalo antes de guardar",true);return false;}
     }
     return true;
@@ -1744,7 +1764,7 @@
     try{
       const ahora=new Date().toISOString();
       AV.forEach(a=>{if(!a.creado)a.creado=ahora;a.modificado=!a._firma?a.creado:firma(a)!==a._firma?ahora:a.modificado;});
-      const avisos=AV.map(a=>({id:a.id,nombre:a.nombre.trim(),creado:a.creado,modificado:a.modificado,activo:a.activo,media:a.media,boton:a.boton}));
+      const avisos=AV.map(a=>({id:a.id,nombre:a.nombre.trim(),creado:a.creado,modificado:a.modificado,activo:a.activo,media:a.media,boton:{...a.boton,texto:a.boton.texto.trim(),texto_en:(a.boton.texto_en||"").trim()}}));
       const res=await fetch("/api/banners",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({galeria:GAL,avisos})});
       const out=await res.json().catch(()=>({}));
       if(res.status===401)throw new Error("Sesión caducada — recarga la página");

@@ -13,7 +13,7 @@
 // Devuelve { ok:true, url:"/img/menu/<clave>" } — esa url se guarda en el campo
 // "image" del plato y la sirve functions/img/menu/[[path]].js desde R2.
 //
-// Con kind=aviso (avisos «Por cierto!») file es la imagen 4:5 ya recortada o un vídeo, y llegan
+// Con kind=aviso (avisos «Por cierto!») file es la imagen 9:16 ya recortada o un vídeo, y llegan
 // además "poster" (fotograma del vídeo) y "mini" (miniatura cuadrada de la pastilla), ambos
 // JPEG. Devuelve { ok, url, poster?, mini? }; ver subirAviso.
 // ─────────────────────────────────────────────────────────────
