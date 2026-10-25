@@ -117,8 +117,8 @@
 .cierto-bar::before, .cierto-bar > span{ content: ""; position: absolute; inset: 0; background: var(--bg); }
 .cierto-bar::before{ opacity: 0.4; }
 .cierto-bar > span{ transform: scaleX(0); transform-origin: left; }
-.cierto-bars, .cierto-x{ transition: opacity .2s ease; }
-.cierto-card.is-pausado .cierto-bars, .cierto-card.is-pausado .cierto-x{ opacity: 0; }
+.cierto-bars, .cierto-x, .cierto-son{ transition: opacity .2s ease; }
+.cierto-card.is-pausado .cierto-bars, .cierto-card.is-pausado .cierto-x, .cierto-card.is-pausado .cierto-son{ opacity: 0; }
 /* Copia de la foto del botón, idéntica a ella: es lo que ve la tarjeta al empezar a abrirse y al
    acabar de cerrarse (queda centrada, así no importa que el filete pase de 2px a 1px). */
 .cierto-pre{ position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; opacity: 0; pointer-events: none; }
@@ -134,7 +134,7 @@
   width: max-content; min-width: 50%; max-width: calc(100% - 2 * var(--fab-inset)); margin-inline: auto;
   justify-content: center; text-align: center; border-color: var(--bg);
 }
-.cierto-x{
+.cierto-x, .cierto-son{
   position: absolute; top: 8px; right: 8px; z-index: 1;
   width: 28px; height: 28px; padding: 0;
   display: grid; place-items: center;
@@ -142,9 +142,14 @@
   background: var(--bg); color: var(--red);
   font-size: 12px; line-height: 1; cursor: pointer;
 }
+/* El altavoz va a la izquierda de la ✕ y las barras le dejan sitio. */
+.cierto-son{ right: 44px; }
+.cierto-son[hidden]{ display: none; }
+.cierto-son svg{ display: block; width: 16px; height: 16px; }
+.cierto-card.hay-sonido .cierto-bars{ right: 80px; }
 
 @media (prefers-reduced-motion: reduce){
   .cierto-fab{ transition: none; }
   .cierto-fab.is-on:not(.is-visto){ animation: none; }
-  .cierto-bars, .cierto-x{ transition: none; }
+  .cierto-bars, .cierto-x, .cierto-son{ transition: none; }
 }

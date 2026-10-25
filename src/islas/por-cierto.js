@@ -18,6 +18,10 @@ const AVATAR = "/favicon-192x192.png";
 // Lo último que ha visto este navegador (los ids de los avisos): hasta que cambien, el aro va en
 // gris y sin número, como una story ya vista.
 const VISTO = "dumdum.avisos";
+// Si ha silenciado los vídeos, se recuerda mientras dure la visita ("0" = silenciado).
+const SONIDO = "dumdum.sonido";
+const ICO_SON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5l4.5 4v-13l-4.5 4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/></svg>';
+const ICO_MUDO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5l4.5 4v-13l-4.5 4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>';
 
 // El aviso de cookies de la primera visita ocupa el mismo rincón: esperar a que se cierre.
 const avisoCookiesAbierto = () => {
@@ -30,10 +34,12 @@ const esperarSinAviso = () => new Promise((ok) => {
 });
 
 // `bucle`: un vídeo suelto se repite; en una historia que avanza sola, al acabar pasa a la siguiente.
-function medio(m, bucle) {
+// `mudo`: los vídeos suenan (la tarjeta se abre con un toque, así que el navegador lo permite) salvo que
+// quien la ve los haya silenciado con el botón del altavoz.
+function medio(m, bucle, mudo) {
   if (m.tipo === "video") {
     const v = document.createElement("video");
-    v.muted = true; v.loop = bucle; v.playsInline = true; v.preload = "none";
+    v.muted = mudo; v.loop = bucle; v.playsInline = true; v.preload = "none";
     if (m.poster) v.poster = m.poster;
     v.src = m.src;
     return v;
@@ -112,6 +118,15 @@ function pintar(avisos) {
   pista.append(...diapositivas.map((d) => d.el));
   const dentro = document.createElement("div"); dentro.className = "cierto-in";
   dentro.append(cerrar, pista);
+  // Altavoz: solo si algún aviso es un vídeo, y solo visible mientras se ve uno.
+  let son = null, sonido = true;
+  try { sonido = sessionStorage.getItem(SONIDO) !== "0"; } catch (e) { /* sin almacenamiento: suena */ }
+  if (avisos.some((a) => a.media.tipo === "video")) {
+    son = document.createElement("button");
+    son.type = "button"; son.className = "cierto-son";
+    tarjeta.classList.add("hay-sonido");
+    dentro.append(son);
+  }
   const barras = [];
   if (n > 1) {
     const bs = document.createElement("div"); bs.className = "cierto-bars"; bs.setAttribute("aria-hidden", "true");
@@ -146,19 +161,42 @@ function pintar(avisos) {
   const cargar = (i) => {
     const d = diapositivas[i];
     if (!d || d.media.firstChild) return;
-    const m = medio(d.a.media, !avanza);
+    const m = medio(d.a.media, !avanza, !sonido);
     if (avanza && m.tagName === "VIDEO") m.addEventListener("ended", () => { if (actual === i) siguiente(); });
     d.media.append(m);
   };
-  const pausado = () => !abierta || animando || sostenido || arrastrando || foco || document.hidden;
+  // El vídeo arranca ya durante la animación de apertura: así el play() cae dentro del toque que abre la
+  // tarjeta, y Safari (que solo deja sonar lo que empieza con un gesto) no lo silencia.
+  const pausado = () => !abierta || sostenido || arrastrando || foco || document.hidden;
+  const pintarSonido = () => {
+    if (!son) return;
+    son.innerHTML = sonido ? ICO_SON : ICO_MUDO;
+    son.setAttribute("aria-label", sonido ? t("Silenciar", "Mute") : t("Activar el sonido", "Turn sound on"));
+  };
+  // Si el navegador no deja sonar un vídeo (NotAllowedError: autoplay con sonido), sigue mudo y el
+  // altavoz lo indica: un toque en él ya es un gesto y lo activa. Cualquier otro error se ignora.
+  function reproducir(v) {
+    v.play().catch((e) => {
+      if (v.muted || !e || e.name !== "NotAllowedError") return;
+      v.muted = true; sonido = false; pintarSonido();
+      v.play().catch(() => {});
+    });
+  }
   // Reproduce o detiene el vídeo visible según el estado, y esconde la interfaz mientras se mantiene pulsado.
   function aplicar() {
     tarjeta.classList.toggle("is-pausado", sostenido);
     diapositivas.forEach((d, i) => {
       const v = d.media.querySelector("video");
-      if (v) { if (i === actual && !pausado()) v.play().catch(() => {}); else v.pause(); }
+      if (!v) return;
+      v.muted = !sonido;
+      if (i === actual && !pausado()) reproducir(v); else v.pause();
     });
   }
+  if (son) son.addEventListener("click", () => {
+    sonido = !sonido; pintarSonido();
+    try { sessionStorage.setItem(SONIDO, sonido ? "1" : "0"); } catch (e) { /* idem */ }
+    aplicar();
+  });
   function mostrar(i) {
     actual = i; avance = 0;
     diapositivas.forEach((d, k) => { d.el.inert = k !== i; });
@@ -166,6 +204,7 @@ function pintar(avisos) {
     cargar(i); if (n > 1) cargar(i + 1);
     const v = diapositivas[i].media.querySelector("video");
     if (v) v.currentTime = 0;   // cada vez que se ve, empieza desde el principio
+    if (son) { son.hidden = !v; pintarSonido(); }
     aplicar();
   }
   // Primera historia: «anterior» la reinicia. Última: «siguiente» cierra la tarjeta.
