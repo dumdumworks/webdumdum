@@ -137,6 +137,12 @@ sin avisos activos no se pinta nada. La isla es `src/islas/por-cierto.js`; los a
   como está hasta que cambia la página, sin enseñar el botón redondo en medio); si abre un modal o salta a un
   ancla de la misma página, se esconde de golpe. **Vídeos:** `preload="auto"` y, al cerrar la tarjeta, vuelven al
   primer fotograma sin descargarse de nuevo: reabrir arranca al instante.
+- **Entre páginas:** la foto de perfil y el póster (o la imagen) del primer aviso se bajan junto con el CSS/JS de
+  avisos, y el botón no sale hasta que la foto está decodificada (nada de círculo vacío). El fondo de la
+  tarjeta es negro (`--black`) mientras carga, nunca gris. Tras ver un vídeo hasta poder reproducirlo entero
+  se guarda en la **Cache API** (`dumdum-avisos`); en las siguientes páginas y visitas se reproduce desde ahí,
+  sin red y también en Safari. Se borran los guardados que ya no son avisos activos. El botón sale a los 2 s
+  de la primera página de la visita (con rebote) y enseguida y sin rebote en las demás (`sessionStorage`).
 
 ## Idiomas
 

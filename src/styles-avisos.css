@@ -48,6 +48,7 @@
 /* Entrada: sale con un rebote y un único halo; después, quieta. Ya vista, solo el fundido. La espera de los
    2 primeros segundos la hace islas/avisos-carga.js, no el CSS. */
 .cierto-fab.is-on:not(.is-visto){ animation: cierto-entra .9s cubic-bezier(.34, 1.56, .64, 1) backwards, cierto-halo 1.4s ease-out .7s 1; }
+.cierto-fab.is-on.sin-entrada{ animation: none; }
 @keyframes cierto-entra{ from{ opacity: 0; transform: translateY(24px) scale(.6); } 60%{ opacity: 1; } to{ opacity: 1; transform: none; } }
 @keyframes cierto-halo{ from{ box-shadow: 0 0 0 0 rgba(31, 212, 90, 0.55); } to{ box-shadow: 0 0 0 22px rgba(31, 212, 90, 0); } }
 /* La tarjeta nace sobre los botones (el redondo de 44px + 10px de aire), pegada a la izquierda
@@ -123,7 +124,7 @@
    acabar de cerrarse (queda centrada, así no importa que el filete pase de 2px a 1px). */
 .cierto-pre{ position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; opacity: 0; pointer-events: none; }
 /* Vertical, 9:16: el ancho de la tarjeta ya se ajusta a la altura disponible, así que no hace falta recortar. */
-.cierto-media{ width: 100%; aspect-ratio: 9 / 16; background: var(--sage-faint); }
+.cierto-media{ width: 100%; aspect-ratio: 9 / 16; background: var(--black); }
 .cierto-media img, .cierto-media video{ display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
 /* El botón flota sobre la imagen (que ocupa toda la tarjeta, sin franja de texto debajo): centrado,
    a la mitad del ancho como mínimo y tan ancho como pida su texto, hasta dejar el margen de la tarjeta a cada

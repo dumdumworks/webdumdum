@@ -25,6 +25,11 @@ async function cargarAvisos() {
   const avisos = datos.galeria === false ? activos.slice(0, 1) : activos;
   if (!avisos.length) return;
   window.dumdumAvisos = avisos;
+  // A la vez que el CSS y el JS se bajan la foto de perfil del botón y lo primero que se ve al abrir
+  // (el póster del vídeo o la imagen): cuando salga el botón y se toque, ya están y no hay hueco.
+  new Image().src = "/favicon-192x192.png";
+  const m0 = avisos[0].media, previa = m0.tipo === "video" ? m0.poster : m0.src;
+  if (previa) new Image().src = previa;
   // El CSS primero: la isla crea el botón con opacidad 0 desde ese CSS y, sin él, parpadearía.
   const css = document.createElement("link");
   css.rel = "stylesheet"; css.href = "/" + CSS;

@@ -1618,12 +1618,12 @@
 
   // ── imagen: recorte centrado a 9:16, reducción y subida ──
   // Recorte centrado a 9:16 de lo que sea dibujable (imagen o fotograma de vídeo), ya reducido a JPEG.
-  async function recortarA9x16(fuente,nw,nh){
+  async function recortarA9x16(fuente,nw,nh,ancho=W){
     let sw=nw,sh=Math.round(sw*H/W);
     if(sh>nh){sh=nh;sw=Math.round(sh*W/H);}
     const c=document.createElement("canvas");c.width=sw;c.height=sh;
     c.getContext("2d").drawImage(fuente,Math.round((nw-sw)/2),Math.round((nh-sh)/2),sw,sh,0,0,sw,sh);
-    return ui.reducir(c,Math.min(W,sw));
+    return ui.reducir(c,Math.min(ancho,sw));
   }
   async function recortar(file){
     const url=URL.createObjectURL(file);
@@ -1664,7 +1664,7 @@
       await new Promise((ok,ko)=>{v.onloadeddata=ok;v.onerror=ko;});
       v.currentTime=Math.min(0.1,(v.duration||0)/2);
       await new Promise(r=>{v.onseeked=r;});
-      const poster=await recortarA9x16(v,v.videoWidth,v.videoHeight);
+      const poster=await recortarA9x16(v,v.videoWidth,v.videoHeight,540);   // el póster solo se ve un instante: 540 px bastan
       a._preview=url;a._previewTipo="video";pintar();
       const fd=new FormData();fd.append("kind","aviso");fd.append("name","aviso");
       fd.append("file",file,"aviso."+(file.type==="video/webm"?"webm":file.type==="video/quicktime"?"mov":"mp4"));fd.append("poster",poster,"poster.jpg");

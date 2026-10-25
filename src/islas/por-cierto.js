@@ -18,6 +18,33 @@ const AVATAR = "/favicon-192x192.png";
 // Lo último que ha visto este navegador (los ids de los avisos): hasta que cambien, el aro va en
 // gris y sin número, como una story ya vista.
 const VISTO = "dumdum.avisos";
+// Ya ha salido el botón en esta visita: en las demás páginas aparece sin esperas ni rebote ("1").
+const ENTRADA = "dumdum.entrada";
+// Vídeos guardados en el navegador (Cache API): tras verlos una vez se reproducen sin red, también al
+// cambiar de página o volver otro día (Safari no reutiliza el vídeo por su caché normal).
+const CACHE = "dumdum-avisos";
+const absoluta = (src) => new URL(src, location.href).href;
+async function enCache(src) {
+  try {
+    const r = await (await caches.open(CACHE)).match(src);
+    return r ? URL.createObjectURL(await r.blob()) : "";
+  } catch (e) { return ""; }
+}
+async function guardarEnCache(src) {
+  try {
+    const c = await caches.open(CACHE);
+    if (await c.match(src)) return;
+    const r = await fetch(src);   // entero (un 206 no cabe en la Cache API)
+    if (r.status === 200) await c.put(src, r);
+  } catch (e) { /* sin Cache API o sin sitio: se vuelve a bajar */ }
+}
+// Fuera lo guardado de avisos que ya no están activos.
+async function limpiarCache(vigentes) {
+  try {
+    const c = await caches.open(CACHE), ok = vigentes.map(absoluta);
+    for (const k of await c.keys()) if (!ok.includes(k.url)) await c.delete(k);
+  } catch (e) { /* idem */ }
+}
 // Si ha silenciado los vídeos, se recuerda mientras dure la visita ("0" = silenciado).
 const SONIDO = "dumdum.sonido";
 const ICO_SON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5l4.5 4v-13l-4.5 4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/></svg>';
@@ -36,12 +63,12 @@ const esperarSinAviso = () => new Promise((ok) => {
 // `bucle`: un vídeo suelto se repite; en una historia que avanza sola, al acabar pasa a la siguiente.
 // `mudo`: los vídeos suenan (la tarjeta se abre con un toque, así que el navegador lo permite) salvo que
 // quien la ve los haya silenciado con el botón del altavoz.
-function medio(m, bucle, mudo) {
+function medio(m, bucle, mudo, local) {
   if (m.tipo === "video") {
     const v = document.createElement("video");
     v.muted = mudo; v.loop = bucle; v.playsInline = true; v.preload = "auto";
     if (m.poster) v.poster = m.poster;
-    v.src = m.src;
+    v.src = local || m.src;
     return v;
   }
   const i = new Image();
@@ -62,7 +89,7 @@ const DURACION = 520;
 const IMAGEN_MS = 5000, RETENER_MS = 200, UMBRAL_PX = 8, CIERRE_PX = 90;
 const sinMovimiento = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function pintar(avisos) {
+function pintar(avisos, sinEntrada) {
   const boton = document.createElement("button");
   boton.type = "button";
   boton.className = "fab cierto-fab";
@@ -70,8 +97,8 @@ function pintar(avisos) {
   boton.setAttribute("aria-controls", "cierto-card");
   const ico = document.createElement("span");
   ico.className = "fab-ico cierto-avatar"; ico.setAttribute("aria-hidden", "true");
-  const foto = new Image();
-  foto.src = AVATAR; foto.alt = ""; foto.width = foto.height = 36;
+  const foto = avatar;   // ya descargada y decodificada (ver el final del archivo)
+  foto.alt = ""; foto.width = foto.height = 36;
   ico.append(foto);
   // El botón no lleva texto visible; esto es lo que lee un lector de pantalla.
   const txt = document.createElement("span");
@@ -149,6 +176,11 @@ function pintar(avisos) {
   pre.append(ico.cloneNode(true));
   tarjeta.append(dentro, pre);
   document.body.append(boton, tarjeta);
+  if (sinEntrada) boton.classList.add("sin-entrada");
+  try { sessionStorage.setItem(ENTRADA, "1"); } catch (e) { /* idem */ }
+  // Vídeos ya guardados en este navegador, listos para usarse sin red; y limpieza de los que sobran.
+  diapositivas.forEach((d) => { if (d.a.media.tipo === "video") enCache(d.a.media.src).then((u) => { d.local = u; }); });
+  limpiarCache(avisos.filter((a) => a.media.tipo === "video").map((a) => a.media.src));
   atenuarAlScroll(boton);
   requestAnimationFrame(() => boton.classList.add("is-on"));
 
@@ -161,8 +193,10 @@ function pintar(avisos) {
   const cargar = (i) => {
     const d = diapositivas[i];
     if (!d || d.media.firstChild) return;
-    const m = medio(d.a.media, !avanza, !sonido);
+    const m = medio(d.a.media, !avanza, !sonido, d.local);
     if (avanza && m.tagName === "VIDEO") m.addEventListener("ended", () => { if (actual === i) siguiente(); });
+    // Con el vídeo ya listo para verse entero, se guarda para las próximas veces (si no estaba guardado).
+    if (m.tagName === "VIDEO" && !d.local) m.addEventListener("canplaythrough", () => guardarEnCache(d.a.media.src), { once: true });
     d.media.append(m);
   };
   // El vídeo arranca ya durante la animación de apertura: así el play() cae dentro del toque que abre la
@@ -370,8 +404,15 @@ function pintar(avisos) {
   });
 }
 
-// El botón nunca sale antes de los 2 s de la visita (con la página recién cargada no hay prisa).
+// El botón no sale antes de los 2 s de la visita (con la página recién cargada no hay prisa), pero en las
+// demás páginas de la misma visita aparece enseguida y sin el rebote de entrada. Antes de pintarlo se
+// espera a la foto de perfil: que no salga un círculo vacío y luego aparezca el favicon.
 const ENTRADA_MS = 2000;
-new Promise((ok) => setTimeout(ok, Math.max(0, ENTRADA_MS - performance.now())))
+let yaSalio = false;
+try { yaSalio = sessionStorage.getItem(ENTRADA) === "1"; } catch (e) { /* sin almacenamiento: con entrada */ }
+const avatar = new Image();
+avatar.src = AVATAR;
+new Promise((ok) => setTimeout(ok, yaSalio ? 0 : Math.max(0, ENTRADA_MS - performance.now())))
   .then(esperarSinAviso)
-  .then(() => pintar(window.dumdumAvisos));
+  .then(() => avatar.decode().catch(() => {}))
+  .then(() => pintar(window.dumdumAvisos, yaSalio));
