@@ -39,7 +39,7 @@ const esperarSinAviso = () => new Promise((ok) => {
 function medio(m, bucle, mudo) {
   if (m.tipo === "video") {
     const v = document.createElement("video");
-    v.muted = mudo; v.loop = bucle; v.playsInline = true; v.preload = "none";
+    v.muted = mudo; v.loop = bucle; v.playsInline = true; v.preload = "auto";
     if (m.poster) v.poster = m.poster;
     v.src = m.src;
     return v;
@@ -190,6 +190,9 @@ function pintar(avisos) {
       if (!v) return;
       v.muted = !sonido;
       if (i === actual && !pausado()) reproducir(v); else v.pause();
+      // Cerrada la tarjeta, cada vídeo vuelve a su primer fotograma: al reabrirla ya está listo y
+      // cargado, sin póster ni espera.
+      if (!abierta && v.currentTime > 0) v.currentTime = 0;
     });
   }
   if (son) son.addEventListener("click", () => {
@@ -341,8 +344,24 @@ function pintar(avisos) {
   const alternar = (e) => { if (!animando) mover(!abierta, e.detail === 0); };
   boton.addEventListener("click", alternar);
   cerrar.addEventListener("click", (e) => { if (!animando && abierta) mover(false, e.detail === 0); });
-  // Al abrir un modal (o saltar al formulario de la misma página) la tarjeta se recoge: no queda detrás.
-  diapositivas.forEach((d) => d.ir.addEventListener("click", () => { if (!animando && abierta) mover(false, false); }));
+  // Cierre SIN animación (el botón de la tarjeta te lleva «de una»: nada de enseñar el botón redondo en medio).
+  function cerrarYa() {
+    abierta = sostenido = arrastrando = false;
+    parar();
+    boton.setAttribute("aria-expanded", "false");
+    tarjeta.classList.remove("is-open"); tarjeta.inert = true; tarjeta.style.transform = "";
+    boton.style.visibility = "";
+    aplicar();
+  }
+  // El botón de la tarjeta: si va a OTRA página, la tarjeta se queda tal cual hasta que cambie la página;
+  // si abre un modal o salta a un ancla de ESTA página, se esconde de golpe para no quedar delante.
+  diapositivas.forEach((d) => d.ir.addEventListener("click", (e) => {
+    if (animando || !abierta || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const otraPagina = !d.a.boton.accion && new URL(d.ir.href, location.href).pathname !== location.pathname;
+    if (!otraPagina) cerrarYa();
+  }));
+  // Volver con «atrás» puede traer la página de la caché con la tarjeta aún abierta.
+  addEventListener("pageshow", (e) => { if (e.persisted && abierta && !animando) cerrarYa(); });
   document.addEventListener("keydown", (e) => {
     if (!abierta || animando) return;
     if (e.key === "Escape") mover(false, true);
