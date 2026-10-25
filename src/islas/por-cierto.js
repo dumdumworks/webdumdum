@@ -7,7 +7,7 @@
 // esta página, no hace nada (ni pinta ni pide nada más).
 // La imagen o el vídeo NO se piden hasta que alguien abre la tarjeta.
 // ─────────────────────────────────────────────────────────────
-import { $, atenuarAlScroll } from "./nucleo.js";
+import { atenuarAlScroll } from "./nucleo.js";
 
 const EN = document.documentElement.lang === "en";
 const t = (es, en) => (EN && en ? en : es);
@@ -136,7 +136,6 @@ function pintar(avisos) {
   tarjeta.append(dentro, pre);
   document.body.append(boton, tarjeta);
   atenuarAlScroll(boton);
-  if (ruta() === "/menu") cruzarConAlergenos();
   requestAnimationFrame(() => boton.classList.add("is-on"));
 
   let abierta = false, animando = false, actual = 0;
@@ -312,19 +311,6 @@ function pintar(avisos) {
     else if (e.key === "ArrowRight" && actual < n - 1) siguiente();
     else if (e.key === "ArrowLeft") anterior();
   });
-}
-
-// En la carta, en móvil, «Por cierto!» ocupa el sitio de alérgenos (derecha) y alérgenos pasa a
-// la izquierda: en el resto de la web la derecha es de «Pide ya». Alérgenos se desliza a su
-// nuevo sitio (técnica FLIP) en vez de saltar, porque ya está en pantalla cuando llega el aviso.
-function cruzarConAlergenos() {
-  if (!matchMedia("(max-width: 879px)").matches) return;
-  const alerg = $("[data-alerg-fab]");
-  const antes = alerg ? alerg.getBoundingClientRect().left : 0;
-  document.documentElement.classList.add("cierto-cruzado");
-  if (!alerg || sinMovimiento()) return;
-  const dx = antes - alerg.getBoundingClientRect().left;
-  if (dx) alerg.animate({ transform: ["translateX(" + dx + "px)", "none"] }, { duration: DURACION, easing: EASE });
 }
 
 // Un aviso sale solo si está activo, tiene medio y botón, y la página figura en «Dónde sale».

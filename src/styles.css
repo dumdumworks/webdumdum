@@ -422,14 +422,6 @@ img { display: block; max-width: 100%; }
 .cierto-fab.is-on:not(.is-visto){ animation: cierto-entra .9s cubic-bezier(.34, 1.56, .64, 1) 2s backwards, cierto-halo 1.4s ease-out 2.7s 1; }
 @keyframes cierto-entra{ from{ opacity: 0; transform: translateY(24px) scale(.6); } 60%{ opacity: 1; } to{ opacity: 1; transform: none; } }
 @keyframes cierto-halo{ from{ box-shadow: 0 0 0 0 rgba(31, 212, 90, 0.55); } to{ box-shadow: 0 0 0 22px rgba(31, 212, 90, 0); } }
-/* En la carta, en móvil: el botón de los avisos ocupa el sitio de alérgenos (derecha) y alérgenos pasa a la
-   izquierda (la derecha del resto de la web es de «Pide ya»). Lo activa la isla (cierto-cruzado). */
-@media (max-width: 879px){
-  .cierto-cruzado .alerg-fab{ left: var(--fab-inset); right: auto; }
-  .cierto-cruzado .cierto-fab{ left: auto; right: var(--fab-inset); }
-  .cierto-cruzado .cierto-card{ left: auto; width: min(440px, calc(100vw - 2 * var(--fab-inset))); }
-}
-
 /* La tarjeta nace sobre los botones (el redondo de 44px + 10px de aire). Con los mismos
    márgenes laterales que ellos (left y right = --fab-inset), ocupa justo el hueco que va
    del borde izquierdo del botón izquierdo al borde derecho del botón derecho: queda
