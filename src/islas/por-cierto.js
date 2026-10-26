@@ -86,7 +86,10 @@ function medio(m, bucle, mudo, local) {
 const EASE = "cubic-bezier(0.32, 0.72, 0, 1)";   // arranca con decisión y frena largo y suave al llegar
 const DURACION = 520;
 // Historias: lo que dura una imagen, lo que hay que mantener para pausar y los umbrales del gesto.
-const IMAGEN_MS = 5000, RETENER_MS = 200, UMBRAL_PX = 8, CIERRE_PX = 90;
+const IMAGEN_MS = 5000, RETENER_MS = 200, UMBRAL_PX = 8;
+// Empujar la tarjeta: lo que hay que apartarla (px) o la rapidez del gesto (px/ms) para que salga volando,
+// la ventana de tiempo (ms) con la que se mide esa rapidez y lo que dura la salida (ms).
+const CIERRE_PX = 90, CIERRE_V = 0.5, VENTANA_V = 100, SALIDA_MS = 320;
 const sinMovimiento = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function pintar(avisos, sinEntrada) {
@@ -132,7 +135,7 @@ function pintar(avisos, sinEntrada) {
   // Historias: con varios avisos, la tarjeta se porta como las stories de Instagram. Barritas de
   // progreso arriba; avanza sola (IMAGEN_MS por imagen, lo que dure el vídeo); un toque a la derecha
   // pasa a la siguiente y uno en el primer tercio vuelve a la anterior; mantener pulsado pausa y
-  // esconde la interfaz; deslizar hacia abajo cierra; al acabar la última, se cierra. Con un solo aviso
+  // esconde la interfaz; empujarla en cualquier dirección la cierra; al acabar la última, se cierra. Con un solo aviso
   // no hay barras ni avance: queda la tarjeta fija de siempre.
   const n = avisos.length;
   const avanza = n > 1 && !sinMovimiento();   // con «reducir movimiento» no hay avance automático
@@ -281,24 +284,31 @@ function pintar(avisos, sinEntrada) {
   const arrancar = () => { if (avanza) { previo = performance.now(); bucle = requestAnimationFrame(pulso); } };
   const parar = () => cancelAnimationFrame(bucle);
 
-  // Gesto sobre la imagen: toque (pasa), mantener pulsado (pausa), deslizar hacia abajo (cierra).
-  // El botón de la tarjeta queda fuera: es un enlace normal.
+  // Gesto sobre la imagen: toque (pasa), mantener pulsado (pausa) y empujar en cualquier dirección: la
+  // tarjeta sigue al dedo y, si se la aparta lo bastante o se la lanza con ganas, sale volando de la pantalla
+  // en esa dirección y deja el botón redondo en su sitio; si no, vuelve. El botón de la tarjeta queda fuera:
+  // es un enlace normal.
   let dedo = null;
+  // Cuánto se ha apartado y la escala que lo acompaña: la tarjeta se encoge un poco al alejarse, como si se
+  // la empujara hacia dentro de la pantalla.
+  const empuje = (dx, dy) => "translate(" + dx + "px," + dy + "px) scale(" + (1 - Math.min(Math.hypot(dx, dy) / 900, 0.12)) + ")";
   pista.addEventListener("pointerdown", (e) => {
     if (!abierta || animando || dedo || e.button > 0 || e.target.closest(".cierto-ir")) return;
-    dedo = { id: e.pointerId, x: e.clientX, y: e.clientY, t: e.timeStamp, dy: 0 };
+    dedo = { id: e.pointerId, x: e.clientX, y: e.clientY, dx: 0, dy: 0, muestras: [] };
     dedo.espera = setTimeout(() => { dedo.retenido = true; sostenido = true; aplicar(); }, RETENER_MS);
     pista.setPointerCapture(e.pointerId);
   });
   pista.addEventListener("pointermove", (e) => {
     if (!dedo || e.pointerId !== dedo.id) return;
     const dx = e.clientX - dedo.x, dy = e.clientY - dedo.y;
-    if (!dedo.arrastre && dy > UMBRAL_PX && dy > Math.abs(dx)) {
+    if (!dedo.arrastre && Math.hypot(dx, dy) > UMBRAL_PX) {
       dedo.arrastre = true; clearTimeout(dedo.espera);
       sostenido = false; arrastrando = true; aplicar();
     }
-    if (dedo.arrastre) { dedo.dy = Math.max(dy, 0); tarjeta.style.transform = "translateY(" + dedo.dy + "px)"; }
-    else if (Math.hypot(dx, dy) > UMBRAL_PX) dedo.movido = true;
+    if (!dedo.arrastre) return;
+    dedo.dx = dx; dedo.dy = dy;
+    tarjeta.style.transform = empuje(dx, dy);
+    dedo.muestras.push({ x: e.clientX, y: e.clientY, t: e.timeStamp });
   });
   const soltar = (e) => {
     if (!dedo || e.pointerId !== dedo.id) return;
@@ -307,12 +317,22 @@ function pintar(avisos, sinEntrada) {
     const cancelado = e.type === "pointercancel";
     sostenido = arrastrando = false;
     if (d.arrastre) {
-      if (!cancelado && (d.dy > CIERRE_PX || d.dy / (e.timeStamp - d.t) > 0.5)) return mover(false, false);
+      // La rapidez es la de los últimos instantes (no la media del gesto): un dedo que se para antes de soltar no lanza nada.
+      const m = d.muestras.filter((q) => q.t > e.timeStamp - VENTANA_V);
+      const dt = m.length > 1 ? m[m.length - 1].t - m[0].t : 0;
+      const vx = dt ? (m[m.length - 1].x - m[0].x) / dt : 0, vy = dt ? (m[m.length - 1].y - m[0].y) / dt : 0;
+      const v = Math.hypot(vx, vy), lejos = Math.hypot(d.dx, d.dy);
+      const haciaFuera = vx * d.dx + vy * d.dy >= 0;   // un tirón de vuelta hacia donde estaba cancela el empuje
+      if (!cancelado && ((lejos > CIERRE_PX && (v < CIERRE_V || haciaFuera)) || (v > CIERRE_V && haciaFuera))) {
+        // Sale en la dirección en que iba el dedo; si apenas se movía, en la del desplazamiento.
+        const ux = v > CIERRE_V ? vx / v : d.dx / lejos, uy = v > CIERRE_V ? vy / v : d.dy / lejos;
+        return expulsar(d.dx, d.dy, ux, uy);
+      }
       // Sin llegar al umbral, la tarjeta vuelve a su sitio con el mismo frenado que el resto.
       tarjeta.style.transition = "transform .3s " + EASE;
       tarjeta.style.transform = "";
       setTimeout(() => { tarjeta.style.transition = ""; }, 300);
-    } else if (!cancelado && !d.movido && !d.retenido) {
+    } else if (!cancelado && !d.retenido) {
       const r = pista.getBoundingClientRect();
       if (e.clientX - r.left < r.width / 3) anterior(); else siguiente();
     }
@@ -341,7 +361,6 @@ function pintar(avisos, sinEntrada) {
     }
     if (!abriendo) parar();
     const c = tarjeta.getBoundingClientRect();
-    tarjeta.style.transform = "";   // si se cierra deslizando, la animación parte de donde está la tarjeta (c ya lo recoge)
     const fin = () => {
       if (abriendo) {
         arrancar();
@@ -385,6 +404,31 @@ function pintar(avisos, sinEntrada) {
       anims.forEach((x) => x.cancel());
       tarjeta.style.overflow = ""; dentro.style.width = "";
       fin();
+    };
+  }
+  // Cierre por empuje: la tarjeta sigue su camino en la dirección (ux, uy) desde donde la soltó el dedo
+  // (dx, dy), encogiéndose y desvaneciéndose hasta salir de la pantalla; entonces el botón vuelve.
+  function expulsar(dx, dy, ux, uy) {
+    animando = true; abierta = false;
+    parar();
+    boton.setAttribute("aria-expanded", "false");
+    const fuera = () => {
+      tarjeta.classList.remove("is-open"); tarjeta.inert = true; tarjeta.style.transform = "";
+      boton.style.visibility = "";
+      animando = false;
+      aplicar();
+    };
+    if (sinMovimiento()) return fuera();
+    const recorrido = Math.hypot(innerWidth, innerHeight);   // la diagonal: más que de sobra para salir por cualquier lado
+    const a = tarjeta.animate([
+      { transform: empuje(dx, dy), opacity: 1 },
+      { transform: "translate(" + (dx + ux * recorrido) + "px," + (dy + uy * recorrido) + "px) scale(0.8)", opacity: 0 },
+    ], { duration: SALIDA_MS, easing: "cubic-bezier(0.4, 0, 1, 1)", fill: "both" });
+    a.onfinish = () => {
+      // Se oculta ANTES de soltar la animación: si no, parpadea en su sitio.
+      fuera();
+      a.cancel();
+      boton.animate({ opacity: [0, 1] }, { duration: 250, easing: "ease" });
     };
   }
   const alternar = (e) => { if (!animando) mover(!abierta, e.detail === 0); };

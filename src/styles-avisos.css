@@ -46,7 +46,7 @@
 .cierto-in{ position: relative; }
 /* Historias: todas ocupan la misma celda (la tarjeta mide lo que una 9:16) y solo se ve la actual;
    la isla marca inert a las demás. El cambio es instantáneo, como en Instagram. La pista recibe el
-   gesto entero (toque, mantener, deslizar hacia abajo), así que el navegador no debe hacer scroll
+   gesto entero (toque, mantener, empujar en cualquier dirección), así que el navegador no debe hacer scroll
    ni seleccionar ni abrir el menú de imagen con la pulsación larga. */
 .cierto-pista{
   position: relative; display: grid; touch-action: none;

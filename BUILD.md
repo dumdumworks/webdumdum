@@ -124,7 +124,9 @@ sin avisos activos no se pinta nada. La isla es `src/islas/por-cierto.js`; los a
 - Con varios avisos activos en la página, la tarjeta se comporta como las **stories de Instagram**:
   barritas de progreso arriba (en la fila de la ✕), avance solo (5 s por imagen; el vídeo, lo que dure y sin
   bucle), toque a la derecha = siguiente y en el primer tercio = anterior (en la primera la reinicia; al
-  acabar la última se cierra), mantener pulsado = pausa y esconde barras y ✕, deslizar hacia abajo = cierra.
+  acabar la última se cierra), mantener pulsado = pausa y esconde barras y ✕, y empujar la tarjeta con el dedo
+  en cualquier dirección = cierra: sigue al dedo y, si se la aparta ≥ 90 px o se la lanza a más de 0,5 px/ms,
+  sale volando por ese lado y vuelve el botón redondo; si no, regresa (`expulsar()` en `por-cierto.js`).
   Empieza siempre por la primera al abrir. Se pausa con la pestaña oculta y con el foco del teclado en el
   botón o la ✕; con «reducir movimiento» no hay avance automático. Con un solo aviso no hay barras ni
   avance. Las constantes del gesto están al principio de `por-cierto.js`.
