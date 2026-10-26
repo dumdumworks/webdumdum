@@ -35,7 +35,7 @@ const TAGS = {
   "DEL MES": ["DEL MES", "OF THE MONTH", "month"],
   TOP: ["TOP", "TOP", "month"],
   "BAJO EN AZÚCAR": ["BAJO EN AZÚCAR 👍", "LOW SUGAR 👍", "black"],
-  "SIN AZÚCAR": ["SIN AZÚCAR ✅", "SUGAR FREE ✅", "black"],
+  "SIN AZÚCAR AÑADIDO": ["SIN AZÚCAR AÑADIDO ✅", "NO ADDED SUGAR ✅", "black"],
 };
 const tag = (i, tg) => {
   const d = TAGS[String(tg || "").toUpperCase()] || [tg, tg, ""];
