@@ -273,7 +273,7 @@ export function renderCarta(i, carta) {
     <div class="row between menu-head-row">
       <div>
         <h1 class="menu-h">${esc(t("Carta", "Menu"))}</h1>
-        <div class="menu-sub">${esc(t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated"))} ${esc(mesCorto(i.lang))} ${esc(t("dosmil", "twenty") + anioYY())} ·<br class="m-only"> ${esc(t("IVA incluido", "VAT included"))}</div>
+        <div class="menu-sub"><span>${esc(t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated"))} ${esc(mesCorto(i.lang))} ${esc(t("dosmil", "twenty") + anioYY())} ·</span> <span>${esc(t("IVA incluido", "VAT included"))}</span></div>
       </div>
       ${alergenosBtn("btn menu-foot-btn menu-alerg-desk")}${esc(t("Alérgenos", "Allergens"))} →</a>
     </div>
