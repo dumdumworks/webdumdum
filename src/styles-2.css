@@ -396,6 +396,8 @@
   color: var(--ink);
 }
 .menu-sub { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; font-size: 11px; letter-spacing: 0; text-transform: uppercase; color: rgba(255,0,30,0.55); margin-top: 10px; }
+/* Si no cabe en una línea, salta entre las dos mitades y nunca dentro de ellas. */
+.menu-sub span { white-space: nowrap; }
 
 /* align-items: flex-end (no baseline): título y nota terminan a la misma
    altura, pegados al filete, sea cual sea el número de líneas de cada uno
