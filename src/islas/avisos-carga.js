@@ -64,7 +64,11 @@ export function avisos() {
     if (!yaLanzado) { if (frescos.length) lanzar(frescos); return; }
     // Ya se pintó lo de la página anterior: si ahora no queda ningún aviso activo, se retira; si solo
     // cambió algo, se verá en la página siguiente.
-    if (!frescos.length) { window.dumdumAvisos = []; if (window.dumdumAvisosQuitar) window.dumdumAvisosQuitar(); }
+    if (!frescos.length) {
+      window.dumdumAvisos = [];
+      // Si la isla aún no ha adoptado el botón que trae el HTML, se retira ese.
+      if (window.dumdumAvisosQuitar) window.dumdumAvisosQuitar(); else document.querySelectorAll(".cierto-fab").forEach((b) => b.remove());
+    }
   };
   const alLibre = () => {
     // Safari no tiene requestIdleCallback: un margen fijo tras la carga.

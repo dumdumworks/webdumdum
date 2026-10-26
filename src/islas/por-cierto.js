@@ -90,30 +90,38 @@ const IMAGEN_MS = 5000, RETENER_MS = 200, UMBRAL_PX = 8, CIERRE_PX = 90;
 const sinMovimiento = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function pintar(avisos, sinEntrada) {
-  const boton = document.createElement("button");
-  boton.type = "button";
-  boton.className = "fab cierto-fab";
-  boton.setAttribute("aria-expanded", "false");
-  boton.setAttribute("aria-controls", "cierto-card");
-  const ico = document.createElement("span");
-  ico.className = "fab-ico cierto-avatar"; ico.setAttribute("aria-hidden", "true");
-  const foto = avatar;   // ya descargada y decodificada (ver el final del archivo)
-  foto.alt = ""; foto.width = foto.height = 36;
-  ico.append(foto);
-  // El botón no lleva texto visible; esto es lo que lee un lector de pantalla.
-  const txt = document.createElement("span");
-  txt.className = "sr-only";
-  txt.textContent = t("Novedades de DUM DUM", "News from DUM DUM");
-  boton.append(ico, txt);
-  // Como la notificación de una app: cuántos avisos hay, hasta que se abren.
+  // En las páginas siguientes de la visita el HTML ya trae el botón puesto (html/shell.mjs, botonAvisos):
+  // se adopta tal cual, sin recrearlo, para que no parpadee. Si no, se crea con el mismo marcado.
+  const puesto = document.querySelector(".cierto-fab");
+  const boton = puesto || document.createElement("button");
+  let ico, txt, num;
+  if (puesto) {
+    ico = boton.querySelector(".cierto-avatar"); txt = boton.querySelector(".sr-only"); num = boton.querySelector(".cierto-num");
+  } else {
+    boton.type = "button";
+    boton.className = "fab cierto-fab";
+    boton.setAttribute("aria-expanded", "false");
+    boton.setAttribute("aria-controls", "cierto-card");
+    ico = document.createElement("span");
+    ico.className = "fab-ico cierto-avatar"; ico.setAttribute("aria-hidden", "true");
+    const foto = avatar;   // ya descargada y decodificada (ver el final del archivo)
+    foto.alt = ""; foto.width = foto.height = 36;
+    ico.append(foto);
+    // El botón no lleva texto visible; esto es lo que lee un lector de pantalla.
+    txt = document.createElement("span");
+    txt.className = "sr-only";
+    txt.textContent = t("Novedades de DUM DUM", "News from DUM DUM");
+    // Como la notificación de una app: cuántos avisos hay, hasta que se abren.
+    num = document.createElement("span");
+    num.className = "cierto-num"; num.setAttribute("aria-hidden", "true");
+    boton.append(ico, txt, num);
+  }
+  num.textContent = avisos.length;
   const huella = avisos.map((a) => a.id).join(",");
   const marcarVisto = () => { try { localStorage.setItem(VISTO, huella); } catch (e) { /* sin almacenamiento: se vuelve a ver */ } };
   let visto = false;
   try { visto = localStorage.getItem(VISTO) === huella; } catch (e) { /* idem */ }
-  const num = document.createElement("span");
-  num.className = "cierto-num"; num.setAttribute("aria-hidden", "true"); num.textContent = avisos.length;
-  boton.append(num);
-  if (visto) boton.classList.add("is-visto");
+  boton.classList.toggle("is-visto", visto);
 
   const tarjeta = document.createElement("aside");
   tarjeta.id = "cierto-card"; tarjeta.className = "cierto-card";
@@ -175,7 +183,8 @@ function pintar(avisos, sinEntrada) {
   const pre = document.createElement("div"); pre.className = "cierto-pre"; pre.setAttribute("aria-hidden", "true");
   pre.append(ico.cloneNode(true));
   tarjeta.append(dentro, pre);
-  document.body.append(boton, tarjeta);
+  if (!puesto) document.body.append(boton);
+  document.body.append(tarjeta);
   if (sinEntrada) boton.classList.add("sin-entrada");
   try { sessionStorage.setItem(ENTRADA, "1"); } catch (e) { /* idem */ }
   // Vídeos ya guardados en este navegador, listos para usarse sin red; y limpieza de los que sobran.
@@ -183,7 +192,7 @@ function pintar(avisos, sinEntrada) {
   limpiarCache(avisos.filter((a) => a.media.tipo === "video").map((a) => a.media.src));
   atenuarAlScroll(boton);
   // Ya salió en esta visita: queda puesto de entrada, como «Pide ya» (sin fundido ni rebote).
-  if (sinEntrada) boton.classList.add("is-on"); else requestAnimationFrame(() => boton.classList.add("is-on"));
+  if (!puesto) { if (sinEntrada) boton.classList.add("is-on"); else requestAnimationFrame(() => boton.classList.add("is-on")); }
   // Si al comprobar el JSON ya no hay avisos activos (avisos-carga.js), se retira todo lo pintado.
   window.dumdumAvisosQuitar = () => { boton.remove(); tarjeta.remove(); };
 
