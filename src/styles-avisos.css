@@ -59,20 +59,16 @@
 .cierto-zona{ position: absolute; top: 0; bottom: 0; padding: 0; border: 0; border-radius: 0; background: none; cursor: default; -webkit-tap-highlight-color: transparent; }
 .cierto-zona-ant{ left: 0; width: 33.333%; }
 .cierto-zona-sig{ left: 33.333%; right: 0; }
-/* Barritas de progreso, en la fila de la ✕ y a su izquierda (la ✕ no se mueve haya o no haya barras).
-   El fondo de cada una es crema al 40 %; el relleno, crema entero, crece con scaleX desde la isla.
-   Un velo oscuro suave detrás las deja leerse sobre cualquier imagen. Mantener pulsado las esconde. */
-.cierto-bars{ position: absolute; z-index: 1; top: 21px; left: 8px; right: 44px; display: flex; gap: 3px; pointer-events: none; }
-.cierto-bars::before{
-  content: ""; position: absolute; z-index: -1; top: -21px; left: -8px; right: -44px; height: 64px;
-  background: linear-gradient(var(--black), transparent); opacity: 0.3;
-}
+/* Barritas de progreso, a todo lo ancho arriba y con la cabecera (.cierto-cab) justo debajo, con las
+   proporciones de una story de Instagram. El fondo de cada una es crema al 40 %; el relleno, crema
+   entero, crece con scaleX desde la isla. Mantener pulsado lo esconde todo, cabecera incluida. */
+.cierto-bars{ position: absolute; z-index: 1; top: 8px; left: 8px; right: 8px; display: flex; gap: 3px; pointer-events: none; }
 .cierto-bar{ position: relative; flex: 1; height: 2px; overflow: hidden; border-radius: 1px; }
 .cierto-bar::before, .cierto-bar > span{ content: ""; position: absolute; inset: 0; background: var(--bg); }
 .cierto-bar::before{ opacity: 0.4; }
 .cierto-bar > span{ transform: scaleX(0); transform-origin: left; }
-.cierto-bars, .cierto-x, .cierto-son{ transition: opacity .2s ease; }
-.cierto-card.is-pausado .cierto-bars, .cierto-card.is-pausado .cierto-x, .cierto-card.is-pausado .cierto-son{ opacity: 0; }
+.cierto-bars, .cierto-cab{ transition: opacity .2s ease; }
+.cierto-card.is-pausado .cierto-bars, .cierto-card.is-pausado .cierto-cab{ opacity: 0; }
 /* Copia de la foto del botón, idéntica a ella: es lo que ve la tarjeta al empezar a abrirse y al
    acabar de cerrarse (queda centrada, así no importa que el filete pase de 2px a 1px). */
 .cierto-pre{ position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; opacity: 0; pointer-events: none; }
@@ -88,20 +84,37 @@
   width: max-content; min-width: 50%; max-width: calc(100% - 2 * var(--fab-inset)); margin-inline: auto;
   justify-content: center; text-align: center; border-color: var(--bg);
 }
-.cierto-x, .cierto-son{
-  position: absolute; top: 8px; right: 8px; z-index: 1;
-  width: 28px; height: 28px; padding: 0;
-  display: grid; place-items: center;
-  border: 1px solid var(--red); border-radius: 50%;
-  background: var(--bg); color: var(--red);
-  font-size: 12px; line-height: 1; cursor: pointer;
+/* Cabecera: centrada a 34px del borde (las barras van a 8px), como en una story. La fila no recoge
+   toques (la imagen de debajo sigue pasando de historia); solo el nombre y los iconos. Todo en crema
+   con una sombra tenue para leerse sobre cualquier foto. */
+.cierto-cab{
+  position: absolute; z-index: 1; top: 14px; left: 12px; right: 0;
+  display: flex; align-items: center; justify-content: space-between; pointer-events: none;
 }
-/* El altavoz va a la izquierda de la ✕ y las barras le dejan sitio. */
-.cierto-son{ right: 44px; }
+/* El velo vive aquí y no en las barras: con un solo aviso no hay barras y la cabecera también lo necesita. */
+.cierto-cab::before{
+  content: ""; position: absolute; z-index: -1; top: -14px; left: -12px; right: 0; height: 96px;
+  background: linear-gradient(var(--black), transparent); opacity: 0.3;
+}
+.cierto-perfil{
+  display: flex; align-items: center; gap: 10px; height: 40px; pointer-events: auto;
+  color: var(--bg); font-weight: 700; font-size: 14px; line-height: 1; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+/* El dibujo del favicon llega casi a los bordes de su lienzo: 4px de aire dentro del círculo lo dejan respirar. */
+.cierto-perfil img{ display: block; box-sizing: border-box; width: 32px; height: 32px; padding: 4px; border-radius: 50%; object-fit: contain; background: var(--bg); }
+.cierto-acciones{ display: flex; pointer-events: auto; }
+/* Iconos sueltos de 40px de toque, sin círculo: el de la derecha es la ✕ y el altavoz va a su izquierda. */
+.cierto-x, .cierto-son{
+  width: 40px; height: 40px; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%;
+  background: none; color: var(--bg);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+  cursor: pointer;
+}
+.cierto-x svg, .cierto-son svg{ display: block; width: 24px; height: 24px; }
 .cierto-son[hidden]{ display: none; }
-.cierto-son svg{ display: block; width: 16px; height: 16px; }
-.cierto-card.hay-sonido .cierto-bars{ right: 80px; }
 
 @media (prefers-reduced-motion: reduce){
-  .cierto-bars, .cierto-x, .cierto-son{ transition: none; }
+  .cierto-bars, .cierto-cab{ transition: none; }
 }

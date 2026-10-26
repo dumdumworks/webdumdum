@@ -9,12 +9,15 @@
 // La imagen o el vídeo NO se piden hasta que alguien abre la tarjeta.
 // ─────────────────────────────────────────────────────────────
 import { atenuarAlScroll } from "./nucleo.js";
+import { INSTAGRAM_URL } from "../html/enlaces.mjs";
 
 const EN = document.documentElement.lang === "en";
 const t = (es, en) => (EN && en ? en : es);
 
 // La foto de perfil es el favicon de la web (ya está en el repo; no añade ningún archivo).
 const AVATAR = "/favicon-192x192.png";
+// El nombre que firma cada aviso, como el de una story: lleva al Instagram de DUM DUM.
+const PERFIL = "dumdum.plings";
 // Lo último que ha visto este navegador (los ids de los avisos): hasta que cambien, el aro va en
 // gris y sin número, como una story ya vista.
 const VISTO = "dumdum.avisos";
@@ -48,6 +51,7 @@ async function limpiarCache(vigentes) {
 // Si ha silenciado los vídeos, se recuerda mientras dure la visita ("0" = silenciado).
 const SONIDO = "dumdum.sonido";
 const ICO_SON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5l4.5 4v-13l-4.5 4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/></svg>';
+const ICO_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 3l18 18M21 3L3 21"/></svg>';
 const ICO_MUDO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5l4.5 4v-13l-4.5 4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>';
 
 // El aviso de cookies de la primera visita ocupa el mismo rincón: esperar a que se cierre.
@@ -130,7 +134,7 @@ function pintar(avisos, sinEntrada) {
   tarjeta.id = "cierto-card"; tarjeta.className = "cierto-card";
   tarjeta.setAttribute("aria-label", txt.textContent); tarjeta.tabIndex = -1; tarjeta.inert = true;
   const cerrar = document.createElement("button");
-  cerrar.type = "button"; cerrar.className = "cierto-x"; cerrar.textContent = "✕";
+  cerrar.type = "button"; cerrar.className = "cierto-x"; cerrar.innerHTML = ICO_X;
   cerrar.setAttribute("aria-label", t("Cerrar", "Close"));
   // Historias: con varios avisos, la tarjeta se porta como las stories de Instagram. Barritas de
   // progreso arriba; avanza sola (IMAGEN_MS por imagen, lo que dure el vídeo); un toque a la derecha
@@ -155,16 +159,26 @@ function pintar(avisos, sinEntrada) {
   const pista = document.createElement("div"); pista.className = "cierto-pista";
   pista.append(...diapositivas.map((d) => d.el));
   const dentro = document.createElement("div"); dentro.className = "cierto-in";
-  dentro.append(cerrar, pista);
+  dentro.append(pista);
   // Altavoz: solo si algún aviso es un vídeo, y solo visible mientras se ve uno.
   let son = null, sonido = true;
   try { sonido = sessionStorage.getItem(SONIDO) !== "0"; } catch (e) { /* sin almacenamiento: suena */ }
   if (avisos.some((a) => a.media.tipo === "video")) {
     son = document.createElement("button");
     son.type = "button"; son.className = "cierto-son";
-    tarjeta.classList.add("hay-sonido");
-    dentro.append(son);
   }
+  // Cabecera como la de una story, bajo las barras: la foto y el nombre a la izquierda (enlace al
+  // Instagram) y, a la derecha, el altavoz (si hay vídeo) y la ✕.
+  const cab = document.createElement("div"); cab.className = "cierto-cab";
+  const perfil = document.createElement("a");
+  perfil.className = "cierto-perfil"; perfil.href = INSTAGRAM_URL; perfil.target = "_blank"; perfil.rel = "noreferrer";
+  const fotoPerfil = new Image();
+  fotoPerfil.src = AVATAR; fotoPerfil.alt = ""; fotoPerfil.width = fotoPerfil.height = 32;
+  perfil.append(fotoPerfil, PERFIL);
+  const acciones = document.createElement("div"); acciones.className = "cierto-acciones";
+  acciones.append(...(son ? [son, cerrar] : [cerrar]));
+  cab.append(perfil, acciones);
+  dentro.append(cab);
   const barras = [];
   if (n > 1) {
     const bs = document.createElement("div"); bs.className = "cierto-bars"; bs.setAttribute("aria-hidden", "true");
