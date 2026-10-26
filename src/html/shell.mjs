@@ -25,6 +25,7 @@ export function esqueleto(i, ruta, locales, main) {
     modales(i, locales),
     "<main>\n" + main + "\n</main>",
     footer(i, locales),
+    botonAvisos(i),
   ].filter(Boolean).join("\n\n");
 }
 
@@ -113,6 +114,25 @@ export function flotante(i) {
   </span>
   <span>${esc(t("Pide ya!", "Order now!"))}</span>
 </button>`;
+}
+
+// Botón redondo de los avisos, puesto en el HTML desde el primer pintado en las páginas siguientes de
+// la visita. La web es multipágina: un botón creado por la isla (islas/por-cierto.js) desaparece al cambiar
+// de página y no vuelve hasta que se bajan el JS y el CSS de los avisos, así que saltaba. Este script
+// síncrono, al final del <body>, lee los avisos que la página anterior dejó guardados (los mismos que
+// islas/avisos-carga.js) y deja el botón ya puesto, como «Pide ya», que va en el HTML; la isla lo adopta
+// después, sin recrearlo, y le añade el comportamiento. En la primera página no hay nada guardado: no
+// hace nada y el botón sale con su entrada de siempre. El CSS va en styles.css y los nombres de
+// almacenamiento y el marcado deben coincidir con los de por-cierto.js.
+export function botonAvisos(i) {
+  const nombre = esc(i.t("Novedades de DUM DUM", "News from DUM DUM"));
+  return `<script>(function(){try{var d=JSON.parse(sessionStorage.getItem("dumdum.avisos.datos"));if(!d||!d.length)return;`
+    + `var b=document.createElement("button");b.type="button";`
+    + `b.className="fab cierto-fab is-on sin-entrada"+(localStorage.getItem("dumdum.avisos")===d.map(function(a){return a.id}).join(",")?" is-visto":"");`
+    + `b.setAttribute("aria-expanded","false");b.setAttribute("aria-controls","cierto-card");`
+    + `b.innerHTML='<span class="fab-ico cierto-avatar" aria-hidden="true"><img src="/favicon-192x192.png" alt="" width="36" height="36"></span>`
+    + `<span class="sr-only">${nombre}</span><span class="cierto-num" aria-hidden="true">'+d.length+'</span>';`
+    + `document.body.append(b)}catch(e){}})()</script>`;
 }
 
 // Tarjeta de un modal: <a> si lleva href, <button> si lleva data-*.
