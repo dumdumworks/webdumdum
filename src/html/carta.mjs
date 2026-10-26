@@ -82,17 +82,28 @@ export function numeroALetra(n, lang) {
 }
 export const mayuscInicial = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
-// Mes y año en curso, SIEMPRE con la hora de Madrid (el subtítulo de la carta
-// y el botón de la home). En español en minúscula, en inglés capitalizado: es lo
-// que devuelve Intl para cada locale.
+// Fecha en curso, SIEMPRE con la hora de Madrid (subtítulo de la carta y botón de
+// la home). Una sola función para que ninguna parte dependa de la zona del servidor.
+function fechaMadrid(locale, opciones) {
+  try { return new Intl.DateTimeFormat(locale, { timeZone: "Europe/Madrid", ...opciones }).format(new Date()); }
+  catch (e) { return new Intl.DateTimeFormat(locale, opciones).format(new Date()); }
+}
+// Mes completo: en español en minúscula, en inglés capitalizado (lo que devuelve Intl).
 export function mesEnCurso(lang) {
-  const locale = lang === "en" ? "en-US" : "es-ES";
-  try { return new Intl.DateTimeFormat(locale, { timeZone: "Europe/Madrid", month: "long" }).format(new Date()); }
-  catch (e) { return new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date()); }
+  return fechaMadrid(lang === "en" ? "en-US" : "es-ES", { month: "long" });
+}
+// Mes abreviado a tres letras y punto ("oct.", "Oct."), igual en los doce meses. Va en
+// tablas propias porque Intl abrevia distinto según el mes y el idioma ("sept", "Sep").
+const MES_CORTO = {
+  es: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"],
+  en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+};
+export function mesCorto(lang) {
+  const n = Number(fechaMadrid("en-CA", { month: "numeric" }));
+  return MES_CORTO[lang === "en" ? "en" : "es"][n - 1] + ".";
 }
 function anioYY() {
-  try { return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Madrid", year: "numeric" }).format(new Date()).slice(-2); }
-  catch (e) { return String(new Date().getFullYear()).slice(-2); }
+  return fechaMadrid("en-CA", { year: "numeric" }).slice(-2);
 }
 
 const num = (n) => "[nº" + String(n).padStart(2, "0") + "]";
@@ -262,7 +273,7 @@ export function renderCarta(i, carta) {
     <div class="row between menu-head-row">
       <div>
         <h1 class="menu-h">${esc(t("Carta", "Menu"))}</h1>
-        <div class="menu-sub">${esc(t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated"))} ${esc(mesEnCurso(i.lang))} ${esc(t("dosmil", "twenty") + anioYY())} ·<br class="m-only"> ${esc(t("IVA incluido", "VAT included"))}</div>
+        <div class="menu-sub">${esc(t("DUM DUM™ · Actualizada", "DUM DUM™ · Updated"))} ${esc(mesCorto(i.lang))} ${esc(t("dosmil", "twenty") + anioYY())} ·<br class="m-only"> ${esc(t("IVA incluido", "VAT included"))}</div>
       </div>
       ${alergenosBtn("btn menu-foot-btn menu-alerg-desk")}${esc(t("Alérgenos", "Allergens"))} →</a>
     </div>
