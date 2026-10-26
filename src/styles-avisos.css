@@ -100,8 +100,8 @@
   display: flex; align-items: center; gap: 10px; height: 40px; pointer-events: auto;
   color: var(--bg); font-weight: 700; font-size: 14px; line-height: 1; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
-/* El dibujo del favicon llega casi a los bordes de su lienzo: 5px de aire dentro del círculo lo dejan respirar. */
-.cierto-perfil img{ display: block; box-sizing: border-box; width: 32px; height: 32px; padding: 5px; border-radius: 50%; object-fit: contain; background: var(--bg); }
+/* El dibujo del favicon llega casi a los bordes de su lienzo: 4px de aire dentro del círculo lo dejan respirar. */
+.cierto-perfil img{ display: block; box-sizing: border-box; width: 32px; height: 32px; padding: 4px; border-radius: 50%; object-fit: contain; background: var(--bg); }
 .cierto-acciones{ display: flex; pointer-events: auto; }
 /* Iconos sueltos de 40px de toque, sin círculo: el de la derecha es la ✕ y el altavoz va a su izquierda. */
 .cierto-x, .cierto-son{
