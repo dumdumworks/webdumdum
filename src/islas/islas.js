@@ -16,6 +16,7 @@ import { embeds } from "./embeds.js";
 import { home } from "./home.js";
 import { faq } from "./faq.js";
 import { eventos } from "./eventos.js";
+import { ir } from "./ir.js";
 import { cookies } from "./cookies.js";
 import { avisos } from "./avisos-carga.js";
 import { $$ } from "./nucleo.js";
@@ -32,6 +33,7 @@ embeds();
 home();
 faq();
 eventos();
+ir();
 cookies();
 avisos();
 

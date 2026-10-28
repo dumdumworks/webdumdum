@@ -11,6 +11,7 @@ import { esc, ORIGIN, breadcrumbLd, ldGlobalIdioma } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
 import { srcset } from "../imagenes.mjs";
 import { icono } from "./local.mjs";
+import { faqSeccion, faqLd } from "../faq.mjs";
 
 export const RUTA = "/taller-team-building";
 const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
@@ -393,17 +394,6 @@ function jsonLd(i, url) {
     areaServed: { "@type": "City", name: "Madrid" },
   };
 }
-function faqLd(i) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQ.map(({ q, a }) => ({
-      "@type": "Question",
-      name: i.lang === "en" ? q[1] : q[0],
-      acceptedAnswer: { "@type": "Answer", text: (i.lang === "en" ? a[1] : a[0]).replace("{{bernabeu}}", "DUM DUM Bernabéu") },
-    })),
-  };
-}
 
 // Sellos de "laurel de festival de cine" (Official Selection) a los lados
 // de la foto del hero, en broma: el SVG (dibujo de Yerai) trae solo la
@@ -474,21 +464,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
   <div class="hr taller2-esencial-filete" aria-hidden="true"></div>
 </section>
 
-<section class="taller2-faq">
-  <div class="taller2-faq-col">
-    <div class="tiny muted">${esc(t("Preguntas frecuentes", "FAQ"))}</div>
-    <h2 class="h-1" style="margin-top:16px;max-width:18ch">${esc(t("Lo que más nos preguntáis.", "What you ask us most."))}</h2>
-    <details class="faq-toggle taller2-faq-toggle" open>
-      <summary class="big">${esc(t("Preguntas frecuentes", "FAQ"))}<span class="faq-ico" aria-hidden="true"></span></summary>
-      <div class="faq-list">
-        ${FAQ.map(({ q, a }) => `      <details class="faq-item">
-        <summary>${esc(i.lang === "en" ? q[1] : q[0])}<span class="faq-ico" aria-hidden="true"></span></summary>
-        <p class="body">${esc(i.lang === "en" ? a[1] : a[0]).replace("{{bernabeu}}", `<a href="${i.ruta("/locales/bernabeu")}" class="link-hover">DUM DUM Bernabéu</a>`)}</p>
-      </details>`).join("\n")}
-      </div>
-    </details>
-  </div>
-</section>
+${faqSeccion(i, FAQ)}
 </div>`;
 
   return {
@@ -498,6 +474,6 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
     ld: [ldGlobalIdioma(i, ldGlobal), breadcrumbLd(i, [
       { nombre: t("Eventos", "Events"), ruta: "/eventos" },
       { nombre: t("Talleres Team Building", "Team Building Workshops"), ruta: RUTA },
-    ]), jsonLd(i, url), faqLd(i)],
+    ]), jsonLd(i, url), faqLd(i, FAQ)],
   };
 }

@@ -33,7 +33,7 @@ ${derecha}
 
 // Fecha de hoy (Madrid) en YYYY-MM-DD para el `min` del campo de fecha. La
 // isla lo vuelve a poner al cargar: esta es la del build, solo de respaldo.
-function hoyISOMadrid() {
+export function hoyISOMadrid() {
   try {
     return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Madrid", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
   } catch (e) { return new Date().toISOString().slice(0, 10); }
@@ -68,19 +68,19 @@ function formulario(i) {
     red: t("No hay conexión. Inténtalo de nuevo.", "No connection. Please try again."),
     enviando: t("Enviando…", "Sending…"),
   };
-  return `<form class="ev-form" data-formulario data-clave="${WEB3FORMS_KEY}" data-textos='${esc(JSON.stringify(textos))}'>
+  return `<form class="ev-form" data-formulario data-clave="${WEB3FORMS_KEY}" data-asunto="Nueva solicitud de evento" data-origen="Web DUM DUM · Eventos" data-textos='${esc(JSON.stringify(textos))}'>
   <input type="checkbox" name="botcheck" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" tabindex="-1" autocomplete="off" aria-hidden="true">
   <div class="ev-form-row ev-form-row-3">
-    ${campo(t("Nombre y apellido *", "Full name *"), `<input type="text" name="nombre" required placeholder="${esc(t("Tu nombre", "Your name"))}">`)}
-    ${campo(t("Empresa", "Company"), `<input type="text" name="empresa" placeholder="${esc(t("Tu empresa (opcional)", "Your company (optional)"))}">`)}
-    ${campo(t("Email *", "Email *"), `<input type="email" name="email" required placeholder="tu@email.com">`)}
+    ${campo(t("Nombre y apellido *", "Full name *"), `<input type="text" name="nombre" data-etiqueta="Nombre y apellido" required placeholder="${esc(t("Tu nombre", "Your name"))}">`)}
+    ${campo(t("Empresa", "Company"), `<input type="text" name="empresa" data-etiqueta="Empresa" placeholder="${esc(t("Tu empresa (opcional)", "Your company (optional)"))}">`)}
+    ${campo(t("Email *", "Email *"), `<input type="email" name="email" data-etiqueta="Email de contacto" required placeholder="tu@email.com">`)}
   </div>
   <div class="ev-form-row ev-form-row-3">
-    ${campo(t("Teléfono *", "Phone *"), `<input type="tel" name="telefono" required placeholder="+34 600 000 000">`)}
-    ${campo(t("Fecha del evento *", "Event date *"), `<input type="date" name="fecha" min="${hoyISOMadrid()}" required data-fecha>`)}
-    ${campo(t("Número de asistentes", "Number of guests"), `<select name="asistentes" class="ev-select">${opciones.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join("")}</select>`)}
+    ${campo(t("Teléfono *", "Phone *"), `<input type="tel" name="telefono" data-etiqueta="Teléfono" required placeholder="+34 600 000 000">`)}
+    ${campo(t("Fecha del evento *", "Event date *"), `<input type="date" name="fecha" data-etiqueta="Fecha del evento" min="${hoyISOMadrid()}" required data-fecha>`)}
+    ${campo(t("Número de asistentes", "Number of guests"), `<select name="asistentes" data-etiqueta="Número de asistentes" class="ev-select">${opciones.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join("")}</select>`)}
   </div>
-  ${campo(t("¿Qué necesitas?", "What do you need?"), `<textarea name="mensaje" rows="5" placeholder="${esc(t("Tipo de evento, comentarios…", "Type of event, comments…"))}"></textarea>`)}
+  ${campo(t("¿Qué necesitas?", "What do you need?"), `<textarea name="mensaje" data-etiqueta="Mensaje" rows="5" placeholder="${esc(t("Tipo de evento, comentarios…", "Type of event, comments…"))}"></textarea>`)}
   <div class="ev-form-err" role="alert" hidden></div>
   <div class="ev-form-actions">
     <button type="submit" class="btn red"><span class="btn-label">${esc(t("Enviar solicitud", "Send request"))}</span><span class="btn-arrow">→</span></button>
@@ -220,12 +220,12 @@ ${seccion("06", t("Al frente", "At the helm"),
   <h2 class="h-1" style="margin-top:16px;max-width:20ch">${esc(t("Qué hacemos.", "What we do."))}</h2>
   <div class="ev-services-grid">
     ${[
-        // El \u00FAnico servicio con p\u00E1gina propia (taller de dumplings, con dossier y tarifas):
-        // primero de la rejilla, con flecha en el t\u00EDtulo (ver .ev-service.is-link .t::after).
+        // Los servicios con p\u00E1gina propia llevan flecha en el t\u00EDtulo (ver .ev-service.is-link .t::after).
+        // El primero (taller de dumplings, con dossier y tarifas) es el destino del bot\u00F3n del hero.
         { nombre: t("Talleres Team Building", "Team Building Workshops"), href: "/taller-team-building" },
         { nombre: "Cocktails" },
         { nombre: "Afterwork" },
-        { nombre: "Workshops" },
+        { nombre: t("Comidas de empresa", "Company meals"), href: "/comidas-empresa" },
         { nombre: t("Presenta\u00ADciones", "Launches") },
         { nombre: t("Alquiler de espacio", "Venue rental") },
       ].map(({ nombre, href }, n) => {
