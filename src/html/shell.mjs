@@ -12,11 +12,12 @@ import * as E from "./enlaces.mjs";
 // página; `ruta` la neutra (sin /en), para marcar el enlace activo.
 // Rutas donde los accesos rápidos a pedir y reservar sobran o confunden.
 // Flotante "Pide ya": la carta (se llega por el QR de la mesa: no queremos
-// inducir a pedir online estando sentado) y el taller de team building (venta a
-// empresas: el cliente va a pedir presupuesto, no a pedir comida).
-const SIN_FLOTANTE = ["/menu", "/taller-team-building"];
-// "Reservar" de la barra móvil: solo el taller, por la misma razón.
-const SIN_RESERVAR_MOVIL = ["/taller-team-building"];
+// inducir a pedir online estando sentado) y las páginas de venta a empresas
+// (taller de team building y menús de empresa: el cliente va a pedir presupuesto,
+// no a pedir comida).
+const SIN_FLOTANTE = ["/menu", "/taller-team-building", "/comidas-empresa"];
+// "Reservar" de la barra móvil: solo las de empresa, por la misma razón.
+const SIN_RESERVAR_MOVIL = ["/taller-team-building", "/comidas-empresa"];
 
 export function esqueleto(i, ruta, locales, main) {
   return [
