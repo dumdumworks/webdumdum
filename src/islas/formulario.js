@@ -1,5 +1,8 @@
-// Formulario de eventos: envía un POST JSON a Web3Forms (gratis hasta 250
-// envíos/mes; la clave es pública por diseño), con honeypot anti-spam. Al
+// Formularios de la web (eventos, menús de empresa): envían un POST JSON a
+// Web3Forms (gratis hasta 250 envíos/mes en total; la clave es pública por
+// diseño), con honeypot anti-spam. El asunto, el remitente y los campos salen
+// de los data-atributos del propio formulario (data-asunto, data-origen y
+// data-etiqueta en cada campo), así un formulario nuevo no toca este JS. Al
 // enviar bien, el formulario se sustituye por el "Gracias." y el foco pasa a
 // su encabezado (si no, un lector de pantalla se queda en un botón que ya no
 // existe). Si falla, un aviso con role="alert" dice por qué.
@@ -40,11 +43,17 @@ export function formulario() {
     flecha.hidden = e;
   };
 
+  // El aviso es de un intento de envío: en cuanto se toca un campo, ya no vale.
+  form.addEventListener("input", () => { err.hidden = true; });
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (enviando) return;   // doble Enter/tap
-    const v = (n) => (form.elements[n].value || "").trim();
-    if (!v("nombre") || !v("email") || !v("telefono") || !v("fecha")) { fallo(textos.obligatorios); return; }
+    const campos = [...form.elements].filter((el) => el.dataset.etiqueta);
+    // Un formulario con `novalidate` no usa los avisos del navegador: avisa él y lleva el foco a la
+    // primera pregunta sin responder.
+    const malos = campos.filter((el) => !el.checkValidity());
+    if (malos.length) { fallo(textos.obligatorios); malos[0].focus(); return; }
     err.hidden = true;
     estado(true);
     const ref = referencia();
@@ -54,18 +63,12 @@ export function formulario() {
         headers: { Accept: "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({
           access_key: form.dataset.clave,
-          subject: `Nueva solicitud de evento · ${ref}`,
-          from_name: "Web DUM DUM · Eventos",
+          subject: `${form.dataset.asunto} · ${ref}`,
+          from_name: form.dataset.origen,
           botcheck: form.elements.botcheck.checked,   // un bot que lo marque se descarta en Web3Forms
           "Referencia": ref,
-          "Nombre y apellido": v("nombre"),
-          "Empresa": v("empresa"),
-          "Email de contacto": v("email"),
-          "Teléfono": v("telefono"),
-          "Fecha del evento": v("fecha"),
-          "Número de asistentes": v("asistentes"),
-          "Mensaje": v("mensaje"),
-          replyto: v("email"),
+          ...Object.fromEntries(campos.map((el) => [el.dataset.etiqueta, el.value.trim()])),
+          replyto: form.elements.email.value.trim(),
         }),
       });
       const data = await res.json().catch(() => ({}));
