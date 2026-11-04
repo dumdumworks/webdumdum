@@ -14,7 +14,8 @@ import { icono } from "./local.mjs";
 import { faqSeccion, faqLd } from "../faq.mjs";
 
 export const RUTA = "/taller-team-building";
-const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_EVENTOS.pdf";
+// Dossier propio del taller (no el de eventos): tarifas, qué incluye y dónde.
+const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_TALLER_TEAM_BUILDING.pdf";
 
 // Año en curso para el sello "MEJOR TEAM BUILDING" — se calcula en cada
 // build, nunca hay que tocarlo a mano para que no se quede desfasado.
