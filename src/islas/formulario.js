@@ -63,7 +63,7 @@ export function formulario() {
         headers: { Accept: "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({
           access_key: form.dataset.clave,
-          subject: `${form.dataset.asunto} · ${ref}`,
+          subject: [form.elements.nombre?.value, form.elements.empresa?.value, "Evento en DUM DUM :)"].map(value => String(value || "").replace(/[\r\n\x00-\x1f|]/g, " ").trim().slice(0, 80)).filter(Boolean).join(" | ").slice(0, 200),
           from_name: form.dataset.origen,
           botcheck: form.elements.botcheck.checked,   // un bot que lo marque se descarta en Web3Forms
           "Referencia": ref,
@@ -86,3 +86,4 @@ export function formulario() {
   });
   $("[data-otra]", ok).addEventListener("click", () => { ok.hidden = true; form.hidden = false; });
 }
+
