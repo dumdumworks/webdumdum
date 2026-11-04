@@ -14,8 +14,11 @@ import { icono } from "./local.mjs";
 import { faqSeccion, faqLd } from "../faq.mjs";
 
 export const RUTA = "/taller-team-building";
-// Dossier propio del taller (no el de eventos): tarifas, qué incluye y dónde.
-const DOSSIER = "/img/dossier/DUMDUM_DOSSIER_TALLER_TEAM_BUILDING.pdf";
+// Dossier propio del taller (no el de eventos): tarifas, qué incluye y dónde. Uno por idioma.
+const DOSSIER = {
+  es: "/img/dossier/DUMDUM_DOSSIER_TALLER_TEAM_BUILDING.pdf",
+  en: "/img/dossier/DUMDUM_DOSSIER_TALLER_TEAM_BUILDING_EN.pdf",
+};
 
 // Año en curso para el sello "MEJOR TEAM BUILDING" — se calcula en cada
 // build, nunca hay que tocarlo a mano para que no se quede desfasado.
@@ -428,7 +431,7 @@ export function tallerTeamBuilding(i, { locales, seo, ldGlobal, raiz }) {
   </div>
   <div class="ev-hero-cta">
     <a class="btn red" href="${i.ruta("/eventos")}#contact-eventos"><span class="btn-label">${esc(t("Pedir presupuesto", "Get a quote"))}</span><span class="btn-arrow">→</span></a>
-    <a class="btn" href="${esc(DOSSIER)}" target="_blank" rel="noreferrer"><span class="btn-label">${esc(t("Descargar dossier", "Download dossier"))}</span><span class="btn-arrow">↓</span></a>
+    <a class="btn" href="${esc(DOSSIER[i.lang])}" target="_blank" rel="noreferrer"><span class="btn-label">${esc(t("Descargar dossier", "Download dossier"))}</span><span class="btn-arrow">↓</span></a>
   </div>
 </section>
 
