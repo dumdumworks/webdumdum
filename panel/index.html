@@ -251,6 +251,17 @@
   .logo-zone{aspect-ratio:auto;height:152px;max-width:300px;background:#FFFAF3}
   .logo-zone .pz-inner{padding:12px;gap:8px}
   .logo-zone img{object-fit:contain;padding:16px 16px 44px;box-sizing:border-box;mix-blend-mode:multiply}   /* el pie queda libre para Cambiar / Quitar */
+  /* Disponibilidad por días: siete botones como los de «Estado» (verde = disponible ese día). */
+  .dias-row{display:flex;flex-wrap:wrap;gap:8px}
+  .dia-btn{min-width:58px;height:44px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--muted);
+    font-weight:600;font-size:13px;cursor:pointer;transition:.14s}
+  .dia-btn:hover{border-color:var(--muted)}
+  .dia-btn[aria-pressed="true"]{border-color:var(--green);background:color-mix(in srgb,var(--green) 9%,var(--panel));color:var(--green)}
+  .dias-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .dias-presets button{font-family:var(--mono);font-size:10.5px;padding:5px 9px;border-radius:7px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);cursor:pointer}
+  .dias-presets button:hover{border-color:var(--ink)}
+  .dias-resumen{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.5}
+  .dias-resumen.error{color:var(--red-ink);font-weight:600}
   .colab-fields{margin-top:14px;max-width:640px}
   .colab-fields .invalid,.colab-fields input.invalid{border-color:var(--red)}
   .colab-estado{margin-top:12px;font-size:12px;font-weight:600;color:var(--red-ink)}
@@ -604,6 +615,14 @@
               </div>
             </div>
 
+            <!-- DISPONIBILIDAD por días de la semana -->
+            <div class="grp" id="diasGrp">
+              <div class="grp-label">Disponibilidad</div>
+              <div class="dias-row" id="diasRow" role="group" aria-label="Días de la semana en que el plato sale en la carta"></div>
+              <div class="dias-presets" id="diasPresets"></div>
+              <div class="dias-resumen" id="diasResumen" role="status"></div>
+            </div>
+
             <!-- COLABORACIÓN ESPECIAL con otra marca -->
             <div class="grp">
               <div class="grp-label">Colaboración especial</div>
@@ -850,6 +869,12 @@
   const slug = (s) => (s||"").toString().toLowerCase().normalize("NFD")
     .replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || "seccion";
 
+  // Disponibilidad por días (1 = lunes … 7 = domingo). Mismo criterio que src/html/disponibilidad.mjs: sin el campo =
+  // todos los días (valor por defecto; los platos ya existentes no hay que tocarlos).
+  const DIAS=[[1,"Lun","Lunes","L"],[2,"Mar","Martes","M"],[3,"Mié","Miércoles","X"],[4,"Jue","Jueves","J"],[5,"Vie","Viernes","V"],[6,"Sáb","Sábado","S"],[7,"Dom","Domingo","D"]];
+  const TODOS=[1,2,3,4,5,6,7];
+  const diasDeCarta=(it)=>{const v=Array.isArray(it.dias)?[...new Set(it.dias.filter(n=>Number.isInteger(n)&&n>=1&&n<=7))].sort((a,b)=>a-b):[];return v.length?v:TODOS.slice();};
+
   // menu.json -> modelo del editor
   function loadModel(menu){
     MENU = menu || { sections: [] };
@@ -874,6 +899,7 @@
           feat: !!it.featured,
           archived: !!it.archived,
           image: it.image||"",
+          dias: diasDeCarta(it),
           colab: { on: !!it.colab, marca: (it.colab&&it.colab.marca)||"", logo: (it.colab&&it.colab.logo)||"", _preview: null },
           _preview: null,   // vista previa local de una foto recién elegida
           _orig: it,        // original, para conservar campos que el editor no toca (logo, etc.)
@@ -900,6 +926,8 @@
           available: d.avail, featured: d.feat, archived: d.archived,
           image: d.image,
         });
+        // Los siete días son el valor por defecto: se guarda sin el campo. El servidor vuelve a validar los días.
+        if(d.dias.length===7) delete it.dias; else it.dias = d.dias.slice().sort((a,b)=>a-b);
         // Apagar la colaboración la quita del plato; el servidor vuelve a validar marca y logo.
         if(d.colab.on) it.colab = { marca: d.colab.marca.trim(), logo: d.colab.logo };
         else delete it.colab;
@@ -942,7 +970,7 @@
   function addDishTo(secId){
     if(!secById(secId))secId=createSection("General").id;   // sin ninguna sección, el plato necesita una
     const id="nuevo-"+Date.now().toString(36);
-    dishes.push({id,sec:secId,n:dishes.filter(d=>d.sec===secId).length,name:"Plato nuevo",name_en:"",tag:"",tag_en:"",ingr:"",ingr_en:"",price:"0,00",tags:[],alerSel:[],avail:true,feat:false,archived:false,image:"",colab:{on:false,marca:"",logo:"",_preview:null},_preview:null,_orig:{}});
+    dishes.push({id,sec:secId,n:dishes.filter(d=>d.sec===secId).length,name:"Plato nuevo",name_en:"",tag:"",tag_en:"",ingr:"",ingr_en:"",price:"0,00",tags:[],alerSel:[],avail:true,feat:false,archived:false,image:"",dias:TODOS.slice(),colab:{on:false,marca:"",logo:"",_preview:null},_preview:null,_orig:{}});
     if(filter==="Archivados")filter="Todas";
     mode="dish";selId=id;markDirty();renderTabs();renderList();renderEditor();
     document.querySelector(".editor").scrollTo({top:0,behavior:"smooth"});
@@ -1017,7 +1045,7 @@
     const m=el("div","meta");
     const dn=el("div","dn");dn.textContent=d.name;
     const dp=el("div","dp");
-    dp.textContent=d.archived?("Archivado"+(d.sec?" · "+secTitle(d.sec):"")):((hidden?"Oculto · ":"")+d.price+" €"+(d.tags.length?" · "+d.tags.length+" etiq.":""));
+    dp.textContent=d.archived?("Archivado"+(d.sec?" · "+secTitle(d.sec):"")):((hidden?"Oculto · ":"")+d.price+" €"+(d.tags.length?" · "+d.tags.length+" etiq.":"")+(d.dias.length<7?" · "+DIAS.filter(x=>d.dias.includes(x[0])).map(x=>x[3]).join(" "):""));
     m.appendChild(dn);m.appendChild(dp);
     r.append(grip,th,m);
     if(d.archived){const t=el("span","row-arch");t.textContent="📦";r.appendChild(t);}
@@ -1238,7 +1266,7 @@
     arch.classList.toggle("restore",!!d.archived);
     $("#archBanner").hidden=!d.archived;
     addingTag=false;addingSec=false;
-    renderCat();renderChips();renderAler();renderPhoto();renderColab();renderCard();
+    renderCat();renderChips();renderAler();renderPhoto();renderDias();renderColab();renderCard();
   }
 
   function renderPhoto(){
@@ -1265,14 +1293,22 @@
   const colabFaltas=(d)=>d.colab.on?[!d.colab.marca.trim()&&"la marca",!d.colab.logo&&"el logo",!d.image&&"la foto del plato"].filter(Boolean):[];
   const unir=(a)=>a.length>1?a.slice(0,-1).join(", ")+" y "+a[a.length-1]:a[0]||"";
   // El primer plato (de toda la carta, también los archivados: el servidor los valida igual) con la colaboración a medias.
-  function colabPendiente(){for(const d of dishes){const f=colabFaltas(d);if(f.length)return {d,faltas:f};}return null;}
+  // El primer plato con algo que impide guardar: colaboración a medias o ningún día de disponibilidad marcado.
+  function pendiente(){
+    for(const d of dishes){
+      const n=d.name||"sin nombre",f=colabFaltas(d);
+      if(f.length)return {d,msg:"a la colaboración de «"+n+"» le falta "+unir(f)};
+      if(!d.dias.length)return {d,msg:"al plato «"+n+"» le falta marcar algún día de disponibilidad"};
+    }
+    return null;
+  }
   function actualizarGuardar(){
-    const p=colabPendiente(),btns=[$("#saveBtn"),$("#saveBtn2")];
+    const p=pendiente(),btns=[$("#saveBtn"),$("#saveBtn2")];
     btns.forEach(b=>{b.disabled=!!p;});
     document.querySelectorAll("[data-guardar-hint]").forEach(h=>{
       h.classList.toggle("bloqueado",!!p);
       if(!p){h.textContent="Se publica en la web en segundos";return;}
-      h.textContent="No se puede guardar: a la colaboración de «"+(p.d.name||"sin nombre")+"» le falta "+unir(p.faltas)+".";
+      h.textContent="No se puede guardar: "+p.msg+".";
       if(mode!=="dish"||p.d.id!==selId){
         const ir=el("button");ir.type="button";ir.textContent="Ir al plato";
         ir.onclick=()=>{mode="dish";selId=p.d.id;renderTabs();renderList();renderEditor();};
@@ -1280,6 +1316,36 @@
       }
     });
   }
+  // ── disponibilidad por días: siete botones, atajos y resumen
+  const lista=(a)=>a.length>1?a.slice(0,-1).join(", ")+" y "+a[a.length-1]:a[0]||"";
+  const hoyMadrid=()=>({Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6,Sun:7})[new Intl.DateTimeFormat("en-US",{timeZone:"Europe/Madrid",weekday:"short"}).format(new Date())]||1;
+  function renderDias(){
+    const d=cur();if(!d)return;
+    $("#diasRow").querySelectorAll(".dia-btn").forEach(b=>b.setAttribute("aria-pressed",String(d.dias.includes(+b.dataset.dia))));
+    const r=$("#diasResumen"),hoy=DIAS.find(x=>x[0]===hoyMadrid());
+    r.classList.toggle("error",!d.dias.length);
+    if(!d.dias.length){r.textContent="Marca al menos un día: sin ninguno no se puede guardar. Si no quieres que salga, usa «Disponible» arriba.";}
+    else if(d.dias.length===7){r.textContent="Disponible todos los días.";}
+    else{
+      const nombres=DIAS.filter(x=>d.dias.includes(x[0])).map(x=>x[2].toLowerCase());
+      r.textContent="Solo "+lista(nombres)+". Los demás días no sale en la carta, y si una sección se queda sin platos ese día, tampoco sale la sección. Hoy, "+hoy[2].toLowerCase()+", "+(d.dias.includes(hoy[0])?"sí":"no")+" sale.";
+    }
+    actualizarGuardar();
+  }
+  (function montarDias(){
+    const row=$("#diasRow");
+    DIAS.forEach(([n,corto,largo])=>{
+      const b=el("button","dia-btn");b.type="button";b.dataset.dia=n;b.textContent=corto;b.title=largo;b.setAttribute("aria-label",largo);
+      b.onclick=()=>{const d=cur(),i=d.dias.indexOf(n);if(i>=0)d.dias.splice(i,1);else d.dias.push(n);d.dias.sort((x,y)=>x-y);renderDias();renderList();};
+      row.appendChild(b);
+    });
+    [["Todos los días",TODOS],["Entre semana",[1,2,3,4,5]],["Fin de semana",[6,7]]].forEach(([t,dias])=>{
+      const b=el("button");b.type="button";b.textContent=t;
+      b.onclick=()=>{cur().dias=dias.slice();renderDias();renderList();};
+      $("#diasPresets").appendChild(b);
+    });
+  })();
+
   function renderColab(){
     const d=cur(),c=d.colab,z=$("#logoZone"),f=colabFaltas(d);
     $("#sw_colab").setAttribute("aria-pressed",String(c.on));
@@ -1529,10 +1595,10 @@
       if(vistos.has(t)){showToast("Hay dos secciones llamadas “"+s.title.trim()+"”: cambia una de las dos",true);openSection(s.id);$("#f_s_title").focus();return false;}
       vistos.add(t);
     }
-    // Red de seguridad: con una colaboración a medias el botón ya está desactivado.
-    const p=colabPendiente();
+    // Red de seguridad: con algo a medias el botón ya está desactivado.
+    const p=pendiente();
     if(p){
-      showToast("A la colaboración de «"+(p.d.name||"sin nombre")+"» le falta "+unir(p.faltas),true);
+      showToast("No se puede guardar: "+p.msg,true);
       mode="dish";selId=p.d.id;renderTabs();renderList();renderEditor();
       return false;
     }

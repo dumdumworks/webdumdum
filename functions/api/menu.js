@@ -11,6 +11,7 @@
 // ─────────────────────────────────────────────────────────────
 import { requireAccess } from "../_lib/access.js";
 import { colabDe, MARCA_MAX } from "../../src/html/colab.mjs";
+import { validarDias } from "../../src/html/disponibilidad.mjs";
 
 function json(obj, status = 200, extra = {}) {
   return new Response(JSON.stringify(obj), {
@@ -57,6 +58,12 @@ export async function onRequestPost({ env, request }) {
     ids.add(s.id);
     // Colaboración especial: marca y logo válidos y con foto (la caja se hace con ella). Se guarda ya saneada.
     for (const it of s.items) {
+      if (it && typeof it === "object") {
+        // Disponibilidad por días: lista de 1 (lunes) a 7 (domingo), al menos un día. Los siete = por defecto: sin el campo.
+        const d = validarDias(it.dias);
+        if (!d.ok) return json({ error: `El plato «${String(it.name || it.id || "sin nombre")}» tiene días de disponibilidad no válidos: hay que marcar al menos un día.` }, 400);
+        if (d.dias) it.dias = d.dias; else delete it.dias;
+      }
       if (!it || typeof it !== "object" || it.colab == null) continue;
       const colab = colabDe(it);
       const nombre = String(it.name || it.id || "un plato");

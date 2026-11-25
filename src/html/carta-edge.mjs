@@ -9,10 +9,11 @@
 import { idioma, documento } from "./plantilla.mjs";
 import { menu, RUTA } from "./paginas/menu.mjs";
 
-export function paginaCarta(lang, carta) {
+// `dia` (1..7) es opcional: sin él, el de hoy en Madrid (ver disponibilidad.mjs).
+export function paginaCarta(lang, carta, dia) {
   const i = idioma(lang, __RUTAS_HTML__);
   return documento({
-    i, ruta: RUTA, ...menu(i, { locales: __LOCALES__, seo: __SEO__, carta }),
+    i, ruta: RUTA, ...menu(i, { locales: __LOCALES__, seo: __SEO__, carta, dia }),
     analitica: __ANALITICA__, css: __CSS__, islas: __ISLAS__,
   });
 }

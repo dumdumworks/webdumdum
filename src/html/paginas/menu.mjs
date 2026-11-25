@@ -6,19 +6,20 @@
 import { ORIGIN, breadcrumbLd } from "../plantilla.mjs";
 import { esqueleto } from "../shell.mjs";
 import { renderCarta, tf, dumplingsDisponibles, numeroALetra, mayuscInicial } from "../carta.mjs";
+import { disponibleEn } from "../disponibilidad.mjs";
 
 export const RUTA = "/menu";
 
 // Datos estructurados de la carta (schema.org/Menu): secciones y platos con
 // precio, foto y dieta. Salen de la misma carta viva que la página, así que
 // nunca pueden contradecirla. Los buscadores y las IAs citan de aquí.
-function jsonLd(i, carta, url) {
+function jsonLd(i, carta, url, dia) {
   const absoluta = (src) => (src ? ORIGIN + "/" + String(src).replace(/^\//, "") : undefined);
   const secciones = (carta.sections || []).map((sec) => ({
     "@type": "MenuSection",
     name: tf(i, sec, "title"),
     ...(tf(i, sec, "note") ? { description: tf(i, sec, "note") } : {}),
-    hasMenuItem: (sec.items || []).filter((it) => it.available !== false && !it.archived).map((it) => {
+    hasMenuItem: (sec.items || []).filter((it) => disponibleEn(it, dia)).map((it) => {
       const veg = (it.tags || []).some((x) => String(x).toUpperCase() === "VEG");
       return {
         "@type": "MenuItem",
@@ -42,7 +43,7 @@ function jsonLd(i, carta, url) {
   };
 }
 
-export function menu(i, { locales, seo, carta }) {
+export function menu(i, { locales, seo, carta, dia }) {
   const s = seo.find((r) => r.p === RUTA);
   // La cifra de la meta description sale de la carta viva, no de un número
   // suelto en seo.mjs: si no, en cuanto cambia la carta la descripción que
@@ -54,7 +55,7 @@ export function menu(i, { locales, seo, carta }) {
     desc: i.lang === "en"
       ? `${cifra.en} dumplings, a new one every month and not a single conventional one.`
       : `${cifra.es} dumplings, uno nuevo cada mes y ni uno convencional.`,
-    cuerpo: esqueleto(i, RUTA, locales, renderCarta(i, carta)),
-    ld: [jsonLd(i, carta, ORIGIN + i.ruta(RUTA)), breadcrumbLd(i, [{ nombre: i.t("Carta", "Menu"), ruta: RUTA }])],
+    cuerpo: esqueleto(i, RUTA, locales, renderCarta(i, carta, dia)),
+    ld: [jsonLd(i, carta, ORIGIN + i.ruta(RUTA), dia), breadcrumbLd(i, [{ nombre: i.t("Carta", "Menu"), ruta: RUTA }])],
   };
 }

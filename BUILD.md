@@ -98,6 +98,24 @@ va en `--black` con todo en crema, como la del destacado va en rojo. Cada colabo
 - **No se guarda a medias.** Con la colaboración activada y sin marca, logo o foto del plato, el panel desactiva los dos botones
   «Guardar cambios», dice en rojo qué falta (y un «Ir al plato» si estás en otro) y marca el campo; el servidor también lo rechaza.
 
+**Disponibilidad por días de la semana.** Cada plato puede salir solo algunos días: `dias: [1..7]` (ISO: 1 = lunes … 7 = domingo).
+Sin el campo, o con los siete, el plato sale **todos los días** (valor por defecto: los platos ya existentes no se tocan, y el panel
+guarda «todos los días» sin escribir el campo). Se edita en el grupo «Disponibilidad» del plato, bajo Alérgenos (siete botones
+Lun–Dom y atajos «Todos los días», «Entre semana» y «Fin de semana»). No es lo mismo que «Disponible»: ese interruptor oculta el plato
+siempre.
+- **Qué día cuenta:** el de **Madrid** (`diaSemanaMadrid` en `src/html/disponibilidad.mjs`), no el del servidor ni el del cliente. La
+  carta se pinta en el edge en cada petición, así que cambia sola a medianoche (la caché es de 15 s + 60 s de revalidación).
+  `/menu?dia=N` (1 = lunes) fuerza otro día para revisar la carta de ese día; cualquier otro valor se ignora.
+- **Qué filtra:** los platos de la carta, la lista de la ventana de alérgenos y los datos estructurados (`schema.org/Menu`). **Una
+  sección sin platos ese día desaparece** (cabecera incluida) y reaparece sola cuando vuelve a tener. Oculto (`available:false`) y
+  archivado no salen nunca.
+- **Qué NO filtra, a propósito:** la cifra de dumplings de la home y de la meta description de `/menu` (`dumplingsDisponibles`): la home
+  es estática y no puede cambiar de número según el día. Cuenta un dumpling aunque hoy no toque. `/menu.json` sigue siendo la carta
+  entera (con `dias`).
+- **Validación:** el panel no deja guardar un plato sin ningún día marcado (botones desactivados y aviso, como con la colaboración) y
+  `functions/api/menu.js` lo rechaza igualmente (`validarDias`). Un `dias` roto o vacío ya guardado cuenta como «todos»: ante la duda el
+  plato se ve.
+
 ### Infraestructura en Cloudflare (proyecto `webdumdum`, entorno Production)
 
 - **KV** `dumdum-menu`, binding **`MENU`**: la carta viva (clave `current`,

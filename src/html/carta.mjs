@@ -8,6 +8,7 @@ import { esc } from "./plantilla.mjs";
 import { sanearInline, mdInline } from "./texto.mjs";
 import { candidatasR2 } from "./fotos-r2.mjs";
 import { colabDe } from "./colab.mjs";
+import { disponibleEn, diaSemanaMadrid } from "./disponibilidad.mjs";
 
 // Los 14 alérgenos de declaración obligatoria (UE). id = clave que guarda cada plato.
 export const ALERGENOS = [
@@ -63,7 +64,9 @@ export function tf(i, obj, campo) {
 }
 
 // Los dumplings que de verdad salen en la carta ahora mismo: sin los platos
-// ocultos (available:false) ni los archivados. Única fuente de la cifra que
+// ocultos (available:false) ni los archivados. A propósito cuenta un dumpling aunque hoy no toque
+// (disponibilidad por días, ver disponibilidad.mjs): la home es estática y la meta description no
+// puede cambiar de cifra según el día de la semana. Única fuente de la cifra que
 // citan la home y el SEO de /menu — así nunca pueden contradecirse entre sí
 // ni quedarse desactualizados cuando cambia la carta.
 export function dumplingsDisponibles(carta) {
@@ -189,9 +192,10 @@ function plato(i, it, opts = {}) {
 </article>`;
 }
 
-function seccion(i, sec) {
-  const platos = (sec.items || []).filter((it) => it.available !== false && !it.archived);
-  // Sin platos visibles (sección nueva aún vacía, o todos ocultos/archivados): ni cabecera.
+function seccion(i, sec, dia) {
+  const platos = (sec.items || []).filter((it) => disponibleEn(it, dia));
+  // Sin platos visibles (sección nueva aún vacía, o todos ocultos/archivados, o ninguno disponible
+  // hoy): ni cabecera. Reaparece sola el día en que vuelve a haber platos.
   if (!platos.length) return "";
   const cls = ["dish-grid", sec.id === "postres" ? "dish-grid-2col-m" : "", sec.id === "bebidas" ? "dish-grid-2col-m drinks-grid" : ""].filter(Boolean).join(" ");
   // La nota admite " / " para forzar un salto de línea (igual que los
@@ -274,13 +278,14 @@ function ventanaAlergenos(i, platos) {
 </div>`;
 }
 
-export function renderCarta(i, carta) {
+// `dia`: 1 = lunes … 7 = domingo. Por defecto, el de hoy en Madrid; ?dia=N en /menu lo fuerza (para revisar).
+export function renderCarta(i, carta, dia = diaSemanaMadrid()) {
   const { t } = i;
   const secciones = carta.sections || [];
   // Lista plana de platos disponibles con sus alérgenos, para la ventana.
   const platos = [];
   for (const sec of secciones) for (const it of sec.items || []) {
-    if (it.available !== false && !it.archived) platos.push({ name: tf(i, it, "name"), seccion: tf(i, sec, "title"), alergenos: it.alergenos || [] });
+    if (disponibleEn(it, dia)) platos.push({ name: tf(i, it, "name"), seccion: tf(i, sec, "title"), alergenos: it.alergenos || [] });
   }
   const disclaimer = tf(i, carta, "disclaimer");
   const alergenosBtn = (cls, extra) => `<${cls.includes("fab") ? "button type=\"button\"" : 'a href="#"'} class="${cls}" data-alergenos${extra || ""}>`;
@@ -296,7 +301,7 @@ export function renderCarta(i, carta) {
     </div>
   </div>
 ${disclaimer ? `  <aside class="menu-disclaimer"><span class="menu-disclaimer-arrow" aria-hidden="true">→</span><div class="menu-disclaimer-bubble"><p>${sanearInline(disclaimer)}</p></div></aside>\n` : ""}
-${secciones.map((sec) => seccion(i, sec)).filter(Boolean).join("\n")}
+${secciones.map((sec) => seccion(i, sec, dia)).filter(Boolean).join("\n")}
 
   <aside class="menu-chopsticks-note">
     <span class="menu-chopsticks-arrow" aria-hidden="true">→</span>
