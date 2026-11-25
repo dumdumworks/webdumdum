@@ -240,12 +240,21 @@
   .pz-inner .ic svg{width:20px;height:20px}
   .pz-title{font-weight:700;font-size:14px}
   .pz-sub{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.02em}
+  .pz-inner .pz-sub+.pz-sub{margin-top:-6px}
   .pz-actions{position:absolute;bottom:10px;right:10px;display:flex;gap:7px;z-index:2}
   .pz-actions button{
     font-family:var(--mono);font-size:10.5px;font-weight:500;padding:6px 10px;border-radius:7px;
     background:color-mix(in srgb,var(--ink) 78%,transparent);color:var(--cream);border:none;backdrop-filter:blur(4px);
   }
   .pz-actions button:hover{background:var(--ink)}
+  /* Colaboración especial: la zona del logo es una versión compacta de la de la foto, sobre crema como la placa de la web. */
+  .logo-zone{aspect-ratio:auto;height:152px;max-width:300px;background:#FFFAF3}
+  .logo-zone .pz-inner{padding:12px;gap:8px}
+  .logo-zone img{object-fit:contain;padding:16px 16px 44px;box-sizing:border-box;mix-blend-mode:multiply}   /* el pie queda libre para Cambiar / Quitar */
+  .colab-fields{margin-top:14px;max-width:640px}
+  .colab-fields .invalid,.colab-fields input.invalid{border-color:var(--red)}
+  .colab-estado{margin-top:12px;font-size:12px;font-weight:600;color:var(--red-ink)}
+  .colab-estado[hidden]{display:none}
   .photo-current{margin:-6px 0 18px;font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.01em;line-height:1.5}
   .photo-current code{color:var(--ink)}
 
@@ -430,8 +439,11 @@
 
   .savebar{display:flex;gap:10px;align-items:center;margin-top:6px}
   .save-main{background:var(--ink);color:#fff;border:none;border-radius:10px;padding:11px 22px;font-weight:700;font-size:14px;transition:.15s;display:inline-flex;align-items:center;gap:8px}
-  .save-main:hover{filter:brightness(1.06)}
+  .save-main:hover:not(:disabled){filter:brightness(1.06)}
+  .save-main:disabled{opacity:.35;cursor:not-allowed}
   .save-hint{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+  .save-hint.bloqueado{color:var(--red-ink)}
+  .save-hint button{font:inherit;color:inherit;background:none;border:none;padding:0;margin-left:6px;text-decoration:underline;cursor:pointer}
 
   .mockup-badge{position:fixed;top:10px;right:12px;z-index:60;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;
     text-transform:uppercase;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 10px;opacity:.9}
@@ -592,9 +604,45 @@
               </div>
             </div>
 
+            <!-- COLABORACIÓN ESPECIAL con otra marca -->
+            <div class="grp">
+              <div class="grp-label">Colaboración especial</div>
+              <div class="meta-toggles">
+                <button type="button" class="statebtn" id="sw_colab" aria-pressed="false" aria-controls="colabFields" title="Activada, el plato sale en la carta del móvil en una caja negra, con su foto a la vista y el logo de la otra marca">
+                  <span class="sb-ic" aria-hidden="true">✓</span> <span id="swColabTxt">Desactivada</span>
+                </button>
+              </div>
+              <div class="colab-fields" id="colabFields" hidden>
+                <div class="row2">
+                  <div class="field">
+                    <label for="f_colab_marca">Marca <span class="req">obligatorio</span></label>
+                    <input type="text" id="f_colab_marca" maxlength="60" autocomplete="off" placeholder="p. ej. Luna &amp; Wanda">
+                  </div>
+                  <div class="field">
+                    <label for="logoZone">Logo <span class="req">obligatorio</span></label>
+                    <div class="photo-zone logo-zone" id="logoZone" tabindex="0" role="button" aria-label="Subir o cambiar el logo de la marca">
+                      <div class="pz-inner">
+                        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15l-5-5L5 21"/><path d="M3 16V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg></div>
+                        <div class="pz-title">Sube el logo</div>
+                        <div class="pz-sub">PNG · JPG · SVG</div>
+                        <div class="pz-sub">máx. 360 × 120 px · logo oscuro o a color</div>
+                      </div>
+                      <div class="pz-actions" id="logoActions" hidden>
+                        <button type="button" id="logoChange">Cambiar</button>
+                        <button type="button" id="logoRemove">Quitar</button>
+                      </div>
+                    </div>
+                    <input type="file" id="logoInput" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden>
+                  </div>
+                </div>
+                <div class="num-hint">Necesita foto del plato. «Destacado» no se aplica.</div>
+                <div class="colab-estado" id="colabEstado" role="status" hidden></div>
+              </div>
+            </div>
+
             <div class="savebar">
               <button class="save-main" id="saveBtn">Guardar cambios</button>
-              <span class="save-hint">Se publica en la web en segundos</span>
+              <span class="save-hint" data-guardar-hint>Se publica en la web en segundos</span>
             </div>
           </fieldset>
         </section>
@@ -639,7 +687,7 @@
 
             <div class="savebar">
               <button class="save-main" id="saveBtn2">Guardar cambios</button>
-              <span class="save-hint">Se publica en la web en segundos</span>
+              <span class="save-hint" data-guardar-hint>Se publica en la web en segundos</span>
             </div>
           </fieldset>
         </section>
@@ -826,6 +874,7 @@
           feat: !!it.featured,
           archived: !!it.archived,
           image: it.image||"",
+          colab: { on: !!it.colab, marca: (it.colab&&it.colab.marca)||"", logo: (it.colab&&it.colab.logo)||"", _preview: null },
           _preview: null,   // vista previa local de una foto recién elegida
           _orig: it,        // original, para conservar campos que el editor no toca (logo, etc.)
         });
@@ -841,7 +890,7 @@
       // OJO: se conserva el ORDEN del array (la web pinta en ese orden) y el
       // NÚMERO 'n' tal cual (es la etiqueta de nº del plato, no la posición).
       const items = dishes.filter(d=>d.sec===sec.id).map((d)=>{
-        return Object.assign({}, d._orig || {}, {
+        const it = Object.assign({}, d._orig || {}, {
           id: d.id, n: d.n,
           name: d.name, name_en: d.name_en,
           tagline: d.tag, tagline_en: d.tag_en,
@@ -851,6 +900,10 @@
           available: d.avail, featured: d.feat, archived: d.archived,
           image: d.image,
         });
+        // Apagar la colaboración la quita del plato; el servidor vuelve a validar marca y logo.
+        if(d.colab.on) it.colab = { marca: d.colab.marca.trim(), logo: d.colab.logo };
+        else delete it.colab;
+        return it;
       });
       // _orig conserva lo que el editor no toca de la sección.
       return Object.assign({}, sec._orig || {}, { id: sec.id, title: sec.title, title_en: sec.title_en, note: sec.note, note_en: sec.note_en, items });
@@ -889,7 +942,7 @@
   function addDishTo(secId){
     if(!secById(secId))secId=createSection("General").id;   // sin ninguna sección, el plato necesita una
     const id="nuevo-"+Date.now().toString(36);
-    dishes.push({id,sec:secId,n:dishes.filter(d=>d.sec===secId).length,name:"Plato nuevo",name_en:"",tag:"",tag_en:"",ingr:"",ingr_en:"",price:"0,00",tags:[],alerSel:[],avail:true,feat:false,archived:false,image:"",_preview:null,_orig:{}});
+    dishes.push({id,sec:secId,n:dishes.filter(d=>d.sec===secId).length,name:"Plato nuevo",name_en:"",tag:"",tag_en:"",ingr:"",ingr_en:"",price:"0,00",tags:[],alerSel:[],avail:true,feat:false,archived:false,image:"",colab:{on:false,marca:"",logo:"",_preview:null},_preview:null,_orig:{}});
     if(filter==="Archivados")filter="Todas";
     mode="dish";selId=id;markDirty();renderTabs();renderList();renderEditor();
     document.querySelector(".editor").scrollTo({top:0,behavior:"smooth"});
@@ -1155,6 +1208,7 @@
 
   // ── editor
   function renderEditor(){
+    actualizarGuardar();
     const grid=document.querySelector(".editor-grid");
     $("#dishEditor").hidden=mode==="section";
     $("#secEditor").hidden=mode!=="section";
@@ -1181,10 +1235,11 @@
     arch.classList.toggle("restore",!!d.archived);
     $("#archBanner").hidden=!d.archived;
     addingTag=false;addingSec=false;
-    renderCat();renderChips();renderAler();renderPhoto();renderCard();
+    renderCat();renderChips();renderAler();renderPhoto();renderColab();renderCard();
   }
 
   function renderPhoto(){
+    actualizarGuardar();   // la foto es requisito de la colaboración
     const d=cur(),z=$("#photoZone"),acts=$("#pzActions");
     z.querySelectorAll("img").forEach(i=>i.remove());
     z.style.background="";
@@ -1198,6 +1253,45 @@
       z.querySelector(".pz-inner").style.opacity="1";
     }
     $("#photoCurrent").hidden=true;
+    if(d.colab&&d.colab.on)renderColab();
+  }
+
+  // ── colaboración especial: interruptor, marca y logo ──
+  // Activada, necesita marca, logo y foto del plato (la caja de la carta se hace con ellas). Mientras
+  // falte algo NO se puede guardar: el servidor también lo rechaza (functions/api/menu.js), esto lo evita antes.
+  const colabFaltas=(d)=>d.colab.on?[!d.colab.marca.trim()&&"la marca",!d.colab.logo&&"el logo",!d.image&&"la foto del plato"].filter(Boolean):[];
+  const unir=(a)=>a.length>1?a.slice(0,-1).join(", ")+" y "+a[a.length-1]:a[0]||"";
+  // El primer plato (de toda la carta, también los archivados: el servidor los valida igual) con la colaboración a medias.
+  function colabPendiente(){for(const d of dishes){const f=colabFaltas(d);if(f.length)return {d,faltas:f};}return null;}
+  function actualizarGuardar(){
+    const p=colabPendiente(),btns=[$("#saveBtn"),$("#saveBtn2")];
+    btns.forEach(b=>{b.disabled=!!p;});
+    document.querySelectorAll("[data-guardar-hint]").forEach(h=>{
+      h.classList.toggle("bloqueado",!!p);
+      if(!p){h.textContent="Se publica en la web en segundos";return;}
+      h.textContent="No se puede guardar: a la colaboración de «"+(p.d.name||"sin nombre")+"» le falta "+unir(p.faltas)+".";
+      if(mode!=="dish"||p.d.id!==selId){
+        const ir=el("button");ir.type="button";ir.textContent="Ir al plato";
+        ir.onclick=()=>{mode="dish";selId=p.d.id;renderTabs();renderList();renderEditor();};
+        h.appendChild(ir);
+      }
+    });
+  }
+  function renderColab(){
+    const d=cur(),c=d.colab,z=$("#logoZone"),f=colabFaltas(d);
+    $("#sw_colab").setAttribute("aria-pressed",String(c.on));
+    $("#swColabTxt").textContent=c.on?"Activada":"Desactivada";
+    $("#colabFields").hidden=!c.on;
+    $("#f_colab_marca").value=c.marca;
+    $("#f_colab_marca").classList.toggle("invalid",f.includes("la marca"));
+    z.classList.toggle("invalid",f.includes("el logo"));
+    const e=$("#colabEstado");e.hidden=!f.length;e.textContent=f.length?"Para poder guardar falta "+unir(f)+".":"";
+    z.querySelectorAll("img").forEach(i=>i.remove());
+    const src=c._preview||imgSrc(c.logo);
+    z.classList.toggle("has-photo",!!src);$("#logoActions").hidden=!src;
+    z.querySelector(".pz-inner").style.opacity=src?"0":"1";
+    if(src){const img=new Image();img.src=src;img.alt="";z.appendChild(img);}
+    actualizarGuardar();
   }
 
   // ── live card
@@ -1234,6 +1328,8 @@
   bind("#f_ingr","ingr");bind("#f_ingr_en","ingr_en");bind("#f_price","price");
   $("#f_num").addEventListener("input",e=>{const v=e.target.value.trim();const d=cur();if(d)d.n=v===""?0:(parseInt(v,10)||0);});
 
+  $("#sw_colab").onclick=function(){const d=cur();d.colab.on=!d.colab.on;renderColab();if(d.colab.on)$("#f_colab_marca").focus();};
+  $("#f_colab_marca").addEventListener("input",e=>{cur().colab.marca=e.target.value;renderColab();});
   $("#sw_feat").onclick=function(){const d=cur();d.feat=!d.feat;this.setAttribute("aria-pressed",String(d.feat));renderCard();};
   $("#sw_avail").onclick=function(){const d=cur();d.avail=!d.avail;this.setAttribute("aria-pressed",String(d.avail));renderList();};
   $("#archiveBtn").onclick=()=>{
@@ -1354,6 +1450,72 @@
   ["dragleave","drop"].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();if(ev==="dragleave"&&zone.contains(e.relatedTarget))return;zone.classList.remove("drag");}));
   zone.addEventListener("drop",e=>{if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);});
 
+  // ── logo de la marca (a R2 vía /api/upload, kind=logo) ──
+  // Se recorta y se reduce AQUÍ: un PNG de como mucho 360×120 px = la caja del logo en la carta (116×40 px) ×3,
+  // la densidad de un iPhone Pro. Mantener igual que LOGO_MAX_W/H en src/html/colab.mjs, que el servidor exige. Márgenes: si las esquinas son transparentes o blancas, se recorta todo lo que sea fondo,
+  // porque un logo con medio dedo de blanco alrededor saldría diminuto. Un logo con fondo propio se deja entero.
+  const LOGO_W=360,LOGO_H=120,LOGO_TRABAJO=1600,CAJA_W=116,CAJA_H=40;
+  async function prepararLogo(file){
+    const url=URL.createObjectURL(file);
+    try{
+      const img=new Image();img.src=url;await img.decode();
+      // Un SVG sin tamaño propio mide 0: se le da uno para poder dibujarlo. Solo el vectorial se amplía al
+      // lienzo de trabajo; una imagen de píxeles nunca (ampliarla solo inventaría píxeles).
+      const svg=file.type==="image/svg+xml",w0=img.naturalWidth||800,h0=img.naturalHeight||400;
+      const k0=Math.min(svg?Infinity:1,LOGO_TRABAJO/w0,LOGO_TRABAJO/h0);
+      const c=document.createElement("canvas");c.width=Math.max(1,Math.round(w0*k0));c.height=Math.max(1,Math.round(h0*k0));
+      const x=c.getContext("2d",{willReadFrequently:true});x.drawImage(img,0,0,c.width,c.height);
+      const {data,width:W,height:H}=x.getImageData(0,0,c.width,c.height);
+      const px=(i)=>[data[i],data[i+1],data[i+2],data[i+3]];
+      const esquinas=[0,(W-1)*4,(H-1)*W*4,((H-1)*W+W-1)*4].map(px);
+      const transp=esquinas.every(p=>p[3]<16),blanco=esquinas.every(p=>p[3]>=16&&p[0]>=240&&p[1]>=240&&p[2]>=240);
+      const fondo=(i)=>data[i+3]<16||(blanco&&data[i]>=240&&data[i+1]>=240&&data[i+2]>=240);
+      let x0=0,y0=0,x1=W-1,y1=H-1;
+      if(transp||blanco){
+        x0=W;y0=H;x1=-1;y1=-1;
+        for(let y=0;y<H;y++)for(let xx=0;xx<W;xx++){if(!fondo((y*W+xx)*4)){if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(y<y0)y0=y;if(y>y1)y1=y;}}
+        if(x1<0)return null;   // imagen vacía
+      }
+      const cw=x1-x0+1,ch=y1-y0+1,k=Math.min(1,LOGO_W/cw,LOGO_H/ch);
+      const out=document.createElement("canvas");out.width=Math.max(1,Math.round(cw*k));out.height=Math.max(1,Math.round(ch*k));
+      const o=out.getContext("2d");o.imageSmoothingQuality="high";o.drawImage(c,x0,y0,cw,ch,0,0,out.width,out.height);
+      // Nitidez: píxeles del original por píxel de pantalla al encajarlo en la caja de la carta. Bajo 2 (un móvil
+      // normal ya es ×2) se ve borroso. Un SVG es vectorial: siempre nítido.
+      const densidad=1/Math.min(CAJA_W/(cw/k0),CAJA_H/(ch/k0));
+      const blob=await new Promise(r=>out.toBlob(r,"image/png"));
+      return blob&&{blob,borroso:!svg&&densidad<2};
+    }catch(e){return null;}
+    finally{URL.revokeObjectURL(url);}
+  }
+  async function loadLogo(file){
+    const d=cur();if(!d||!file||!file.type.startsWith("image/"))return;
+    setPill("saving","Subiendo logo…");
+    const prep=await prepararLogo(file);
+    if(!prep){setPill("dirty","Sin guardar");showToast("No se pudo leer el logo: prueba con un PNG, JPG o SVG",true);return;}
+    const png=prep.blob;
+    const rd=new FileReader();rd.onload=e=>{d.colab._preview=e.target.result;renderColab();};rd.readAsDataURL(png);
+    try{
+      const fd=new FormData();fd.append("kind","logo");fd.append("name",d.id||"marca");fd.append("file",png,"logo.png");
+      const res=await fetch("/api/upload",{method:"POST",body:fd});
+      const out=await res.json().catch(()=>({}));
+      if(res.status===401) throw new Error("Sesión caducada — recarga la página");
+      if(!res.ok||!out.ok) throw new Error(out.error||("HTTP "+res.status));
+      d.colab.logo=out.url;d.colab._preview=null;renderColab();
+      markDirty();
+      if(prep.borroso)showToast("Logo subido, pero es pequeño y puede verse borroso en el móvil: mejor uno más grande o un SVG",true);
+      else showToast("Logo subido ("+kb(png.size)+") — dale a Guardar para publicarlo");
+    }catch(e){ setPill("dirty","Sin guardar");showToast("No se pudo subir el logo: "+e.message,true); }
+  }
+  const lz=$("#logoZone"),li=$("#logoInput");
+  lz.onclick=()=>li.click();
+  lz.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();li.click();}};
+  li.onchange=e=>{loadLogo(e.target.files[0]);e.target.value="";};
+  $("#logoChange").onclick=e=>{e.stopPropagation();li.click();};
+  $("#logoRemove").onclick=e=>{e.stopPropagation();const d=cur();if(!d)return;d.colab.logo="";d.colab._preview=null;renderColab();markDirty();};
+  ["dragenter","dragover"].forEach(ev=>lz.addEventListener(ev,e=>{e.preventDefault();lz.classList.add("drag");}));
+  ["dragleave","drop"].forEach(ev=>lz.addEventListener(ev,e=>{e.preventDefault();if(ev==="dragleave"&&lz.contains(e.relatedTarget))return;lz.classList.remove("drag");}));
+  lz.addEventListener("drop",e=>{if(e.dataTransfer.files[0])loadLogo(e.dataTransfer.files[0]);});
+
   // ── guardar (a KV vía /api/menu) ──
   // Antes de guardar: toda sección con título y sin repetir (sin mirar mayúsculas).
   function validar(){
@@ -1363,6 +1525,13 @@
       if(!t){showToast("Una sección no tiene título: ponle uno antes de guardar",true);openSection(s.id);$("#f_s_title").focus();return false;}
       if(vistos.has(t)){showToast("Hay dos secciones llamadas “"+s.title.trim()+"”: cambia una de las dos",true);openSection(s.id);$("#f_s_title").focus();return false;}
       vistos.add(t);
+    }
+    // Red de seguridad: con una colaboración a medias el botón ya está desactivado.
+    const p=colabPendiente();
+    if(p){
+      showToast("A la colaboración de «"+(p.d.name||"sin nombre")+"» le falta "+unir(p.faltas),true);
+      mode="dish";selId=p.d.id;renderTabs();renderList();renderEditor();
+      return false;
     }
     return true;
   }
@@ -1378,7 +1547,7 @@
       MENU=menu;dirty=false;SECS.forEach(s=>{s.nuevo=false;});setPill("ok","Guardado · en vivo");
       showToast("Guardado ✓ — publicado en la web");
     }catch(e){ setPill("dirty","Error al guardar");showToast("No se pudo guardar: "+e.message,true); }
-    finally{ btns.forEach(b=>b.disabled=false); }
+    finally{ actualizarGuardar(); }
   }
   // La vista de «Por cierto» (script de abajo) comparte con la carta el indicador, el aviso, el diálogo y el reductor de fotos.
   window.panelUI={setPill,getPill:()=>({cls:["saving","dirty","ok"].find(c=>pill.classList.contains(c))||"",txt:saveTxt.textContent}),showToast,confirmar,reducir,kb};

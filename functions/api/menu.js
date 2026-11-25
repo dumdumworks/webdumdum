@@ -10,6 +10,7 @@
 //   POST /api/menu  → guarda la carta en KV (body = objeto menu.json completo).
 // ─────────────────────────────────────────────────────────────
 import { requireAccess } from "../_lib/access.js";
+import { colabDe, MARCA_MAX } from "../../src/html/colab.mjs";
 
 function json(obj, status = 200, extra = {}) {
   return new Response(JSON.stringify(obj), {
@@ -54,6 +55,15 @@ export async function onRequestPost({ env, request }) {
     if (!ok) return json({ error: "Cada sección necesita 'id', 'title' y 'items'." }, 400);
     if (ids.has(s.id)) return json({ error: "Hay dos secciones con el mismo id: " + s.id }, 400);
     ids.add(s.id);
+    // Colaboración especial: marca y logo válidos y con foto (la caja se hace con ella). Se guarda ya saneada.
+    for (const it of s.items) {
+      if (!it || typeof it !== "object" || it.colab == null) continue;
+      const colab = colabDe(it);
+      const nombre = String(it.name || it.id || "un plato");
+      if (!colab) return json({ error: `La colaboración de «${nombre}» necesita el nombre de la marca (hasta ${MARCA_MAX} letras) y un logo subido.` }, 400);
+      if (!it.image) return json({ error: `La colaboración de «${nombre}» necesita foto del plato.` }, 400);
+      it.colab = colab;
+    }
   }
 
     const savedAt = new Date().toISOString();

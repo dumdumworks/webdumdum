@@ -13,18 +13,44 @@
 // Devuelve { ok:true, url:"/img/menu/<clave>" } — esa url se guarda en el campo
 // "image" del plato y la sirve functions/img/menu/[[path]].js desde R2.
 //
+// Con kind=logo (logo de la marca de una colaboración especial) file es un PNG ya recortado y
+// reducido por el panel (como mucho LOGO_MAX_W × LOGO_MAX_H px y 500 KB). Devuelve { ok, url }; ver subirLogo.
+//
 // Con kind=aviso (avisos «Por cierto!») file es la imagen 9:16 ya recortada o un vídeo, y llegan
 // además "poster" (fotograma del vídeo, JPEG; obligatorio si es vídeo). Devuelve
 // { ok, url, poster? }; ver subirAviso.
 // ─────────────────────────────────────────────────────────────
 import { requireAccess } from "../_lib/access.js";
 import { claveFoto, variantesDe } from "../../src/html/fotos-r2.mjs";
+import { LOGO_MAX_W, LOGO_MAX_H } from "../../src/html/colab.mjs";
 
 function json(obj, status = 200) {
   return new Response(JSON.stringify(obj), {
     status,
     headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
   });
+}
+
+const stripAccents = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "");
+const baseDe = (form) =>
+  stripAccents((form.get("name") || "foto").toString().toLowerCase())
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "foto";
+
+const FIRMA_PNG = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+
+// El tipo que declara el navegador no basta: se comprueba que los primeros bytes sean los de un PNG.
+async function subirLogo(env, form, file) {
+  if (file.type !== "image/png") return json({ error: "El logo debe ser un PNG." }, 400);
+  if (file.size > 500 * 1024) return json({ error: "El logo supera 500 KB." }, 400);
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  if (bytes.length < 24 || !FIRMA_PNG.every((b, i) => bytes[i] === b)) return json({ error: "El archivo no es un PNG válido." }, 400);
+  // Ancho y alto van en la cabecera IHDR (bytes 16-23, big-endian). El panel ya lo reduce al tamaño óptimo.
+  const vista = new DataView(bytes.buffer);
+  const ancho = vista.getUint32(16), alto = vista.getUint32(20);
+  if (!ancho || !alto || ancho > LOGO_MAX_W || alto > LOGO_MAX_H) return json({ error: `El logo debe medir como mucho ${LOGO_MAX_W}×${LOGO_MAX_H} px.` }, 400);
+  const key = `logo-${baseDe(form)}-${Date.now()}.png`;
+  await env.PHOTOS.put(key, bytes, { httpMetadata: { contentType: "image/png" } });
+  return json({ ok: true, url: `/img/menu/${key}` });
 }
 
 const VIDEOS = { "video/mp4": "mp4", "video/webm": "webm", "video/quicktime": "mov" };
@@ -64,16 +90,14 @@ export async function onRequestPost({ env, request }) {
   const file = form.get("file");
   if (!file || typeof file === "string") return json({ error: "Falta el archivo 'file'." }, 400);
   if (form.get("kind") === "aviso") return subirAviso(env, form, file);
+  if (form.get("kind") === "logo") return subirLogo(env, form, file);
 
   const type = file.type || "application/octet-stream";
   if (!type.startsWith("image/")) return json({ error: "Solo se admiten imágenes." }, 400);
   // Límite defensivo de tamaño (~8 MB).
   if (file.size > 8 * 1024 * 1024) return json({ error: "La imagen supera 8 MB." }, 400);
 
-  const stripAccents = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "");
-  const base =
-    stripAccents((form.get("name") || "foto").toString().toLowerCase())
-      .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "foto";
+  const base = baseDe(form);
   const ts = Date.now();
   const ancho = Number(form.get("w"));
 
