@@ -1195,14 +1195,17 @@
     inp.placeholder=d.alerSel.length?"Añadir…":"Añade alérgenos…";
     inp.oninput=alerRenderDrop;
     inp.onfocus=()=>{alerOpen=true;alerRenderDrop();};
-    inp.onblur=()=>{setTimeout(()=>{alerOpen=false;alerRenderDrop();},130);};
+    // Tras elegir un alérgeno la caja se redibuja y el input viejo desaparece: su blur retrasado NO debe cerrar
+    // el desplegable si el nuevo input ya tiene el foco (si no, quedaba cerrado y enfocado, y no reabría al pulsar).
+    inp.onblur=()=>{setTimeout(()=>{if(document.activeElement===$("#alerInput"))return;alerOpen=false;alerRenderDrop();},130);};
     inp.onkeydown=(e)=>{
       if(e.key==="Enter"){e.preventDefault();const o=alerAvail(inp.value);if(o.length)alerAdd(o[0].id);}
       else if(e.key==="Backspace"&&inp.value===""&&d.alerSel.length){d.alerSel.pop();markDirty();renderAler();const i2=$("#alerInput");if(i2)i2.focus();}
       else if(e.key==="Escape"){inp.blur();}
     };
     box.appendChild(inp);
-    box.onclick=(e)=>{ if(e.target===box){const i=$("#alerInput");if(i)i.focus();} };
+    // Pulsar la caja (también con el input ya enfocado, donde no salta «focus») abre el desplegable.
+    box.onclick=(e)=>{ if(e.target.closest(".msel-x"))return;const i=$("#alerInput");if(i){alerOpen=true;i.focus();alerRenderDrop();} };
     alerRenderDrop();
   }
 
