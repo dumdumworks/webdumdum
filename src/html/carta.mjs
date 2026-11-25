@@ -154,8 +154,10 @@ function plato(i, it, opts = {}) {
   const tagsMovil = opts.tagsInline ? tagsCms : tagsCms.filter((x) => !esLimitado(x));
   const limitadoMovil = opts.tagsInline ? [] : tagsCms.filter(esLimitado);
   const pillsMovil = pills(tagsMovil);
+  // La pastilla «Colaboración especial» sale en móvil (sobre la foto de la caja) y en escritorio (primera de las etiquetas de la foto).
+  const etiquetaColab = colab ? `<span class="tag colab-etiqueta">${esc(t("Colaboración especial", "Special collab"))}</span>` : "";
   const fotoColab = colab ? `
-  <figure class="colab-foto m-only"><img src="${esc(it.image)}"${srcsetPlato(it.image)} alt="${esc(nombre)}" decoding="async"><span class="tag colab-etiqueta">${esc(t("Colaboración especial", "Special collab"))}</span>${colabPlaca(i, colab)}</figure>` : "";
+  <figure class="colab-foto m-only"><img src="${esc(it.image)}"${srcsetPlato(it.image)} alt="${esc(nombre)}" decoding="async">${etiquetaColab}${colabPlaca(i, colab)}</figure>` : "";
   return `<article class="dish${it.featured && !colab ? " is-featured" : ""}${colab ? " dish--colab" : ""}"${colab ? ` id="colab-${esc(it.id)}"` : ""}>${fotoColab}
   <div class="num m-only">${num(it.n)}</div>
   <div class="body m-only">
@@ -173,7 +175,7 @@ function plato(i, it, opts = {}) {
     ${it.image
       ? `<img src="${esc(it.image)}"${srcsetPlato(it.image)} alt="${esc(nombre)}" loading="lazy" decoding="async">`
       : `<div class="dish-img-ph"><span class="ph-label">[${esc(nombre)}]</span><span class="ph-sub">product shot · 4:5</span></div>`}
-    ${sobreFoto.length ? `<div class="dish-tags-overlay">${sobreFoto.map((x) => tag(i, x)).join("")}</div>` : ""}
+    ${sobreFoto.length || colab ? `<div class="dish-tags-overlay">${etiquetaColab}${sobreFoto.map((x) => tag(i, x)).join("")}</div>` : ""}
     ${colab ? colabPlaca(i, colab) : ""}
   </div>
   <div class="dish-card">
