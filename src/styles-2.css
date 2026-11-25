@@ -2515,7 +2515,10 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
   }
 
   /* Pills + logo siguen siendo flotantes sobre la foto */
-  .dish-img .colab-placa { position: absolute; left: 10px; bottom: 10px; z-index: 2; }
+  /* La placa, más pequeña que en móvil, a la derecha y con su borde derecho alineado con el del precio de la ficha (14px). */
+  .dish-img .colab-placa { position: absolute; right: 14px; bottom: 10px; z-index: 2; gap: 6px; padding: 5px 9px; }
+  .dish-img .colab-placa img { height: 28px; max-width: 84px; }
+  .dish-img .colab-con { font-size: 12px; }
   .dish-tags-overlay {
     display: flex;
     position: absolute;
