@@ -82,7 +82,7 @@ o con `id` repetido.
 
 **Colaboraciones especiales con otra marca.** Un plato con `colab: { marca, logo }` sale en la carta del móvil
 como una caja negra (`--black`) con su foto a la vista, una pastilla «Colaboración especial» y una placa crema con
-«DUM DUM × logo». Se activa en el panel (grupo «Colaboración especial» del plato). Necesita marca, logo y foto del
+«con» + el logo («with» en inglés). Se activa en el panel (grupo «Colaboración especial» del plato). Necesita marca, logo y foto del
 plato; si falta algo, el plato sale normal. Manda sobre «Destacado». En escritorio el plato ya lleva foto: la placa va encima y la ficha
 va en `--black` con todo en crema, como la del destacado va en rojo. Cada colaboración es enlazable: `/menu#colab-<id del plato>`.
 - `src/html/colab.mjs` (`colabDe`): única fuente de lo que es una colaboración válida; lo usan la carta y `functions/api/menu.js`,
