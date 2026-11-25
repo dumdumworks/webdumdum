@@ -134,7 +134,7 @@ function srcsetPlato(src) {
 // con el logo de la marca en una placa crema (cabe cualquier logo, sea del color que sea);
 // en escritorio el plato ya lleva foto y la placa se pinta sobre ella.
 function colabPlaca(i, colab) {
-  return `<span class="colab-placa"><span class="colab-dd">DUM DUM</span><span class="colab-x" aria-hidden="true">×</span><img src="${esc(colab.logo)}" alt="${esc(colab.marca)}" decoding="async"></span>`;
+  return `<span class="colab-placa"><span class="colab-con">${esc(i.t("con", "with"))}</span><img src="${esc(colab.logo)}" alt="${esc(colab.marca)}" decoding="async"></span>`;
 }
 
 function plato(i, it, opts = {}) {

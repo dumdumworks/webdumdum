@@ -575,7 +575,7 @@
 /* ─── COLABORACIÓN ESPECIAL con otra marca ────────────────────
    Un plato con `colab` (ver src/html/colab.mjs) lleva, solo en móvil, su foto a la vista
    (sin pulsar «Foto») dentro de una caja negra: foto y ficha son una sola pieza. En la foto,
-   una pastilla «Colaboración especial» y una placa crema con «DUM DUM × logo»: la placa hace
+   una pastilla «Colaboración especial» y una placa crema con «con + logo»: la placa hace
    que cualquier logo, del color que sea, se lea igual. La foto es .m-only; en escritorio el
    plato ya tiene foto y la placa va encima. */
 /* Enlazable (/menu#colab-<id>) desde un aviso o una story: el scroll deja la caja bajo la topbar. */
@@ -590,8 +590,7 @@
   border: 1px solid var(--black);
   border-radius: 6px;
 }
-.colab-dd { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: -0.01em; line-height: 1; }
-.colab-x { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; font-size: 11px; line-height: 1; }
+.colab-con { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: -0.01em; line-height: 1; }
 /* Caja de logo de alto fijo: uno apilado llena el alto y uno apaisado topa con el ancho, y la placa
    se ajusta a ambos. multiply: un logo con fondo blanco se funde con el crema de la placa. */
 .colab-placa img { display: block; height: 40px; width: auto; max-width: 116px; object-fit: contain; object-position: left center; mix-blend-mode: multiply; }
