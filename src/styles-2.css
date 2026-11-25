@@ -2537,6 +2537,8 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
     color: var(--red);
     border-color: var(--red);
   }
+  /* «Colaboración especial» (la primera de la pila): en --black, texto y trazo, como en móvil. */
+  .dish-tags-overlay .colab-etiqueta { color: var(--black); border-color: var(--black); }
   /* Plato destacado: sus etiquetas SOBRE LA FOTO también con borde rojo. Existe
      una regla `.dish.is-featured .tag.hot/.tag.limited` (borde crema, para la
      tarjeta roja) que va más abajo con la MISMA especificidad y ganaba por orden;
