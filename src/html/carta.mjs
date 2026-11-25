@@ -7,6 +7,7 @@
 import { esc } from "./plantilla.mjs";
 import { sanearInline, mdInline } from "./texto.mjs";
 import { candidatasR2 } from "./fotos-r2.mjs";
+import { colabDe } from "./colab.mjs";
 
 // Los 14 alérgenos de declaración obligatoria (UE). id = clave que guarda cada plato.
 export const ALERGENOS = [
@@ -129,8 +130,17 @@ function srcsetPlato(src) {
   return r2 ? ` srcset="${r2.map(([u, w]) => `${esc(u)} ${w}w`).join(", ")}"${SIZES_PLATO}` : "";
 }
 
+// Colaboración especial con otra marca (ver colab.mjs): en móvil la foto se ve de entrada,
+// con el logo de la marca en una placa crema (cabe cualquier logo, sea del color que sea);
+// en escritorio el plato ya lleva foto y la placa se pinta sobre ella.
+function colabPlaca(i, colab) {
+  return `<span class="colab-placa"><span class="colab-dd">DUM DUM</span><span class="colab-x" aria-hidden="true">×</span><img src="${esc(colab.logo)}" alt="${esc(colab.marca)}" decoding="async"></span>`;
+}
+
 function plato(i, it, opts = {}) {
   const { t } = i;
+  // Una colaboración necesita foto (es lo que la hace destacar): sin ella, plato normal.
+  const colab = it.image ? colabDe(it) : null;
   const nombre = tf(i, it, "name"), tagline = tf(i, it, "tagline"), ingr = tf(i, it, "ingredients");
   const tagsCms = conNewPrimero(it.tags || []);
   const sobreFoto = tagsCms.filter((x) => !esInline(x));
@@ -144,7 +154,9 @@ function plato(i, it, opts = {}) {
   const tagsMovil = opts.tagsInline ? tagsCms : tagsCms.filter((x) => !esLimitado(x));
   const limitadoMovil = opts.tagsInline ? [] : tagsCms.filter(esLimitado);
   const pillsMovil = pills(tagsMovil);
-  return `<article class="dish${it.featured ? " is-featured" : ""}">
+  const fotoColab = colab ? `
+  <figure class="colab-foto m-only"><img src="${esc(it.image)}"${srcsetPlato(it.image)} alt="${esc(nombre)}" decoding="async"><span class="tag colab-etiqueta">${esc(t("Colaboración especial", "Special collab"))}</span>${colabPlaca(i, colab)}</figure>` : "";
+  return `<article class="dish${it.featured && !colab ? " is-featured" : ""}${colab ? " dish--colab" : ""}"${colab ? ` id="colab-${esc(it.id)}"` : ""}>${fotoColab}
   <div class="num m-only">${num(it.n)}</div>
   <div class="body m-only">
     <div class="name-row"><span class="name" style="font-size:20px">${esc(nombre)}</span>${opts.tagsInline ? pillsMovil : ""}</div>
@@ -155,13 +167,14 @@ function plato(i, it, opts = {}) {
   </div>
   <div class="dish-price-col m-only">
     <div class="price tnum" style="font-size:11px">${esc(it.price)} €</div>
-    ${it.image ? `<button type="button" class="dish-photo-btn" data-foto="${esc(it.image)}" data-nombre="${esc(nombre)}">${esc(t("Foto", "Photo"))}</button>` : ""}
+    ${it.image && !colab ? `<button type="button" class="dish-photo-btn" data-foto="${esc(it.image)}" data-nombre="${esc(nombre)}">${esc(t("Foto", "Photo"))}</button>` : ""}
   </div>
   <div class="dish-img">
     ${it.image
       ? `<img src="${esc(it.image)}"${srcsetPlato(it.image)} alt="${esc(nombre)}" loading="lazy" decoding="async">`
       : `<div class="dish-img-ph"><span class="ph-label">[${esc(nombre)}]</span><span class="ph-sub">product shot · 4:5</span></div>`}
     ${sobreFoto.length ? `<div class="dish-tags-overlay">${sobreFoto.map((x) => tag(i, x)).join("")}</div>` : ""}
+    ${colab ? colabPlaca(i, colab) : ""}
   </div>
   <div class="dish-card">
     <div class="dish-card-row dish-card-meta"><span class="num">${num(it.n)}</span><span class="price tnum">${esc(it.price)} €</span></div>

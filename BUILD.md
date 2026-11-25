@@ -80,6 +80,24 @@ JSON-LD. Solo `postres` y `bebidas` tienen maquetación propia; el resto usa la
 estándar. `functions/api/menu.js` rechaza al guardar secciones sin `id`/`title`/`items`
 o con `id` repetido.
 
+**Colaboraciones especiales con otra marca.** Un plato con `colab: { marca, logo }` sale en la carta del móvil
+como una caja negra (`--black`) con su foto a la vista, una pastilla «Colaboración especial» y una placa crema con
+«DUM DUM × logo». Se activa en el panel (grupo «Colaboración especial» del plato). Necesita marca, logo y foto del
+plato; si falta algo, el plato sale normal. Manda sobre «Destacado». En escritorio el plato ya lleva foto: la placa va encima y la ficha
+va en `--black` con todo en crema, como la del destacado va en rojo. Cada colaboración es enlazable: `/menu#colab-<id del plato>`.
+- `src/html/colab.mjs` (`colabDe`): única fuente de lo que es una colaboración válida; lo usan la carta y `functions/api/menu.js`,
+  que rechaza al guardar una colaboración sin marca (≤ 60 letras), sin logo propio (`/img/menu/` o `/img/colab/`) o sin foto.
+- **Tamaño del logo: 360 × 120 px como máximo** (`LOGO_MAX_W/H` en `colab.mjs`; el panel tiene las mismas cifras en `LOGO_W/H`).
+  Es la caja del logo en la carta (116 × 40 px, `.colab-placa img`) por 3, la densidad de un iPhone Pro: más grande solo pesa,
+  más pequeño se ve borroso. El panel lo recorta (quita el margen blanco o transparente), lo reduce a un PNG de ese tamaño
+  y nunca amplía una imagen de píxeles (solo un SVG se dibuja grande); si el original es pequeño (menos de ×2 de densidad al
+  encajarlo en la caja) avisa de que puede verse borroso. `functions/api/upload.js` `kind=logo` exige PNG, ≤ 500 KB, la firma
+  del archivo y las dimensiones de la cabecera, y lo guarda en R2 como `logo-<plato>-<ts>.png`. La placa pinta el logo con
+  `mix-blend-mode: multiply`, así que un fondo blanco se funde con el crema. Un logo blanco o muy claro no se vería: haría falta
+  una placa oscura (no existe todavía).
+- **No se guarda a medias.** Con la colaboración activada y sin marca, logo o foto del plato, el panel desactiva los dos botones
+  «Guardar cambios», dice en rojo qué falta (y un «Ir al plato» si estás en otro) y marca el campo; el servidor también lo rechaza.
+
 ### Infraestructura en Cloudflare (proyecto `webdumdum`, entorno Production)
 
 - **KV** `dumdum-menu`, binding **`MENU`**: la carta viva (clave `current`,
