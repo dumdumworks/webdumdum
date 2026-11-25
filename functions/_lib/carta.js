@@ -33,7 +33,11 @@ export const servirCarta = (lang) => async ({ env, request }) => {
     return Response.redirect(url.origin + url.pathname.slice(0, -1) + url.search, 301);
   }
   const carta = JSON.parse(await leerCarta(env, request));
-  return new Response(paginaCarta(lang, carta), {
+  // Qué platos salen depende del día de la semana en Madrid (disponibilidad por días). ?dia=1..7 (1 = lunes)
+  // fuerza otro día, para revisar la carta de ese día; cualquier otro valor se ignora y manda el de hoy.
+  const forzado = Number(url.searchParams.get("dia"));
+  const dia = Number.isInteger(forzado) && forzado >= 1 && forzado <= 7 ? forzado : undefined;
+  return new Response(paginaCarta(lang, carta, dia), {
     headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": CACHE },
   });
 };
