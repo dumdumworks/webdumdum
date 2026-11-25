@@ -616,7 +616,7 @@
   .colab-foto > img:first-child { display: block; width: 100%; height: 100%; object-fit: cover; }
   /* A la derecha, con su borde derecho alineado con el del precio (el relleno de la caja, 16px). */
   .colab-foto .colab-placa { position: absolute; right: 16px; bottom: 10px; }
-  .colab-etiqueta { position: absolute; top: 10px; left: 10px; color: var(--red); }
+  .colab-etiqueta { position: absolute; top: 10px; left: 10px; color: var(--black); border-color: var(--black); }
 
   /* Texto en crema. El rojo solo queda en «Por tiempo limitado» y en el DUM DUM de la placa:
      sobre #1a1a1a el rojo da 4,4:1, justo por debajo de AA para texto pequeño. */
