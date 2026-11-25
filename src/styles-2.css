@@ -585,6 +585,9 @@
   padding: 7px 12px;
   background: var(--bg);
   color: var(--red);
+  /* Trazo negro como el de la caja: con una foto de fondo crema (recorte de producto) la placa, crema,
+     desaparecería y solo se vería su logo. */
+  border: 1px solid var(--black);
   border-radius: 6px;
 }
 .colab-dd { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: -0.01em; line-height: 1; }
@@ -598,6 +601,9 @@
   .dish--colab {
     padding: 0 16px 18px; margin: 8px 0;
     background: var(--black);
+    /* El trazo cierra la caja también por arriba y por los lados: con una foto de fondo crema, sin él solo
+       se vería la franja negra del texto. */
+    border: 1px solid var(--black);
     border-radius: 8px;
     overflow: hidden;
   }
