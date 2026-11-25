@@ -572,6 +572,54 @@
   
 }
 
+/* ─── COLABORACIÓN ESPECIAL con otra marca ────────────────────
+   Un plato con `colab` (ver src/html/colab.mjs) lleva, solo en móvil, su foto a la vista
+   (sin pulsar «Foto») dentro de una caja negra: foto y ficha son una sola pieza. En la foto,
+   una pastilla «Colaboración especial» y una placa crema con «DUM DUM × logo»: la placa hace
+   que cualquier logo, del color que sea, se lea igual. La foto es .m-only; en escritorio el
+   plato ya tiene foto y la placa va encima. */
+/* Enlazable (/menu#colab-<id>) desde un aviso o una story: el scroll deja la caja bajo la topbar. */
+.dish--colab { scroll-margin-top: 72px; }
+.colab-placa {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 12px;
+  background: var(--bg);
+  color: var(--red);
+  border-radius: 6px;
+}
+.colab-dd { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: -0.01em; line-height: 1; }
+.colab-x { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; font-size: 11px; line-height: 1; }
+/* Caja de logo de alto fijo: uno apilado llena el alto y uno apaisado topa con el ancho, y la placa
+   se ajusta a ambos. multiply: un logo con fondo blanco se funde con el crema de la placa. */
+.colab-placa img { display: block; height: 40px; width: auto; max-width: 116px; object-fit: contain; object-position: left center; mix-blend-mode: multiply; }
+
+@media (max-width: 879px) {
+  /* Como el destacado, no deja filete en el plato de encima. */
+  .dish--colab {
+    padding: 0 16px 18px; margin: 8px 0;
+    background: var(--black);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .dish-grid:not(.dish-grid-2col-m) .dish:has(+ .dish--colab) { border-bottom: 0; }
+  .colab-foto {
+    grid-column: 1 / -1;
+    position: relative;
+    margin: 0 -16px 8px;
+    aspect-ratio: 4 / 3;
+  }
+  .colab-foto > img:first-child { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .colab-foto .colab-placa { position: absolute; left: 10px; bottom: 10px; }
+  .colab-etiqueta { position: absolute; top: 10px; left: 10px; color: var(--red); }
+
+  /* Texto en crema. El rojo solo queda en «Por tiempo limitado» y en el DUM DUM de la placa:
+     sobre #1a1a1a el rojo da 4,4:1, justo por debajo de AA para texto pequeño. */
+  .dish--colab :is(.name, .price, .tagline, .ingr) { color: var(--bg); }
+  .dish--colab .num { color: rgba(255,250,243,0.7); }
+  .dish--colab .tag:is(.black, .hot) { background: transparent; color: var(--bg); border-color: var(--bg); }
+  .dish--colab .tag.veg { background: var(--bg); border-color: var(--bg); }
+}
+
 /* Formulario de Eventos */
 .ev-form {
   margin-top: 0;
@@ -2461,6 +2509,7 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
   }
 
   /* Pills + logo siguen siendo flotantes sobre la foto */
+  .dish-img .colab-placa { position: absolute; left: 10px; bottom: 10px; z-index: 2; }
   .dish-tags-overlay {
     display: flex;
     position: absolute;
@@ -2633,6 +2682,17 @@ html[lang="en"] [data-screen-label="taller-team-building"] .ev-hero h1.h-display
     color: #1f8a5b;
     border-color: var(--bg);
   }
+
+  /* ─── Colaboración (desktop) ─────────────────────────────────
+     Como el destacado lleva la ficha en rojo, la colaboración la lleva en --black, con todo
+     el contenido en crema; la foto cierra su caja con el mismo borde. (En móvil es toda la caja.) */
+  .dish--colab .dish-img { border-color: var(--black); }
+  .dish--colab .dish-card { background: var(--black); border-color: var(--black); }
+  .dish--colab .dish-card * { color: var(--bg); border-color: var(--bg); }
+  .dish--colab .dish-card-meta .num { color: rgba(255,250,243,0.7); }
+  .dish--colab .dish-card .tag.hot,
+  .dish--colab .dish-card .tag.limited { background: var(--bg); color: var(--red); border-color: var(--bg); }
+  .dish--colab .dish-card .tag.veg { background: var(--bg); color: #1f8a5b; border-color: var(--bg); }
 }
 
 /* ---------- Responsive ---------- */
